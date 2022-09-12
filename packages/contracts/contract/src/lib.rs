@@ -1,6 +1,3 @@
-use std::collections::HashSet;
-use std::collections::hash_map::RandomState;
-
 use merkle_tree::commitment_tree::MerkleTree;
 use merkle_tree::whitelist_tree::WhitelistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
@@ -21,16 +18,18 @@ pub struct Contract {
   pub white_list: WhitelistMerkleTree,
   pub value_of_deposit: U128,
   pub verifier: Verifier,
+  pub nullifier: LookupSet<U256>,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
   Guardian,
+  Nullifier,
   // merkle tree keys
   FilledSubtreesPrefix,
   LastRootsPrefix,
   ZeroValuesPrefix,
-  //white list keys
+  // white list keys
   DataStorePrefix,
   DataLocationsPrefix,
   LastRootsPrefixWL,
@@ -43,17 +42,17 @@ impl Contract {
   #[init]
   pub fn new(
     owner: AccountId,
-    //merkle tree params
+    // merkle tree params
     height: u64,
     last_roots_len: u8,
-    field_size: U256, // its the same for wl
+    field_size: U256, // it's the same for wl
     zero_value: U256,
-    //wl params
+    // wl params
     height_wl: u64,
     last_roots_len_wl: u8,
     zero_value_wl: U256,
     value_of_deposit: U128,
-    //verifier
+    // verifier
     verifier: Verifier,
   ) -> Self {
     assert!(!env::state_exists(), "Already initialized");
@@ -86,6 +85,7 @@ impl Contract {
       ),
       value_of_deposit,
       verifier,
+      nullifier: LookupSet::new(StorageKey::Nullifier),
     }
   }
 }
