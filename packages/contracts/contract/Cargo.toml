@@ -8,4 +8,6 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-near-sdk = "3.1.0"
+near-sdk = "4.0.0"
+near-bigint = {path = "../../contract-libraries/near_bigint"}
+mimc = {path = "../../contract-libraries/mimc"}
