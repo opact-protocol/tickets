@@ -98,3 +98,13 @@ impl Contract {
     }
   }
 }
+
+impl Contract {
+  pub fn only_owner(&self) {
+    assert_eq!(
+      env::predecessor_account_id(),
+      self.owner,
+      "This function is restricted to the owner"
+    );
+  }
+}
