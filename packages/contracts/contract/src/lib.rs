@@ -8,12 +8,19 @@ use rust_verifier::Verifier;
 use near_bigint::U256;
 
 mod merkle_tree;
+mod serial_hasher;
+mod whitelist;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
+
+///To-do: authorizer smart contract
 pub struct Contract {
   pub owner: AccountId,
+  // blacklist responsible accounts
   pub guardian: LookupSet<AccountId>,
+  //white list responsible smart contract (mock up with just account at the moment)
+  pub authorizer: LookupSet<AccountId>,
   pub commitments: MerkleTree,
   pub white_list: WhitelistMerkleTree,
   pub value_of_deposit: U128,
@@ -24,6 +31,7 @@ pub struct Contract {
 #[derive(BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
   Guardian,
+  Authorizer,
   Nullifier,
   // merkle tree keys
   FilledSubtreesPrefix,
@@ -63,6 +71,7 @@ impl Contract {
     Self {
       owner,
       guardian: LookupSet::new(StorageKey::Guardian),
+      authorizer: LookupSet::new(StorageKey::Authorizer),
       commitments: MerkleTree::new(
         height,
         last_roots_len,
