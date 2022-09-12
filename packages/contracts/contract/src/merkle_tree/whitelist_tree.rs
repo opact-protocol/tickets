@@ -79,7 +79,7 @@ impl WhitelistMerkleTree {
   }
 
   /// Call when validating proof to verify if
-  /// tht proof is vorrectr - must be done before
+  /// that proof is correct - must be done before
   pub fn is_known_valid_root(&self, root: U256) -> bool {
     for (_, root_tupple) in self.last_roots.iter() {
       if root == root_tupple.0 {
@@ -100,9 +100,9 @@ impl WhitelistMerkleTree {
       .unwrap_or(self.zeros(self.height - 1))
   }
 
-  /// To-do - expose all of this to owner/guardin
+  /// To-do - expose all of this to owner/guardian
   /// you know
-  ///
+  /// Adds user to white list and verifies
   pub fn add_to_whitelist(&mut self, account_hash: U256) {
     assert!(
       !self.blacklist_set.contains(&account_hash),
