@@ -1,0 +1,55 @@
+{
+  "name": "near.monorepo",
+  "version": "1.0.0",
+  "description": "Near Contract and React Monorepo",
+  "private": true,
+  "scripts": {
+    "postinstall": "yarn husky install",
+    "front": "yarn workspace @near/front",
+    "contracts": "yarn workspace @near/contracts"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn prettier --config .prettierrc --write"
+    ],
+    "*.{js,jsx}": [
+      "yarn prettier --config .prettierrc --write"
+    ],
+    "*.rs": [
+      "sh ./format_rust.sh"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint-staged"
+    }
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/tailwindcss",
+      "**/tailwindcss/**",
+      "**/postcss",
+      "**/postcss/**",
+      "**/autoprefixer",
+      "**/autoprefixer/**"
+    ]
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@types/jest": "^27.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "cypress": "^10.6.0",
+    "eslint": "^8.15.0",
+    "eslint-plugin-react": "^7.29.4",
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.1",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.2"
+  }
+}

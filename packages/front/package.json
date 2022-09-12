@@ -1,0 +1,41 @@
+{
+  "name": "@near/front",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@headlessui/react": "^1.6.6",
+    "@heroicons/react": "^2.0.4",
+    "@near-wallet-selector/core": "^5.0.3",
+    "@near-wallet-selector/near-wallet": "^5.0.3",
+    "@near-wallet-selector/sender": "^5.0.3",
+    "@near/contracts": "*",
+    "autoprefixer": "^10.4.7",
+    "buffer": "^6.0.3",
+    "near-api-js": "^0.44.2",
+    "postcss": "^8.4.13",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-near": "^3.4.8",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "tailwindcss": "^3.0.24",
+    "use-mediaquery": "^1.0.1",
+    "vite-plugin-pages": "^0.25.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
+    "buffer": "^6.0.3",
+    "typescript": "^4.6.3",
+    "vite": "^2.9.7",
+    "vite-compatible-readable-stream": "^3.6.1"
+  }
+}
