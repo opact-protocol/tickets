@@ -7,6 +7,7 @@ use near_sdk::collections::{LookupSet};
 use rust_verifier::Verifier;
 use near_bigint::U256;
 
+mod events;
 mod merkle_tree;
 mod serial_hasher;
 mod whitelist;
