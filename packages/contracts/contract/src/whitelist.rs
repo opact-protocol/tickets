@@ -1,7 +1,6 @@
 use crate::{*, serial_hasher::serial_hash};
 use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
 use near_bigint::U256;
-use mimc::u256_mimc_sponge;
 
 #[near_bindgen]
 impl Contract {
@@ -19,11 +18,7 @@ impl Contract {
   ///To-do: Create an owner.rs file to add the owner restriceted fn
   /// Adds a new whitelist authorizer
   pub fn new_authorizer(&mut self, authorizer: AccountId) {
-    assert_eq!(
-      env::predecessor_account_id(),
-      self.owner,
-      "This functin is restricted to the owner"
-    );
+    self.only_owner();
     self.add_authorizer(authorizer);
   }
 }
@@ -38,7 +33,7 @@ impl Contract {
   pub fn add_authorizer(&mut self, account_to_become_authorizer: AccountId) {
     assert!(
       self.authorizer.contains(&account_to_become_authorizer),
-      "This account is already and authorizer"
+      "This account is already an authorizer"
     );
     self.authorizer.insert(&account_to_become_authorizer);
   }
