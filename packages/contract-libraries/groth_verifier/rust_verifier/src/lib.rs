@@ -1,11 +1,12 @@
+use near_bigint::U256;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 pub use pairing::{pairing_prod_4, G1Point, G2Point};
-use near_bigint::U256;
 
 mod pairing;
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Verifier {
     pub alfa1: G1Point,
     pub beta2: G2Point,
@@ -57,10 +58,10 @@ impl Verifier {
                 input[i] < self.snark_scalar_field,
                 "verifier-gte-snark-scalar-field"
             );
-            
+
             vk_x = G1Point::addition(&vk_x, &self.ic[i + 1].scalar_mul(input[i]));
         }
-        
+
         pairing_prod_4(
             &proof.a.negate(),
             &proof.b,
