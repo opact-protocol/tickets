@@ -1,9 +1,10 @@
+use near_sdk::{env, near_bindgen, AccountId};
+
 use crate::{
-  *,
+  Contract, ContractExt,
   hashes::account_hash,
   events::{event_whitelist_update},
 };
-use near_sdk::{near_bindgen, AccountId, json_types::U64};
 
 #[near_bindgen]
 impl Contract {
@@ -12,13 +13,14 @@ impl Contract {
   pub fn whitelist(&mut self, account_id: AccountId) {
     assert!(
       self.authorizer.contains(&env::predecessor_account_id()),
-      "This account is not a registred authorizer for the white list"
+      "This account is not a registred authorizer for the whitelist"
     );
 
     let account_hash = account_hash(&account_id);
 
+    let index = self.whitelist.current_insertion_index;
     self.whitelist.add_to_whitelist(account_hash);
-    event_whitelist_update(U64(self.whitelist.current_insertion_index), account_hash);
+    event_whitelist_update(index, account_hash);
   }
 
   ///To-do: Create an owner.rs file to add the owner restriceted fn
