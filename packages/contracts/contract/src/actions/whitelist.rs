@@ -32,7 +32,7 @@ impl Contract {
 impl Contract {
   pub fn add_authorizer(&mut self, account_to_become_authorizer: AccountId) {
     assert!(
-      self.authorizer.contains(&account_to_become_authorizer),
+      !self.authorizer.contains(&account_to_become_authorizer),
       "This account is already an authorizer"
     );
     self.authorizer.insert(&account_to_become_authorizer);
