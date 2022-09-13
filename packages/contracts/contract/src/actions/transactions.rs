@@ -20,9 +20,10 @@ impl Contract {
     assert!(self.whitelist.is_in_whitelist(&account_hash));
 
     let commitment = serial_hash(secrets_hash, account_hash);
+    let index = self.whitelist.current_insertion_index;
     self.commitments.insert(commitment);
 
-    event_deposit(account_id, deposit_value);
+    event_deposit(index, account_hash);
   }
 
   pub fn withdraw(
