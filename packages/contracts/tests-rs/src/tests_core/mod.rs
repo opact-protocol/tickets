@@ -15,7 +15,7 @@ use crate::*;
   async fn test_normal_flow() -> anyhow::Result<()> {
     let worker: Worker<Sandbox> = workspaces::sandbox().await?;
 
-    let root = worker.root_account();
+    let root = worker.root_account().unwrap();
 
     // 0. Initialize accounts
     // CREATE USER ACCOUNTS
