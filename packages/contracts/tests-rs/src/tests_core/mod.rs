@@ -130,10 +130,23 @@ mod tests {
     // 1. commit deposits
     let commitment1 = get_json("commitment1.json").unwrap();
 
-    println!("AAA");
-    println!("{}", commitment1["secret_hash"]);
-
     // assert wrong deposit fails
+    let should_fail = user
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment1["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE - 1)
+      .gas(300000000000000)
+      .transact()
+      .await;
+
+    match should_fail {
+        Ok(_) => panic!("should fail"),
+        Err(_) => ()
+    }
+
+    // assert correct proof
     let should_fail = user
       .call(&worker, contract.id(), "deposit")
       .args_json(json!({
@@ -144,24 +157,10 @@ mod tests {
       .transact()
       .await?;
 
-    // assert!(!should_fail);
-
-    println!("{:?}", should_fail);
-    println!("BBB");
-    println!("{}", commitment1["secret_hash"]);
-
-    // assert correct proof
-    user
-      .call(&worker, contract.id(), "deposit")
-      .args_json(json!({
-          "secrets_hash": commitment1["secret_hash"]
-      }))?
-      .deposit(DEPOSIT_VALUE)
-      .gas(300000000000000)
-      .transact()
-      .await?;
+      println!("{:?}", should_fail);
 
     // 2. attempt to withdraw with wrong proofs - assert fail
+    
 
     // 3. withdraw with correct proofs
 
