@@ -20,7 +20,7 @@ fn log_basic_event_format(standard: &str, version: &str, event_type: &str, data_
 }
 
 /// New account was added to whitelist
-pub fn event_new_white_list(index: U64, value: U256) {
+pub fn event_white_list_update(index: U64, value: U256) {
   let event_type = "new_white_list";
   let event_data = &json!({
       "index": index,

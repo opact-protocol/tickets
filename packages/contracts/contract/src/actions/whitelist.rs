@@ -1,5 +1,9 @@
-use crate::{*, serial_hasher::serial_hash};
-use near_sdk::json_types::U64;
+use crate::{
+  *,
+  serial_hasher::serial_hash,
+  events::{event_white_list_update},
+};
+use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, json_types::U64};
 use near_bigint::U256;
 
 #[near_bindgen]
@@ -15,7 +19,7 @@ impl Contract {
     let account_hash: U256 = serial_hash(U256::zero(), account.to_string().as_str());
 
     self.white_list.add_to_whitelist(account_hash);
-    event_new_white_list(U64(self.white_list.current_insertion_index), account_hash);
+    event_white_list_update(U64(self.white_list.current_insertion_index), account_hash);
   }
 
   ///To-do: Create an owner.rs file to add the owner restriceted fn
