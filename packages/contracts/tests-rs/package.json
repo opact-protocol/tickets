@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "web3-utils": "1.7.5",
-    "circomlibjs": "0.1.2"
+    "circomlibjs": "0.1.2",
+    "fixed-merkle-tree": "0.7.3"
   }
 }
