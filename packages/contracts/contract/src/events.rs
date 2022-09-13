@@ -26,10 +26,10 @@ fn log_basic_event_format(
   )
 }
 /// New account was added or removed from whitelist
-pub fn event_whitelist_update(index: U64, value: U256) {
+pub fn event_whitelist_update(index: u64, value: U256) {
   let event_type = "updated_whitelist";
   let event_data = json!({
-    "index": index,
+    "index": U64(index),
     "value": value,
   });
 
