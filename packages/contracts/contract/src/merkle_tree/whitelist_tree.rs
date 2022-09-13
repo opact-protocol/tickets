@@ -194,7 +194,7 @@ impl WhitelistMerkleTree {
     self.current_root_index = new_root_index;
   }
 
-  fn zeros(&self, level: u64) -> U256 {
+  pub fn zeros(&self, level: u64) -> U256 {
     self
       .zero_values
       .get(level)
