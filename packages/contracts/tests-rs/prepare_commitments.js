@@ -21,7 +21,7 @@ const { utils } = require("ffjavascript");
 const { stringifyBigInts } = utils;
 
 const Logger = require("logplease");
-const logger = Logger.create("snarkJS", {showTimestamp:false});
+const logger = Logger.create("snarkJS", { showTimestamp: false });
 Logger.setLogLevel("DEBUG");
 
 async function buildCommitments() {
@@ -59,6 +59,22 @@ async function buildCommitments() {
             }
         });
     }
+
+    async function generate_witness(input, name) {
+        const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
+        const witnessCalculator = await wc(buffer);
+        const buff = await witnessCalculator.calculateWTNSBin(input, 0);
+        fs.writeFileSync("temp/" + name, buff, function (err) {
+            if (err) throw err;
+        });
+    }
+
+    async function generate_proof(number) {
+        const { proof, publicSignals } = await groth16.prove("../../circuits/out/withdraw_0001.zkey", `temp/witness${number}.wtns`, logger);
+        await bfj.write(`./temp/proof${number}.json`, stringifyBigInts(proof), { space: 1 });
+        await bfj.write(`./temp/public${number}.json`, stringifyBigInts(publicSignals), { space: 1 });
+    }
+
 
     // set accounts that will be used
     const accounts = [
@@ -135,17 +151,10 @@ async function buildCommitments() {
     const path4 = commitmentTree.proof(commitmentLeaves[3]);
     const pathWL4 = whitelistTree.proof(accountsHashes[3]);
 
-    const nullifierHashes = [
-        mimc.single_hash(commitment1.nullifier),
-        mimc.single_hash(commitment2.nullifier),
-        mimc.single_hash(commitment3.nullifier),
-        mimc.single_hash(commitment4.nullifier),
-    ];
-
     // commitment 1 will be withdrawn by user 4
     let commitment1Input = {
         root: path1.pathRoot,
-        nullifierHash: nullifierHashes[0],
+        nullifierHash: mimc.single_hash(commitment1.nullifier),
         recipient: accountsHashes[3], // not taking part in any computations
         relayer: "0",  // not taking part in any computations
         fee: "0",      // not taking part in any computations
@@ -163,24 +172,34 @@ async function buildCommitments() {
         whitelistPathIndices: pathWL1.pathIndices
     };
 
-    console.log(commitment1Input);
+    // commitment 1 will be withdrawn by user 4
+    let commitment2Input = {
+        root: path2.pathRoot,
+        nullifierHash: mimc.single_hash(commitment2.nullifier),
+        recipient: accountsHashes[3], // not taking part in any computations
+        relayer: accountsHashes[0],  // not taking part in any computations
+        fee: "1000",      // not taking part in any computations
+        refund: "0",   // not taking part in any computations
+        nullifier: commitment2.nullifier,
+        secret: commitment2.secret,
+        pathElements: path2.pathElements,
+        pathIndices: path2.pathIndices,
+
+        // reference to current whitelist Merkle Tree
+        whitelistRoot: pathWL2.pathRoot,
+        // reference to original depositor to enforce whitelist
+        originDepositor: accountsHashes[1],
+        whitelistPathElements: pathWL2.pathElements,
+        whitelistPathIndices: pathWL2.pathIndices
+    };
 
     // generate witness
-    async function generate_witness(input, name) {
-        const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
-        const witnessCalculator = await wc(buffer);
-        const buff = await witnessCalculator.calculateWTNSBin(input, 0);
-        fs.writeFileSync("temp/" + name, buff, function (err) {
-            if (err) throw err;
-        });
-    }
-
     await generate_witness(commitment1Input, "witness1.wtns");
+    await generate_witness(commitment2Input, "witness2.wtns");
 
-    const { proof, publicSignals } = await groth16.prove("../../circuits/out/withdraw_0001.zkey", "temp/witness1.wtns", logger);
-
-    await bfj.write("./temp/proof1.json", stringifyBigInts(proof), { space: 1 });
-    await bfj.write("./temp/public1.json", stringifyBigInts(publicSignals), { space: 1 });
+    // generate proofs
+    await generate_proof(1);
+    await generate_proof(2);
 
     process.exit()
 }
