@@ -67,9 +67,12 @@ pub fn event_blacklist_removal(account_id: AccountId) {
   );
 }
 
-pub fn event_deposit(account_id: AccountId, value: u128) {
+pub fn event_deposit(index: u64, value: U256) {
   let event_type = "deposit";
-  let event_data = json!({ "account_id": account_id, "value": U128(value) });
+  let event_data = json!({
+    "index": U64(index),
+    "value": value
+  });
 
   log_basic_event_format(
     STANDARD_NAME,
