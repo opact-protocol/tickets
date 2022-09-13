@@ -11,7 +11,7 @@ impl Contract {
   /// Add them to WL if they are
   pub fn whitelist(&mut self, account_id: AccountId) {
     assert!(
-      self.authorizer.contains(&account_id),
+      self.authorizer.contains(&env::predecessor_account_id()),
       "This account is not a registred authorizer for the white list"
     );
 

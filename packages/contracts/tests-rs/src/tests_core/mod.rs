@@ -50,7 +50,7 @@ use crate::*;
             // wl params
             "height_wl": 20,
             "last_roots_len_wl": 20,
-            "value_of_deposit": DEPOSIT_VALUE.to_string(),
+            "deposit_value": DEPOSIT_VALUE.to_string(),
             // verifier
             "verifier": {
                 "alfa1": {
@@ -83,25 +83,32 @@ use crate::*;
     // 1. commit deposits
     let commitment1 = get_json("commitment1.json").unwrap();
 
+
+    println!("AAA");
+    println!("{}", commitment1["secret_hash"]);
+
     // assert wrong deposit fails
     let should_fail = user
         .call(&worker, contract.id(), "deposit")
         .args_json(json!({
-            "secrets_hash": commitment1["secrets_hash"]
+            "secrets_hash": commitment1["secret_hash"]
         }))?
         .deposit(DEPOSIT_VALUE)
         .gas(300000000000000)
         .transact()
-        .await?
-        .is_success();
+        .await?;
     
-    assert!(!should_fail);
+    // assert!(!should_fail);
+
+    println!("{:?}", should_fail);
+    println!("BBB");
+    println!("{}", commitment1["secret_hash"]);
 
     // assert correct proof
     user
         .call(&worker, contract.id(), "deposit")
         .args_json(json!({
-            "secrets_hash": commitment1["secrets_hash"]
+            "secrets_hash": commitment1["secret_hash"]
         }))?
         .deposit(DEPOSIT_VALUE)
         .gas(300000000000000)
