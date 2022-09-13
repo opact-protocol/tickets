@@ -1,7 +1,7 @@
 use near_bigint::U256;
 use near_sdk::json_types::{U64};
 use near_sdk::serde_json::json;
-use near_sdk::{log};
+use near_sdk::{log, AccountId};
 
 const STANDARD_NAME: &str = "hyde_your_cash";
 const STANDARD_VERSION: &str = "1.0.0";
@@ -26,7 +26,7 @@ fn log_basic_event_format(
 /// New account was added or removed from whitelist
 pub fn event_white_list_update(index: U64, value: U256) {
   let event_type = "updated_whitelist";
-  let event_data = &json!({
+  let event_data = json!({
       "index": index,
       "value": value,
   });
@@ -42,7 +42,7 @@ pub fn event_white_list_update(index: U64, value: U256) {
 /// Withdraw was performed
 pub fn event_withdrawal(nullifier: U256) {
   let event_type = "withdrawal";
-  let event_data = &json!({ "nullifier": nullifier });
+  let event_data = json!({ "nullifier": nullifier });
 
   log_basic_event_format(
     STANDARD_NAME,
@@ -55,7 +55,7 @@ pub fn event_withdrawal(nullifier: U256) {
 /// New account was added to whitelist
 pub fn event_black_list_removal(account: AccountId) {
   let event_type = "blacklist removal";
-  let event_data = &json!({
+  let event_data = json!({
       "account": account,
   });
 
