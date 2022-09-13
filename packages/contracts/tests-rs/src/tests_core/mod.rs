@@ -38,6 +38,11 @@ mod tests {
 
     let verifying_keys = get_json("verification_key.json").unwrap();
 
+    let commitment1 = get_json("commitment1.json").unwrap();
+    let commitment2 = get_json("commitment2.json").unwrap();
+    let commitment3 = get_json("commitment3.json").unwrap();
+    let commitment4 = get_json("commitment4.json").unwrap();
+
     // INITIALIZE CONTRACT
     owner
       .call(&worker, contract.id(), "new")
@@ -80,6 +85,78 @@ mod tests {
       .gas(300000000000000)
       .transact()
       .await?;
+
+    //print account zeros
+    //   let account1: String = contract
+    //   .view(
+    //     &worker,
+    //     "view_a_hash",
+    //     json!({
+    //       "account_id": user.id()
+    //     })
+    //     .to_string()
+    //     .into_bytes(),
+    //   )
+    //   .await?
+    //   .json()?;
+
+    let hash1: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment1["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash2: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment2["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash3: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment3["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash4: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment4["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+      println!("{}", hash1);
+      println!("{}", hash2);
+      println!("{}", hash3);
+      println!("{}", hash4);
+      panic!("EEE");
 
     // 0. add to whitelist
     owner
@@ -128,7 +205,6 @@ mod tests {
       .await?;
 
     // 1. commit deposits
-    let commitment1 = get_json("commitment1.json").unwrap();
 
     // assert wrong deposit fails
     let should_fail = user
@@ -142,8 +218,8 @@ mod tests {
       .await;
 
     match should_fail {
-        Ok(_) => panic!("should fail"),
-        Err(_) => ()
+      Ok(_) => panic!("should fail"),
+      Err(_) => (),
     }
 
     // assert correct proof
@@ -157,10 +233,9 @@ mod tests {
       .transact()
       .await?;
 
-      println!("{:?}", should_fail);
+    println!("{:?}", should_fail);
 
     // 2. attempt to withdraw with wrong proofs - assert fail
-    
 
     // 3. withdraw with correct proofs
 
