@@ -17,6 +17,7 @@ pub fn serial_hash(secrets_hash: U256, wallet: &str) -> U256 {
   u256_mimc_sponge(U256::zero(), [secrets_hash, wallet_hash])[0]
 }
 
+#[cfg(test)]
 mod tests {
   use super::*;
 
