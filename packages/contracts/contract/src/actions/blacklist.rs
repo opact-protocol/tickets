@@ -1,7 +1,7 @@
 use crate::{
   *,
   hashes::{account_hash},
-  events::{event_white_list_update, event_black_list_removal},
+  events::{event_whitelist_update, event_blacklist_removal},
 };
 use near_sdk::{near_bindgen, AccountId, json_types::U64};
 use near_bigint::U256;
@@ -21,7 +21,7 @@ impl Contract {
     let index = self.whitelist.add_to_blacklist(account_hash);
 
     if let Some(index) = index {
-      event_white_list_update(U64(index), self.whitelist.zeros(0));
+      event_whitelist_update(U64(index), self.whitelist.zeros(0));
     }
   }
 
@@ -35,7 +35,7 @@ impl Contract {
 
     self.whitelist.remove_from_blacklist(account_hash);
 
-    event_black_list_removal(account_id);
+    event_blacklist_removal(account_id);
   }
 
   pub fn add_guardian(&mut self, account_to_become_guardian: AccountId) {

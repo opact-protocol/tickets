@@ -1,7 +1,7 @@
 use crate::{
   *,
   hashes::account_hash,
-  events::{event_white_list_update},
+  events::{event_whitelist_update},
 };
 use near_sdk::{near_bindgen, AccountId, json_types::U64};
 
@@ -18,7 +18,7 @@ impl Contract {
     let account_hash = account_hash(&account_id);
 
     self.whitelist.add_to_whitelist(account_hash);
-    event_white_list_update(U64(self.whitelist.current_insertion_index), account_hash);
+    event_whitelist_update(U64(self.whitelist.current_insertion_index), account_hash);
   }
 
   ///To-do: Create an owner.rs file to add the owner restriceted fn
