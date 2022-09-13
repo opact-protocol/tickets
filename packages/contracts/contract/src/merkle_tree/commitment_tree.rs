@@ -1,7 +1,7 @@
 use std::convert::TryInto;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedMap, Vector};
+use near_sdk::collections::{LookupMap, UnorderedMap, Vector, LookupSet};
 use near_sdk::IntoStorageKey;
 
 use near_bigint::{U256};
@@ -20,6 +20,8 @@ pub struct MerkleTree {
   pub current_root_index: u8,
   pub field_size: U256,
   pub zero_values: Vector<U256>,
+
+  previous_commitments: LookupSet<U256>,
 }
 
 impl MerkleTree {
@@ -29,16 +31,17 @@ impl MerkleTree {
     filled_subtrees_prefix: S,
     last_roots_prefix: S,
     zero_values_prefix: S,
+    previous_commitments_prefix: S,
     field_size: U256,
     zero_value: U256,
   ) -> Self
   where
     S: IntoStorageKey,
   {
-    let mut zero_vec = Vector::new(zero_values_prefix);
+    let mut zero_values = Vector::new(zero_values_prefix);
     let mut current_hash = zero_value;
     for _ in 0..height {
-      zero_vec.push(&current_hash);
+      zero_values.push(&current_hash);
       current_hash = u256_mimc_sponge(U256::zero(), [current_hash; 2])[0]
     }
     Self {
@@ -49,7 +52,8 @@ impl MerkleTree {
       last_roots_len,
       current_root_index: 0,
       field_size,
-      zero_values: zero_vec,
+      zero_values,
+      previous_commitments: LookupSet::new(previous_commitments_prefix),
     }
   }
 
@@ -72,6 +76,8 @@ impl MerkleTree {
 
   /// deposit
   pub fn insert(&mut self, account_hash: U256) -> u64 {
+    assert!(!self.previous_commitments.contains(&account_hash));
+
     let index = self.current_insertion_index;
     assert!(
       index < 2u64.pow(self.height.try_into().unwrap()),
@@ -96,6 +102,9 @@ impl MerkleTree {
       level_index /= 2;
     }
     self.update_root(current_hash);
+
+    self.previous_commitments.insert(&account_hash);
+
     self.current_insertion_index += 1;
     self.current_insertion_index
   }

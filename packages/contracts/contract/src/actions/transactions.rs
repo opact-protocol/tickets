@@ -1,5 +1,5 @@
 use crate::*;
-use crate::serial_hasher::serial_hash;
+use crate::hashes::account_hash;
 
 #[near_bindgen]
 impl Contract {
@@ -15,7 +15,7 @@ impl Contract {
     proof: Proof,
   ) -> Promise {
     assert!(
-      fee < U256::from_dec_str(&self.value_of_deposit.0.to_string()).unwrap(),
+      fee < U256::from_dec_str(&self.deposit_value.to_string()).unwrap(),
       "fee cannot be greater than deposit value"
     );
     assert!(
@@ -27,12 +27,12 @@ impl Contract {
       "commitment tree root is invalid"
     );
     assert!(
-      self.white_list.is_known_valid_root(whitelist_root),
+      self.whitelist.is_known_valid_root(whitelist_root),
       "whitelist tree root is invalid"
     );
 
-    let recipient_hash = serial_hash(U256::zero(), recipient.to_string().as_str());
-    let relayer_hash = serial_hash(U256::zero(), relayer.to_string().as_str());
+    let recipient_hash = account_hash(&recipient);
+    let relayer_hash = account_hash(&relayer);
 
     assert!(
       self.verifier.verify(
@@ -52,10 +52,11 @@ impl Contract {
 
     self.nullifier.insert(&nullifier_hash);
     event_withdrawal(nullifier_hash);
-    
+
     if fee > U256::zero() {
       Promise::new(relayer).transfer(fee.as_u128());
     }
-    Promise::new(recipient).transfer(self.value_of_deposit.0 - fee.as_u128())
+
+    Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
   }
 }
