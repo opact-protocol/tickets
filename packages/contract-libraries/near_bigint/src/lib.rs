@@ -1,6 +1,7 @@
 use std::io::{Error, ErrorKind};
 
 use near_sdk::{
+    __private::BorshIntoStorageKey,
     borsh::{BorshDeserialize, BorshSerialize},
     serde::{self, de::Visitor, Deserialize, Serialize},
 };
@@ -22,19 +23,19 @@ macro_rules! construct_near_bigint {
 
             impl $name {
 
-            
+
                 pub fn to_be_bytes(&self) -> [u8; [<$name _BYTE_SIZE>]] {
                     let mut arr = [0u8; [<$name _BYTE_SIZE>]];
                     self.to_big_endian(&mut arr);
                     arr
                 }
-    
+
                 pub fn to_le_bytes(&self) -> [u8; [<$name _BYTE_SIZE>]] {
                     let mut arr = [0u8; [<$name _BYTE_SIZE>]];
                     self.to_little_endian(&mut arr);
                     arr
                 }
-    
+
                 #[inline]
                 const fn empty_buffer() -> [u8; [<$name _BYTE_SIZE>]] {
                     [0; [<$name _BYTE_SIZE>]]
@@ -66,25 +67,25 @@ macro_rules! construct_near_bigint {
 					self.low_u128()
 				}
 			}
-    
+
             impl BorshSerialize for $name {
-    
-    
+
+
                 #[inline]
                 fn serialize<W: std::io::Write>(&self, writer: &mut W) -> std::io::Result<()> {
                     let buffer: &mut [u8; [<$name _BYTE_SIZE>]] = &mut $name::empty_buffer();
                     self.to_little_endian(buffer);
-    
+
                     writer.write_all(buffer)
                 }
-    
+
                 fn try_to_vec(&self) -> std::io::Result<Vec<u8>> {
                     let mut result = Vec::with_capacity([<$name _BYTE_SIZE>]);
                     BorshSerialize::serialize(&self, &mut result)?;
                     Ok(result)
                 }
             }
-    
+
             impl BorshDeserialize for $name {
                 #[inline]
                 fn deserialize(buf: &mut &[u8]) -> std::io::Result<Self> {
@@ -94,15 +95,17 @@ macro_rules! construct_near_bigint {
                             ERROR_UNEXPECTED_LENGTH_OF_INPUT,
                         ));
                     }
-    
+
                     let res = $name::from_little_endian(buf[..[<$name _BYTE_SIZE>]].try_into().unwrap());
-    
+
                     *buf = &buf[[<$name _BYTE_SIZE>]..];
-    
+
                     Ok(res)
                 }
             }
-    
+
+            impl BorshIntoStorageKey for $name {}
+
             impl Serialize for $name {
                 fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                 where
@@ -111,24 +114,24 @@ macro_rules! construct_near_bigint {
                     serializer.serialize_str(&self.to_string())
                 }
             }
-    
-            
+
+
             struct [<$name Visitor>];
-    
+
             impl<'de> Visitor<'de> for [<$name Visitor>] {
                 type Value = $name;
-    
+
                 fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
                     formatter.write_str("an unsigned integer smaller than 2^256 - 1, encoded as a string")
                 }
-    
+
                 fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
                 {
                     $name::from_dec_str(&v).or_else(|e| Err(E::custom(e)))
                 }
-    
+
                 fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
                 where
                     E: serde::de::Error,
@@ -136,7 +139,7 @@ macro_rules! construct_near_bigint {
                     $name::from_dec_str(v).or_else(|e| Err(E::custom(e)))
                 }
             }
-    
+
             impl<'de> Deserialize<'de> for $name {
                 fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
                 where
