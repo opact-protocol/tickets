@@ -163,6 +163,8 @@ async function buildCommitments() {
         whitelistPathIndices: pathWL1.pathIndices
     };
 
+    console.log(commitment1Input);
+
     // generate witness
     async function generate_witness(input, name) {
         const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
