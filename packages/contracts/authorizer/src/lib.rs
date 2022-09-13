@@ -1,4 +1,6 @@
-use near_sdk::{near_bindgen, PanicOnDefault, AccountId, env, Promise, PromiseError, Gas, log};
+use near_sdk::{
+  near_bindgen, PanicOnDefault, AccountId, env, Promise, PromiseError, Gas, log, PromiseResult,
+};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 
 use crate::ext_interface::ext_transactions_contract;
@@ -51,18 +53,17 @@ impl Contract {
     promise.then(
       Self::ext(env::current_account_id())
         .with_static_gas(Gas(5 * TGAS))
-        .callback(),
+        .callback_promise_result(),
     )
   }
 
-  #[private] // Public - but only callable by env::current_account_id()
-  pub fn callback(&self, #[callback_result] call_result: Result<String, PromiseError>) -> String {
-    // Check if the promise succeeded by calling the method outlined in external.rs
-    if call_result.is_err() {
-      log!("There was an error contacting the TRANSACTIONS CONTRACT");
-      return "".to_string();
+  #[private]
+  pub fn callback_promise_result() -> bool {
+    assert_eq!(env::promise_results_count(), 1, "ERR_TOO_MANY_RESULTS");
+    match env::promise_result(0) {
+      PromiseResult::NotReady => unreachable!(),
+      PromiseResult::Successful(_) => true,
+      PromiseResult::Failed => env::panic_str("ERR_CALL_FAILED"),
     }
-    let msg: String = call_result.unwrap();
-    msg
   }
 }
