@@ -10,6 +10,17 @@ pub fn get_wasm(file_name: &str) -> Result<Vec<u8>, Error> {
   std::fs::read(Path::new(OUT_DIR).join(file_name))
 }
 
+pub fn get_json(file_name: &str) -> Option<serde_json::Value> {
+  let path = Path::new(PROOF_DIR).join(file_name);
+  if path.exists() {
+    let data = std::fs::read_to_string(path).unwrap();
+    Some(serde_json::from_str(&data).unwrap())
+  } else {
+    None
+  }
+  
+}
+
 pub async fn create_user_account(
   tla: &Account,
   worker: &Worker<impl DevNetwork>,

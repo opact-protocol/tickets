@@ -62,7 +62,6 @@ impl Contract {
     // wl params
     height_wl: u64,
     last_roots_len_wl: u8,
-    zero_value_wl: U256,
     deposit_value: U128,
     // verifier
     verifier: Verifier,
@@ -95,7 +94,7 @@ impl Contract {
         StorageKey::BlacklistSetPrefix,
         StorageKey::ZeroValuesPrefixWL,
         field_size,
-        zero_value_wl,
+        zero_value,
       ),
       deposit_value: deposit_value.0,
       verifier,
