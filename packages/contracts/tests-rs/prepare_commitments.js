@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const web3utils = require('web3-utils');
 const fs = require('fs');
+const { readFileSync, writeFile } = fs;
 
 const { BN, toBN } = web3utils;
 
@@ -9,6 +10,19 @@ const { buildMimcSponge } = circomlibjs;
 
 const fixedMerkleTree = require('fixed-merkle-tree');
 const { MerkleTree } = fixedMerkleTree;
+
+const wc = require("../../circuits/out/withdraw_js/witness_calculator.js");
+
+const snarkjs = require('snarkjs');
+const { groth16 } = snarkjs;
+
+const bfj = require("bfj");
+const { utils } = require("ffjavascript");
+const { stringifyBigInts } = utils;
+
+const Logger = require("logplease");
+const logger = Logger.create("snarkJS", {showTimestamp:false});
+Logger.setLogLevel("DEBUG");
 
 async function buildCommitments() {
     class Mimc {
@@ -19,8 +33,9 @@ async function buildCommitments() {
         }
 
         async initMimc() {
-            this.sponge = await buildMimcSponge()
-            this.hash = (left, right) => this.sponge.F.toString(this.sponge.multiHash([BigInt(left), BigInt(right)]))
+            this.sponge = await buildMimcSponge();
+            this.hash = (left, right) => this.sponge.F.toString(this.sponge.multiHash([BigInt(left), BigInt(right)]));
+            this.single_hash = (single) => this.sponge.F.toString(this.sponge.multiHash([BigInt(single)]));
         }
     }
 
@@ -121,10 +136,10 @@ async function buildCommitments() {
     const pathWL4 = whitelistTree.proof(accountsHashes[3]);
 
     const nullifierHashes = [
-        "21086104474227232800393935460814015478975725103042202437637973134177504619938",
-        "8254240706376035266498274064987702895664455429409415464200880850024127429752",
-        "13252771540914963342929683696377588408648108358404717789439875981176015948239",
-        "7359813155397801907900958651437619387810140803255531262941663192539003928769"
+        mimc.single_hash(commitment1.nullifier),
+        mimc.single_hash(commitment2.nullifier),
+        mimc.single_hash(commitment3.nullifier),
+        mimc.single_hash(commitment4.nullifier),
     ];
 
     // commitment 1 will be withdrawn by user 4
@@ -143,19 +158,28 @@ async function buildCommitments() {
         // reference to current whitelist Merkle Tree
         whitelistRoot: pathWL1.pathRoot,
         // reference to original depositor to enforce whitelist
-        originDepositor: accountsHashes[0], 
+        originDepositor: accountsHashes[0],
         whitelistPathElements: pathWL1.pathElements,
         whitelistPathIndices: pathWL1.pathIndices
     };
 
-    
+    // generate witness
+    async function generate_witness(input, name) {
+        const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
+        const witnessCalculator = await wc(buffer);
+        const buff = await witnessCalculator.calculateWTNSBin(input, 0);
+        fs.writeFileSync("temp/" + name, buff, function (err) {
+            if (err) throw err;
+        });
+    }
 
-    // create 4 proofs
+    await generate_witness(commitment1Input, "witness1.wtns");
 
-    
+    const { proof, publicSignals } = await groth16.prove("../../circuits/out/withdraw_0001.zkey", "temp/witness1.wtns", logger);
 
-    // transform accountId to hashes
+    await bfj.write("./temp/proof1.json", stringifyBigInts(proof), { space: 1 });
+    await bfj.write("./temp/public1.json", stringifyBigInts(publicSignals), { space: 1 });
 
-    //save to files
+    process.exit()
 }
 buildCommitments()
