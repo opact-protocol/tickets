@@ -13,7 +13,7 @@ impl Contract {
   #[payable]
   pub fn deposit(&mut self, secrets_hash: U256) {
     let deposit_value = self.deposit_value;
-    assert_eq!(env::attached_deposit(), deposit_value);
+    assert_eq!(env::attached_deposit(), deposit_value, "deposited values must be exactly {} NEAR", deposit_value);
 
     let account_id = env::predecessor_account_id();
     let account_hash = account_hash(&account_id);
