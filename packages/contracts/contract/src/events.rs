@@ -6,7 +6,12 @@ use near_sdk::{log};
 const STANDARD_NAME: &str = "hyde_your_cash";
 const STANDARD_VERSION: &str = "1.0.0";
 
-fn log_basic_event_format(standard: &str, version: &str, event_type: &str, data_vec: Vec<&str>) {
+fn log_basic_event_format(
+  standard: &str,
+  version: &str,
+  event_type: &str,
+  data_vec: Vec<near_sdk::serde_json::Value>,
+) {
   log!(
     "EVENT_JSON:{}",
     &json!({
@@ -18,15 +23,14 @@ fn log_basic_event_format(standard: &str, version: &str, event_type: &str, data_
     .to_string()
   )
 }
-
-/// New account was added to whitelist
+/// New account was added or removed from whitelist
 pub fn event_white_list_update(index: U64, value: U256) {
-  let event_type = "new_white_list";
+  let event_type = "updated_whitelist";
   let event_data = &json!({
       "index": index,
       "value": value,
-  })
-  .to_string();
+  });
+
   log_basic_event_format(
     STANDARD_NAME,
     STANDARD_VERSION,
@@ -35,14 +39,26 @@ pub fn event_white_list_update(index: U64, value: U256) {
   );
 }
 
-
 /// Withdraw was performed
 pub fn event_withdrawal(nullifier: U256) {
   let event_type = "withdrawal";
+  let event_data = &json!({ "nullifier": nullifier });
+
+  log_basic_event_format(
+    STANDARD_NAME,
+    STANDARD_VERSION,
+    event_type,
+    vec![event_data],
+  );
+}
+
+/// New account was added to whitelist
+pub fn event_black_list_removal(account: AccountId) {
+  let event_type = "blacklist removal";
   let event_data = &json!({
-      "nullifier": nullifier
-  })
-  .to_string();
+      "account": account,
+  });
+
   log_basic_event_format(
     STANDARD_NAME,
     STANDARD_VERSION,
