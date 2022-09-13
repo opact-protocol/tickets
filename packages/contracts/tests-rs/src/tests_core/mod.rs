@@ -150,13 +150,58 @@ mod tests {
       Err(_) => (),
     }
 
-    // assert correct proof
+    // make correct deposits
+    user
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment1["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE)
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    user2
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment2["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE)
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    user3
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment3["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE)
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    user4
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment4["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE)
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    // assert correct proofs
+
+    // user 1 deposits -> user 1 withdraws to user4
     let receiver_account = user4.id();
 
     let proof1 = get_json("proof1.json").unwrap();
     let public1 = get_json("public1.json").unwrap();
 
-    let result = user
+    let initial_balance = user4.view_account(&worker).await?.balance;
+
+    user
       .call(&worker, contract.id(), "withdraw")
       .args_json(json!({
         "root": public1[0],
@@ -185,9 +230,99 @@ mod tests {
       .transact()
       .await?;
 
-    println!("{:?}", result);
-    panic!("WWW");
+    let final_balance = user4.view_account(&worker).await?.balance;
 
+    assert_eq!(initial_balance + DEPOSIT_VALUE, final_balance);
+
+    // assert proof cannot be used again
+    let should_panic = user
+      .call(&worker, contract.id(), "withdraw")
+      .args_json(json!({
+        "root": public1[0],
+        "nullifier_hash": public1[1],
+        "recipient": receiver_account,
+        "relayer": null,
+        "fee": public1[4],
+        "refund": public1[5],
+        "whitelist_root": public1[6],
+        "proof": {
+          "a": {
+            "x": proof1["pi_a"][0],
+            "y": proof1["pi_a"][1]
+          },
+          "b": {
+            "x": proof1["pi_b"][0],
+            "y": proof1["pi_b"][1]
+          },
+          "c": {
+            "x": proof1["pi_c"][0],
+            "y": proof1["pi_c"][1]
+          }
+        },
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await;
+
+    match should_panic {
+      Ok(_) => panic!("should panic"),
+      Err(_) => (),
+    }
+
+    // user 2 deposits -> user1 withdraws as relayer to user4 withdraws
+    let receiver_account = user4.id();
+
+    let proof2 = get_json("proof2.json").unwrap();
+    let public2 = get_json("public2.json").unwrap();
+
+    let initial_balance1 = user.view_account(&worker).await?.balance;
+    let initial_balance4 = user4.view_account(&worker).await?.balance;
+
+    user2
+      .call(&worker, contract.id(), "withdraw")
+      .args_json(json!({
+        "root": public2[0],
+        "nullifier_hash": public2[1],
+        "recipient": receiver_account,
+        "relayer": user.id(),
+        "fee": public2[4],
+        "refund": public2[5],
+        "whitelist_root": public2[6],
+        "proof": {
+          "a": {
+            "x": proof2["pi_a"][0],
+            "y": proof2["pi_a"][1]
+          },
+          "b": {
+            "x": proof2["pi_b"][0],
+            "y": proof2["pi_b"][1]
+          },
+          "c": {
+            "x": proof2["pi_c"][0],
+            "y": proof2["pi_c"][1]
+          }
+        },
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    let final_balance1 = user.view_account(&worker).await?.balance;
+    let final_balance4 = user4.view_account(&worker).await?.balance;
+
+    println!("initial1: {}", initial_balance1);
+    println!("final1: {}", final_balance1);
+    println!("initial2: {}", initial_balance4);
+    println!("final2: {}", final_balance4);
+
+    assert_eq!(
+      initial_balance1 + public2[4].as_str().unwrap().parse::<u128>().unwrap(),
+      final_balance1
+    );
+    assert_eq!(
+      initial_balance4 + DEPOSIT_VALUE - public2[4].as_str().unwrap().parse::<u128>().unwrap(),
+      final_balance4
+    );
 
     // 2. attempt to withdraw with wrong proofs - assert fail
 
