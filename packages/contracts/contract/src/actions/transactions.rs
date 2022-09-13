@@ -1,8 +1,30 @@
-use crate::*;
-use crate::hashes::account_hash;
+use near_sdk::{env, near_bindgen, AccountId, Promise};
+use near_bigint::U256;
+use rust_verifier::Proof;
+
+use crate::{
+  Contract, ContractExt,
+  hashes::{account_hash, serial_hash},
+  events::{event_deposit, event_withdrawal},
+};
 
 #[near_bindgen]
 impl Contract {
+  #[payable]
+  pub fn deposit(&mut self, secrets_hash: U256) {
+    let deposit_value = self.deposit_value;
+    assert_eq!(env::attached_deposit(), deposit_value);
+
+    let account_id = env::predecessor_account_id();
+    let account_hash = account_hash(&account_id);
+    assert!(self.whitelist.is_in_whitelist(&account_hash));
+
+    let commitment = serial_hash(secrets_hash, account_hash);
+    self.commitments.insert(commitment);
+
+    event_deposit(account_id, deposit_value);
+  }
+
   pub fn withdraw(
     &mut self,
     root: U256,

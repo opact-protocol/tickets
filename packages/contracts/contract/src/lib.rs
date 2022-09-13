@@ -9,7 +9,6 @@ use near_bigint::U256;
 use events::*;
 
 mod actions;
-mod deposit;
 mod events;
 mod hashes;
 mod merkle_tree;
