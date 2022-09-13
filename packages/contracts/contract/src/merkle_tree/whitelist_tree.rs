@@ -110,6 +110,7 @@ impl WhitelistMerkleTree {
       !self.blacklist_set.contains(&account_hash),
       "account is blacklisted"
     );
+
     match self.is_in_whitelist(&account_hash) {
       true => panic!("account is already registered"),
       false => self.insert_to_final_index(account_hash),

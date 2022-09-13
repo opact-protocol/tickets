@@ -21,7 +21,7 @@ impl Contract {
     let index = self.whitelist.add_to_blacklist(account_hash);
 
     if let Some(index) = index {
-      event_whitelist_update(U64(index), self.whitelist.zeros(0));
+      event_whitelist_update(index, self.whitelist.zeros(0));
     }
   }
 
