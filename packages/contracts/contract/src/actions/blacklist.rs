@@ -41,7 +41,7 @@ impl Contract {
   pub fn add_guardian(&mut self, account_to_become_guardian: AccountId) {
     self.only_owner();
     assert!(
-      self.guardian.contains(&account_to_become_guardian),
+      !self.guardian.contains(&account_to_become_guardian),
       "This account is already a guardian"
     );
     self.authorizer.insert(&account_to_become_guardian);
