@@ -1,5 +1,5 @@
-use crate::{*, serial_hasher::serial_hash, events::event_new_white_list};
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, json_types::U64};
+use crate::{*, serial_hasher::serial_hash};
+use near_sdk::json_types::U64;
 use near_bigint::U256;
 
 #[near_bindgen]

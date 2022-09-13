@@ -2,16 +2,16 @@ use merkle_tree::commitment_tree::MerkleTree;
 use merkle_tree::whitelist_tree::WhitelistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
+use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise};
 use near_sdk::collections::{LookupSet};
-use rust_verifier::{self, Verifier};
+use rust_verifier::{self, Verifier, Proof};
 use near_bigint::U256;
+use events::*;
 
 mod actions;
 mod events;
 mod merkle_tree;
 mod serial_hasher;
-mod whitelist;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
