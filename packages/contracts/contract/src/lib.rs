@@ -7,7 +7,9 @@ use near_sdk::collections::{LookupSet};
 use rust_verifier::Verifier;
 use near_bigint::U256;
 
+mod actions;
 mod merkle_tree;
+mod serial_hasher;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
