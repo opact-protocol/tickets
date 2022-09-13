@@ -40,6 +40,32 @@ macro_rules! construct_near_bigint {
                     [0; [<$name _BYTE_SIZE>]]
                 }
             }
+
+            impl $name {
+				/// Low 2 words (u128)
+				#[inline]
+				pub const fn low_u128(&self) -> u128 {
+					let &$name(ref arr) = self;
+					((arr[1] as u128) << 64) + arr[0] as u128
+				}
+
+				/// Conversion to u128 with overflow checking
+				///
+				/// # Panics
+				///
+				/// Panics if the number is larger than 2^128.
+				#[inline]
+				pub fn as_u128(&self) -> u128 {
+					let &$name(ref arr) = self;
+					for i in 2..$n_words {
+						if arr[i] != 0 {
+							panic!("Integer overflow when casting to u128")
+						}
+
+					}
+					self.low_u128()
+				}
+			}
     
             impl BorshSerialize for $name {
     
