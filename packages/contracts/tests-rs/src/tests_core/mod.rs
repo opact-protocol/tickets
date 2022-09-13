@@ -32,6 +32,8 @@ use crate::*;
     
     const FIELD_SIZE: &str = "21888242871839275222246405745257275088548364400416034343698204186575808495617";
     const ZERO_VALUE: &str = "21663839004416932945382355908790599225266501822907911457504978515578255421292";
+    const DEPOSIT_VALUE: u128 = 10_000_000_000_000_000_000_000_000; 
+
 
     let verifying_keys = get_json("verification_key.json").unwrap();
 
@@ -48,7 +50,7 @@ use crate::*;
             // wl params
             "height_wl": 20,
             "last_roots_len_wl": 20,
-            "value_of_deposit": "10_000_000_000_000_000_000_000_000",
+            "value_of_deposit": DEPOSIT_VALUE.to_string(),
             // verifier
             "verifier": {
                 "alfa1": {
@@ -74,10 +76,24 @@ use crate::*;
                 "snark_scalar_field": FIELD_SIZE,
             },
         }))?
+        .gas(300000000000000)
         .transact()
         .await?;
 
     // 1. commit deposits
+
+
+    let commitment1 = get_json("commitment1.json").unwrap();
+
+    user
+        .call(&worker, contract.id(), "deposit")
+        .args_json(json!({
+            "secrets_hash": commitment1["secrets_hash"]
+        }))?
+        .deposit(DEPOSIT_VALUE)
+        .gas(300000000000000)
+        .transact()
+        .await?;
 
     // 2. attempt to withdraw with wrong proofs - assert fail
     
