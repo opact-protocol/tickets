@@ -8,10 +8,12 @@ use near_units::parse_near;
 use futures::future::{try_join_all};
 
 mod methods;
+mod tests_core;
 
 pub use methods::*;
 
 pub const OUT_DIR: &str = "../out";
+pub const PROOF_DIR: &str = "temp";
 
 pub const FRACTION_BASE: u128 = 10_000;
 

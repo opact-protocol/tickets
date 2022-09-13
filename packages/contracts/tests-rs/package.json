@@ -1,0 +1,15 @@
+{
+  "name": "@near/contracts",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "main": "lib/index.ts",
+  "scripts": {
+    "copy:verificationkey": "mkdir -p temp && cp ../../circuits/out/verification_key.json ./temp/verification_key.json",
+    "build:commitments": "node prepare_commitments.js",
+    "build:proofs": ""
+  },
+  "dependencies": {
+    "web3-utils": "1.7.5",
+    "crypto": "^1.0.1"
+  }
+}
