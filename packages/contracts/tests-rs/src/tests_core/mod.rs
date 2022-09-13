@@ -86,78 +86,6 @@ mod tests {
       .transact()
       .await?;
 
-    //print account zeros
-    //   let account1: String = contract
-    //   .view(
-    //     &worker,
-    //     "view_a_hash",
-    //     json!({
-    //       "account_id": user.id()
-    //     })
-    //     .to_string()
-    //     .into_bytes(),
-    //   )
-    //   .await?
-    //   .json()?;
-
-    let hash1: String = contract
-      .view(
-        &worker,
-        "view_nullifier_hash",
-        json!({
-          "nullifier": commitment1["nullifier"]
-        })
-        .to_string()
-        .into_bytes(),
-      )
-      .await?
-      .json()?;
-
-    let hash2: String = contract
-      .view(
-        &worker,
-        "view_nullifier_hash",
-        json!({
-          "nullifier": commitment2["nullifier"]
-        })
-        .to_string()
-        .into_bytes(),
-      )
-      .await?
-      .json()?;
-
-    let hash3: String = contract
-      .view(
-        &worker,
-        "view_nullifier_hash",
-        json!({
-          "nullifier": commitment3["nullifier"]
-        })
-        .to_string()
-        .into_bytes(),
-      )
-      .await?
-      .json()?;
-
-    let hash4: String = contract
-      .view(
-        &worker,
-        "view_nullifier_hash",
-        json!({
-          "nullifier": commitment4["nullifier"]
-        })
-        .to_string()
-        .into_bytes(),
-      )
-      .await?
-      .json()?;
-
-      println!("{}", hash1);
-      println!("{}", hash2);
-      println!("{}", hash3);
-      println!("{}", hash4);
-      panic!("EEE");
-
     // 0. add to whitelist
     owner
       .call(&worker, contract.id(), "new_authorizer")
@@ -223,17 +151,43 @@ mod tests {
     }
 
     // assert correct proof
-    let should_fail = user
-      .call(&worker, contract.id(), "deposit")
+    let receiver_account = user4.id();
+
+    let proof1 = get_json("proof1.json").unwrap();
+    let public1 = get_json("public1.json").unwrap();
+
+    let result = user
+      .call(&worker, contract.id(), "withdraw")
       .args_json(json!({
-          "secrets_hash": commitment1["secret_hash"]
+        "root": public1[0],
+        "nullifier_hash": public1[1],
+        "recipient": receiver_account,
+        "relayer": null,
+        "fee": public1[4],
+        "refund": public1[5],
+        "whitelist_root": public1[6],
+        "proof": {
+          "a": {
+            "x": proof1["pi_a"][0],
+            "y": proof1["pi_a"][1]
+          },
+          "b": {
+            "x": proof1["pi_b"][0],
+            "y": proof1["pi_b"][1]
+          },
+          "c": {
+            "x": proof1["pi_c"][0],
+            "y": proof1["pi_c"][1]
+          }
+        },
       }))?
-      .deposit(DEPOSIT_VALUE)
       .gas(300000000000000)
       .transact()
       .await?;
 
-    println!("{:?}", should_fail);
+    println!("{:?}", result);
+    panic!("WWW");
+
 
     // 2. attempt to withdraw with wrong proofs - assert fail
 

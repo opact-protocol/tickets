@@ -31,7 +31,7 @@ impl Contract {
     root: U256,
     nullifier_hash: U256,
     recipient: AccountId,
-    relayer: AccountId,
+    relayer: Option<AccountId>,
     fee: U256,
     refund: U256,
     whitelist_root: U256,
@@ -55,7 +55,23 @@ impl Contract {
     );
 
     let recipient_hash = account_hash(&recipient);
-    let relayer_hash = account_hash(&relayer);
+
+    let relayer_hash;
+
+    match relayer {
+      Some(relayer_account) => {
+        relayer_hash = account_hash(&relayer_account);
+        if fee > U256::zero() {
+          Promise::new(relayer_account).transfer(fee.as_u128());
+        }
+      },
+      None => {
+        relayer_hash = U256::zero();
+        if fee > U256::zero() {
+          panic!("Fee cannot be greater than 0 if there is no relayer");
+        }
+      }
+    }
 
     assert!(
       self.verifier.verify(
@@ -75,11 +91,7 @@ impl Contract {
 
     self.nullifier.insert(&nullifier_hash);
     event_withdrawal(nullifier_hash);
-
-    if fee > U256::zero() {
-      Promise::new(relayer).transfer(fee.as_u128());
-    }
-
+    
     Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
   }
 }
