@@ -1,10 +1,10 @@
 use crate::*;
 use near_bigint::U256;
-use crate::serial_hasher::serial_hash;
+use crate::hashes::account_hash;
 
 #[near_bindgen]
 impl Contract {
-  pub fn view_a_hash(&self, account: AccountId) -> U256 {
-    serial_hash(U256::zero(), account.to_string().as_str())
+  pub fn view_a_hash(&self, account_id: AccountId) -> U256 {
+    account_hash(&account_id)
   }
 }

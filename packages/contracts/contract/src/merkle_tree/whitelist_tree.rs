@@ -44,18 +44,26 @@ impl WhitelistMerkleTree {
     zero_value: U256,
   ) -> Self
   where
-    S: IntoStorageKey,
+    S: IntoStorageKey + Copy,
   {
-    let mut zero_vec = Vector::new(zero_values_prefix);
+    let mut zero_values = Vector::new(zero_values_prefix);
     let mut current_hash = zero_value;
     for _ in 0..height {
-      zero_vec.push(&current_hash);
+      zero_values.push(&current_hash);
       current_hash = u256_mimc_sponge(U256::zero(), [current_hash; 2])[0]
     }
-    let prefix = data_store_prefix.into_storage_key();
-    let mut tree = Self {
+
+    let mut data_store = Vector::new(data_store_prefix);
+    for i in 0..height {
+      data_store.push(&LookupMap::new(append(
+        &data_store_prefix.into_storage_key(),
+        format!("level:{}", i).as_bytes(),
+      )));
+    }
+
+    Self {
       height,
-      data_store: Vector::new(prefix.clone()),
+      data_store,
       data_locations: LookupMap::new(data_locations_prefix),
       current_insertion_index: 0,
       last_roots: UnorderedMap::new(last_roots_prefix),
@@ -64,18 +72,8 @@ impl WhitelistMerkleTree {
       last_blacklist: 0,
       blacklist_set: UnorderedSet::new(blacklist_set_prefix),
       field_size,
-      zero_values: zero_vec,
-    };
-
-    let mut i = 0;
-    while i < height {
-      tree.data_store.push(&LookupMap::new(append(
-        &prefix,
-        format!("level:{}", i).as_bytes(),
-      )));
-      i += 1;
+      zero_values,
     }
-    tree
   }
 
   /// Call when validating proof to verify if
@@ -100,7 +98,11 @@ impl WhitelistMerkleTree {
       .unwrap_or(self.zeros(self.height - 1))
   }
 
-  /// To-do - expose all of this to owner/guardian
+  pub fn is_in_whitelist(&self, account_hash: &U256) -> bool {
+    self.data_locations.get(account_hash).is_some()
+  }
+
+  /// To-do - expose all of this to owner/guardin
   /// you know
   /// Adds user to white list and verifies
   pub fn add_to_whitelist(&mut self, account_hash: U256) {
@@ -108,9 +110,9 @@ impl WhitelistMerkleTree {
       !self.blacklist_set.contains(&account_hash),
       "account is blacklisted"
     );
-    match self.data_locations.get(&account_hash) {
-      Some(_) => panic!("account is already registered"),
-      None => self.insert_to_final_index(account_hash),
+    match self.is_in_whitelist(&account_hash) {
+      true => panic!("account is already registered"),
+      false => self.insert_to_final_index(account_hash),
     }
   }
 
