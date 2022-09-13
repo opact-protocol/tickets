@@ -3,7 +3,7 @@ mod tests {
 
   use core::panic;
 
-use crate::*;
+  use crate::*;
 
   /// Integration tests
   /// aims to test full aplication flow
@@ -29,87 +29,214 @@ use crate::*;
     // DEPLOY CONTRACT
     let contract_wasm = get_wasm("contract.wasm")?;
     let contract = deploy_contract(&root, &worker, "core_contract", &contract_wasm).await;
-    
-    const FIELD_SIZE: &str = "21888242871839275222246405745257275088548364400416034343698204186575808495617";
-    const ZERO_VALUE: &str = "21663839004416932945382355908790599225266501822907911457504978515578255421292";
-    const DEPOSIT_VALUE: u128 = 10_000_000_000_000_000_000_000_000; 
 
+    const FIELD_SIZE: &str =
+      "21888242871839275222246405745257275088548364400416034343698204186575808495617";
+    const ZERO_VALUE: &str =
+      "21663839004416932945382355908790599225266501822907911457504978515578255421292";
+    const DEPOSIT_VALUE: u128 = 10_000_000_000_000_000_000_000_000;
 
     let verifying_keys = get_json("verification_key.json").unwrap();
 
+    let commitment1 = get_json("commitment1.json").unwrap();
+    let commitment2 = get_json("commitment2.json").unwrap();
+    let commitment3 = get_json("commitment3.json").unwrap();
+    let commitment4 = get_json("commitment4.json").unwrap();
+
     // INITIALIZE CONTRACT
     owner
-        .call(&worker, contract.id(), "new")
-        .args_json(json!({
-            "owner": owner.id(),
-            // merkle tree params
-            "height": 20,
-            "last_roots_len": 20,
-            "field_size": FIELD_SIZE,
-            "zero_value": ZERO_VALUE,
-            // wl params
-            "height_wl": 20,
-            "last_roots_len_wl": 20,
-            "value_of_deposit": DEPOSIT_VALUE.to_string(),
-            // verifier
-            "verifier": {
-                "alfa1": {
-                    "x": verifying_keys["vk_alpha_1"][0],
-                    "y": verifying_keys["vk_alpha_1"][1]
-                },
-                "beta2": {
-                    "x": [verifying_keys["vk_beta_2"][0][0], verifying_keys["vk_beta_2"][0][1]],
-                    "y": [verifying_keys["vk_beta_2"][1][0], verifying_keys["vk_beta_2"][1][1]]
-                },
-                "gamma2": {
-                    "x": [verifying_keys["vk_gamma_2"][0][0], verifying_keys["vk_gamma_2"][0][1]],
-                    "y": [verifying_keys["vk_gamma_2"][1][0], verifying_keys["vk_gamma_2"][1][1]]
-                },
-                "delta2": {
-                    "x": [verifying_keys["vk_delta_2"][0][0], verifying_keys["vk_delta_2"][0][1]],
-                    "y": [verifying_keys["vk_delta_2"][1][0], verifying_keys["vk_delta_2"][1][1]]
-                },
-                "ic": verifying_keys["IC"].as_array().unwrap().iter().map(|g1| json!({
-                    "x": g1[0],
-                    "y": g1[1]
-                })).collect::<Vec<serde_json::Value>>(),
-                "snark_scalar_field": FIELD_SIZE,
-            },
-        }))?
-        .gas(300000000000000)
-        .transact()
-        .await?;
+      .call(&worker, contract.id(), "new")
+      .args_json(json!({
+          "owner": owner.id(),
+          // merkle tree params
+          "height": 20,
+          "last_roots_len": 20,
+          "field_size": FIELD_SIZE,
+          "zero_value": ZERO_VALUE,
+          // wl params
+          "height_wl": 20,
+          "last_roots_len_wl": 20,
+          "deposit_value": DEPOSIT_VALUE.to_string(),
+          // verifier
+          "verifier": {
+              "alfa1": {
+                  "x": verifying_keys["vk_alpha_1"][0],
+                  "y": verifying_keys["vk_alpha_1"][1]
+              },
+              "beta2": {
+                  "x": [verifying_keys["vk_beta_2"][0][0], verifying_keys["vk_beta_2"][0][1]],
+                  "y": [verifying_keys["vk_beta_2"][1][0], verifying_keys["vk_beta_2"][1][1]]
+              },
+              "gamma2": {
+                  "x": [verifying_keys["vk_gamma_2"][0][0], verifying_keys["vk_gamma_2"][0][1]],
+                  "y": [verifying_keys["vk_gamma_2"][1][0], verifying_keys["vk_gamma_2"][1][1]]
+              },
+              "delta2": {
+                  "x": [verifying_keys["vk_delta_2"][0][0], verifying_keys["vk_delta_2"][0][1]],
+                  "y": [verifying_keys["vk_delta_2"][1][0], verifying_keys["vk_delta_2"][1][1]]
+              },
+              "ic": verifying_keys["IC"].as_array().unwrap().iter().map(|g1| json!({
+                  "x": g1[0],
+                  "y": g1[1]
+              })).collect::<Vec<serde_json::Value>>(),
+              "snark_scalar_field": FIELD_SIZE,
+          },
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    //print account zeros
+    //   let account1: String = contract
+    //   .view(
+    //     &worker,
+    //     "view_a_hash",
+    //     json!({
+    //       "account_id": user.id()
+    //     })
+    //     .to_string()
+    //     .into_bytes(),
+    //   )
+    //   .await?
+    //   .json()?;
+
+    let hash1: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment1["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash2: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment2["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash3: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment3["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+    let hash4: String = contract
+      .view(
+        &worker,
+        "view_nullifier_hash",
+        json!({
+          "nullifier": commitment4["nullifier"]
+        })
+        .to_string()
+        .into_bytes(),
+      )
+      .await?
+      .json()?;
+
+      println!("{}", hash1);
+      println!("{}", hash2);
+      println!("{}", hash3);
+      println!("{}", hash4);
+      panic!("EEE");
+
+    // 0. add to whitelist
+    owner
+      .call(&worker, contract.id(), "new_authorizer")
+      .args_json(json!({
+          "authorizer": owner.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    owner
+      .call(&worker, contract.id(), "whitelist")
+      .args_json(json!({
+          "account_id": user.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    owner
+      .call(&worker, contract.id(), "whitelist")
+      .args_json(json!({
+          "account_id": user2.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    owner
+      .call(&worker, contract.id(), "whitelist")
+      .args_json(json!({
+          "account_id": user3.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    owner
+      .call(&worker, contract.id(), "whitelist")
+      .args_json(json!({
+          "account_id": user4.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
 
     // 1. commit deposits
-    let commitment1 = get_json("commitment1.json").unwrap();
 
     // assert wrong deposit fails
     let should_fail = user
-        .call(&worker, contract.id(), "deposit")
-        .args_json(json!({
-            "secrets_hash": commitment1["secrets_hash"]
-        }))?
-        .deposit(DEPOSIT_VALUE)
-        .gas(300000000000000)
-        .transact()
-        .await?
-        .is_success();
-    
-    assert!(!should_fail);
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment1["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE - 1)
+      .gas(300000000000000)
+      .transact()
+      .await;
+
+    match should_fail {
+      Ok(_) => panic!("should fail"),
+      Err(_) => (),
+    }
 
     // assert correct proof
-    user
-        .call(&worker, contract.id(), "deposit")
-        .args_json(json!({
-            "secrets_hash": commitment1["secrets_hash"]
-        }))?
-        .deposit(DEPOSIT_VALUE)
-        .gas(300000000000000)
-        .transact()
-        .await?;
+    let should_fail = user
+      .call(&worker, contract.id(), "deposit")
+      .args_json(json!({
+          "secrets_hash": commitment1["secret_hash"]
+      }))?
+      .deposit(DEPOSIT_VALUE)
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
+    println!("{:?}", should_fail);
 
     // 2. attempt to withdraw with wrong proofs - assert fail
-    
+
     // 3. withdraw with correct proofs
 
     anyhow::Ok(())
