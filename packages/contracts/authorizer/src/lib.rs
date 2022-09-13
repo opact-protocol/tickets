@@ -48,12 +48,11 @@ impl Contract {
       .with_static_gas(Gas(5 * TGAS))
       .whitelist(account);
 
-    return promise.then(
-      // Create a promise to callback query_greeting_callback
+    promise.then(
       Self::ext(env::current_account_id())
         .with_static_gas(Gas(5 * TGAS))
         .callback(),
-    );
+    )
   }
 
   #[private] // Public - but only callable by env::current_account_id()
