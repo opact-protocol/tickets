@@ -122,12 +122,15 @@ impl WhitelistMerkleTree {
     self.blacklist_set.remove(&account_hash)
   }
 
-  pub fn add_to_blacklist(&mut self, account_hash: U256) {
+  pub fn add_to_blacklist(&mut self, account_hash: U256) -> Option<u64> {
     self.blacklist_set.insert(&account_hash);
     self.last_blacklist = env::block_timestamp();
     match self.data_locations.get(&account_hash) {
-      Some(location) => self.insert_to_middle(self.zeros(0), location),
-      None => (),
+      Some(location) => {
+        self.insert_to_middle(self.zeros(0), location);
+        Some(location)
+      }
+      None => None,
     }
   }
 
