@@ -81,10 +81,23 @@ use crate::*;
         .await?;
 
     // 1. commit deposits
-
-
     let commitment1 = get_json("commitment1.json").unwrap();
 
+    // assert wrong deposit fails
+    let should_fail = user
+        .call(&worker, contract.id(), "deposit")
+        .args_json(json!({
+            "secrets_hash": commitment1["secrets_hash"]
+        }))?
+        .deposit(DEPOSIT_VALUE)
+        .gas(300000000000000)
+        .transact()
+        .await?
+        .is_success();
+    
+    assert!(!should_fail);
+
+    // assert correct proof
     user
         .call(&worker, contract.id(), "deposit")
         .args_json(json!({
