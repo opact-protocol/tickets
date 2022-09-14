@@ -52,9 +52,6 @@ export const WalletSelectorContextProvider: React.FC<
       network: import.meta.env.VITE_NEAR_NETWORK,
       debug: true,
       modules: [
-        setupSender({
-          iconUrl: "/assets/sender-icon.png",
-        }),
         setupNearWallet({
           iconUrl: "/assets/near-wallet-icon.png",
         }),
