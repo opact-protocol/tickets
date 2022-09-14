@@ -3,30 +3,57 @@ import { defineConfig } from "vite";
 import Pages from "vite-plugin-pages";
 import react from "@vitejs/plugin-react";
 import reactRefresh from "@vitejs/plugin-react-refresh";
-import NodeGlobalsPolyfillPlugin from "@esbuild-plugins/node-globals-polyfill";
 
-export default defineConfig({
-  plugins: [
-    react(),
-    reactRefresh(),
-    NodeGlobalsPolyfillPlugin({
-      buffer: true,
-      process: true,
-    }),
-    Pages({
-      pagesDir: "src/pages",
-    }),
-  ],
-  esbuild: {},
-  define: {
-    global: "window",
-    "process.env": {},
-  },
-  resolve: {
-    alias: {
-      util: "util",
-      process: "process/browser",
-      "@": resolve(__dirname, "./src"),
+const inject = require("@rollup/plugin-inject");
+
+export default defineConfig(async () => {
+  const { default: stdLibBrowser } = await import("node-stdlib-browser");
+
+  return {
+    plugins: [
+      react(),
+      reactRefresh(),
+      Pages({
+        pagesDir: "src/pages",
+      }),
+      {
+        ...inject({
+          global: [
+            require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
+            "global",
+          ],
+          process: [
+            require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
+            "process",
+          ],
+          Buffer: [
+            require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
+            "Buffer",
+          ],
+        }),
+        enforce: "post",
+      },
+    ],
+    define: {
+      global: "window",
+      "process.env": {},
     },
-  },
+    build: {
+      target: ["esNext"],
+      rollupOptions: {
+        output: {
+          format: "es",
+        },
+      },
+    },
+    optimizeDeps: {
+      include: ["buffer", "process"],
+    },
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
+        ...stdLibBrowser,
+      },
+    },
+  };
 });

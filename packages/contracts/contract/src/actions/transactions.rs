@@ -13,17 +13,22 @@ impl Contract {
   #[payable]
   pub fn deposit(&mut self, secrets_hash: U256) {
     let deposit_value = self.deposit_value;
-    assert_eq!(env::attached_deposit(), deposit_value, "deposited values must be exactly {} NEAR", deposit_value);
+    assert_eq!(
+      env::attached_deposit(),
+      deposit_value,
+      "deposited values must be exactly {} NEAR",
+      deposit_value
+    );
 
     let account_id = env::predecessor_account_id();
     let account_hash = account_hash(&account_id);
     assert!(self.whitelist.is_in_whitelist(&account_hash));
 
     let commitment = serial_hash(secrets_hash, account_hash);
-    let index = self.whitelist.current_insertion_index;
+    let index = self.commitments.current_insertion_index;
     self.commitments.insert(commitment);
 
-    event_deposit(index, account_hash);
+    event_deposit(index, commitment);
   }
 
   pub fn withdraw(
@@ -64,7 +69,7 @@ impl Contract {
         if fee > U256::zero() {
           Promise::new(relayer_account).transfer(fee.as_u128());
         }
-      },
+      }
       None => {
         relayer_hash = U256::zero();
         if fee > U256::zero() {
@@ -91,7 +96,7 @@ impl Contract {
 
     self.nullifier.insert(&nullifier_hash);
     event_withdrawal(nullifier_hash);
-    
+
     Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
   }
 }
