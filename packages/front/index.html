@@ -7,12 +7,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <title>Near Monorepo Boilerplate</title>
+    <script>
+      var global = global || window;
+    </script>
+    <script type="module">
+      import { Buffer } from 'buffer';
+
+      window.Buffer = Buffer;
+    </script>
   </head>
   <body>
     <div id="root"></div>

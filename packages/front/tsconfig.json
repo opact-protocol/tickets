@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -18,11 +22,25 @@
     "baseUrl": ".",
     "noImplicitAny": false,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
-    "types": ["vite-plugin-pages/client-react", "vite/client"],
+    "types": [
+      "vite-plugin-pages/client-react",
+      "vite/client"
+    ],
   },
-  "include": ["./src"],
-  "exclude": ["tailwind.config.js"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "./src",
+    "fs.ts"
+  ],
+  "exclude": [
+    "tailwind.config.js"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
