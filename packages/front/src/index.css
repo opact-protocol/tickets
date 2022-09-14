@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Sora', sans-serif;
   color: white;
-  background-color: black;
   width: 100vw;
   height: 100vh;
+  background-color: rgb(243, 244, 246);
 }
