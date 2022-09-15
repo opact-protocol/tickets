@@ -40,7 +40,9 @@ export function Header() {
                 onClick={() => toggleModal()}
                 className="flex items-center space-x-[4px] bg-[#121315] px-[24px] py-[12px] rounded-full w-full font-[400] hover:opacity-[.9] justify-bettween"
               >
-                <span className="text-white">Connect Wallet</span>
+                <span className="text-white whitespace-nowrap">
+                  Connect Wallet
+                </span>
 
                 <ChevronRightIcon className="w-[18px]" />
               </button>

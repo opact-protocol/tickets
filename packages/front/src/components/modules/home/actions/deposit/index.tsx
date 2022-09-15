@@ -11,7 +11,7 @@ const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState(1);
+  const [selectedAmount, setSelectedAmount] = useState(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
 
@@ -48,10 +48,10 @@ export function Deposit() {
               Token
             </span>
 
-            <div className="text-[#121315] space-x-[4px]">
+            {/* <div className="text-[#121315] space-x-[4px]">
               <span>In wallet:</span>
               <span>10</span>
-            </div>
+            </div> */}
           </div>
 
           <div
@@ -69,7 +69,7 @@ export function Deposit() {
             "
           >
             <div className="flex items-center space-x-[8px]">
-              <div className="bg-[#121315] rounded-full h-[24px] w-[24px]" />
+              <img className="w-[16px]" src="./assets/near-wallet-icon.png" />
 
               <span className="text-[18px] font-[400]">NEAR</span>
             </div>
@@ -87,7 +87,7 @@ export function Deposit() {
 
           <RadioGroup
             value={selectedAmount}
-            onChange={setSelectedAmount}
+            onChange={() => { }}
             className="mt-2"
           >
             <div className="flex space-x-[12px]">
@@ -99,8 +99,8 @@ export function Deposit() {
                     classNames(
                       checked
                         ? "bg-gray-100 border-transparent text-black"
-                        : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50",
-                      "border rounded-full p-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1 cursor-pointer"
+                        : "bg-white border-gray-200 text-gray-900",
+                      "border rounded-full p-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1 cursor-not-allowed"
                     )
                   }
                 >
