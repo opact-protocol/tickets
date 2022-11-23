@@ -49,6 +49,16 @@ export default defineConfig(async () => {
     optimizeDeps: {
       include: ["buffer", "process"],
     },
+    server: {
+      port: 3000,
+      proxy: {
+        "/api": {
+          target: "http://localhost:8081",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
