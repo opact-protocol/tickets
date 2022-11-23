@@ -8,7 +8,7 @@ import {
   viewFunction,
 } from "@/utils/tools";
 import { mimc } from "@/services/mimc";
-import { buildTree } from "@/services";
+import { buildTree, api } from "@/services";
 
 const DEFAULT_HASH_DATA = {
   amount: 1,
@@ -217,22 +217,16 @@ export const useApplication = create<{
     let publicArgs = get().publicArgs;
     let proof = get().proof;
 
-    transactions.push(
-      getTransaction(
-        account,
-        CONTRACT,
-        "withdraw",
-        {
-          proof,
-          ...publicArgs,
-        },
-        "0"
-      )
-    );
+    try {
+      await api.post("/money/withdraw", {
+        proof,
+        ...publicArgs,
+      });
 
-    executeMultipleTransactions(transactions, wallet);
-
-    toast.success("Withdraw sended!");
+      toast.success("Withdraw sended!");
+    } catch(e) {
+      toast.error("Error on withdraw");
+    }
   },
 
   createSnarkProof: async (input) => {
