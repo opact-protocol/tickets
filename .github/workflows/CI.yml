@@ -42,13 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'
+        uses: actions/checkout@v2
 
       - name: Install Yarn Globally
         run: npm install -g yarn
