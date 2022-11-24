@@ -1,16 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 import type { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export function WalletSelectorModal(props: {}) {
-  const { connection, showModal, toggleModal } = useNearWalletSelector();
+  const { selector, showModal, toggleModal } = useWalletSelector();
 
   const [modules, setModules] = useState<ModuleState[]>([]);
 
   useEffect(() => {
-    const subscription = connection.store.observable.subscribe((state) => {
+    const subscription = selector.store.observable.subscribe((state) => {
       state.modules.sort((current, next) => {
         if (current.metadata.deprecated === next.metadata.deprecated) {
           return 0;
