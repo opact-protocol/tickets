@@ -3,6 +3,8 @@ name = "near-bigint"
 version = "1.0.0"
 authors = ["jack the dev <joao@hackachain.io>"]
 edition = "2021"
+license = "MIT"
+
 
 [lib]
 crate-type = ["cdylib", "rlib"]
