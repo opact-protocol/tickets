@@ -1,0 +1,45 @@
+name: near-bigint CI
+
+on: 
+  pull_request:
+    paths:
+      - 'packages/contract-libraries/near_bigint/**'
+
+env:
+  RUSTFLAGS: -D warnings
+
+defaults:
+  run:
+    shell: bash
+    working-directory: packages/contract-libraries/near_bigint
+
+jobs:
+  test_near_bigint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup component add rustfmt
+          rustup target add wasm32-unknown-unknown
+
+      - name: Install Yarn Globally
+        run: npm install -g yarn
+
+      - name: Installing Dependencies
+        run: yarn
+
+      - name: Rust Tests
+        run: yarn test:near_bigint
+
+      - name: Test build
+        run: yarn build:near_bigint
+
+      - name: Install Audit
+        run: cargo install cargo-audit
+
+      - name: Run Audit
+        run: cargo audit --ignore RUSTSEC-2020-0071
