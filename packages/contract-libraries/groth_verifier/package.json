@@ -6,8 +6,8 @@
   "author": "jack the dev",
   "license": "MIT",
   "scripts": {
-    "build:lib": "cd rust_verifier && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
-    "build:contract": "cd rust_verifier_test && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
+    "build:lib": "cd near_groth16_verifier && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
+    "build:contract": "cd verifier_test && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
     "build": "RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
     "test": "yarn build && cd tests-rs && cargo test"
   }
