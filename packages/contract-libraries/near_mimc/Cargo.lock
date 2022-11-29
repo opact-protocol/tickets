@@ -380,21 +380,16 @@ dependencies = [
 [[package]]
 name = "ff"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "df689201f395c6b90dfe87127685f8dbfc083a5e779e613575d8bd7314300c3e"
 dependencies = [
  "bitvec 1.0.1",
  "byteorder",
  "ff_derive",
- "rand_core 0.6.3",
  "subtle",
 ]
 
 [[package]]
 name = "ff_derive"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95dddd96655a8ef19cc0dd2cb7063fb159f1583af0dbf3c04805ebc7dcc15849"
 dependencies = [
  "addchain",
  "cfg-if 1.0.0",
@@ -558,15 +553,6 @@ name = "memory_units"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
-
-[[package]]
-name = "mimc"
-version = "1.0.0"
-dependencies = [
- "ff",
- "near-bigint",
- "near-sdk",
-]
 
 [[package]]
 name = "near-account-id"
@@ -751,6 +737,15 @@ dependencies = [
  "serde",
  "sha2 0.10.3",
  "sha3",
+]
+
+[[package]]
+name = "near_mimc"
+version = "1.0.0"
+dependencies = [
+ "ff",
+ "near-bigint",
+ "near-sdk",
 ]
 
 [[package]]
