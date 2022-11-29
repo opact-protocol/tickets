@@ -1,5 +1,5 @@
 use near_sdk::{
-  near_bindgen, PanicOnDefault, AccountId, env, Promise, PromiseError, Gas, log, PromiseResult,
+  near_bindgen, PanicOnDefault, AccountId, env, Promise, Gas, PromiseResult,
 };
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 

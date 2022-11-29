@@ -789,6 +789,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "near_groth16_verifier"
+version = "1.0.0"
+dependencies = [
+ "near-bigint",
+ "near-sdk",
+ "rstest",
+]
+
+[[package]]
 name = "num-bigint"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1075,24 +1084,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_verifier"
-version = "1.0.0"
-dependencies = [
- "near-bigint",
- "near-sdk",
- "rstest",
-]
-
-[[package]]
-name = "rust_verifier_test"
-version = "1.0.0"
-dependencies = [
- "near-bigint",
- "near-sdk",
- "rust_verifier",
-]
-
-[[package]]
 name = "rustc-hex"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1354,6 +1345,15 @@ name = "unicode-xid"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "957e51f3646910546462e67d5f7599b9e4fb8acdd304b087a6494730f9eebf04"
+
+[[package]]
+name = "verifier_test"
+version = "1.0.0"
+dependencies = [
+ "near-bigint",
+ "near-sdk",
+ "near_groth16_verifier",
+]
 
 [[package]]
 name = "version_check"

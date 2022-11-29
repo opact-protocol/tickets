@@ -3,7 +3,7 @@ use crate::{
   hashes::{account_hash},
   events::{event_whitelist_update, event_blacklist_removal},
 };
-use near_sdk::{near_bindgen, AccountId, json_types::U64};
+use near_sdk::{near_bindgen, AccountId};
 use near_bigint::U256;
 
 #[near_bindgen]

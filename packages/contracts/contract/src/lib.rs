@@ -2,9 +2,9 @@ use merkle_tree::commitment_tree::MerkleTree;
 use merkle_tree::whitelist_tree::WhitelistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise};
+use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
 use near_sdk::collections::{LookupSet};
-use rust_verifier::{self, Verifier, Proof};
+use near_groth16_verifier::{self, Verifier};
 use near_bigint::U256;
 use events::*;
 
@@ -204,7 +204,7 @@ mod tests {
       ),
       deposit_value: 20000000000000000000000000,
       verifier: Verifier::new(
-        rust_verifier::G1Point {
+        near_groth16_verifier::G1Point {
           x: U256::from_dec_str(
             "11929434009103390266755415091858623822884685127957621260775374579078909737674",
           )
@@ -214,7 +214,7 @@ mod tests {
           )
           .unwrap(),
         },
-        rust_verifier::G2Point {
+        near_groth16_verifier::G2Point {
           x: [
             U256::from_dec_str(
               "12329300379284736487759277870289591812325857359120129210116695958510025528558",
@@ -236,7 +236,7 @@ mod tests {
             .unwrap(),
           ],
         },
-        rust_verifier::G2Point {
+        near_groth16_verifier::G2Point {
           x: [
             U256::from_dec_str(
               "10857046999023057135944570762232829481370756359578518086990519993285655852781",
@@ -258,7 +258,7 @@ mod tests {
             .unwrap(),
           ],
         },
-        rust_verifier::G2Point {
+        near_groth16_verifier::G2Point {
           x: [
             U256::from_dec_str(
               "5790202932707851834971338329931905576169490530124069101001782500222600854667",
@@ -281,7 +281,7 @@ mod tests {
           ],
         },
         vec![
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "10558925288976907965469300478434171166775183168644571041226339931044639838584",
             )
@@ -291,7 +291,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "8692640465836940407247076561528588802257111263627111557005104421314190010881",
             )
@@ -301,7 +301,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "9015295882064685058646324579770369169624639664495134765302964899445979537974",
             )
@@ -311,7 +311,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "2680708481975690632841888313988626621815593840420314570935868033529951064689",
             )
@@ -321,7 +321,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "21646405787355360791256498679491825515973450327612830612936932142232629913707",
             )
@@ -331,7 +331,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "7326800130457667302128074678103962581759337277766929222842481653542128159923",
             )
@@ -341,7 +341,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "19217544629750115119592690785243318580209244929795854424339912058683641377341",
             )
@@ -351,7 +351,7 @@ mod tests {
             )
             .unwrap(),
           },
-          rust_verifier::G1Point {
+          near_groth16_verifier::G1Point {
             x: U256::from_dec_str(
               "626944075200141454123327199571007123899735939592938593344851156659404091574",
             )

@@ -920,7 +920,7 @@ fn prime_field_impl(
         }
     };
 
-    let top_limb_index = limbs - 1;
+    let _top_limb_index = limbs - 1;
 
     quote! {
         impl ::core::marker::Copy for #name { }
