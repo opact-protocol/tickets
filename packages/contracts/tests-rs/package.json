@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "main": "lib/index.ts",
   "scripts": {
-    "copy:verificationkey": "mkdir -p temp && cp ../../circuits/out/verification_key.json ./temp/verification_key.json",
+    "copy:verificationkey": "mkdir -p temp && cp ../../circuits/ci_sample_compile/verification_key.json ./temp/verification_key.json",
     "build:commitments": "node prepare_commitments.js",
     "test:full": "yarn copy:verificationkey && yarn build:commitments && cargo test"
   },

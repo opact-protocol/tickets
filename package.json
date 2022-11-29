@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "yarn husky install",
     "front": "yarn workspace @near/front",
-    "contracts": "yarn workspace @near/contracts"
+    "contracts": "yarn workspace @near/contracts",
+    "circuits": "yarn workspace circuits"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

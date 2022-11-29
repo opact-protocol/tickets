@@ -12,7 +12,7 @@
     "prestart": "npm run build:contract:debug && npm run dev:deploy:contract",
     "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\"",
     "test:rust": "npm run build:contract && cargo test -- --nocapture",
-    "test:lib": "npm run build:contract && cd tests-rs && cargo test"
+    "test:lib": "npm run build:contract && cd tests-rs && yarn test:full"
   },
   "devDependencies": {
     "env-cmd": "~10.1.0",
