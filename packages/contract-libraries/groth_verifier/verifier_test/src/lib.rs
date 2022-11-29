@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{near_bindgen, PanicOnDefault};
-use rust_verifier::{G1Point, G2Point, Proof, Verifier};
+use near_groth16_verifier::{G1Point, G2Point, Proof, Verifier};
 
 use near_bigint::U256;
 

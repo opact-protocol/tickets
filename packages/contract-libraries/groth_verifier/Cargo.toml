@@ -1,8 +1,8 @@
 [workspace]
 # Add location of contracts here
 members = [
-  "./rust_verifier",
-  "./rust_verifier_test"
+  "./near_groth16_verifier",
+  "./verifier_test"
 ]
 
 [profile.release]

@@ -1,6 +1,6 @@
 use near_bigint::U256;
 use near_sdk::{
-  json_types::{U64, U128},
+  json_types::{U64},
   serde_json::json,
   log, AccountId,
 };

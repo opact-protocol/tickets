@@ -24,7 +24,7 @@ mod tests {
 
         // 1. Initialize contracts
         // DEPLOY REWARD_TOKEN
-        let wasm_file = get_wasm("rust_verifier_test.wasm")?;
+        let wasm_file = get_wasm("verifier_test.wasm")?;
         let verifier = deploy_contract(&root, &worker, "verifier", &wasm_file).await;
 
         verifier

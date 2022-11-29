@@ -1,5 +1,5 @@
 [package]
-name = "rust_verifier_test"
+name = "near_groth16_verifier"
 version = "1.0.0"
 authors = ["jack the dev <joao@hackachain.io>"]
 edition = "2021"
@@ -10,4 +10,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = { version = "4.0.0", features = ["unstable"] }
 near-bigint = { path = "../../near_bigint" }
-rust_verifier = { path = "../rust_verifier" }
+
+[dev-dependencies]
+rstest = "0.14.0"
