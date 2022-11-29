@@ -1,6 +1,6 @@
 use near_sdk::{env, near_bindgen, AccountId, Promise};
 use near_bigint::U256;
-use rust_verifier::Proof;
+use near_groth16_verifier::Proof;
 
 use crate::{
   Contract, ContractExt,

@@ -11,7 +11,7 @@ crate-type = ["cdylib", "rlib"]
 near-sdk = { version = "4.0.0", features = ["unstable"] }
 near-bigint = {path = "../../contract-libraries/near_bigint"}
 mimc = {path = "../../contract-libraries/mimc"}
-rust_verifier = {path = "../../contract-libraries/groth_verifier/rust_verifier"}
+near_groth16_verifier = {path = "../../contract-libraries/groth_verifier/near_groth16_verifier"}
 
 [dev-dependencies]
 rstest = "0.14.0"
