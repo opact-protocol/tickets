@@ -10,7 +10,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = "4.0.0"
 near-bigint = {path = "../../contract-libraries/near_bigint"}
-mimc = {path = "../../contract-libraries/mimc"}
 
 [dev-dependencies]
 rstest = "0.14.0"

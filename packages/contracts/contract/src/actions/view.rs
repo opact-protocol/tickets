@@ -1,7 +1,7 @@
 use crate::*;
 use near_bigint::U256;
 use crate::hashes::account_hash;
-use mimc::u256_mimc_sponge_single;
+use near_mimc::u256_mimc_sponge_single;
 
 #[near_bindgen]
 impl Contract {
