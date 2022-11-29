@@ -65,7 +65,6 @@ dependencies = [
  "near-bigint",
  "near-sdk",
  "rstest",
- "rust_verifier",
 ]
 
 [[package]]
@@ -274,8 +273,8 @@ dependencies = [
  "mimc",
  "near-bigint",
  "near-sdk",
+ "near_groth16_verifier",
  "rstest",
- "rust_verifier",
 ]
 
 [[package]]
@@ -873,6 +872,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "near_groth16_verifier"
+version = "1.0.0"
+dependencies = [
+ "near-bigint",
+ "near-sdk",
+]
+
+[[package]]
 name = "num-bigint"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1162,14 +1169,6 @@ dependencies = [
  "quote",
  "rustc_version",
  "syn",
-]
-
-[[package]]
-name = "rust_verifier"
-version = "1.0.0"
-dependencies = [
- "near-bigint",
- "near-sdk",
 ]
 
 [[package]]
