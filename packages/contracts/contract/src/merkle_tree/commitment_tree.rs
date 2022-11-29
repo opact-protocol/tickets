@@ -5,7 +5,7 @@ use near_sdk::collections::{LookupMap, UnorderedMap, Vector, LookupSet};
 use near_sdk::IntoStorageKey;
 
 use near_bigint::{U256};
-use mimc::{u256_mimc_sponge};
+use near_mimc::{u256_mimc_sponge};
 
 /// Solidity uses big endian for byte values and little endian for uint256,
 /// so we must make sure to always for bytes and little endian for U256

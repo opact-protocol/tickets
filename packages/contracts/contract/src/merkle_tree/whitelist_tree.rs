@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet, Vector};
 use near_sdk::{env, IntoStorageKey};
 
-use mimc::{u256_mimc_sponge};
+use near_mimc::{u256_mimc_sponge};
 use near_bigint::U256;
 
 pub(crate) fn append(id: &[u8], chr: &[u8]) -> Vec<u8> {

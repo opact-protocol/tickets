@@ -10,8 +10,8 @@
     "test:groth_verifier": "cd groth_verifier && cargo test",
     "build:groth_verifier": "cd groth_verifier && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
 
-    "test:mimc": "cd mimc && cargo test",
-    "build:mimc": "cd mimc && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release"
+    "test:mimc": "cd near_mimc && cargo test",
+    "build:mimc": "cd near_mimc && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release"
   },
   "devDependencies": {
     "env-cmd": "~10.1.0",
