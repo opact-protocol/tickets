@@ -1,0 +1,12 @@
+[package]
+name = "near_mimc"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "4.0.0"
+near-bigint = { path = "../near_bigint" }
+ff = { path = "../ff", features = ["derive"] }
