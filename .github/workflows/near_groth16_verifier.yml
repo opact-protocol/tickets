@@ -1,0 +1,42 @@
+name: near-groth16-verifier CI
+
+on: 
+  pull_request:
+    paths:
+      - 'packages/contract-libraries/groth_verifier/**'
+
+env:
+  RUSTFLAGS: -D warnings
+
+defaults:
+  run:
+    shell: bash
+    working-directory: packages/contract-libraries/groth_verifier
+
+jobs:
+  test_near_bigint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          rustup component add rustfmt
+          rustup target add wasm32-unknown-unknown
+
+      - name: Install Yarn Globally
+        run: npm install -g yarn
+
+      - name: Installing Dependencies
+        run: yarn
+
+      - name: Tests
+        run: yarn test
+
+      - name: Install Audit
+        run: cargo install cargo-audit
+
+      - name: Run Audit
+        run: cargo audit --ignore RUSTSEC-2020-0071
