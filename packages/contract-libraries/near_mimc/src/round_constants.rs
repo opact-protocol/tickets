@@ -1344,21 +1344,6 @@ mod tests {
     }
 
     #[test]
-    fn pqp() {
-        let pp1: Fp = Fp::from_repr(FpRepr(
-            U256::from_dec_str(
-                "21888242871839275222246405745257275088548364400416034343698204186575808495617",
-            )
-            .unwrap()
-            .add(U256::from(1))
-            .to_le_bytes(),
-        ))
-        .unwrap();
-
-        assert_eq!(Fp::one(), pp1);
-    }
-
-    #[test]
     fn skrr777() {
         let iter = JS_ROUND_CONSTANTS
             .iter()
@@ -1457,11 +1442,6 @@ mod tests {
                 212, 9, 55, 111, 19, 209, 123, 247, 112, 28, 14, 238, 206, 21,
             ],
         ];
-
-        let p = U256::from_dec_str(
-            "21888242871839275222246405745257275088548364400416034343698204186575808495617",
-        )
-        .unwrap();
 
         for ((&el_buffo, string), round_constant) in EL_BUFFO
             .iter()
