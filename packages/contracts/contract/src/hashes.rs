@@ -1,5 +1,5 @@
 use near_bigint::U256;
-use mimc::u256_mimc_sponge;
+use near_mimc::u256_mimc_sponge;
 use near_sdk::AccountId;
 
 // TODO: make this work for longer wallet lengths
