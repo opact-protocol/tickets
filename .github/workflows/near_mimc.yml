@@ -1,9 +1,9 @@
-name: near-groth16-verifier CI
+name: near-mimc CI
 
 on: 
   pull_request:
     paths:
-      - 'packages/contract-libraries/groth_verifier/**'
+      - 'packages/contract-libraries/near_mimc/**'
 
 env:
   RUSTFLAGS: -D warnings
@@ -11,10 +11,10 @@ env:
 defaults:
   run:
     shell: bash
-    working-directory: packages/contract-libraries/groth_verifier
+    working-directory: packages/contract-libraries/near_mimc
 
 jobs:
-  test_near_groth16_verifier:
+  test_near_mimc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,8 +32,11 @@ jobs:
       - name: Installing Dependencies
         run: yarn
 
-      - name: Tests
-        run: yarn test
+      - name: Rust Tests
+        run: yarn test:near_mimc
+
+      - name: Test build
+        run: yarn build:near_mimc
 
       - name: Install Audit
         run: cargo install cargo-audit
