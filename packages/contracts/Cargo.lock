@@ -398,18 +398,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "ff"
-version = "0.12.0"
-dependencies = [
- "bitvec 1.0.1",
- "byteorder",
- "ff_derive",
- "subtle",
-]
-
-[[package]]
-name = "ff_derive"
-version = "0.12.0"
+name = "ff_derive_wasm_unknown_unknown"
+version = "0.12.2"
 dependencies = [
  "addchain",
  "cfg-if 1.0.0",
@@ -419,6 +409,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "ff_wasm_unknown_unknown"
+version = "0.12.2"
+dependencies = [
+ "bitvec 1.0.1",
+ "byteorder",
+ "ff_derive_wasm_unknown_unknown",
+ "subtle",
 ]
 
 [[package]]
@@ -687,7 +687,7 @@ dependencies = [
 
 [[package]]
 name = "near-bigint"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "near-sdk",
  "paste",
@@ -863,7 +863,7 @@ dependencies = [
 
 [[package]]
 name = "near_groth16_verifier"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "near-bigint",
  "near-sdk",
@@ -873,7 +873,7 @@ dependencies = [
 name = "near_mimc"
 version = "1.0.0"
 dependencies = [
- "ff",
+ "ff_wasm_unknown_unknown",
  "near-bigint",
  "near-sdk",
 ]

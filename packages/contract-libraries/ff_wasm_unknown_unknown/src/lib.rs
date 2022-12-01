@@ -14,7 +14,7 @@ pub use batch::*;
 
 #[cfg(feature = "derive")]
 #[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
-pub use ff_derive::PrimeField;
+pub use ff_derive_wasm_unknown_unknown::PrimeField;
 
 #[cfg(feature = "bits")]
 #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]

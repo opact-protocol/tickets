@@ -1,6 +1,6 @@
 [package]
 name = "ff_wasm_unknown_unknown"
-version = "0.12.0"
+version = "0.12.2"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Jack Grigg <thestr4d@gmail.com>",
@@ -17,22 +17,22 @@ edition = "2021"
 [dependencies]
 bitvec = { version = "1", default-features = false, optional = true }
 byteorder = { version = "1", default-features = false, optional = true }
-ff_derive = { version = "0.12", path = "ff_derive", optional = true }
+ff_derive_wasm_unknown_unknown = { version = "0.12.2", path = "ff_derive_wasm_unknown_unknown", optional = true }
 subtle = { version = "2.2.1", default-features = false, features = ["i128"] }
 
 [features]
 default = ["bits", "std"]
 alloc = []
 bits = ["bitvec"]
-derive = ["byteorder", "ff_derive"]
+derive = ["byteorder", "ff_derive_wasm_unknown_unknown"]
 std = ["alloc"]
 # with MSRV 1.60 this could be merged into bits with ff_derive?/bits
 # see PR#72 for more information.
-derive_bits = ["bits", "ff_derive/bits"]
+derive_bits = ["bits", "ff_derive_wasm_unknown_unknown/bits"]
 
 [[test]]
 name = "derive"
-required-features = ["derive"]
+required-features = ["ff_derive_wasm_unknown_unknown"]
 
 [badges]
 maintenance = { status = "actively-developed" }

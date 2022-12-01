@@ -73,7 +73,7 @@ fn mimc_feistel(k: Fp, left: Fp, right: Fp) -> (Fp, Fp) {
 
 #[allow(unused_imports)]
 mod tests {
-    use ff::{Field, PrimeField};
+    use ff_wasm_unknown_unknown::{Field, PrimeField};
 
     use crate::{
         fp::{Fp, FpRepr},
