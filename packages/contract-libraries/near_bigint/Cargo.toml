@@ -1,7 +1,7 @@
 [package]
 name = "near-bigint"
 version = "1.0.0"
-authors = ["jack the dev <joao@hackachain.io>"]
+authors = ["jack the dev <joao@hackachain.io>, hackerdocc <eduardo@hackachain.io>"]
 edition = "2021"
 license = "MIT"
 keywords = ["near_protocol", "big_integer"]
@@ -11,6 +11,7 @@ categories = [
     "encoding",
     "mathematics"
 ]
+description = "Big integer types compatible with NEAR Protocol state trie serialization and serde serialization"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
