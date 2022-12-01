@@ -4,7 +4,13 @@ version = "1.0.0"
 authors = ["jack the dev <joao@hackachain.io>"]
 edition = "2021"
 license = "MIT"
-
+keywords = ["near_protocol", "big_integer"]
+categories = [
+    "cryptography::cryptocurrencies",
+    "data-structures",
+    "encoding",
+    "mathematics"
+]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
