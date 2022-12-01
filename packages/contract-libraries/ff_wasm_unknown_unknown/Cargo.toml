@@ -1,16 +1,17 @@
 [package]
-name = "ff"
+name = "ff_wasm_unknown_unknown"
 version = "0.12.0"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Jack Grigg <thestr4d@gmail.com>",
+    "Jack the Dev <joao@hackachain.io>"
 ]
-description = "Library for building and interfacing with finite fields"
+description = "Independent adaptation of the open-sourced ff library that removes features incompatible with wasm32-unknown-unknown architecture"
 readme = "README.md"
 documentation = "https://docs.rs/ff/"
 homepage = "https://github.com/zkcrypto/ff"
 license = "MIT/Apache-2.0"
-repository = "https://github.com/zkcrypto/ff"
+repository = "https://github.com/hideyour-cash/monorepo/packages/contract-libraries/ff_wasm_unknown_unknown"
 edition = "2021"
 
 [dependencies]

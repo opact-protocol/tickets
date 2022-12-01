@@ -1,3 +1,9 @@
+## ff_wasm_unknown_unknown
+
+`ff_wasm_unknown_unknown` is an independent adaptation of the open-sourced `ff` library that removes features incompatible with wasm32-unknown-unknown architecture, specially methods that require pseudorandom number generation.
+
+
+
 # ff
 
 `ff` is a finite field library written in pure Rust, with no `unsafe{}` code.
