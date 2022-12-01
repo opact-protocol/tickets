@@ -1323,7 +1323,7 @@ pub const ROUND_CONSTANTS: [Fp; 220] = fp_array!(
 mod tests {
     use std::{ops::Add, string};
 
-    use ff::{Field, PrimeField};
+    use ff_wasm_unknown_unknown::{Field, PrimeField};
 
     use crate::{fp::{Fp, FpRepr}, U256};
 

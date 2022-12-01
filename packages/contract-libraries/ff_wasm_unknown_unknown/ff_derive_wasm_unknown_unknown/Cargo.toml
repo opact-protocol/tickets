@@ -1,15 +1,16 @@
 [package]
-name = "ff_derive"
-version = "0.12.0"
+name = "ff_derive_wasm_unknown_unknown"
+version = "0.12.2"
 authors = [
     "Sean Bowe <ewillbefull@gmail.com>",
     "Jack Grigg <thestr4d@gmail.com>",
+    "Jack the Dev <joao@hackachain.io>"
 ]
-description = "Procedural macro library used to build custom prime field implementations"
+description = "Independent adaptation of the open-sourced ff_derive library that removes features incompatible with wasm32-unknown-unknown architecture"
 documentation = "https://docs.rs/ff-derive/"
 homepage = "https://github.com/zkcrypto/ff"
 license = "MIT/Apache-2.0"
-repository = "https://github.com/zkcrypto/ff"
+repository = "https://github.com/hideyour-cash/monorepo/packages/contract-libraries/ff_wasm_unknown_unknown/ff_derive_wasm_unknown_unknown"
 edition = "2021"
 
 [features]
