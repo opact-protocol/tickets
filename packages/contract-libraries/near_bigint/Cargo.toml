@@ -1,9 +1,10 @@
 [package]
 name = "near-bigint"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["jack the dev <joao@hackachain.io>, hackerdocc <eduardo@hackachain.io>"]
 edition = "2021"
 license = "MIT"
+repository = "https://github.com/hideyour-cash/monorepo"
 keywords = ["near_protocol", "big_integer"]
 categories = [
     "cryptography::cryptocurrencies",
