@@ -1,8 +1,8 @@
-use ff::{Field};
+use ff_wasm_unknown_unknown::{Field};
 use near_bigint::U256;
 use crate::{fp::Fp, round_constants::ROUND_CONSTANTS};
 
-extern crate ff;
+extern crate ff_wasm_unknown_unknown;
 
 mod fp;
 mod round_constants;

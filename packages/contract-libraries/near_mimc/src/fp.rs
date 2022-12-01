@@ -1,4 +1,4 @@
-use ff::PrimeField;
+use ff_wasm_unknown_unknown::PrimeField;
 use crate::U256;
 
 #[derive(PrimeField)]
