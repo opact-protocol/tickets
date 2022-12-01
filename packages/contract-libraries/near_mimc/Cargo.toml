@@ -21,4 +21,4 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = "4.0.0"
 near-bigint = { path = "../near_bigint", version = "1.0.1" }
-ff_wasm_unknown_unknown = { path = "../ff_wasm_unknown_unknown", features = ["derive"], version = "0.12.0" }
+ff_wasm_unknown_unknown = { path = "../ff_wasm_unknown_unknown", features = ["derive"], version = "0.12.2" }

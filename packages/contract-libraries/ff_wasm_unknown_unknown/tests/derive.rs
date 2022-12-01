@@ -1,9 +1,9 @@
 //! This module exercises the `ff_derive` procedural macros, to ensure that changes to the
-//! `ff` crate are reflected in `ff_derive`. It also uses the resulting field to test some
-//! of the APIs provided by `ff`, such as batch inversion.
+//! `ff_wasm_unknown_unknown` crate are reflected in `ff_derive`. It also uses the resulting field to test some
+//! of the APIs provided by `ff_wasm_unknown_unknown`, such as batch inversion.
 
 #[macro_use]
-extern crate ff;
+extern crate ff_wasm_unknown_unknown;
 
 /// The BLS12-381 scalar field.
 #[derive(PrimeField)]
@@ -23,7 +23,7 @@ mod fermat {
 
 #[test]
 fn batch_inversion() {
-    use ff::{BatchInverter, Field};
+    use ff_wasm_unknown_unknown::{BatchInverter, Field};
 
     let one = Bls381K12Scalar::one();
 
@@ -62,7 +62,7 @@ fn batch_inversion() {
     // Test BatchInvert trait
     #[cfg(feature = "alloc")]
     {
-        use ff::BatchInvert;
+        use ff_wasm_unknown_unknown::BatchInvert;
         let mut elements = values.clone();
         elements.iter_mut().batch_invert();
         for (a, a_inv) in values.iter().zip(elements.into_iter()) {
