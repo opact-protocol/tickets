@@ -8,7 +8,12 @@
     "front": "yarn workspace @near/front",
     "contracts": "yarn workspace @near/contracts",
     "circuits": "yarn workspace circuits",
-    "contract_libraries": "yarn workspace @near/contract_libraries"
+    "contract_libraries": "yarn workspace @near/contract_libraries",
+    "relayer": "yarn workspace @near/relayer"
+  },
+  "engines": {
+    "yarn": ">=1.22.0 <2.0.0",
+    "node": "19.1.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

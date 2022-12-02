@@ -2,7 +2,7 @@ import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
 import { Disclosure } from "@headlessui/react";
 import { useState, useMemo, useEffect } from "react";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 import {
   ExclamationCircleIcon,
   ChevronDownIcon,
@@ -23,7 +23,7 @@ export function Withdraw() {
     prepareWithdraw,
   } = useApplication();
 
-  const { connection, accountId, toggleModal } = useNearWalletSelector();
+  const { selector, accountId, toggleModal } = useWalletSelector();
 
   const preWithdraw = async () => {
     if (!accountId) {
@@ -35,7 +35,7 @@ export function Withdraw() {
     setButtonText("Preparing your withdraw...");
 
     try {
-      await prepareWithdraw(connection, {
+      await prepareWithdraw(selector, {
         note: hash,
         recipient: withdrawAddress,
       });
