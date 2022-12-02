@@ -7,14 +7,18 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "engines": {
+    "yarn": ">=1.22.0 <2.0.0",
+    "node": "19.1.0"
+  },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.4",
-    "@near-wallet-selector/core": "^5.0.3",
-    "@near-wallet-selector/near-wallet": "^5.0.3",
-    "@near-wallet-selector/sender": "^5.0.3",
+    "@near-wallet-selector/core": "^7.0.3",
+    "@near-wallet-selector/meteor-wallet": "^7.0.3",
+    "@near-wallet-selector/near-wallet": "^7.0.3",
     "@near/contracts": "*",
     "@rollup/plugin-inject": "^4.0.4",
     "D": "^1.0.0",

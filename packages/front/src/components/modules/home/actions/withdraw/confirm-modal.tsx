@@ -1,7 +1,7 @@
 import { useApplication } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 
 export default function Modal({
   isOpen,
@@ -12,11 +12,11 @@ export default function Modal({
 }) {
   const { sendWithdraw } = useApplication();
 
-  const { connection, accountId } = useNearWalletSelector();
+  const { selector, accountId } = useWalletSelector();
 
   const withdraw = () => {
     onClose();
-    sendWithdraw(connection, accountId!);
+    sendWithdraw(selector, accountId!);
   };
 
   return (

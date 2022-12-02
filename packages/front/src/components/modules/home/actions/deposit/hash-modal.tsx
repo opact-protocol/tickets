@@ -1,7 +1,7 @@
 import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 
 export default function Modal({
   isOpen,
@@ -12,7 +12,7 @@ export default function Modal({
 }) {
   const [sending, setSending] = useState(false);
   const [buttonText, setButtonText] = useState("Send Deposit");
-  const { connection, accountId } = useNearWalletSelector();
+  const { selector, accountId } = useWalletSelector();
 
   const { note, sendDeposit } = useApplication();
 
@@ -29,7 +29,7 @@ export default function Modal({
     setButtonText("Sending your Deposit...");
 
     try {
-      await sendDeposit(connection, accountId!);
+      await sendDeposit(selector, accountId!);
 
       closeModal();
       setSending(false);

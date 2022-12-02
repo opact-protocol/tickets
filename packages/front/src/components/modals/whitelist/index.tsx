@@ -1,7 +1,7 @@
 import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 
 export function WhitelistModal({
   isOpen,
@@ -11,7 +11,7 @@ export function WhitelistModal({
   onClose: () => void;
 }) {
   const [userAddress, setUserAddress] = useState("");
-  const { connection } = useNearWalletSelector();
+  const { selector } = useWalletSelector();
 
   const { sendWhitelist } = useApplication();
 
@@ -20,7 +20,7 @@ export function WhitelistModal({
       return;
     }
 
-    sendWhitelist(connection, userAddress);
+    sendWhitelist(selector, userAddress);
   };
 
   return (
