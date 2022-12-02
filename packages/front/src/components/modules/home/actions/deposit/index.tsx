@@ -2,7 +2,7 @@ import HashModal from "./hash-modal";
 import { useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { useApplication } from "@/store/application";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const amounts = [0.1, 1, 10, 100];
@@ -16,7 +16,7 @@ export function Deposit() {
   const [depositing, setDepositing] = useState(false);
 
   const { prepareDeposit } = useApplication();
-  const { connection, accountId, toggleModal } = useNearWalletSelector();
+  const { selector, accountId, toggleModal } = useWalletSelector();
 
   const preDeposit = async () => {
     if (!accountId) {
@@ -28,7 +28,7 @@ export function Deposit() {
     setDepositing(true);
     setButtonText("Preparing your deposit...");
 
-    await prepareDeposit(connection, accountId!);
+    await prepareDeposit(selector, accountId!);
 
     setShowModal(!showModal);
   };
@@ -87,7 +87,7 @@ export function Deposit() {
 
           <RadioGroup
             value={selectedAmount}
-            onChange={() => { }}
+            onChange={() => {}}
             className="mt-2"
           >
             <div className="flex space-x-[12px]">
