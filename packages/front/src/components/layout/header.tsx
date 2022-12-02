@@ -1,5 +1,5 @@
 import { Container } from "@/components";
-import { useNearWalletSelector } from "@/utils/context/wallet";
+import { useWalletSelector } from "@/utils/context/wallet";
 import {
   ArrowLeftOnRectangleIcon,
   ChevronRightIcon,
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
 
 export function Header() {
-  const { accountId, toggleModal, signOut } = useNearWalletSelector();
+  const { accountId, toggleModal, signOut } = useWalletSelector();
 
   const [showModal, setShowModal] = useState(false);
 
