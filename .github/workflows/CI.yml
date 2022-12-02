@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 19.1.0
           cache: 'yarn'
 
       - name: Install Rust
@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 19.1.0
           cache: 'yarn'
 
       - name: Cypress run
