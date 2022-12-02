@@ -7,6 +7,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "engines": {
+    "yarn": ">=1.22.0 <2.0.0",
+    "node": "19.1.0"
+  },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",

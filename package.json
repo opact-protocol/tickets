@@ -11,6 +11,10 @@
     "contract_libraries": "yarn workspace @near/contract_libraries",
     "relayer": "yarn workspace @near/relayer"
   },
+  "engines": {
+    "yarn": ">=1.22.0 <2.0.0",
+    "node": "19.1.0"
+  },
   "lint-staged": {
     "*.{ts,tsx}": [
       "yarn prettier --config .prettierrc --write"
