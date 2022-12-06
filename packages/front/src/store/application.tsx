@@ -76,7 +76,7 @@ export const useApplication = create<{
       secrets_hash,
       account_hash,
       commitment,
-    })
+    });
 
     const note =
       secret.toString() +
@@ -217,16 +217,33 @@ export const useApplication = create<{
     let publicArgs = get().publicArgs;
     let proof = get().proof;
 
-    try {
-      await api.post("/money/withdraw", {
-        proof,
-        ...publicArgs,
-      });
+    // try {
+    //   await api.post("/money/withdraw", {
+    //     proof,
+    //     ...publicArgs,
+    //   });
 
-      toast.success("Withdraw sended!");
-    } catch(e) {
-      toast.error("Error on withdraw");
-    }
+    //   toast.success("Withdraw sended!");
+    // } catch(e) {
+    //   toast.error("Error on withdraw");
+    // }
+
+    transactions.push(
+      getTransaction(
+        account,
+        CONTRACT,
+        "withdraw",
+        {
+          proof,
+          ...publicArgs,
+        },
+        "0"
+      )
+    );
+
+    executeMultipleTransactions(transactions, wallet);
+
+    toast.success("Withdraw sended!");
   },
 
   createSnarkProof: async (input) => {
