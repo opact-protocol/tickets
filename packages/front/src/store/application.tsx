@@ -217,33 +217,33 @@ export const useApplication = create<{
     let publicArgs = get().publicArgs;
     let proof = get().proof;
 
-    // try {
-    //   await api.post("/money/withdraw", {
-    //     proof,
-    //     ...publicArgs,
-    //   });
+    try {
+      await api.post("/money/withdraw", {
+        proof,
+        ...publicArgs,
+      });
 
-    //   toast.success("Withdraw sended!");
-    // } catch(e) {
-    //   toast.error("Error on withdraw");
-    // }
+      toast.success("Withdraw sended!");
+    } catch (e) {
+      toast.error("Error on withdraw");
+    }
 
-    transactions.push(
-      getTransaction(
-        account,
-        CONTRACT,
-        "withdraw",
-        {
-          proof,
-          ...publicArgs,
-        },
-        "0"
-      )
-    );
+    // transactions.push(
+    //   getTransaction(
+    //     account,
+    //     CONTRACT,
+    //     "withdraw",
+    //     {
+    //       proof,
+    //       ...publicArgs,
+    //     },
+    //     "0"
+    //   )
+    // );
 
-    executeMultipleTransactions(transactions, wallet);
+    // executeMultipleTransactions(transactions, wallet);
 
-    toast.success("Withdraw sended!");
+    // toast.success("Withdraw sended!");
   },
 
   createSnarkProof: async (input) => {
