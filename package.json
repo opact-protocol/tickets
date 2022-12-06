@@ -13,7 +13,7 @@
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
-    "node": "19.1.0"
+    "node": "18.x"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
