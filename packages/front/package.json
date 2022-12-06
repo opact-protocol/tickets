@@ -9,7 +9,7 @@
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
-    "node": "18.x"
+    "node": ">=17.5.0"
   },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
