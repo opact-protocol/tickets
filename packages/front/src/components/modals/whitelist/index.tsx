@@ -54,7 +54,7 @@ export function WhitelistModal({
                   as="span"
                   className="text-[#121315] text-[18px] font-[500]"
                 >
-                  Apply for Whitelist
+                  Apply for Allowlist
                 </Dialog.Title>
 
                 <div className="mt-2 text-[16px] text-[#121315] space-y-[12px]">
