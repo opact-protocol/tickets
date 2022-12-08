@@ -1,0 +1,56 @@
+import {
+  ExclamationTriangleIcon,
+  ClipboardDocumentListIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/24/solid";
+
+export function Feedback() {
+  return (
+    <div className="fixed bottom-[24px] right-[24px] z-[9999] cursor-pointer hover:opacity-[0.95] space-x-[12px] flex">
+      <button
+        onClick={() => {
+          window.open("https://forms.gle/9CzKik7GPtrUgzwC8", "_blank");
+        }}
+        className="rounded-[24px] bg-[#121315] hover:opacity-[0.9]"
+      >
+        <div
+          className="
+          flex items-center
+          space-x-[12px]
+          px-[24px]
+          py-[12px]
+          text-white
+          rounded-[24px]
+        "
+        >
+          <ClipboardDocumentListIcon className="w-[18px]" />
+
+          <span className="text-lg font-medium">Feedback</span>
+        </div>
+      </button>
+
+      <button
+        onClick={() => {
+          window.open("https://forms.gle/UVsMPce2GeWYELtx7", "_blank");
+        }}
+        className="rounded-[24px] bg-[#121315] cursor-not-allowed opacity-[0.6]"
+        disabled
+      >
+        <div
+          className="
+          flex items-center
+          space-x-[12px]
+          px-[24px]
+          py-[12px]
+          text-white
+          rounded-[24px]
+        "
+        >
+          <PlayCircleIcon className="w-[18px]" />
+
+          <span className="text-lg font-medium">Tutorials</span>
+        </div>
+      </button>
+    </div>
+  );
+}
