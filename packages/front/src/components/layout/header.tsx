@@ -30,7 +30,7 @@ export function Header() {
               onClick={() => setShowModal(true)}
               className="flex items-center space-x-[8px] text-[#121315] px-[24px] py-[12px] rounded-full w-full font-[400] hover:bg-gray-200 justify-bettween"
             >
-              <span className="whitespace-nowrap">Whitelist</span>
+              <span className="whitespace-nowrap">Allowlist</span>
 
               <PaperAirplaneIcon className="w-[18px]" />
             </button>
