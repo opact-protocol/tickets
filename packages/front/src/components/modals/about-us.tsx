@@ -26,7 +26,7 @@ export const AboutUsModal = ({
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-[100000]" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -50,7 +50,7 @@ export const AboutUsModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4 relative">
+              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4 relative">
                 <button
                   onClick={() => onClose()}
                   className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
@@ -93,6 +93,15 @@ export const AboutUsModal = ({
                     Furthermore, thank you very much for being part of this with
                     us since the beginning!
                   </p>
+
+                  <iframe
+                    id="ytplayer"
+                    width="100%"
+                    height="450px"
+                    loading="lazy"
+                    frameBorder="0"
+                    src="https://www.youtube.com/embed/PLf6f-5FHUCV4AnrxwU_Ylyhax0ID-TOt2?enablejsapi=1&fs=0&rel=0&playlist=A5GY1eJvsqE"
+                  />
                 </div>
               </Dialog.Panel>
             </Transition.Child>
