@@ -59,7 +59,7 @@ export function WhitelistModal({
 
                 <div className="mt-2 text-[16px] text-[#121315] space-y-[12px]">
                   <p>
-                    Apply to our whitelist to receive permission to make
+                    Apply to our allowlist to receive permission to make
                     anonymous transfers at Hideyour.cash.
                   </p>
                 </div>
