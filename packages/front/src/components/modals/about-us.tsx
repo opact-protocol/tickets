@@ -90,8 +90,8 @@ export const AboutUsModal = ({
                   </p>
 
                   <p>
-                    Furthermore, thank you very much for being part of this with
-                    us since the beginning!
+                    Furthermore, thank you for being part of this with us since
+                    the beginning!
                   </p>
 
                   <iframe
