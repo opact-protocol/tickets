@@ -44,9 +44,12 @@ export function Withdraw() {
       setShowModal(true);
     } catch (err) {
       console.warn(err);
-      toast.error("Please wait 10 minutes to withdraw your amount", {
-        duration: 10000,
-      });
+      toast.error(
+        "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes.",
+        {
+          duration: 10000,
+        }
+      );
     }
   };
 
