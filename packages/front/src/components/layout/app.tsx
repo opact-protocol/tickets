@@ -1,5 +1,5 @@
 import routes from "virtual:generated-pages-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./header";
 import { AboutUsModal } from "../modals";
 import { Feedback } from "./feedback";
@@ -9,18 +9,22 @@ const Pages = () => {
   return useRoutes(routes);
 };
 
-// export const handleOpenModal = (callback: (value: boolean) => void) => {
-//   if (localStorage.getItem("@hyc-first-interaction")) {
-//     return;
-//   }
+export const handleOpenModal = (callback: (value: boolean) => void) => {
+  if (localStorage.getItem("@hyc-first-interaction")) {
+    return;
+  }
 
-//   callback(true);
+  callback(true);
 
-//   localStorage.setItem("@hyc-first-interaction", "false");
-// };
+  localStorage.setItem("@hyc-first-interaction", "true");
+};
 
 export const App = () => {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    handleOpenModal((show) => setShowModal(show));
+  });
 
   return (
     <Router>

@@ -66,6 +66,12 @@ export async function buildTree() {
     Number(a.data[0].index) > Number(b.data[0].index) ? 1 : -1
   );
 
+  console.log("deposit events");
+  console.log(events.deposit.map((a) => a.data[0].index));
+
+  console.log("whitelist events");
+  console.log(events.whitelist.map((a) => a.data[0].index));
+
   const commitmentsTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
 
   events.deposit.forEach(({ data }) => {
