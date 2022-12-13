@@ -31,10 +31,9 @@ export function Feedback() {
 
       <button
         onClick={() => {
-          window.open("https://forms.gle/UVsMPce2GeWYELtx7", "_blank");
+          window.open("https://www.youtube.com/watch?v=82ICG4BEtNk", "_blank");
         }}
-        className="rounded-[24px] bg-[#121315] cursor-not-allowed opacity-[0.6]"
-        disabled
+        className="rounded-[24px] bg-[#121315] hover:opacity-[0.9]"
       >
         <div
           className="

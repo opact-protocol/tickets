@@ -100,7 +100,7 @@ export const AboutUsModal = ({
                     height="450px"
                     loading="lazy"
                     frameBorder="0"
-                    src="https://www.youtube.com/embed/PLf6f-5FHUCV4AnrxwU_Ylyhax0ID-TOt2?enablejsapi=1&fs=0&rel=0&playlist=A5GY1eJvsqE"
+                    src="https://www.youtube.com/embed/82ICG4BEtNk"
                   />
                 </div>
               </Dialog.Panel>
