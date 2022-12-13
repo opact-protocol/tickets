@@ -1,14 +1,20 @@
 import { Tab } from "@headlessui/react";
+import { useState } from "react";
 import { Deposit } from "./deposit";
 import { Withdraw } from "./withdraw";
+import { AboutUsModal } from "@/components/modals";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
 
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="w-full px-2 py-16 sm:px-0 mx-auto z-[3] relative">
+      <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
       <Tab.Group as="div" className="flex flex-col items-center">
         <Tab.List className="flex space-x-1 rounded-xl bg-white p-1 max-w-md w-screen">
           {tabs.map((tab) => (
@@ -28,7 +34,14 @@ export function Actions() {
           ))}
         </Tab.List>
 
-        <Tab.Panels className="mt-2">
+        <Tab.Panels className="mt-2 relative">
+          <button
+            className="text-black absolute right-[33.750px] top-[30px] hover:opacity-[0.8]"
+            onClick={() => setShowModal(true)}
+          >
+            <QuestionMarkCircleIcon className="text-black w-[24px]" />
+          </button>
+
           <Tab.Panel>
             <Deposit />
           </Tab.Panel>
