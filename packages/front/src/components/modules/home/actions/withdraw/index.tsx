@@ -8,6 +8,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
 
 export function Withdraw() {
   const [hash, setHash] = useState("");
@@ -43,6 +44,9 @@ export function Withdraw() {
       setShowModal(true);
     } catch (err) {
       console.warn(err);
+      toast.error("Please wait 10 minutes to withdraw your amount", {
+        duration: 10000,
+      });
     }
   };
 
