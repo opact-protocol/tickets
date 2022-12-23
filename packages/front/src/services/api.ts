@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://seal-app-xcfqc.ondigitalocean.app/",
+  baseURL: import.meta.env.VITE_RELAYER,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",

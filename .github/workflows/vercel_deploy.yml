@@ -2,6 +2,7 @@ name: Vercel Deploy
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VITE_RELAYER: ${{ secrets.VITE_RELAYER }}
   VITE_CONTRACT: dev-1652055476064-95220052886384
   VITE_NEAR_NETWORK: testnet
 on:
