@@ -12,6 +12,7 @@ near-sdk = { version = "4.0.0", features = ["unstable"] }
 near-bigint = {path = "../../contract-libraries/near_bigint"}
 near_mimc = {path = "../../contract-libraries/near_mimc"}
 near_groth16_verifier = {path = "../../contract-libraries/groth_verifier/near_groth16_verifier"}
+hapi-near-connector = "0.1"
 
 [dev-dependencies]
 rstest = "0.14.0"

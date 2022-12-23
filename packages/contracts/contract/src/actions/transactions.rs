@@ -22,7 +22,7 @@ impl Contract {
 
     let account_id = env::predecessor_account_id();
     let account_hash = account_hash(&account_id);
-    assert!(self.whitelist.is_in_whitelist(&account_hash));
+    assert!(self.allowlist.is_in_allowlist(&account_hash));
 
     let commitment = serial_hash(secrets_hash, account_hash);
     let index = self.commitments.current_insertion_index;
@@ -39,7 +39,7 @@ impl Contract {
     relayer: Option<AccountId>,
     fee: U256,
     refund: U256,
-    whitelist_root: U256,
+    allowlist_root: U256,
     proof: Proof,
   ) -> Promise {
     assert!(
@@ -55,8 +55,8 @@ impl Contract {
       "commitment tree root is invalid"
     );
     assert!(
-      self.whitelist.is_known_valid_root(whitelist_root),
-      "whitelist tree root is invalid"
+      self.allowlist.is_known_valid_root(allowlist_root),
+      "allowlist tree root is invalid"
     );
 
     let recipient_hash = account_hash(&recipient);
@@ -87,7 +87,7 @@ impl Contract {
           relayer_hash,
           fee,
           refund,
-          whitelist_root
+          allowlist_root
         ],
         proof
       ),

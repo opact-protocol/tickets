@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet, Vector};
 use near_sdk::{env, IntoStorageKey};
 
-use near_mimc::{u256_mimc_sponge};
+use near_mimc::u256_mimc_sponge;
 use near_bigint::U256;
 
 pub(crate) fn append(id: &[u8], chr: &[u8]) -> Vec<u8> {
@@ -17,7 +17,7 @@ pub(crate) fn append_slice(id: &[u8], extra: &[u8]) -> Vec<u8> {
 /// so we must make sure to always for bytes and little endian for U256
 /// to make sure we can copy tornado's hasher and circuit
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct WhitelistMerkleTree {
+pub struct AllowlistMerkleTree {
   pub height: u64,
   pub data_store: Vector<LookupMap<u64, U256>>,
   pub data_locations: LookupMap<U256, u64>,
@@ -25,20 +25,20 @@ pub struct WhitelistMerkleTree {
   pub last_roots: UnorderedMap<u8, (U256, u64)>,
   pub last_roots_len: u8,
   pub current_root_index: u8,
-  pub last_blacklist: u64,
-  pub blacklist_set: UnorderedSet<U256>,
+  pub last_denylist: u64,
+  pub denylist_set: UnorderedSet<U256>,
   pub field_size: U256,
   pub zero_values: Vector<U256>,
 }
 
-impl WhitelistMerkleTree {
+impl AllowlistMerkleTree {
   pub fn new<S>(
     height: u64,
     last_roots_len: u8,
     data_store_prefix: S,
     data_locations_prefix: S,
     last_roots_prefix: S,
-    blacklist_set_prefix: S,
+    denylist_set_prefix: S,
     zero_values_prefix: S,
     field_size: U256,
     zero_value: U256,
@@ -69,8 +69,8 @@ impl WhitelistMerkleTree {
       last_roots: UnorderedMap::new(last_roots_prefix),
       last_roots_len,
       current_root_index: 0,
-      last_blacklist: 0,
-      blacklist_set: UnorderedSet::new(blacklist_set_prefix),
+      last_denylist: 0,
+      denylist_set: UnorderedSet::new(denylist_set_prefix),
       field_size,
       zero_values,
     }
@@ -81,7 +81,7 @@ impl WhitelistMerkleTree {
   pub fn is_known_valid_root(&self, root: U256) -> bool {
     for (_, root_tupple) in self.last_roots.iter() {
       if root == root_tupple.0 {
-        return root_tupple.1 > self.last_blacklist;
+        return root_tupple.1 > self.last_denylist;
       }
     }
     false
@@ -98,36 +98,36 @@ impl WhitelistMerkleTree {
       .unwrap_or(self.zeros(self.height - 1))
   }
 
-  pub fn is_in_whitelist(&self, account_hash: &U256) -> bool {
+  pub fn is_in_allowlist(&self, account_hash: &U256) -> bool {
     self.data_locations.get(account_hash).is_some()
   }
 
   /// To-do - expose all of this to owner/guardin
   /// you know
-  /// Adds user to white list and verifies
-  pub fn add_to_whitelist(&mut self, account_hash: U256) {
+  /// Adds user to allow list and verifies
+  pub fn add_to_allowlist(&mut self, account_hash: U256) {
     assert!(
-      !self.blacklist_set.contains(&account_hash),
-      "account is blacklisted"
+      !self.denylist_set.contains(&account_hash),
+      "account is denylisted"
     );
 
-    match self.is_in_whitelist(&account_hash) {
+    match self.is_in_allowlist(&account_hash) {
       true => panic!("account is already registered"),
       false => self.insert_to_final_index(account_hash),
     }
   }
 
-  pub fn is_in_blacklist(&self, account_hash: U256) -> bool {
-    self.blacklist_set.contains(&account_hash)
+  pub fn is_in_denylist(&self, account_hash: U256) -> bool {
+    self.denylist_set.contains(&account_hash)
   }
 
-  pub fn remove_from_blacklist(&mut self, account_hash: U256) -> bool {
-    self.blacklist_set.remove(&account_hash)
+  pub fn remove_from_denylist(&mut self, account_hash: U256) -> bool {
+    self.denylist_set.remove(&account_hash)
   }
 
-  pub fn add_to_blacklist(&mut self, account_hash: U256) -> Option<u64> {
-    self.blacklist_set.insert(&account_hash);
-    self.last_blacklist = env::block_timestamp();
+  pub fn add_to_denylist(&mut self, account_hash: U256) -> Option<u64> {
+    self.denylist_set.insert(&account_hash);
+    self.last_denylist = env::block_timestamp();
     match self.data_locations.get(&account_hash) {
       Some(location) => {
         self.insert_to_middle(self.zeros(0), location);
