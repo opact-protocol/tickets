@@ -269,6 +269,7 @@ dependencies = [
 name = "contract"
 version = "0.1.0"
 dependencies = [
+ "hapi-near-connector",
  "near-bigint",
  "near-sdk",
  "near_groth16_verifier",
@@ -573,6 +574,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "hapi-near-connector"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35bdfbefeae79d18fbaf0f54c80407ad411e6b2a010f135b24dc84edff0bb775"
+dependencies = [
+ "near-contract-standards",
+ "near-sdk",
+ "serde",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -692,6 +704,17 @@ dependencies = [
  "near-sdk",
  "paste",
  "uint",
+]
+
+[[package]]
+name = "near-contract-standards"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6466c6aaad18800ff6a3cd104427dc8fd79e144714135224b8289b1dc43f7167"
+dependencies = [
+ "near-sdk",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

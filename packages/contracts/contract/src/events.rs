@@ -1,8 +1,8 @@
 use near_bigint::U256;
 use near_sdk::{
-  json_types::{U64},
+  json_types::U64,
   serde_json::json,
-  log, AccountId,
+  log,
 };
 
 const STANDARD_NAME: &str = "hide_your_cash";
@@ -25,9 +25,9 @@ fn log_basic_event_format(
     .to_string()
   )
 }
-/// New account was added or removed from whitelist
-pub fn event_whitelist_update(index: u64, value: U256) {
-  let event_type = "updated_whitelist";
+/// New account was added or removed from allowlist
+pub fn event_allowlist_update(index: u64, value: U256) {
+  let event_type = "updated_allowlist";
   let event_data = json!({
     "index": U64(index),
     "value": value,
@@ -45,19 +45,6 @@ pub fn event_whitelist_update(index: u64, value: U256) {
 pub fn event_withdrawal(nullifier: U256) {
   let event_type = "withdrawal";
   let event_data = json!({ "nullifier": nullifier });
-
-  log_basic_event_format(
-    STANDARD_NAME,
-    STANDARD_VERSION,
-    event_type,
-    vec![event_data],
-  );
-}
-
-/// New account was added to whitelist
-pub fn event_blacklist_removal(account_id: AccountId) {
-  let event_type = "blacklist_removal";
-  let event_data = json!({ "account_id": account_id });
 
   log_basic_event_format(
     STANDARD_NAME,

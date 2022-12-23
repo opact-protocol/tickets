@@ -1,4 +1,3 @@
-pub mod blacklist;
 pub mod view;
-pub mod whitelist;
+pub mod allowlist;
 pub mod transactions;
