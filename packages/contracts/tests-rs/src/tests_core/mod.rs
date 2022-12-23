@@ -25,6 +25,20 @@ mod tests {
     let user3 = create_user_account(&root, &worker, "user3").await;
     let user4 = create_user_account(&root, &worker, "user4").await;
 
+    // SPOON HAPI.ONE FROM MAINNET
+    let hapi_one_account: &str = "proxy.hapiprotocol.near";
+
+    let hapi_one = spoon_contract(hapi_one_account, &worker).await?;
+
+    owner
+      .call(&worker, hapi_one.id(), "new")
+      .args_json(json!({
+        "owner_id": owner.id()
+      }))?
+      .gas(300000000000000)
+      .transact()
+      .await?;
+
     // 1. Initialize contract
     // DEPLOY CONTRACT
     let contract_wasm = get_wasm("contract.wasm")?;
@@ -48,6 +62,8 @@ mod tests {
       .call(&worker, contract.id(), "new")
       .args_json(json!({
           "owner": owner.id(),
+          "authorizer": hapi_one_account,
+          "max_risk": 5,
           // merkle tree params
           "height": 20,
           "last_roots_len": 20,
@@ -86,18 +102,9 @@ mod tests {
       .transact()
       .await?;
 
-    // 0. add to whitelist
+    // 0. add to allowlist
     owner
-      .call(&worker, contract.id(), "new_authorizer")
-      .args_json(json!({
-          "authorizer": owner.id()
-      }))?
-      .gas(300000000000000)
-      .transact()
-      .await?;
-
-    owner
-      .call(&worker, contract.id(), "whitelist")
+      .call(&worker, contract.id(), "allowlist")
       .args_json(json!({
           "account_id": user.id()
       }))?
@@ -106,7 +113,7 @@ mod tests {
       .await?;
 
     owner
-      .call(&worker, contract.id(), "whitelist")
+      .call(&worker, contract.id(), "allowlist")
       .args_json(json!({
           "account_id": user2.id()
       }))?
@@ -115,7 +122,7 @@ mod tests {
       .await?;
 
     owner
-      .call(&worker, contract.id(), "whitelist")
+      .call(&worker, contract.id(), "allowlist")
       .args_json(json!({
           "account_id": user3.id()
       }))?
@@ -124,7 +131,7 @@ mod tests {
       .await?;
 
     owner
-      .call(&worker, contract.id(), "whitelist")
+      .call(&worker, contract.id(), "allowlist")
       .args_json(json!({
           "account_id": user4.id()
       }))?
@@ -210,7 +217,7 @@ mod tests {
         "relayer": null,
         "fee": public1[4],
         "refund": public1[5],
-        "whitelist_root": public1[6],
+        "allowlist_root": public1[6],
         "proof": {
           "a": {
             "x": proof1["pi_a"][0],
@@ -244,7 +251,7 @@ mod tests {
         "relayer": null,
         "fee": public1[4],
         "refund": public1[5],
-        "whitelist_root": public1[6],
+        "allowlist_root": public1[6],
         "proof": {
           "a": {
             "x": proof1["pi_a"][0],
@@ -287,7 +294,7 @@ mod tests {
         "relayer": user.id(),
         "fee": public2[4],
         "refund": public2[5],
-        "whitelist_root": public2[6],
+        "allowlist_root": public2[6],
         "proof": {
           "a": {
             "x": proof2["pi_a"][0],
