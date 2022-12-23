@@ -1,31 +1,33 @@
 use merkle_tree::commitment_tree::MerkleTree;
-use merkle_tree::whitelist_tree::WhitelistMerkleTree;
+use merkle_tree::allowlist_tree::AllowlistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
 use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
 use near_sdk::collections::{LookupSet};
 use near_groth16_verifier::{self, Verifier};
 use near_bigint::U256;
+use hapi_near_connector::aml::*;
+
 use events::*;
 
 mod actions;
 mod events;
 mod hashes;
 mod merkle_tree;
+mod ext_interface;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
-
-///To-do: authorizer smart contract
 pub struct Contract {
   pub owner: AccountId,
   // blacklist responsible accounts
   pub guardian: LookupSet<AccountId>,
-  //white list responsible smart contract (mock up with just account at the moment)
-  pub authorizer: LookupSet<AccountId>,
+  // hapi.one contract's account 
+  pub authorizer: AML,
+  pub max_risk: u8,
   pub commitments: MerkleTree,
 
-  pub whitelist: WhitelistMerkleTree,
+  pub allowlist: AllowlistMerkleTree,
   pub deposit_value: u128,
   pub verifier: Verifier,
   pub nullifier: LookupSet<U256>,
@@ -54,6 +56,8 @@ impl Contract {
   #[init]
   pub fn new(
     owner: AccountId,
+    authorizer: AccountId,
+    max_risk: u8,
     // merkle tree params
     height: u64,
     last_roots_len: u8,
@@ -74,7 +78,8 @@ impl Contract {
     Self {
       owner,
       guardian: LookupSet::new(StorageKey::Guardian),
-      authorizer: LookupSet::new(StorageKey::Authorizer),
+      authorizer: AML::new(authorizer, max_risk),
+      max_risk,
       commitments: MerkleTree::new(
         height,
         last_roots_len,
@@ -85,7 +90,7 @@ impl Contract {
         field_size,
         zero_value,
       ),
-      whitelist: WhitelistMerkleTree::new(
+      allowlist: AllowlistMerkleTree::new(
         height_wl,
         last_roots_len_wl,
         StorageKey::DataStorePrefix,
@@ -133,6 +138,7 @@ mod tests {
 
   /// Mocked contract account id
   pub const CONTRACT_ACCOUNT: &str = "contract.testnet";
+  pub const AUTHORIZER_ACCOUNT: &str = "authorizer.testnet";
   /// Mocked owner account id
   pub const OWNER_ACCOUNT: &str = "owner.testnet";
   /// Mocked regular user account id
@@ -197,9 +203,10 @@ mod tests {
     Contract {
       owner: OWNER_ACCOUNT.parse().unwrap(),
       guardian: LookupSet::new(hash1),
-      authorizer: LookupSet::new(hash2),
+      authorizer: AML::new(AUTHORIZER_ACCOUNT.parse().unwrap(), MAX_RISK_LEVEL/2),
+      max_risk: MAX_RISK_LEVEL/2,
       commitments: MerkleTree::new(20, 20, hash3, hash4, hash5, hash12, field_size, zero_value),
-      whitelist: WhitelistMerkleTree::new(
+      allowlist: AllowlistMerkleTree::new(
         20, 20, hash6, hash7, hash8, hash9, hash10, field_size, zero_value,
       ),
       deposit_value: 20000000000000000000000000,
