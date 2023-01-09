@@ -223,7 +223,7 @@ export const useApplication = create<{
         ...publicArgs,
       });
 
-      toast.success("Withdraw sended!");
+      toast.success("Withdraw sent!");
     } catch (e) {
       toast.error("Error on withdraw");
     }
