@@ -1,0 +1,16 @@
+[workspace]
+# Add location of contracts here
+members = [
+  "./near_plonk_verifier",
+  "./verifier_test",
+]
+
+[profile.release]
+codegen-units = 1
+# s = optimize for binary size ("z" would additionally turn off loop vectorization)
+opt-level = "z"
+# link time optimization
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true

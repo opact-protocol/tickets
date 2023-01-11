@@ -1,0 +1,14 @@
+{
+  "name": "plonk_verifier",
+  "version": "1.0.0",
+  "description": "plonk zkSNARK algorithm verifier implementation in rust for NEAR smart contracts",
+  "main": "index.js",
+  "author": "jack the dev",
+  "license": "MIT",
+  "scripts": {
+    "build:lib": "cd near_plonk_verifier && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
+    "build:contract": "cd verifier_test && RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
+    "build": "RUSTFLAGS='-C link-arg=-s' cargo build --target wasm32-unknown-unknown --release",
+    "test": "yarn build && cd tests-rs && cargo test"
+  }
+}
