@@ -1,0 +1,27 @@
+{
+  "name": "test_verifier_solidity",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "boilerplate for ethereum/bsc cryptogames",
+  "main": "index.js",
+  "scripts": {
+    "compile": "mkdir -p out && solc contract/verifier.sol --bin --abi --optimize --overwrite -o out/",
+    "test": "mocha --exit",
+    "test:full": "yarn compile && yarn test"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.2",
+    "@truffle/hdwallet-provider": "^2.0.0",
+    "bignumber.js": "^9.0.2",
+    "dotenv": "^16.0.0",
+    "eth-revert-reason": "^1.0.3",
+    "ganache-cli": "^6.12.2",
+    "mocha": "^9.1.4",
+    "prompt-sync": "^4.2.0",
+    "snarkjs": "^0.5.0",
+    "solc": "^0.8.11",
+    "web3": "^1.7.0"
+  }
+}
