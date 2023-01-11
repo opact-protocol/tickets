@@ -613,15 +613,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "near-bigint"
-version = "1.0.1"
-dependencies = [
- "near-sdk",
- "paste",
- "uint",
-]
-
-[[package]]
 name = "near-crypto"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -789,15 +780,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "near_groth16_verifier"
-version = "1.0.1"
-dependencies = [
- "near-bigint",
- "near-sdk",
- "rstest",
-]
-
-[[package]]
 name = "num-bigint"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -889,12 +871,6 @@ dependencies = [
  "cfg-if 0.1.10",
  "rand 0.7.3",
 ]
-
-[[package]]
-name = "paste"
-version = "1.0.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1de2e551fb905ac83f73f7aedf2f0cb4a0da7e35efa24a202a936269f1f18e1"
 
 [[package]]
 name = "pin-project-lite"
@@ -1081,6 +1057,15 @@ dependencies = [
  "quote",
  "rustc_version",
  "syn",
+]
+
+[[package]]
+name = "rust_verifier"
+version = "1.0.0"
+dependencies = [
+ "near-sdk",
+ "rstest",
+ "uint",
 ]
 
 [[package]]
@@ -1278,18 +1263,18 @@ checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 
 [[package]]
 name = "thiserror"
-version = "1.0.33"
+version = "1.0.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d0a539a918745651435ac7db7a18761589a94cd7e94cd56999f828bf73c8a57"
+checksum = "f5f6586b7f764adc0231f4c79be7b920e766bb2f3e51b3661cdb263828f19994"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.33"
+version = "1.0.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c251e90f708e16c49a16f4917dc2131e75222b72edfa9cb7f7c58ae56aae0c09"
+checksum = "12bafc5b54507e0149cdf1b145a5d80ab80a90bcd9275df43d4fff68460f6c21"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1345,15 +1330,6 @@ name = "unicode-xid"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "957e51f3646910546462e67d5f7599b9e4fb8acdd304b087a6494730f9eebf04"
-
-[[package]]
-name = "verifier_test"
-version = "1.0.0"
-dependencies = [
- "near-bigint",
- "near-sdk",
- "near_groth16_verifier",
-]
 
 [[package]]
 name = "version_check"

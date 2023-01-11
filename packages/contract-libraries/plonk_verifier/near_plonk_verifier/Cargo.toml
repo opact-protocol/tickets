@@ -1,0 +1,27 @@
+[package]
+name = "near_plonk_verifier"
+version = "1.0.0"
+authors = ["jack the dev <joao@hackachain.io>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/hideyour-cash/monorepo"
+keywords = ["near_protocol", "plonk", "zero_knowledge", "cryptography"]
+categories = [
+    "wasm",
+    "cryptography",
+    "cryptography::cryptocurrencies"
+]
+description = "Plonk proof verifier implementation for Near Protocol smart Contracts"
+
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { version = "4.0.0", features = ["unstable"] }
+near-bigint = { path = "../../near_bigint", version = "1.0.1" }
+num = { version = "0.4.0", default-features = false, features = ["alloc"] }
+
+
+[dev-dependencies]
+rstest = "0.14.0"

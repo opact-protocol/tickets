@@ -1,0 +1,13 @@
+[package]
+name = "verifier_test"
+version = "1.0.0"
+authors = ["jack the dev <joao@hackachain.io>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { version = "4.0.0", features = ["unstable"] }
+near-bigint = { path = "../../near_bigint" }
+near_plonk_verifier = { path = "../near_plonk_verifier" }
