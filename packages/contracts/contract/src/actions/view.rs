@@ -28,4 +28,8 @@ impl Contract {
   pub fn view_was_nullifier_spent(&self, nullifier: U256) -> bool {
     self.nullifier.contains(&nullifier)
   }
+
+  pub fn view_kill_switch(&self) -> bool {
+    self.kill_switch
+  }
 }

@@ -20,6 +20,8 @@ impl Contract {
       deposit_value
     );
 
+    assert!(!self.kill_switch, "kill_switch was triggered");
+
     let account_id = env::predecessor_account_id();
     let account_hash = account_hash(&account_id);
     assert!(self.allowlist.is_in_allowlist(&account_hash));
