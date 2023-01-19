@@ -20,8 +20,7 @@ mod ext_interface;
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
   pub owner: AccountId,
-  // blacklist responsible accounts
-  pub guardian: LookupSet<AccountId>,
+  pub kill_switch: bool,
   // hapi.one contract's account 
   pub authorizer: AML,
   pub max_risk: u8,
@@ -35,7 +34,6 @@ pub struct Contract {
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
-  Guardian,
   Authorizer,
   Nullifier,
   // merkle tree keys
@@ -43,11 +41,11 @@ pub enum StorageKey {
   LastRootsPrefix,
   ZeroValuesPrefix,
   PreviousCommitmentsPrefix,
-  // white list keys
+  // allow list keys
   DataStorePrefix,
   DataLocationsPrefix,
   LastRootsPrefixWL,
-  BlacklistSetPrefix,
+  DenylistSetPrefix,
   ZeroValuesPrefixWL,
 }
 
@@ -77,7 +75,7 @@ impl Contract {
     );
     Self {
       owner,
-      guardian: LookupSet::new(StorageKey::Guardian),
+      kill_switch: false,
       authorizer: AML::new(authorizer, max_risk),
       max_risk,
       commitments: MerkleTree::new(
@@ -96,7 +94,7 @@ impl Contract {
         StorageKey::DataStorePrefix,
         StorageKey::DataLocationsPrefix,
         StorageKey::LastRootsPrefixWL,
-        StorageKey::BlacklistSetPrefix,
+        StorageKey::DenylistSetPrefix,
         StorageKey::ZeroValuesPrefixWL,
         field_size,
         zero_value,
@@ -202,7 +200,7 @@ mod tests {
 
     Contract {
       owner: OWNER_ACCOUNT.parse().unwrap(),
-      guardian: LookupSet::new(hash1),
+      kill_switch: false,
       authorizer: AML::new(AUTHORIZER_ACCOUNT.parse().unwrap(), MAX_RISK_LEVEL/2),
       max_risk: MAX_RISK_LEVEL/2,
       commitments: MerkleTree::new(20, 20, hash3, hash4, hash5, hash12, field_size, zero_value),
