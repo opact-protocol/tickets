@@ -46,6 +46,7 @@ params:
 
 User calling this method must attach the NEAR amount corresponding to the contract's value.
 
+Panics if contract kill_switch is activated
 Panics if user is not in whitelist
 Inserts the commitment in the cotnract so that a withdraw can be made using the secrets
 
@@ -99,3 +100,13 @@ params:
   - nullifier: U256 -> nullifier you want to check
 
 true if nullifier was already spent, false otherwise
+
+7. `view_kill_switch` -> `bool`
+
+Returns current value of kill_switch variable
+
+### Owner methods
+1. `toggle_kill_switch`
+
+Can only be called by owner upon depositing 1 yoctoNEAR.
+Toggles value of kill_switch. Default is false. When true, disallows all deposits.
