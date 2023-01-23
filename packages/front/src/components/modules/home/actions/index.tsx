@@ -1,47 +1,38 @@
 import { Tab } from "@headlessui/react";
-import { useState } from "react";
 import { Deposit } from "./deposit";
 import { Withdraw } from "./withdraw";
-import { AboutUsModal } from "@/components/modals";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
 
-  const [showModal, setShowModal] = useState(false);
-
   return (
-    <div className="w-full px-2 py-16 sm:px-0 mx-auto z-[3] relative">
-      <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
-      <Tab.Group as="div" className="flex flex-col items-center">
-        <Tab.List className="flex space-x-1 rounded-xl bg-white p-1 max-w-md w-screen">
+    <div className="w-[95%] max-w-[479px] bg-white/80 px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
+      <Tab.Group
+        as="div"
+        className="flex flex-col items-center bg-white rounded-[30px] max-w-[431px] mx-auto p-8 shadow-sm border-[3px] border-solid border-[#616dd333]"
+      >
+        <Tab.List className="flex gap-4 p-6 max-w-[431px] w-screen rounded-[30px]">
           {tabs.map((tab) => (
             <Tab
               key={tab}
               className={({ selected }) =>
                 classNames(
-                  "w-full rounded-lg py-2.5 text-sm font-medium leading-5",
+                  "w-full rounded-full py-2.5 text-md font-bold leading-5",
                   "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-100 focus:outline-none focus:ring-2",
                   selected
-                    ? "text-white bg-[#121315] shadow"
-                    : "text-blue-100 hover:bg-white/[0.12] text-[#131415]"
+                    ? "text-white bg-[#606CD2] shadow"
+                    : "bg-[#D3D8FF] hover:bg-[#606CD2]/40 text-[#606CD2]"
                 )
               }
-              children={tab}
-            />
+            >
+              {tab}
+            </Tab>
           ))}
         </Tab.List>
 
-        <Tab.Panels className="mt-2 relative">
-          <button
-            className="text-black absolute right-[33.750px] top-[30px] hover:opacity-[0.8]"
-            onClick={() => setShowModal(true)}
-          >
-            <QuestionMarkCircleIcon className="text-black w-[24px]" />
-          </button>
-
+        <Tab.Panels className="mt-2 w-full">
           <Tab.Panel>
             <Deposit />
           </Tab.Panel>
