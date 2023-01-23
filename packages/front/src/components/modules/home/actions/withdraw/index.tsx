@@ -83,33 +83,24 @@ export function Withdraw() {
   }, [hasErrorHash]);
 
   return (
-    <div className="w-[500px] bg-white rounded-2xl border border-gray-200 px-9 py-8 mx-auto">
-      <div className="mb-[28px]">
-        <span className="text-[18px] leading-6 text-gray-900 font-[500]">
-          Withdraw
-        </span>
-      </div>
-
+    <div className="">
       <div>
-        <div>
+        <div className="mb-24">
           <div className="flex items-center justify-between">
-            <span className="text-[#121315] text-[1.1rem] font-[500]">
-              Hash of deposit
+            <span className="text-black text-[1.1rem] font-bold">
+              Withdraw ticket
             </span>
           </div>
-
           <div>
             <input
               className="
                 mt-2
                 p-[8px]
                 h-[43px]
-                bg-[#f7f8fa]
-                rounded-full
-                text-[#121315]
-                opacity-[.8]
+                bg-[#E3E6FF]
+                rounded-[15px]
+                text-[#636363]
                 w-full
-                px-[24px]
                 flex items-center justify-between
               "
               value={hash}
@@ -121,9 +112,9 @@ export function Withdraw() {
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 mb-48">
           <div className="flex items-center justify-between">
-            <span className="text-[#121315] text-[1.1rem] font-[500]">
+            <span className="text-black text-[1.1rem] font-bold">
               Recipient Address
             </span>
           </div>
@@ -131,18 +122,16 @@ export function Withdraw() {
           <div>
             <input
               className="
-                mt-2
-                p-[8px]
-                h-[43px]
-                bg-[#f7f8fa]
-                rounded-full
-                text-[#121315]
-                opacity-[.8]
-                w-full
-                px-[24px]
-                flex items-center justify-between
-                disabled:cursor-not-allowed
-              "
+               mt-2
+               p-[8px]
+               h-[43px]
+               bg-[#E3E6FF]
+               rounded-[15px]
+               text-[#636363]
+               w-full
+               flex items-center justify-between
+               disabled:cursor-not-allowed
+             "
               disabled={hasErrorHash}
               placeholder="Wallet Address"
               value={withdrawAddress}
@@ -222,9 +211,11 @@ export function Withdraw() {
           <button
             disabled={hasErrorHash && !!accountId}
             onClick={() => preWithdraw()}
-            children={!accountId ? "Connect Wallet" : buttonText}
-            className="bg-[#121315] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-          />
+            className="bg-gradient-to-r from-[#606CD2] to-[#8DC1FF] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+          >
+            {" "}
+            {!accountId ? "Connect Wallet" : buttonText}{" "}
+          </button>
         </div>
 
         <ConfirmModal
