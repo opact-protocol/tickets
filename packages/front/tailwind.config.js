@@ -2,6 +2,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        space: "linear-gradient(90deg, #606CD2 0%, #8DC1FF 100%)",
+      },
       animation: {
         "fade-in": "fade-in 0.5s linear forwards",
         marquee: "marquee var(--marquee-duration) linear infinite",
