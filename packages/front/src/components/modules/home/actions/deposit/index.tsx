@@ -1,19 +1,31 @@
 import HashModal from "./hash-modal";
-import { useState } from "react";
-import { RadioGroup } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import { useWalletSelector } from "@/utils/context/wallet";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  QuestionMarkCircleIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
+import { FixedValuesModal } from "@/components/modals/fixedValues";
 
 const amounts = [0.1, 1, 10, 100];
 
-const classNames = (...classes) => classes.filter(Boolean).join(" ");
+const people = [
+  { id: 1, name: "Near", unavailable: false },
+  { id: 2, name: "Ethereum", unavailable: false },
+  { id: 3, name: "Solana", unavailable: false },
+  { id: 4, name: "Maui", unavailable: true },
+  { id: 5, name: "Token", unavailable: false },
+];
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState<any>(people[0]);
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
@@ -34,79 +46,92 @@ export function Deposit() {
   };
 
   return (
-    <div className="w-[500px] bg-white rounded-2xl border border-gray-200 px-9 py-8 mx-auto">
-      <div className="mb-[28px]">
-        <span className="text-[18px] leading-6 text-gray-900 font-[500]">
-          Deposit
-        </span>
-      </div>
-
+    <div>
       <div>
         <div>
           <div className="flex items-center justify-between">
-            <span className="text-[#121315] text-[1.1rem] font-[500]">
-              Token
+            <span className="text-black text-[1.1rem] font-bold">
+              Choose token
             </span>
-
-            {/* <div className="text-[#121315] space-x-[4px]">
-              <span>In wallet:</span>
-              <span>10</span>
-            </div> */}
           </div>
-
-          <div
-            className="
-              mt-2
-              p-[8px]
-              h-[43px]
-              bg-[#f7f8fa]
-              rounded-full
-              text-[#121315]
-              cursor-pointer
-              opacity-[.8]
-              cursor-not-allowed
-              flex items-center justify-between
-            "
-          >
-            <div className="flex items-center space-x-[8px]">
-              <img className="w-[16px]" src="./assets/near-wallet-icon.png" />
-
-              <span className="text-[18px] font-[400]">NEAR</span>
+          <Listbox value={selectedPerson} onChange={setSelectedPerson}>
+            <div className="relative mt-1">
+              <Listbox.Button className="cursor-pointer relative w-full rounded-[15px] bg-[#E3E6FF] py-3 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <span className="block truncate text-[#636363] font-normal">
+                  {selectedPerson.name}
+                </span>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                  <ChevronDownIcon
+                    className="h-5 w-5 text-gray-400 font-bold"
+                    aria-hidden="true"
+                  />
+                </span>
+              </Listbox.Button>
+              <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="absolute mt-1 max-h-60 w-[200px] overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {people.map((person, personIdx) => (
+                    <Listbox.Option
+                      key={personIdx}
+                      className={({ active }) =>
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                          active
+                            ? "bg-[#E3E6FF] text-[#434343]"
+                            : "text-[#434343]"
+                        }`
+                      }
+                      value={person}
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span className={`flex gap-5 truncate font-bold`}>
+                            <div
+                              className={`w-4 h-4  rounded-[50%] ${
+                                selected ? "bg-green-500" : "bg-gray-300"
+                              }`}
+                            />{" "}
+                            {person.name}
+                          </span>
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
             </div>
-
-            <ChevronRightIcon className="h-[16px] w-[16px]" />
-          </div>
+          </Listbox>
         </div>
 
         <div className="mt-8">
           <div className="flex items-center justify-between">
-            <span className="text-[#121315] text-[1.1rem] font-[500]">
-              Amount
-            </span>
+            <span className="text-black text-[1.1rem] font-bold ">Amount</span>
           </div>
 
           <RadioGroup
-            value={selectedAmount}
-            onChange={() => {}}
-            className="mt-2"
+            onChange={() => {
+              console.log("oi");
+            }}
+            className="mt-2 max-w-[371px] overflow-x-auto"
           >
-            <div className="flex space-x-[12px]">
+            <div className="flex space-x-[12px] w-[500px] py-2">
               {amounts.map((size) => (
                 <RadioGroup.Option
                   key={size}
                   value={size}
-                  className={({ checked }) =>
-                    classNames(
-                      checked
-                        ? "bg-gray-100 border-transparent text-black"
-                        : "bg-white border-gray-200 text-gray-900",
-                      "border rounded-full p-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1 cursor-not-allowed"
-                    )
-                  }
+                  multiple
+                  className={({ checked }) => `
+                    p-3 shadow-md shadow-[#606CD2] rounded-full w-[118px] flex items-center justify-center cursor-pointer ${
+                      checked ? "bg-[#D3D8FF]" : ""
+                    }
+                  `}
                 >
                   <RadioGroup.Label
                     as="span"
-                    className="whitespace-nowrap space-x-[4px]"
+                    className="whitespace-nowrap space-x-[4px] font-bold text-[#606CD2]"
                   >
                     {size} NEAR
                   </RadioGroup.Label>
@@ -114,15 +139,40 @@ export function Deposit() {
               ))}
             </div>
           </RadioGroup>
+          <p
+            className="text-[#2C8DFF] font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
+            onClick={() => setIsOpen(true)}
+          >
+            Why use fixed values <QuestionMarkCircleIcon className="w-4 h-4" />
+          </p>
+        </div>
+
+        <div className="mt-16 mb-16">
+          <div className="flex items-center justify-between">
+            <span className="text-black text-[1.1rem] font-bold ">
+              Transaction Anonimity
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mt-2">
+            {[1, 2, 3].map((item) => (
+              <>
+                <div className="w-[77px] h-[9px] bg-gray-300 rounded-full" />
+              </>
+            ))}
+          </div>
+          <p className="text-[#2C8DFF] font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2">
+            What is this <QuestionMarkCircleIcon className="w-4 h-4" />
+          </p>
         </div>
 
         <div>
           <button
             disabled={depositing}
-            children={!accountId ? "Connect Wallet" : buttonText}
             onClick={() => preDeposit()}
-            className="bg-[#121315] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-          />
+            className="bg-gradient-to-r from-[#606CD2] to-[#8DC1FF] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+          >
+            {!accountId ? "Connect Wallet" : buttonText}
+          </button>
         </div>
 
         <HashModal
@@ -133,6 +183,7 @@ export function Deposit() {
             setButtonText("Deposit");
           }}
         />
+        <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
     </div>
   );
