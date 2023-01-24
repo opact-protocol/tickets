@@ -97,9 +97,9 @@ export function Withdraw() {
                 mt-2
                 p-[8px]
                 h-[43px]
-                bg-[#E3E6FF]
+                bg-soft-blue-normal
                 rounded-[15px]
-                text-[#636363]
+                text-dark-grafiti-light
                 w-full
                 flex items-center justify-between
               "
@@ -125,9 +125,9 @@ export function Withdraw() {
                mt-2
                p-[8px]
                h-[43px]
-               bg-[#E3E6FF]
+               bg-soft-blue-normal
                rounded-[15px]
-               text-[#636363]
+               text-dark-grafiti-light
                w-full
                flex items-center justify-between
                disabled:cursor-not-allowed
@@ -166,34 +166,34 @@ export function Withdraw() {
                   <Disclosure.Panel className="pt-[24px]">
                     <div className="flex flex-col p-[20px] border border-[#e0e1e4] rounded-[16px] space-y-[12px] w-full">
                       <div className="flex items-center justify-between pb-[12px] border-b-[1px] border-[#e0e1e4]">
-                        <span className="text-[#8d8d94] text-[14px]">
+                        <span className="text-dark-grafiti-medium text-[14px]">
                           Amount:
                         </span>
 
                         <span
-                          className="text-[#121315]"
+                          className="text-black"
                           children={hashData?.amount + "NEAR"}
                         />
                       </div>
 
                       <div className="flex items-center justify-between pb-[12px] border-b-[1px] border-[#e0e1e4]">
-                        <span className="text-[#8d8d94] text-[14px]">
+                        <span className="text-dark-grafiti-medium text-[14px]">
                           Relayer fee:
                         </span>
 
                         <span
-                          className="text-[#121315]"
+                          className="text-black"
                           children={`${hashData?.relayer_fee * 100}%`}
                         />
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-[#8d8d94] text-[14px]">
+                        <span className="text-dark-grafiti-light text-[14px]">
                           Tokens to receive:
                         </span>
 
                         <span
-                          className="text-[#121315]"
+                          className="text-black"
                           children={`${
                             hashData?.amount / 1 - hashData?.relayer_fee
                           }NEAR`}
@@ -211,7 +211,7 @@ export function Withdraw() {
           <button
             disabled={hasErrorHash && !!accountId}
             onClick={() => preWithdraw()}
-            className="bg-gradient-to-r from-[#606CD2] to-[#8DC1FF] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+            className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {" "}
             {!accountId ? "Connect Wallet" : buttonText}{" "}

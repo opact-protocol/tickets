@@ -24,10 +24,10 @@ export function Header() {
           <div className="flex items-center gap-6">
             <button
               onClick={() => setShowModal(true)}
-              className="bg-[#E8EAFF] flex items-center justify-center space-x-[8px] text-[#121315] px-[24px] py-[10px] rounded-full w-full font-[400] hover:bg-gray-200 justify-bettween"
+              className="bg-soft-blue-normal flex items-center justify-center space-x-[8px] text-black px-[24px] py-[10px] rounded-full w-full font-[400] hover:bg-gray-200 justify-bettween"
             >
-              <PaperAirplaneIcon className="w-[18px] text-[#606CD2]" />
-              <span className="whitespace-nowrap text-[#606CD2]">
+              <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
+              <span className="whitespace-nowrap text-soft-blue">
                 Allowlist
               </span>
             </button>
@@ -35,7 +35,7 @@ export function Header() {
             {!!!accountId ? (
               <button
                 onClick={() => toggleModal()}
-                className="flex items-center justify-center space-x-[4px] bg-[#606CD2] px-[24px] py-[10px] rounded-full w-full font-[400] hover:opacity-[.9] justify-bettween"
+                className="flex items-center justify-center space-x-[4px] bg-soft-blue px-[24px] py-[10px] rounded-full w-full font-[400] hover:opacity-[.9] justify-bettween"
               >
                 <img src="/wallet-icon.svg" alt="Wallet icon" />
                 <span className="text-white whitespace-nowrap">
@@ -45,7 +45,7 @@ export function Header() {
             ) : (
               <button
                 onClick={() => signOut()}
-                className="flex items-center space-x-[8px] bg-[#606CD2] px-[24px] py-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
+                className="flex items-center space-x-[8px] bg-soft-blue px-[24px] py-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
               >
                 <span className="text-white truncate">{accountId}</span>
 

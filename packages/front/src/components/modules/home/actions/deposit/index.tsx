@@ -56,8 +56,8 @@ export function Deposit() {
           </div>
           <Listbox value={selectedPerson} onChange={setSelectedPerson}>
             <div className="relative mt-1">
-              <Listbox.Button className="cursor-pointer relative w-full rounded-[15px] bg-[#E3E6FF] py-3 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                <span className="block truncate text-[#636363] font-normal">
+              <Listbox.Button className="cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <span className="block truncate text-dark-grafiti font-normal">
                   {selectedPerson.name}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -80,8 +80,8 @@ export function Deposit() {
                       className={({ active }) =>
                         `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
                           active
-                            ? "bg-[#E3E6FF] text-[#434343]"
-                            : "text-[#434343]"
+                            ? "bg-soft-blue-normal text-dark-grafiti"
+                            : "text-dark-grafiti"
                         }`
                       }
                       value={person}
@@ -91,7 +91,7 @@ export function Deposit() {
                           <span className={`flex gap-5 truncate font-bold`}>
                             <div
                               className={`w-4 h-4  rounded-[50%] ${
-                                selected ? "bg-green-500" : "bg-gray-300"
+                                selected ? "bg-success" : "bg-gray-300"
                               }`}
                             />{" "}
                             {person.name}
@@ -122,16 +122,15 @@ export function Deposit() {
                 <RadioGroup.Option
                   key={size}
                   value={size}
-                  multiple
                   className={({ checked }) => `
-                    p-3 shadow-md shadow-[#606CD2] rounded-full w-[118px] flex items-center justify-center cursor-pointer ${
-                      checked ? "bg-[#D3D8FF]" : ""
+                    p-3 shadow-md shadow-soft-blue rounded-full w-[118px] flex items-center justify-center cursor-pointer ${
+                      checked ? "bg-soft-blue-nromal" : ""
                     }
                   `}
                 >
                   <RadioGroup.Label
                     as="span"
-                    className="whitespace-nowrap space-x-[4px] font-bold text-[#606CD2]"
+                    className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
                   >
                     {size} NEAR
                   </RadioGroup.Label>
@@ -140,7 +139,7 @@ export function Deposit() {
             </div>
           </RadioGroup>
           <p
-            className="text-[#2C8DFF] font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
+            className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
             onClick={() => setIsOpen(true)}
           >
             Why use fixed values <QuestionMarkCircleIcon className="w-4 h-4" />
@@ -160,7 +159,7 @@ export function Deposit() {
               </>
             ))}
           </div>
-          <p className="text-[#2C8DFF] font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2">
+          <p className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2">
             What is this <QuestionMarkCircleIcon className="w-4 h-4" />
           </p>
         </div>
@@ -169,7 +168,7 @@ export function Deposit() {
           <button
             disabled={depositing}
             onClick={() => preDeposit()}
-            className="bg-gradient-to-r from-[#606CD2] to-[#8DC1FF] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+            className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {!accountId ? "Connect Wallet" : buttonText}
           </button>

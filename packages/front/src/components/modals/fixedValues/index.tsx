@@ -42,12 +42,12 @@ export const FixedValuesModal = ({
                   onClick={() => onClose()}
                   className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
                 >
-                  <XMarkIcon className="text-[#121315] w-[24px]" />
+                  <XMarkIcon className="text-black w-[24px]" />
                 </button>
 
                 <Dialog.Title
                   as="h1"
-                  className="text-[#434343] text-xl font-bold text-center mb-20"
+                  className="text-dark-grafiti-medium text-xl font-bold text-center mb-20"
                 >
                   Why use fixed values ?
                 </Dialog.Title>
@@ -57,14 +57,14 @@ export const FixedValuesModal = ({
                     <>
                       <div
                         className={`bg-transparent rounded-full p-1 ${
-                          i === 1 ? "bg-space" : ""
+                          i === 1 ? "bg-soft-blue-from-deep-blue" : ""
                         }`}
                       >
                         <div
                           key={i}
-                          className={`bg-white p-2 shadow-md shadow-[#606CD2] rounded-full w-[125px] flex items-center justify-center cursor-pointer`}
+                          className={`bg-white p-2 shadow-md shadow-soft-blue rounded-full w-[125px] flex items-center justify-center cursor-pointer`}
                         >
-                          <span className="whitespace-nowrap space-x-[4px] font-bold text-[#606CD2]">
+                          <span className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue">
                             {amount} NEAR
                           </span>
                         </div>
@@ -72,14 +72,14 @@ export const FixedValuesModal = ({
                     </>
                   ))}
                 </div>
-                <p className="text-[#434343] text-lg max-w-[600px] mx-auto mb-32">
+                <p className="text-dark-grafiti-medium text-lg max-w-[600px] mx-auto mb-32">
                   Fixed values ​guarantee the standardization of transactions,
                   making detection of the source wallet much more difficult. In
                   this way, further ensuring the anonymity and security of your
                   transaction.
                 </p>
                 <button
-                  className="max-w-[367px] block mx-auto bg-space mt-[24px] p-[12px] mb-28 rounded-full w-full font-[400] hover:opacity-[.9]"
+                  className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-28 rounded-full w-full font-[400] hover:opacity-[.9]"
                   onClick={() => onClose()}
                 >
                   Close
