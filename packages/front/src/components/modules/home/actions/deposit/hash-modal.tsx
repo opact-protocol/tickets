@@ -2,16 +2,21 @@ import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWalletSelector } from "@/utils/context/wallet";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Modal({
   isOpen,
   onClose,
+  amount,
 }: {
   isOpen: boolean;
+  amount: string;
   onClose: () => void;
 }) {
   const [sending, setSending] = useState(false);
-  const [buttonText, setButtonText] = useState("Send Deposit");
+  const [buttonText, setButtonText] = useState(`Deposit ${amount} Near`);
+  const [copy, setCopy] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const { selector, accountId } = useWalletSelector();
 
   const { note, sendDeposit } = useApplication();
@@ -25,6 +30,11 @@ export default function Modal({
   };
 
   const deposit = async () => {
+    if (!copy) {
+      setErrorMessage("Copy or download your withdraw ticket to continue");
+      return;
+    }
+
     setSending(true);
     setButtonText("Sending your Deposit...");
 
@@ -33,7 +43,7 @@ export default function Modal({
 
       closeModal();
       setSending(false);
-      setButtonText("Send Deposit");
+      setButtonText(`Deposit ${amount} Near`);
     } catch (e) {
       console.warn(e);
     }
@@ -65,36 +75,76 @@ export default function Modal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4">
+              <Dialog.Panel className="w-full max-w-[873px] transform overflow-hidden rounded-[35px] bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
-                  as="span"
-                  className="text-[#121315] text-[18px] font-[500]"
+                  as="h1"
+                  className="text-black text-xl font-bold font-[Sora] text-center mt-[40px]"
                 >
-                  Your Hash
+                  Withdraw ticket
                 </Dialog.Title>
 
-                <div className="mt-2 text-[16px] text-[#121315] space-y-[12px]">
-                  <p>
-                    Your deposit hash is very important. you need it later to
-                    withdraw your deposit.
-                  </p>
-                </div>
+                <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[61px]">
+                  The number bellow is your withdraw ticket, and it will be
+                  necessary to withdraw the funds you`ve deposited. We encourage
+                  you copy this number, and paste in a notepad or somewhere
+                  safe.
+                </p>
 
-                <div>
-                  <p className="text-[16px] text-[#121315]">Your hash:</p>
-                  <p className="break-words text-[#121315] font-[800]">
+                <p className="text-error text-sm font-normal text-center mt-[19px] mb-2">
+                  {errorMessage}
+                </p>
+                <div
+                  className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto mt-[48px] border-[2px] ${
+                    errorMessage
+                      ? "border-error mt-0"
+                      : copy
+                      ? "border-success"
+                      : "border-transparent"
+                  }`}
+                >
+                  <p
+                    className={`${
+                      copy ? "text-success" : "text-dark-grafiti-medium"
+                    } text-sm font-semibold truncate w-full p-3 pl-10`}
+                  >
                     {note}
                   </p>
+                  <CopyToClipboard text={note} onCopy={() => setCopy(true)}>
+                    <button
+                      className={`flex items-center gap-3 pr-10 ${
+                        copy ? "text-success" : "text-dark-grafiti-medium"
+                      } text-sm font-normal`}
+                    >
+                      <img
+                        src={copy ? "/copied-icon.svg" : "/copy-icon.svg"}
+                        alt={copy ? "Copied Icon" : "Copy Icon"}
+                      />
+                      {copy ? "Copied" : "Copy"}
+                    </button>
+                  </CopyToClipboard>
                 </div>
-
-                <div>
-                  <button
-                    disabled={sending}
-                    children={buttonText}
-                    onClick={() => deposit()}
-                    className="bg-[#121315] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                  />
-                </div>
+                <p className="text-dark-grafiti-medium flex gap-3 w-full max-w-[609px] mx-auto pl-3 mt-2">
+                  or{" "}
+                  <p
+                    className="text-info underline flex gap-3 cursor-pointer"
+                    onClick={() => setCopy(true)}
+                  >
+                    <img src="/download-icon.svg" alt="Download Icon" />{" "}
+                    Download your ticket in txt.file
+                  </p>
+                </p>
+                <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[30px]">
+                  To ensure the anonimity of your transaction, we recommend you
+                  wait <strong>at least 30 minutes</strong> to withdraw the
+                  funds deposited.{" "}
+                </p>
+                <button
+                  disabled={sending}
+                  onClick={() => deposit()}
+                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[118px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                >
+                  {buttonText}
+                </button>
               </Dialog.Panel>
             </Transition.Child>
           </div>
