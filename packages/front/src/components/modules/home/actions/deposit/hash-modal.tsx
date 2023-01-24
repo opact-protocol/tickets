@@ -3,6 +3,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import DownloadLink from "react-download-link";
 
 export default function Modal({
   isOpen,
@@ -130,7 +131,12 @@ export default function Modal({
                     onClick={() => setCopy(true)}
                   >
                     <img src="/download-icon.svg" alt="Download Icon" />{" "}
-                    Download your ticket in txt.file
+                    <DownloadLink
+                      style={{ margin: 0 }}
+                      label="Download your ticket in txt file"
+                      filename="ticket.txt"
+                      exportFile={() => note}
+                    />
                   </p>
                 </p>
                 <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[30px]">
