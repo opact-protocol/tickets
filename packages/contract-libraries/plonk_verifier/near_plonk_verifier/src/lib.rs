@@ -22,54 +22,54 @@ pub use pairing::*;
 #[serde(crate = "near_sdk::serde")]
 pub struct Verifier {
     // n values
-    power: U256,
-    n: U256,
-    n_public: U256,
-    n_lagrange: U256,
+    pub power: U256,
+    pub n: U256,
+    pub n_public: U256,
+    pub n_lagrange: U256,
     // Q values
-    q_m: G1Point,
-    q_l: G1Point,
-    q_r: G1Point,
-    q_o: G1Point,
-    q_c: G1Point,
+    pub q_m: G1Point,
+    pub q_l: G1Point,
+    pub q_r: G1Point,
+    pub q_o: G1Point,
+    pub q_c: G1Point,
     // S values
-    s_1: G1Point,
-    s_2: G1Point,
-    s_3: G1Point,
+    pub s_1: G1Point,
+    pub s_2: G1Point,
+    pub s_3: G1Point,
     // k values
-    k_1: U256,
-    k_2: U256,
+    pub k_1: U256,
+    pub k_2: U256,
     // X2 values
-    x_2: G2Point,
+    pub x_2: G2Point,
     // Field size constants
-    q: U256,
-    qf: U256,
+    pub q: U256,
+    pub qf: U256,
     // omega value
-    w1: U256,
+    pub w1: U256,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Proof {
     // public values
-    public_values: Vec<U256>,
+    pub public_values: Vec<U256>,
     // proof values
-    a: G1Point,
-    b: G1Point,
-    c: G1Point,
-    z: G1Point,
-    t_1: G1Point,
-    t_2: G1Point,
-    t_3: G1Point,
-    eval_a: U256,
-    eval_b: U256,
-    eval_c: U256,
-    eval_s1: U256,
-    eval_s2: U256,
-    eval_zw: U256,
-    eval_r: U256,
-    wxi: G1Point,
-    wxi_w: G1Point,
+    pub a: G1Point,
+    pub b: G1Point,
+    pub c: G1Point,
+    pub z: G1Point,
+    pub t_1: G1Point,
+    pub t_2: G1Point,
+    pub t_3: G1Point,
+    pub eval_a: U256,
+    pub eval_b: U256,
+    pub eval_c: U256,
+    pub eval_s1: U256,
+    pub eval_s2: U256,
+    pub eval_zw: U256,
+    pub eval_r: U256,
+    pub wxi: G1Point,
+    pub wxi_w: G1Point,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone)]

@@ -59,7 +59,22 @@ params:
   - fee: U256 -> quantity of tokens that will be sent to relayer as a fee
   - refund: U256 -> quantity of tokens that will be sent to relayer as refund for gas
   - whitelist_root: U256 -> root value of whitelist merkle tree used to build proof
-  - proof: Proof -> zk proof used to validate transaction
+  - a: G1Point -> A point component of proof,
+  - b: G1Point -> B point component of proof,
+  - c: G1Point -> C point component of proof,
+  - z: G1Point -> Z point component of proof,
+  - t_1: G1Point -> T1 point component of proof,
+  - t_2: G1Point -> T2 point component of proof,
+  - t_3: G1Point -> T3 point component of proof,
+  - eval_a: U256 -> eval_a value component of proof,
+  - eval_b: U256 -> eval_b value component of proof,
+  - eval_c: U256 -> eval_c value component of proof,
+  - eval_s1: U256 -> eval_s1 value component of proof,
+  - eval_s2: U256 -> eval_s2 value component of proof,
+  - eval_zw: U256 -> eval_zw value component of proof,
+  - eval_r: U256 -> eval_r value component of proof,
+  - wxi: G1Point -> Wxi point component of proof,
+  - wxi_w: G1Point -> Wxiw point component of proof,
 
 Panics if proof is invalid
 Panics if nullifier has already been withdrawn
