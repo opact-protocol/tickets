@@ -51,14 +51,14 @@ export function WhitelistModal({
             >
               <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4">
                 <Dialog.Title
-                  as="span"
-                  className="text-[#121315] text-[18px] font-[500]"
+                  as="h1"
+                  className="text-black text-[18px] font-medium text-center font-[Sora]"
                 >
                   Apply for Allowlist
                 </Dialog.Title>
 
-                <div className="mt-2 text-[16px] text-[#121315] space-y-[12px]">
-                  <p>
+                <div className="mt-2 text-[16px] text-black space-y-[12px]">
+                  <p className="text-center">
                     Apply to our allowlist to receive permission to make
                     anonymous transfers at Hideyour.cash.
                   </p>
@@ -66,7 +66,7 @@ export function WhitelistModal({
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[#121315] text-[1.1rem] font-[500]">
+                    <span className="text-black text-[1.1rem] font-medium">
                       Your Address
                     </span>
                   </div>
@@ -79,7 +79,7 @@ export function WhitelistModal({
                         h-[43px]
                         bg-[#f7f8fa]
                         rounded-full
-                        text-[#121315]
+                        text-black
                         opacity-[.8]
                         w-full
                         px-[24px]
@@ -96,10 +96,11 @@ export function WhitelistModal({
 
                 <div>
                   <button
-                    children="Apply now"
                     onClick={() => apply()}
-                    className="bg-[#121315] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                  />
+                    className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                  >
+                    Apply now
+                  </button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
