@@ -22,10 +22,11 @@ const people = [
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState(10);
+  const [selectedAmount, setSelectedAmount] = useState<any>();
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
-  const [selectedPerson, setSelectedPerson] = useState<any>(people[0]);
+  const [selectedToken, setSelectedToken] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
@@ -36,6 +37,11 @@ export function Deposit() {
 
       return;
     }
+
+    // if (!selectedAmount || !selectedToken) {
+    //   setErrorMessage("Select token and amount to deposit");
+    //   return;
+    // }
 
     setDepositing(true);
     setButtonText("Preparing your deposit...");
@@ -51,14 +57,21 @@ export function Deposit() {
         <div>
           <div className="flex items-center justify-between">
             <span className="text-black text-[1.1rem] font-bold">
-              Choose token
+              Choose token{" "}
+              <span className="text-error">{errorMessage && "*"}</span>
             </span>
           </div>
-          <Listbox value={selectedPerson} onChange={setSelectedPerson}>
+          <Listbox value={selectedToken} onChange={setSelectedToken}>
             <div className="relative mt-1">
-              <Listbox.Button className="cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <Listbox.Button
+                className={`cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left border-[2px] ${
+                  errorMessage ? "border-error" : "border-transparent"
+                } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
+              >
                 <span className="block truncate text-dark-grafiti font-normal">
-                  {selectedPerson.name}
+                  {selectedToken && selectedToken.name
+                    ? selectedToken.name
+                    : "Select token"}
                 </span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <ChevronDownIcon
@@ -108,13 +121,14 @@ export function Deposit() {
 
         <div className="mt-8">
           <div className="flex items-center justify-between">
-            <span className="text-black text-[1.1rem] font-bold ">Amount</span>
+            <span className="text-black text-[1.1rem] font-bold ">
+              Amount <span className="text-error">{errorMessage && "*"}</span>
+            </span>
           </div>
 
           <RadioGroup
-            onChange={() => {
-              console.log("oi");
-            }}
+            value={selectedAmount}
+            onChange={setSelectedAmount}
             className="mt-2 max-w-[371px] overflow-x-auto"
           >
             <div className="flex space-x-[12px] w-[500px] py-2">
@@ -164,18 +178,18 @@ export function Deposit() {
           </p>
         </div>
 
-        <div>
-          <button
-            disabled={depositing}
-            onClick={() => preDeposit()}
-            className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-          >
-            {!accountId ? "Connect Wallet" : buttonText}
-          </button>
-        </div>
+        <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
+        <button
+          disabled={depositing}
+          onClick={() => preDeposit()}
+          className="bg-soft-blue-from-deep-blue p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+        >
+          {!accountId ? "Connect Wallet" : buttonText}
+        </button>
 
         <HashModal
           isOpen={showModal}
+          amount={selectedAmount}
           onClose={() => {
             setDepositing(false);
             setShowModal(!showModal);
