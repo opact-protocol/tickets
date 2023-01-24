@@ -1,6 +1,6 @@
 use near_sdk::{env, near_bindgen, AccountId, Promise};
 use near_bigint::U256;
-use near_groth16_verifier::Proof;
+use near_plonk_verifier::{Proof, G1Point};
 
 use crate::{
   Contract, ContractExt,
@@ -42,7 +42,23 @@ impl Contract {
     fee: U256,
     refund: U256,
     allowlist_root: U256,
-    proof: Proof,
+    // proof params
+    a: G1Point,
+    b: G1Point,
+    c: G1Point,
+    z: G1Point,
+    t_1: G1Point,
+    t_2: G1Point,
+    t_3: G1Point,
+    eval_a: U256,
+    eval_b: U256,
+    eval_c: U256,
+    eval_s1: U256,
+    eval_s2: U256,
+    eval_zw: U256,
+    eval_r: U256,
+    wxi: G1Point,
+    wxi_w: G1Point,
   ) -> Promise {
     assert!(
       fee < U256::from_dec_str(&self.deposit_value.to_string()).unwrap(),
@@ -81,8 +97,8 @@ impl Contract {
     }
 
     assert!(
-      self.verifier.verify(
-        vec![
+      self.verifier.verify(Proof {
+        public_values: vec![
           root,
           nullifier_hash,
           recipient_hash,
@@ -91,8 +107,23 @@ impl Contract {
           refund,
           allowlist_root
         ],
-        proof
-      ),
+        a,
+        b,
+        c,
+        z,
+        t_1,
+        t_2,
+        t_3,
+        eval_a,
+        eval_b,
+        eval_c,
+        eval_s1,
+        eval_s2,
+        eval_zw,
+        eval_r,
+        wxi,
+        wxi_w,
+      }),
       "proof submited is invalid"
     );
 

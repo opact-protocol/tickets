@@ -44,13 +44,11 @@ mod tests {
     let contract_wasm = get_wasm("contract.wasm")?;
     let contract = deploy_contract(&root, &worker, "core_contract", &contract_wasm).await;
 
-    const FIELD_SIZE: &str =
-      "21888242871839275222246405745257275088548364400416034343698204186575808495617";
     const ZERO_VALUE: &str =
       "21663839004416932945382355908790599225266501822907911457504978515578255421292";
     const DEPOSIT_VALUE: u128 = 10_000_000_000_000_000_000_000_000;
 
-    let verifying_keys = get_json("verification_key.json").unwrap();
+    let vk = get_json("verification_key.json").unwrap();
 
     let commitment1 = get_json("commitment1.json").unwrap();
     let commitment2 = get_json("commitment2.json").unwrap();
@@ -67,36 +65,61 @@ mod tests {
           // merkle tree params
           "height": 20,
           "last_roots_len": 20,
-          "field_size": FIELD_SIZE,
           "zero_value": ZERO_VALUE,
           // wl params
           "height_wl": 20,
           "last_roots_len_wl": 20,
           "deposit_value": DEPOSIT_VALUE.to_string(),
           // verifier
-          "verifier": {
-              "alfa1": {
-                  "x": verifying_keys["vk_alpha_1"][0],
-                  "y": verifying_keys["vk_alpha_1"][1]
-              },
-              "beta2": {
-                  "x": [verifying_keys["vk_beta_2"][0][0], verifying_keys["vk_beta_2"][0][1]],
-                  "y": [verifying_keys["vk_beta_2"][1][0], verifying_keys["vk_beta_2"][1][1]]
-              },
-              "gamma2": {
-                  "x": [verifying_keys["vk_gamma_2"][0][0], verifying_keys["vk_gamma_2"][0][1]],
-                  "y": [verifying_keys["vk_gamma_2"][1][0], verifying_keys["vk_gamma_2"][1][1]]
-              },
-              "delta2": {
-                  "x": [verifying_keys["vk_delta_2"][0][0], verifying_keys["vk_delta_2"][0][1]],
-                  "y": [verifying_keys["vk_delta_2"][1][0], verifying_keys["vk_delta_2"][1][1]]
-              },
-              "ic": verifying_keys["IC"].as_array().unwrap().iter().map(|g1| json!({
-                  "x": g1[0],
-                  "y": g1[1]
-              })).collect::<Vec<serde_json::Value>>(),
-              "snark_scalar_field": FIELD_SIZE,
+          "power": vk["power"].to_string(),
+          "n_public": vk["nPublic"].to_string(),
+          "q_m": {
+            "x": vk["Qm"][0],
+            "y": vk["Qm"][1]
           },
+          "q_l": {
+            "x": vk["Ql"][0],
+            "y": vk["Ql"][1]
+          },
+          "q_r":{
+            "x": vk["Qr"][0],
+            "y": vk["Qr"][1]
+          },
+          "q_o":{
+            "x": vk["Qo"][0],
+            "y": vk["Qo"][1]
+          },
+          "q_c":{
+            "x": vk["Qc"][0],
+            "y": vk["Qc"][1]
+          },
+          "s_1": {
+            "x": vk["S1"][0],
+            "y": vk["S1"][1]
+          },
+          "s_2": {
+            "x": vk["S2"][0],
+            "y": vk["S2"][1]
+          },
+          "s_3":  {
+            "x": vk["S3"][0],
+            "y": vk["S3"][1]
+          },
+          "k_1": vk["k1"],
+          "k_2": vk["k2"],
+          "x_2": {
+            "x": [
+              vk["X_2"][0][0],
+              vk["X_2"][0][1],
+              ],
+            "y": [
+              vk["X_2"][1][0],
+              vk["X_2"][1][1],
+              ],
+          },
+          "q": "21888242871839275222246405745257275088548364400416034343698204186575808495617",
+          "qf": "21888242871839275222246405745257275088696311157297823662689037894645226208583",
+          "w1": vk["w"],
       }))?
       .gas(300000000000000)
       .transact()
@@ -218,19 +241,48 @@ mod tests {
         "fee": public1[4],
         "refund": public1[5],
         "allowlist_root": public1[6],
-        "proof": {
-          "a": {
-            "x": proof1["pi_a"][0],
-            "y": proof1["pi_a"][1]
-          },
-          "b": {
-            "x": proof1["pi_b"][0],
-            "y": proof1["pi_b"][1]
-          },
-          "c": {
-            "x": proof1["pi_c"][0],
-            "y": proof1["pi_c"][1]
-          }
+        "a":{
+          "x": proof1["A"][0],
+          "y": proof1["A"][1]
+        },
+        "b": {
+          "x": proof1["B"][0],
+          "y": proof1["B"][1]
+        },
+        "c": {
+          "x": proof1["C"][0],
+          "y": proof1["C"][1]
+        },
+        "z": {
+          "x": proof1["Z"][0],
+          "y": proof1["Z"][1]
+        },
+        "t_1": {
+          "x": proof1["T1"][0],
+          "y": proof1["T1"][1]
+        },
+        "t_2": {
+          "x": proof1["T2"][0],
+          "y": proof1["T2"][1]
+        },
+        "t_3": {
+          "x": proof1["T3"][0],
+          "y": proof1["T3"][1]
+        },
+        "eval_a": proof1["eval_a"],
+        "eval_b": proof1["eval_b"],
+        "eval_c": proof1["eval_c"],
+        "eval_s1": proof1["eval_s1"],
+        "eval_s2": proof1["eval_s2"],
+        "eval_zw": proof1["eval_zw"],
+        "eval_r": proof1["eval_r"],
+        "wxi": {
+          "x": proof1["Wxi"][0],
+          "y": proof1["Wxi"][1]
+        },
+        "wxi_w": {
+          "x": proof1["Wxiw"][0],
+          "y": proof1["Wxiw"][1]
         },
       }))?
       .gas(300000000000000)
@@ -252,19 +304,48 @@ mod tests {
         "fee": public1[4],
         "refund": public1[5],
         "allowlist_root": public1[6],
-        "proof": {
-          "a": {
-            "x": proof1["pi_a"][0],
-            "y": proof1["pi_a"][1]
-          },
-          "b": {
-            "x": proof1["pi_b"][0],
-            "y": proof1["pi_b"][1]
-          },
-          "c": {
-            "x": proof1["pi_c"][0],
-            "y": proof1["pi_c"][1]
-          }
+        "a":{
+          "x": proof1["A"][0],
+          "y": proof1["A"][1]
+        },
+        "b": {
+          "x": proof1["B"][0],
+          "y": proof1["B"][1]
+        },
+        "c": {
+          "x": proof1["C"][0],
+          "y": proof1["C"][1]
+        },
+        "z": {
+          "x": proof1["Z"][0],
+          "y": proof1["Z"][1]
+        },
+        "t_1": {
+          "x": proof1["T1"][0],
+          "y": proof1["T1"][1]
+        },
+        "t_2": {
+          "x": proof1["T2"][0],
+          "y": proof1["T2"][1]
+        },
+        "t_3": {
+          "x": proof1["T3"][0],
+          "y": proof1["T3"][1]
+        },
+        "eval_a": proof1["eval_a"],
+        "eval_b": proof1["eval_b"],
+        "eval_c": proof1["eval_c"],
+        "eval_s1": proof1["eval_s1"],
+        "eval_s2": proof1["eval_s2"],
+        "eval_zw": proof1["eval_zw"],
+        "eval_r": proof1["eval_r"],
+        "wxi": {
+          "x": proof1["Wxi"][0],
+          "y": proof1["Wxi"][1]
+        },
+        "wxi_w": {
+          "x": proof1["Wxiw"][0],
+          "y": proof1["Wxiw"][1]
         },
       }))?
       .gas(300000000000000)
@@ -295,19 +376,48 @@ mod tests {
         "fee": public2[4],
         "refund": public2[5],
         "allowlist_root": public2[6],
-        "proof": {
-          "a": {
-            "x": proof2["pi_a"][0],
-            "y": proof2["pi_a"][1]
-          },
-          "b": {
-            "x": proof2["pi_b"][0],
-            "y": proof2["pi_b"][1]
-          },
-          "c": {
-            "x": proof2["pi_c"][0],
-            "y": proof2["pi_c"][1]
-          }
+        "a":{
+          "x": proof2["A"][0],
+          "y": proof2["A"][1]
+        },
+        "b": {
+          "x": proof2["B"][0],
+          "y": proof2["B"][1]
+        },
+        "c": {
+          "x": proof2["C"][0],
+          "y": proof2["C"][1]
+        },
+        "z": {
+          "x": proof2["Z"][0],
+          "y": proof2["Z"][1]
+        },
+        "t_1": {
+          "x": proof2["T1"][0],
+          "y": proof2["T1"][1]
+        },
+        "t_2": {
+          "x": proof2["T2"][0],
+          "y": proof2["T2"][1]
+        },
+        "t_3": {
+          "x": proof2["T3"][0],
+          "y": proof2["T3"][1]
+        },
+        "eval_a": proof2["eval_a"],
+        "eval_b": proof2["eval_b"],
+        "eval_c": proof2["eval_c"],
+        "eval_s1": proof2["eval_s1"],
+        "eval_s2": proof2["eval_s2"],
+        "eval_zw": proof2["eval_zw"],
+        "eval_r": proof2["eval_r"],
+        "wxi": {
+          "x": proof2["Wxi"][0],
+          "y": proof2["Wxi"][1]
+        },
+        "wxi_w": {
+          "x": proof2["Wxiw"][0],
+          "y": proof2["Wxiw"][1]
         },
       }))?
       .gas(300000000000000)

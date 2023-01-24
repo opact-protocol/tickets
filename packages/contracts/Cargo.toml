@@ -2,7 +2,6 @@
 #Add location of contracts here
 members = [
     "./contract",
-    "./authorizer"
 ]
 
 [profile.release]
