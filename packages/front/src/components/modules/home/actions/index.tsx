@@ -22,8 +22,8 @@ export function Actions() {
                   "w-full rounded-full py-2.5 text-md font-bold leading-5",
                   "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-100 focus:outline-none focus:ring-2",
                   selected
-                    ? "text-white bg-[#606CD2] shadow"
-                    : "bg-[#D3D8FF] hover:bg-[#606CD2]/40 text-[#606CD2]"
+                    ? "text-white bg-soft-blue shadow"
+                    : "bg-soft-blue-normal hover:bg-soft-blue/40 text-soft-blue"
                 )
               }
             >
