@@ -4,7 +4,7 @@ import { useWalletSelector } from "@/utils/context/wallet";
 import type { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
-export function WalletSelectorModal(props: {}) {
+export function WalletSelectorModal() {
   const { selector, showModal, toggleModal } = useWalletSelector();
 
   const [modules, setModules] = useState<ModuleState[]>([]);
