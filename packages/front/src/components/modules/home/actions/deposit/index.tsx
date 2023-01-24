@@ -38,10 +38,10 @@ export function Deposit() {
       return;
     }
 
-    // if (!selectedAmount || !selectedToken) {
-    //   setErrorMessage("Select token and amount to deposit");
-    //   return;
-    // }
+    if (!selectedAmount || !selectedToken) {
+      setErrorMessage("Select token and amount to deposit");
+      return;
+    }
 
     setDepositing(true);
     setButtonText("Preparing your deposit...");
