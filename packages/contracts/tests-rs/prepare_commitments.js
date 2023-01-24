@@ -11,10 +11,10 @@ const { buildMimcSponge } = circomlibjs;
 const fixedMerkleTree = require("fixed-merkle-tree");
 const { MerkleTree } = fixedMerkleTree;
 
-const wc = require("../../circuits/ci_sample_compile/withdraw_js/witness_calculator.js");
+const wc = require("../../circuits/out/withdraw_js/witness_calculator.js");
 
 const snarkjs = require("snarkjs");
-const { groth16 } = snarkjs;
+const { plonk } = snarkjs;
 
 const bfj = require("bfj");
 const { utils } = require("ffjavascript");
@@ -65,9 +65,7 @@ async function buildCommitments() {
   }
 
   async function generate_witness(input, name) {
-    const buffer = readFileSync(
-      "../../circuits/ci_sample_compile/withdraw_js/withdraw.wasm"
-    );
+    const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
     const witnessCalculator = await wc(buffer);
     const buff = await witnessCalculator.calculateWTNSBin(input, 0);
     fs.writeFileSync("temp/" + name, buff, function (err) {
@@ -76,8 +74,8 @@ async function buildCommitments() {
   }
 
   async function generate_proof(number) {
-    const { proof, publicSignals } = await groth16.prove(
-      "../../circuits/ci_sample_compile/withdraw_0001.zkey",
+    const { proof, publicSignals } = await plonk.prove(
+      "../../circuits/out/withdraw_0000.zkey",
       `temp/witness${number}.wtns`,
       logger
     );
