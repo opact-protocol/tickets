@@ -20,10 +20,10 @@ export function Actions() {
               className={({ selected }) =>
                 classNames(
                   "w-full rounded-full py-2.5 text-md font-bold leading-5",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-100 focus:outline-none focus:ring-2",
+                  "ring-white ring-opacity-60 ring-offset-2  ring-offset-gray-100 hover:transition-colors focus:outline-none focus:ring-2",
                   selected
-                    ? "text-white bg-soft-blue shadow"
-                    : "bg-soft-blue-normal hover:bg-soft-blue/40 text-soft-blue"
+                    ? "text-white bg-soft-blue hover:bg-soft-blue-light"
+                    : "bg-soft-blue-normal hover:bg-hover-button text-soft-blue"
                 )
               }
             >

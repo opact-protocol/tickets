@@ -1,5 +1,4 @@
 import {
-  ExclamationTriangleIcon,
   ClipboardDocumentListIcon,
   PlayCircleIcon,
 } from "@heroicons/react/24/solid";
@@ -11,7 +10,7 @@ export function Feedback() {
         onClick={() => {
           window.open("https://forms.gle/9CzKik7GPtrUgzwC8", "_blank");
         }}
-        className="rounded-[24px] bg-[#121315] hover:opacity-[0.9]"
+        className="rounded-[24px] bg-soft-blue hover:opacity-[0.9] hover:transition-all"
       >
         <div
           className="
@@ -33,7 +32,7 @@ export function Feedback() {
         onClick={() => {
           window.open("https://www.youtube.com/watch?v=82ICG4BEtNk", "_blank");
         }}
-        className="rounded-[24px] bg-[#121315] hover:opacity-[0.9]"
+        className="rounded-[24px] bg-soft-blue hover:opacity-[0.9] hover:transition-all"
       >
         <div
           className="
