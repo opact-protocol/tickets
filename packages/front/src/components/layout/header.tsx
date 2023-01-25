@@ -8,6 +8,30 @@ import { useWallet } from "@/store/wallet";
 export function Header() {
   const { selector, accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { action } = useAction(transactionHashes!, accountId!);
+
+  if (
+    action &&
+    action?.methodName === "whitelist" &&
+    action.status === "success"
+  ) {
+    toast.custom((t) => (
+      <div>
+        <div className="flex items-center gap-3 p-5">
+          <img src="/check-circle-icon.svg" alt="Check Icon" />
+          <h1 className="text-dark-grafiti-medium font-[Sora] font-bold text-base">
+            Address verified
+          </h1>
+        </div>
+        <p className="text-dark-grafiti-medium text-base font-normal">
+          The funds has been sent to the address.
+        </p>
+      </div>
+    ));
+    setIsOpen(true);
+  }
 
   const { allowList } = useAllowlist(accountId!, selector);
 
