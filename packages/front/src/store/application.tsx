@@ -93,10 +93,10 @@ export const useApplication = create<{
     return secrets_hash;
   },
 
-  sendDeposit: async (connection, account) => {
+  sendDeposit: async (connection: any, account: string) => {
     const wallet = await connection.wallet();
 
-    let transactions: any[] = [];
+    const transactions: any[] = [];
 
     transactions.push(
       getTransaction(
@@ -260,7 +260,7 @@ export const useApplication = create<{
   sendWhitelist: async (connection, accountId) => {
     const wallet = await connection.wallet();
 
-    let transactions: any[] = [];
+    const transactions: any[] = [];
 
     transactions.push(
       getTransaction(
