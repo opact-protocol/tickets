@@ -47,6 +47,8 @@ module.exports = {
       backgroundImage: {
         "soft-blue-from-deep-blue":
           "linear-gradient(90deg, #606CD2 0%, #8DC1FF 100%)",
+        "hover-button":
+          "linear-gradient(90deg, #E8EAFF 2.74%, #8DC1FF 173.63%);",
       },
       animation: {
         "fade-in": "fade-in 0.5s linear forwards",

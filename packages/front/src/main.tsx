@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WalletSelectorContextProvider>
       <App />
-      <Toaster />
+      <Toaster position="bottom-right" reverseOrder={false} />
       <WalletSelectorModal />
     </WalletSelectorContextProvider>
   </React.StrictMode>
