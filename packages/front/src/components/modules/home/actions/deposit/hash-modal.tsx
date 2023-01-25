@@ -15,7 +15,7 @@ export default function Modal({
   onClose: () => void;
 }) {
   const [sending, setSending] = useState(false);
-  const [buttonText, setButtonText] = useState(`Deposit ${amount} Near`);
+  const [buttonText, setButtonText] = useState<string>("");
   const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { selector, accountId } = useWalletSelector();
@@ -149,7 +149,7 @@ export default function Modal({
                   onClick={() => deposit()}
                   className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[118px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
-                  {buttonText}
+                  {buttonText ? buttonText : `Deposit ${amount} Near`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>

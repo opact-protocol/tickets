@@ -8,8 +8,9 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
+import { useAction } from "@/hooks/useAction";
 
-const amounts = [0.1, 1, 10, 100];
+const amounts = [0.1, 1, 10, 20, 50];
 
 const people = [
   { id: 1, name: "Near", unavailable: false },
@@ -19,10 +20,14 @@ const people = [
   { id: 5, name: "Token", unavailable: false },
 ];
 
+const transactionHashes = new URLSearchParams(window.location.search).get(
+  "transactionHashes"
+);
+
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState<any>();
+  const [selectedAmount, setSelectedAmount] = useState<string>("0");
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<any>();
@@ -30,6 +35,8 @@ export function Deposit() {
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
+
+  const { action } = useAction(transactionHashes!, accountId!);
 
   const preDeposit = async () => {
     if (!accountId) {
