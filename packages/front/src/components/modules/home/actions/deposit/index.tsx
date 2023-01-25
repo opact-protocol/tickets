@@ -38,7 +38,7 @@ const tokens = [
 ];
 
 const customId = "deposit-toast";
-  
+
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -85,6 +85,8 @@ export function Deposit() {
   }
 
   const { allowList } = useAllowlist(accountId!, selector);
+
+  const { action } = useAction(transactionHashes!, accountId!);
 
   const preDeposit = async () => {
     if (!accountId) {
