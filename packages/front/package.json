@@ -50,6 +50,7 @@
     "rollup-plugin-polyfill-node": "^0.10.2",
     "rxjs": "^7.5.7",
     "snarkjs": "^0.4.27",
+    "swiper": "^8.4.6",
     "tailwindcss": "^3.0.24",
     "use-mediaquery": "^1.0.1",
     "vite-plugin-pages": "^0.25.0",

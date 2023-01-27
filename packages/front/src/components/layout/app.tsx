@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { AboutUsModal } from "../modals";
 import { Feedback } from "./feedback";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
+import { NeedHelp } from "./needHelp";
 
 const Pages = () => {
   return useRoutes(routes);
@@ -32,6 +33,7 @@ export const App = () => {
       <Pages />
       <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
       <Feedback />
+      <NeedHelp />
     </Router>
   );
 };
