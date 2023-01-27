@@ -8,12 +8,12 @@ export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
 
   return (
-    <div className="w-[95%] max-w-[479px] bg-white/80 px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
+    <div className="w-[95%] max-w-[479px] bg-background-page px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
       <Tab.Group
         as="div"
-        className="flex flex-col items-center bg-white rounded-[30px] max-w-[431px] mx-auto p-8 shadow-sm border-[3px] border-solid border-[#616dd333]"
+        className="flex flex-col items-center max-w-[431px] bg-white rounded-[30px] mx-auto p-8 shadow-sm border-[3px] border-solid border-[#616dd333]"
       >
-        <Tab.List className="flex gap-4 p-6 max-w-[431px] w-screen rounded-[30px]">
+        <Tab.List className="flex gap-4 py-6 w-full rounded-[30px]">
           {tabs.map((tab) => (
             <Tab
               key={tab}

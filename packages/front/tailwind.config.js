@@ -3,6 +3,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "background-page": "#ffffff40",
         "dark-grafiti": "#303030",
         "dark-grafiti-medium": "#434343",
         "dark-grafiti-light": "#716E6E",
@@ -58,6 +59,9 @@ module.exports = {
         "spin-reverse": "spin-reverse 1s linear infinite",
         "spin-reverse-slow": "spin-reverse 4s linear infinite",
         "spin-reverse-slower": "spin-reverse 6s linear infinite",
+      },
+      boxShadow: {
+        sm: "0px 4px 10px rgba(96, 108, 210, 0.2), 0px 2px 4px rgba(96, 108, 210, 0.35)",
       },
     },
   },
