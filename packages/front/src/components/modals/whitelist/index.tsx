@@ -19,7 +19,7 @@ export function WhitelistModal({
     if (!userAddress) {
       return;
     }
-
+    localStorage.setItem("hyc-allowlist", "true");
     sendWhitelist(selector, userAddress);
   };
 

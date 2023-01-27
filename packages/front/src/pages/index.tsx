@@ -6,12 +6,12 @@ function BackgroundIllustration() {
       <img
         src="/left.svg"
         alt=""
-        className="fixed top-[-10px] w-full h-[1000px] -left-[50rem]"
+        className="fixed top-[-10px] w-full h-[1000px] -left-[50rem] selection:none"
       />
       <img
         src="/right.svg"
         alt=""
-        className="fixed top-[-10px] w-full h-[1000px] -right-[47rem]"
+        className="fixed top-[-10px] w-full h-[1000px] -right-[47rem] selection:none"
       />
     </>
   );
