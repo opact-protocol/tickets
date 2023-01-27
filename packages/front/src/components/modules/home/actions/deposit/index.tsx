@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import { useWalletSelector } from "@/utils/context/wallet";
@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Toast from "@/components/shared/toast";
 
 import "swiper/css";
 import { WhitelistModal } from "@/components/modals";
@@ -35,7 +36,7 @@ const tokens = [
 
 const customId = "deposit-toast";
 
-export function Deposit() {
+export function Deposit({ changingTab }: { changingTab: boolean }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
