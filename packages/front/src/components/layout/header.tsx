@@ -8,7 +8,6 @@ import { useAllowlist } from "@/hooks/useAllowlist";
 export function Header() {
   const { accountId, toggleModal, signOut, selector } = useWalletSelector();
   const [showModal, setShowModal] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const { action } = useAction(transactionHashes!, accountId!);
 
