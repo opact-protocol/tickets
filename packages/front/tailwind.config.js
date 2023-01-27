@@ -59,6 +59,28 @@ module.exports = {
         "spin-reverse": "spin-reverse 1s linear infinite",
         "spin-reverse-slow": "spin-reverse 4s linear infinite",
         "spin-reverse-slower": "spin-reverse 6s linear infinite",
+        "slide-left":
+          "slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+        "slide-right":
+          "slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+      },
+      keyframes: {
+        "slide-left": {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(-520px)",
+          },
+        },
+        "slide-right": {
+          "0%": {
+            transform: "translateX(-520px)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
       },
       boxShadow: {
         sm: "0px 4px 10px rgba(96, 108, 210, 0.2), 0px 2px 4px rgba(96, 108, 210, 0.35)",
