@@ -107,6 +107,13 @@ export function Withdraw() {
 
       return;
     }
+    if (!hash || !withdrawAddress) {
+      setErrorMessage({
+        errorHash: "Invalid withdraw ticket",
+        errorRepicient: "Invalid address",
+      });
+      return;
+    }
 
     try {
       buttonText.current = "Preparing your withdraw...";
