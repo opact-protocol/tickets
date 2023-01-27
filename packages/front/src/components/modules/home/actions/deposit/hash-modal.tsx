@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
+import { formatInteger } from "@/utils/formatInteger";
 
 export default function Modal({
   isOpen,
@@ -40,7 +41,11 @@ export default function Modal({
     setButtonText("Sending your Deposit...");
 
     try {
-      await sendDeposit(selector, accountId!);
+      await sendDeposit(
+        selector,
+        accountId!,
+        formatInteger(amount, 24).toFixed(0)
+      );
 
       closeModal();
       setSending(false);
@@ -110,7 +115,13 @@ export default function Modal({
                   >
                     {note}
                   </p>
-                  <CopyToClipboard text={note} onCopy={() => setCopy(true)}>
+                  <CopyToClipboard
+                    text={note}
+                    onCopy={() => {
+                      setCopy(true);
+                      setErrorMessage("");
+                    }}
+                  >
                     <button
                       className={`flex items-center gap-3 pr-10 ${
                         copy ? "text-success" : "text-dark-grafiti-medium"
@@ -128,7 +139,10 @@ export default function Modal({
                   or{" "}
                   <p
                     className="text-info underline flex gap-3 cursor-pointer"
-                    onClick={() => setCopy(true)}
+                    onClick={() => {
+                      setCopy(true);
+                      setErrorMessage("");
+                    }}
                   >
                     <img src="/download-icon.svg" alt="Download Icon" />{" "}
                     <DownloadLink
