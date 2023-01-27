@@ -8,7 +8,6 @@ import { useWallet } from "@/store/wallet";
 export function Header() {
   const { selector, accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const { action } = useAction(transactionHashes!, accountId!);
 
