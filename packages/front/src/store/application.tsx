@@ -39,7 +39,11 @@ export const useApplication = create<{
   publicArgs: any;
   hash: any;
   note: any;
-  sendDeposit: (connection: any, account: string) => Promise<void>;
+  sendDeposit: (
+    connection: any,
+    account: string,
+    amount: string
+  ) => Promise<void>;
   fetchHashData: () => Promise<any>;
   sendWithdraw: (connection: any, account: string) => Promise<void>;
   prepareWithdraw: (connection, payload: any) => Promise<void>;
@@ -93,7 +97,7 @@ export const useApplication = create<{
     return secrets_hash;
   },
 
-  sendDeposit: async (connection: any, account: string) => {
+  sendDeposit: async (connection: any, account: string, amount: string) => {
     const wallet = await connection.wallet();
 
     const transactions: any[] = [];
@@ -106,7 +110,7 @@ export const useApplication = create<{
         {
           secrets_hash: get().hash,
         },
-        "10000000000000000000000000"
+        amount
       )
     );
 
@@ -146,7 +150,7 @@ export const useApplication = create<{
       const commitmentProof = commitmentsTree.proof(commitment);
       const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
 
-      let input = {
+      const input = {
         root: commitmentProof.pathRoot,
         nullifierHash: mimc.singleHash!(parsedNote.nullifier),
         recipient: recipientHash, // not taking part in any computations
@@ -170,7 +174,7 @@ export const useApplication = create<{
 
       const { proof, publicSignals } = await createSnarkProof(input);
 
-      let publicArgs = {
+      const publicArgs = {
         root: publicSignals[0],
         nullifier_hash: publicSignals[1],
         recipient: recipient,
@@ -212,10 +216,10 @@ export const useApplication = create<{
 
     const wallet = await connection.wallet();
 
-    let transactions: any[] = [];
+    const transactions: any[] = [];
 
-    let publicArgs = get().publicArgs;
-    let proof = get().proof;
+    const publicArgs = get().publicArgs;
+    const proof = get().proof;
 
     try {
       await api.post("/money/withdraw", {

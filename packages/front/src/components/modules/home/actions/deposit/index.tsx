@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import { useWalletSelector } from "@/utils/context/wallet";
@@ -9,15 +9,19 @@ import {
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { useAction } from "@/hooks/useAction";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import { toast } from "react-hot-toast";
+import Toast from "@/components/shared/toast";
 
 const amounts = [0.1, 1, 10, 20, 50];
 
-const people = [
-  { id: 1, name: "Near", unavailable: false },
-  { id: 2, name: "Ethereum", unavailable: false },
-  { id: 3, name: "Solana", unavailable: false },
-  { id: 4, name: "Maui", unavailable: true },
-  { id: 5, name: "Token", unavailable: false },
+const tokens = [
+  { id: 1, name: "NEAR" },
+  { id: 2, name: "AVAX" },
+  { id: 3, name: "BTC" },
+  { id: 4, name: "CARDANO" },
 ];
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
@@ -27,7 +31,7 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState<string>("0");
+  const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<any>();
@@ -93,28 +97,37 @@ export function Deposit() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-[200px] overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                  {people.map((person, personIdx) => (
+                <Listbox.Options className="absolute mt-1 max-h-60 w-[240px] overflow-auto rounded-[20px] bg-white py-1 text-base shadow-[0_4px_15px_rgba(0,0,0,0.2)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[10]">
+                  {tokens.map((token, i) => (
                     <Listbox.Option
-                      key={personIdx}
+                      key={token.id}
+                      disabled={
+                        token.id === 2 || token.id === 3 || token.id === 4
+                      }
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                        `relative ${
+                          i === 0 ? "cursor-pointer" : "cursor-not-allowed"
+                        } select-none p-[10px] mx-auto w-[220px] ${
                           active
-                            ? "bg-soft-blue-normal text-dark-grafiti"
+                            ? "bg-soft-blue-normal rounded-[10px] text-dark-grafiti"
                             : "text-dark-grafiti"
                         }`
                       }
-                      value={person}
+                      value={token}
                     >
                       {({ selected }) => (
                         <>
-                          <span className={`flex gap-5 truncate font-bold`}>
+                          <span
+                            className={`flex gap-2 truncate text-black font-bold`}
+                          >
                             <div
                               className={`w-4 h-4  rounded-[50%] ${
                                 selected ? "bg-success" : "bg-gray-300"
                               }`}
                             />{" "}
-                            {person.name}
+                            {i === 0
+                              ? token.name
+                              : `${token.name}, coming soon`}
                           </span>
                         </>
                       )}
@@ -136,28 +149,33 @@ export function Deposit() {
           <RadioGroup
             value={selectedAmount}
             onChange={setSelectedAmount}
-            className="mt-2 max-w-[371px] overflow-x-auto"
+            className="mt-2 max-w-[371px]"
           >
-            <div className="flex space-x-[12px] w-[500px] py-2">
+            <Swiper spaceBetween={40} slidesPerView={3} className="flex">
               {amounts.map((size) => (
-                <RadioGroup.Option
-                  key={size}
-                  value={size}
-                  className={({ checked }) => `
-                    p-3 shadow-md shadow-soft-blue rounded-full w-[118px] flex items-center justify-center cursor-pointer ${
-                      checked ? "bg-soft-blue-nromal" : ""
+                <SwiperSlide key={size}>
+                  <RadioGroup.Option
+                    key={size}
+                    value={size}
+                    as="div"
+                    className={({ checked }) => `
+                    bg-transparent rounded-full p-1 w-[132px] mb-2 ${
+                      checked ? "bg-soft-blue-from-deep-blue" : ""
                     }
                   `}
-                >
-                  <RadioGroup.Label
-                    as="span"
-                    className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
                   >
-                    {size} NEAR
-                  </RadioGroup.Label>
-                </RadioGroup.Option>
+                    <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-not-allowed">
+                      <RadioGroup.Label
+                        as="span"
+                        className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
+                      >
+                        {size} NEAR
+                      </RadioGroup.Label>
+                    </div>
+                  </RadioGroup.Option>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </RadioGroup>
           <p
             className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
@@ -176,7 +194,10 @@ export function Deposit() {
           <div className="flex items-center gap-2 mt-2">
             {[1, 2, 3].map((item) => (
               <>
-                <div className="w-[77px] h-[9px] bg-gray-300 rounded-full" />
+                <div
+                  key={item}
+                  className="w-[77px] h-[9px] bg-gray-300 rounded-full"
+                />
               </>
             ))}
           </div>
@@ -196,7 +217,7 @@ export function Deposit() {
 
         <HashModal
           isOpen={showModal}
-          amount={selectedAmount}
+          amount={selectedAmount.toString()}
           onClose={() => {
             setDepositing(false);
             setShowModal(!showModal);
