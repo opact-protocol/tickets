@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import { useWalletSelector } from "@/utils/context/wallet";
@@ -10,10 +10,9 @@ import {
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { useAction } from "@/hooks/useAction";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Toast from "@/components/shared/toast";
 
 import "swiper/css";
-import { toast } from "react-hot-toast";
-import Toast from "@/components/shared/toast";
 
 const amounts = [0.1, 1, 10, 20, 50];
 
@@ -28,7 +27,7 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
 );
 
-export function Deposit() {
+export function Deposit({ changingTab }: { changingTab: boolean }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -49,8 +48,8 @@ export function Deposit() {
       return;
     }
 
-    if (!selectedAmount || !selectedToken) {
-      setErrorMessage("Select token and amount to deposit");
+    if (!selectedToken) {
+      setErrorMessage("Select token to deposit");
       return;
     }
 
@@ -101,9 +100,7 @@ export function Deposit() {
                   {tokens.map((token, i) => (
                     <Listbox.Option
                       key={token.id}
-                      disabled={
-                        token.id === 2 || token.id === 3 || token.id === 4
-                      }
+                      disabled={token.id !== 1}
                       className={({ active }) =>
                         `relative ${
                           i === 0 ? "cursor-pointer" : "cursor-not-allowed"
@@ -142,7 +139,8 @@ export function Deposit() {
         <div className="mt-8">
           <div className="flex items-center justify-between">
             <span className="text-black text-[1.1rem] font-bold ">
-              Amount <span className="text-error">{errorMessage && "*"}</span>
+              Amount{" "}
+              {/*<span className="text-error">{errorMessage && "*"}</span> */}
             </span>
           </div>
 
@@ -160,7 +158,7 @@ export function Deposit() {
                     as="div"
                     className={({ checked }) => `
                     bg-transparent rounded-full p-1 w-[132px] mb-2 ${
-                      checked ? "bg-soft-blue-from-deep-blue" : ""
+                      size === 10 ? "bg-soft-blue-from-deep-blue" : ""
                     }
                   `}
                   >
@@ -226,6 +224,46 @@ export function Deposit() {
         />
         <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
+      {!changingTab && (
+        <Toast
+          icon={
+            !action && transactionHashes
+              ? "processing"
+              : action?.status === "success" && action.methodName === "deposit"
+              ? "/check-circle-icon.svg"
+              : action?.status === "error" && action.methodName === "deposit"
+              ? "/error-circle-icon.svg"
+              : ""
+          }
+          message={
+            !action && transactionHashes
+              ? "This process could take a few moments"
+              : action?.status === "success" && action.methodName === "deposit"
+              ? "Wait at least 30 minutes to withdraw"
+              : action?.status === "error" && action.methodName === "deposit"
+              ? "The funds had been sent back to your wallet.Click here to know more"
+              : ""
+          }
+          title={
+            !action && transactionHashes
+              ? "Processing deposit"
+              : action?.status === "success" && action.methodName === "deposit"
+              ? "Funds deposited successfully!"
+              : action?.status === "error" && action.methodName === "deposit"
+              ? "Deposit failed"
+              : ""
+          }
+          visible={
+            !action && transactionHashes
+              ? true
+              : action?.status === "success" && action.methodName === "deposit"
+              ? true
+              : action?.status === "error" && action.methodName === "deposit"
+              ? true
+              : false
+          }
+        />
+      )}
     </div>
   );
 }
