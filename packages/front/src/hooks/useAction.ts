@@ -14,7 +14,6 @@ export const useAction = (transactionHashes: string, accountId: string) => {
     if (!accountId || !transactionHashes) {
       return;
     }
-
     (async () => {
       const transactions = transactionHashes.split(",");
 

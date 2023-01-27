@@ -1,6 +1,7 @@
 import routes from "virtual:generated-pages-react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import TagManager from "react-gtm-module";
+import { NeedHelp } from "./needHelp";
 
 const Pages = () => {
   return useRoutes(routes);
