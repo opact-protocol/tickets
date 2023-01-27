@@ -23,7 +23,6 @@ export function Header() {
   const { accountId, toggleModal, signOut } = useWalletSelector();
 
   const [showModal, setShowModal] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const { action } = useAction(transactionHashes!, accountId!);
 
