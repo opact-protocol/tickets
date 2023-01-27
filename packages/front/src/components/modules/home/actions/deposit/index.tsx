@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
@@ -39,7 +39,7 @@ const tokens = [
 
 const customId = "deposit-toast";
 
-export function Deposit() {
+export function Deposit({ changingTab }: { changingTab: boolean }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
