@@ -5,7 +5,7 @@ import {
 
 export function Feedback() {
   return (
-    <div className="fixed bottom-[24px] right-[24px] z-[9999] cursor-pointer hover:opacity-[0.95] space-x-[12px] flex">
+    <div className="fixed bottom-[24px] left-[24px] z-[999] cursor-pointer hover:opacity-[0.95] space-x-[12px] flex">
       <button
         onClick={() => {
           window.open("https://forms.gle/9CzKik7GPtrUgzwC8", "_blank");
