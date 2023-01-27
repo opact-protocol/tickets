@@ -199,7 +199,10 @@ export function Deposit({ changingTab }: { changingTab: boolean }) {
               </>
             ))}
           </div>
-          <p className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2">
+          <p
+            className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+            title="Coming soon"
+          >
             What is this <QuestionMarkCircleIcon className="w-4 h-4" />
           </p>
         </div>
