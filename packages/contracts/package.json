@@ -8,11 +8,10 @@
     "build:contract:debug": "node compile.js --debug",
     "dev:deploy:contract": "near dev-deploy",
     "deploy:contract": "near deploy",
-    "deploy": "npm run build:contract && npm run deploy:contract",
-    "prestart": "npm run build:contract:debug && npm run dev:deploy:contract",
-    "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\"",
-    "test:rust": "npm run build:contract && cargo test -- --nocapture",
-    "test:lib": "npm run build:contract && cd tests-rs && yarn test:full"
+    "deploy": "yarn build:contract && yarn deploy:contract",
+    "test:rust": "yarn build:contract && cargo test -- --nocapture",
+    "test:lib": "yarn build:contract && cd tests-rs && yarn test:full",
+    "seed:testnet": "yarn build:contract && cd testnet_seeder && yarn seeder"
   },
   "devDependencies": {
     "env-cmd": "~10.1.0",
