@@ -1,0 +1,30 @@
+type DepositMerkleTreeUpdate @entity {
+  id: ID!
+  contract: String!,
+  signer: String!,
+  index: BigInt!,
+  value: String!,
+  timestamp: BigInt!,
+}
+
+type AllowlistMerkleTreeUpdate @entity {
+  id: ID!
+  contract: String!,
+  signer: String,
+  index: BigInt!,
+  value: String!,
+  account: String!,
+  allowed: Boolean!,
+  timestamp: BigInt!,
+}
+
+type Withdrawal @entity {
+  id: ID!
+  contract: String!,
+  signer: String!,
+  relayer: String,
+  recipient: String!,
+  fee: BigInt!,
+  nullifier: String!,
+  timestamp: BigInt!,
+}

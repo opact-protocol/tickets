@@ -39,8 +39,9 @@ impl Contract {
         let account_hash = account_hash(&account_id);
 
         let index = self.allowlist.current_insertion_index;
+        event_allowlist_update(self.allowlist.event_count, index, account_hash, account_id, true);
         self.allowlist.add_to_allowlist(account_hash);
-        event_allowlist_update(index, account_hash);
+        
       }
       PromiseResult::Failed => env::panic_str("ERR_CALL_FAILED"),
     }
@@ -77,10 +78,11 @@ impl Contract {
 
         let account_hash = account_hash(&account_id);
 
+        let event_counter = self.allowlist.event_count;
         let index = self.allowlist.add_to_denylist(account_hash);
 
         if let Some(index) = index {
-          event_allowlist_update(index, self.allowlist.zeros(0));
+          event_allowlist_update(event_counter, index, self.allowlist.zeros(0), account_id, false);
         }
       }
       PromiseResult::Failed => env::panic_str("ERR_CALL_FAILED"),
