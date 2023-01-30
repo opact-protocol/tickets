@@ -50,6 +50,10 @@ module.exports = {
           "linear-gradient(90deg, #606CD2 0%, #8DC1FF 100%)",
         "hover-button":
           "linear-gradient(90deg, #E8EAFF 2.74%, #8DC1FF 173.63%);",
+        "aqua-gradient":
+          "linear-gradient(90deg, #FFFFFF -1.75%, #D5EEF4 105.87%)",
+        "aqua-gradient-medium":
+          "linear-gradient(90deg, #47C6E2 29.37%, #63DC94 127.97%)",
       },
       animation: {
         "fade-in": "fade-in 0.5s linear forwards",
@@ -84,6 +88,9 @@ module.exports = {
       },
       boxShadow: {
         sm: "0px 4px 10px rgba(96, 108, 210, 0.2), 0px 2px 4px rgba(96, 108, 210, 0.35)",
+      },
+      gridTemplateColumns: {
+        "auto-fit": "repeat(auto-fit, minmax(26rem, 1fr))",
       },
     },
   },
