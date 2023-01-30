@@ -28,6 +28,7 @@ pub struct Contract {
   pub deposit_value: u128,
   pub verifier: Verifier,
   pub nullifier: LookupSet<U256>,
+  pub nullifier_count: u64,
 }
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
@@ -116,6 +117,7 @@ impl Contract {
         power, n_public, q_m, q_l, q_r, q_o, q_c, s_1, s_2, s_3, k_1, k_2, x_2, q, qf, w1,
       ),
       nullifier: LookupSet::new(StorageKey::Nullifier),
+      nullifier_count: 0,
     }
   }
 }

@@ -1,0 +1,22 @@
+{
+  "name": "@near/subgraph",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ hideyour-cash/hyc",
+    "create-local": "graph create --node http://localhost:8020/ hideyour-cash/hyc",
+    "remove-local": "graph remove --node http://localhost:8020/ hideyour-cash/hyc",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 hideyour-cash/hyc",
+    "test": "graph test",
+    "deploy:hosted": "graph deploy --product hosted-service"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.37.0",
+    "@graphprotocol/graph-ts": "0.28.1"
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.5.0"
+  }
+}
