@@ -29,6 +29,8 @@ pub struct AllowlistMerkleTree {
   pub denylist_set: UnorderedSet<U256>,
   pub field_size: U256,
   pub zero_values: Vector<U256>,
+  // counter number of insert/remove events that happened in the tree
+  pub event_count: u64,
 }
 
 impl AllowlistMerkleTree {
@@ -73,6 +75,7 @@ impl AllowlistMerkleTree {
       denylist_set: UnorderedSet::new(denylist_set_prefix),
       field_size,
       zero_values,
+      event_count: 0,
     }
   }
 
@@ -162,6 +165,7 @@ impl AllowlistMerkleTree {
     }
     self.update_root(current_hash);
     self.current_insertion_index += 1;
+    self.event_count += 1;
   }
 
   fn insert_to_middle(&mut self, account_hash: U256, index: u64) {
@@ -177,7 +181,7 @@ impl AllowlistMerkleTree {
       if level_index % 2 == 0 {
         // left side of pair
         left = current_hash;
-        right = level_map.get(&(level_index + 1)).unwrap();
+        right = level_map.get(&(level_index + 1)).unwrap_or(self.zeros(i));
       } else {
         //right side of pair
         left = level_map.get(&(level_index - 1)).unwrap();
@@ -187,6 +191,7 @@ impl AllowlistMerkleTree {
       level_index /= 2;
     }
     self.update_root(current_hash);
+    self.event_count += 1;
   }
 
   fn update_root(&mut self, new_root: U256) {

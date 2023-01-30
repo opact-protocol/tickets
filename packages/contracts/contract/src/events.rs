@@ -1,9 +1,5 @@
 use near_bigint::U256;
-use near_sdk::{
-  json_types::U64,
-  serde_json::json,
-  log,
-};
+use near_sdk::{json_types::U64, serde_json::json, log, AccountId};
 
 const STANDARD_NAME: &str = "hide_your_cash";
 const STANDARD_VERSION: &str = "1.0.0";
@@ -26,11 +22,20 @@ fn log_basic_event_format(
   )
 }
 /// New account was added or removed from allowlist
-pub fn event_allowlist_update(index: u64, value: U256) {
+pub fn event_allowlist_update(
+  counter: u64,
+  index: u64,
+  value: U256,
+  account: AccountId,
+  allowed: bool,
+) {
   let event_type = "updated_allowlist";
   let event_data = json!({
+    "counter": counter,
     "index": U64(index),
     "value": value,
+    "account": account,
+    "allowed": allowed
   });
 
   log_basic_event_format(
@@ -42,9 +47,23 @@ pub fn event_allowlist_update(index: u64, value: U256) {
 }
 
 /// Withdraw was performed
-pub fn event_withdrawal(nullifier: U256) {
+pub fn event_withdrawal(
+  counter: u64,
+  recipient: AccountId,
+  relayer: Option<AccountId>,
+  fee: U256,
+  refund: U256,
+  nullifier: U256,
+) {
   let event_type = "withdrawal";
-  let event_data = json!({ "nullifier": nullifier });
+  let event_data = json!({
+   "counter": counter,
+   "recipient": recipient,
+   "relayer": relayer,
+   "fee": fee,
+   "refund": refund,
+   "nullifier": nullifier
+  });
 
   log_basic_event_format(
     STANDARD_NAME,
@@ -57,6 +76,7 @@ pub fn event_withdrawal(nullifier: U256) {
 pub fn event_deposit(index: u64, value: U256) {
   let event_type = "deposit";
   let event_data = json!({
+    "counter": index,
     "index": U64(index),
     "value": value
   });

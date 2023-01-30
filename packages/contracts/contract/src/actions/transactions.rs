@@ -81,7 +81,7 @@ impl Contract {
 
     let relayer_hash;
 
-    match relayer {
+    match relayer.clone() {
       Some(relayer_account) => {
         relayer_hash = account_hash(&relayer_account);
         if fee > U256::zero() {
@@ -128,7 +128,16 @@ impl Contract {
     );
 
     self.nullifier.insert(&nullifier_hash);
-    event_withdrawal(nullifier_hash);
+    event_withdrawal(
+      self.nullifier_count,
+      recipient.clone(),
+      relayer,
+      fee,
+      refund,
+      nullifier_hash,
+    );
+
+    self.nullifier_count += 1;
 
     Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
   }
