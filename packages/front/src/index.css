@@ -7,5 +7,5 @@ body {
   color: white;
   width: 100vw;
   height: 100vh;
-  background-color: #e8eaff;
+  background: linear-gradient(90deg, #ffffff -1.75%, #d5eef4 105.87%);
 }
