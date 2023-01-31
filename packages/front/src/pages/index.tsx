@@ -9,6 +9,28 @@ import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
+import Zoom from "react-reveal/Zoom";
+import Fade from "react-reveal/Fade";
+import "swiper/css";
+import { useEffect, useState } from "react";
+import { ProtectionModal } from "@/components/modals/protections";
+
+const Waves = () => {
+  return (
+    <>
+      <img
+        src="/waves.svg"
+        alt=""
+        className="fixed top-[-10px] w-full h-[1000px] -left-[50rem] selection:none"
+      />
+      <img
+        src="/waves.svg"
+        alt=""
+        className="fixed top-[-10px] w-full h-[1000px] -right-[47rem] selection:none"
+      />
+    </>
+  );
+};
 
 const Waves = () => {
   return (
