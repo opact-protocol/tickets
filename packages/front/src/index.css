@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Sora", sans-serif;
   color: white;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(90deg, #ffffff -1.75%, #d5eef4 105.87%);
+  background: #e8eaff;
 }
