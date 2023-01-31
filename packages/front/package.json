@@ -45,6 +45,7 @@
     "react-download-link": "^2.3.0",
     "react-hot-toast": "^2.3.0",
     "react-near": "^3.4.8",
+    "react-reveal": "^1.2.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "rollup-plugin-polyfill-node": "^0.10.2",
