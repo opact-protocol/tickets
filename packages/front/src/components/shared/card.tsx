@@ -18,7 +18,7 @@ const Card = ({ title, message, img }: CardProps) => {
         </p>
       </div>
       <div>
-        <img src={img} alt="" className="w-[229px] h-[161px]" />
+        <img src={img} alt="Icons" className="w-[229px] h-[161px]" />
       </div>
     </div>
   );

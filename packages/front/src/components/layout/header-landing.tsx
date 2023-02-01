@@ -15,7 +15,7 @@ const HeaderLanding = () => {
         </a>
       </div>
       <Bars3Icon
-        className="text-black w-8 md:hidden"
+        className="text-black w-8 cursor-pointer md:hidden"
         onClick={() => setOpen(true)}
       />
       <Transition.Root show={open} as={Fragment}>
