@@ -94,18 +94,17 @@ const Index = () => {
               </p>
               <Card
                 title="The problem"
-                message="Privacy tools on the blockchain have been largely used by criminals to hide and laundry their illicit money"
+                message="The existing privacy tools for blockchain can be used to support illicit activities, such as money laundering."
                 img="/computer-icon.svg"
               />
               <Card
                 title="The challenge"
-                message="We still must create privacy tools to guarantee people’s right to privacy on their day to day activities, without facilitating criminal schemes
-                "
+                message="To create a tool that  guarantees people’s right to privacy in their day-to-day activities, without facilitating criminal activities."
                 img="/challenge-icon.svg"
               />
               <Card
                 title="The solution"
-                message="Hideyour.cash blocks wallets with suspicious behavior by integrating with blockchain analytics firms, opening the way for well-intended users"
+                message="Hideyour.cash blocks wallets with suspicious behavior by integrating with blockchain analytics firms, opening the way for well-intended users."
                 img="/solution-icon.svg"
               />
             </div>
@@ -170,10 +169,11 @@ const Index = () => {
         <Fade left cascade>
           <section className="flex flex-col justify-center items-center mt-[226px]">
             <div className="w-full">
-              <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
+              <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center flex items-center justify-center">
                 Get out,{" "}
-                <span className="text-transparent bg-clip-text bg-aqua-gradient-medium">
+                <span className="text-transparent bg-clip-text bg-green-gradient w-[150px] flex flex-col items-center pt-3">
                   crooks
+                  <img src="crooks-line.svg" alt="" />
                 </span>
                 !
               </h1>
@@ -183,7 +183,8 @@ const Index = () => {
               </p>
             </div>
             <img src="tabs.svg" alt="Tabs" className="hidden sm:block" />
-            <div className="flex flex-col items-center gap-5 justify-around w-full mt-[40px] sm:flex-row">
+            <div className="hidden sm:block border-l-[3px] border-aqua border-dotted h-[500px] sm:mt-[-12rem] md:mt-[-15rem] lg:mt-[-16rem]" />
+            <div className="flex flex-col items-center gap-5 justify-around w-full mt-[40px] sm:flex-row sm:mt-[-15rem]">
               <div className="w-full max-w-[313px] sm:mr-20">
                 <p className="text-xl font-normal text-dark-grafiti text-center">
                   <strong className="text-dark-grafiti">
@@ -208,12 +209,12 @@ const Index = () => {
                 className="mb-[33px] mt-[26px]"
               />
               <p className="font-normal text-dark-grafiti text-xl w-full max-w-[766px] mb-[64px] text-center">
-                <strong>There’s a time break</strong> in which you need to keep
-                your funds in the protocol, so that it can be actually mixed and
-                the transaction becomes anonymous. If you try to remove your
-                funds too fast, it’s likely that your transaction can be
-                tracked. If you take too long, you might get blocked before
-                withdrawing. <strong>Take your chance!</strong>
+                <strong>There is an interval</strong> in which you need to keep
+                your funds in the protocol so that they can be actually mixed
+                and the transaction becomes anonymous. If you are a bad actor
+                and need to remove your funds fast, it is likely that your
+                transaction will be tracked. If you take too long, you might get
+                blocked before withdrawing. <strong>Take your chance!</strong>
               </p>
             </div>
           </section>
@@ -222,9 +223,9 @@ const Index = () => {
           <section className="flex flex-col justify-center items-center mt-[324px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
-                Privacy{" "}
+                Why{" "}
                 <span className="text-transparent bg-clip-text bg-aqua-gradient-medium">
-                  matters
+                  privacy?
                 </span>
                 !
               </h1>
@@ -240,11 +241,11 @@ const Index = () => {
                 </h2>
                 <p className="text-dark-grafiti text-xl font-normal">
                   It’s possible to track every activity ever done by a wallet,
-                  including its available funds. If, at some point, someone
-                  connects your wallet to yourself, they might find out
-                  everything about your on-chain movements. If you want to
-                  protect yourself from this, you need to start using privacy
-                  tools, such as <strong>hideyour.cash</strong>
+                  including its available funds. If someone connects your wallet
+                  to yourself, they might find out everything about your
+                  on-chain movements. If you want to protect yourself from this,
+                  you need to start using privacy tools, such as{" "}
+                  <strong>hideyour.cash</strong>
                 </p>
               </div>
               <img src="/cubes.svg" alt="Cubes" />
@@ -371,9 +372,9 @@ const Index = () => {
                 Vision
               </h1>
               <p className="text-dark-grafiti text-2xl font-normal text-center mt-[24px] mb-[12px]">
-                Our goal is not just to create a privacy tool, but to make it
-                extremely easy for you to use, by integrating with other dApps,
-                such as wallets, DeFi, NFTs, etc.
+                Our goal is to create a privacy tool that is extremely easy for
+                you to use, by integrating with other dApps, such as wallets,
+                DeFi, NFTs, etc.
               </p>
             </div>
             <div className="border-l-[3px] border-aqua border-dotted h-14 mb-[30px]" />
@@ -510,23 +511,23 @@ const Index = () => {
                         leaveTo="transform scale-95 opacity-0"
                       >
                         <Disclosure.Panel className="border-t-[1px] border-dark-grafiti mx-16 pt-9 pb-16 text-lg text-dark-grafiti">
-                          This is actually not 100% guaranteed. What the mixer
-                          does is: instead of sending a transaction directly to
-                          another wallet, you'll send a cryptographic
-                          transaction to the mixer, get a proof of your deposit,
-                          which can't be traced back to your wallet, and you can
-                          use this proof to withdraw your funds. By the time
-                          you're doing that, a lot of people will be doing the
-                          same thing. So all the transactions will be "mixed" on
-                          the protocol, and it won't be possible to know for
-                          sure where they came from. The fact is: if the volume
-                          on the protocol is too small, it will be easier to
-                          trace back the transaction to the wallet that has
-                          deposited, since the "mixing" will have a smaller
-                          volume. It's impossible to be 100% sure of where it
-                          came from, but the less volume and the less time the
-                          funds are kept on the mixer, the bigger the
-                          probability of finding out the wallet that has
+                          It is impossible to remain 100% anonymous. What the
+                          mixer does is: instead of sending a transaction
+                          directly to another wallet, you'll send a
+                          cryptographic transaction to the mixer, get a proof of
+                          your deposit, which can't be traced back to your
+                          wallet, and you can use this proof to withdraw your
+                          funds. By the time you're doing that, a lot of people
+                          will be doing the same thing. So all the transactions
+                          will be "mixed" on the protocol, and it won't be
+                          possible to know for sure where they came from. The
+                          fact is: if the volume on the protocol is too small,
+                          it will be easier to trace back the transaction to the
+                          wallet that has deposited, since the "mixing" will
+                          have a smaller volume. It's impossible to be 100% sure
+                          of where it came from, but the less volume and the
+                          less time the funds are kept on the mixer, the bigger
+                          the probability of finding out the wallet that has
                           deposited the funds.
                         </Disclosure.Panel>
                       </Transition>
@@ -566,20 +567,19 @@ const Index = () => {
                           trace on-chain wallet's activities and create a
                           "suspicious score" from this data. Suspicious wallets
                           won't be able to deposit or withdraw from the
-                          protocol. In case, let's say, a hacker deposits on the
-                          protocol before our partners are able to add their
-                          wallets to a suspicious list, they can still be
-                          blocked from withdrawing. Even if they are at the
-                          allowlist, they can be added to a blocklist at any
-                          time. And if they try to withdraw their funds before
-                          being added to the suspicious list, they run the risk
-                          of being more easily tracked, since it will be a
-                          faster transaction (less mixing). Hideyour.cash is
-                          using game theory. It won't be worth it for the hacker
-                          or the malicious actor to deposit on hideyour.cash,
-                          since he could get blocked at any time. And if he
-                          tries to withdraw fast, he runs the risk of being
-                          traced.
+                          protocol. If a bad actor deposits into the protocol
+                          before our partners can add their wallets to a
+                          suspicious list, they can still be blocked from
+                          withdrawing. Even if they are on the allowlist, they
+                          can be added to a blocklist at any time. If they try
+                          to withdraw their funds before being added to the
+                          suspicious list, they risk being easily tracked, since
+                          it will be a faster transaction, therefore less
+                          mixing. Hideyour.cash utilizes game theory to deter
+                          malicious behavior. It is not profitable for a bad
+                          actor to use hideyour.cash, as they could be blocked
+                          at any moment. Withdrawing funds too quickly also
+                          increases the chance of being traced.
                         </Disclosure.Panel>
                       </Transition>
                     </>
@@ -593,7 +593,7 @@ const Index = () => {
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex w-full items-center justify-between px-16 py-5 font-bold text-xl text-black">
-                        <span>Why using a mixer?</span>
+                        <span>Why use a mixer?</span>
                         <ChevronUpIcon
                           className={`${
                             open ? "rotate-180 transform" : ""
@@ -613,20 +613,19 @@ const Index = () => {
                           Blockchains such as Ethereum and NEAR are transparent
                           by design, which means that every transaction is
                           stored and publicly available for anyone to see. You
-                          have what is called pseudonymity, what means that your
-                          wallet is not directly connected to yourself. However,
-                          it's possible that someone finds out, at some point,
-                          what is your wallet and traces back all the activities
-                          that you have done, everyone that you have interacted
-                          with and your wallet's balance. If we think about the
-                          traditional financial system, we have what is called
-                          bank secrecy. Your transactions are not publicly
-                          available, just for the bank and the authorities,
-                          which guarantees basic levels of privacy. If we want
-                          blockchain to get mass adoption, we must guarantee at
-                          least the same level of privacy, but we know that we
-                          can actually improve it with cutting edge technology,
-                          such as ZK.
+                          have what is called pseudonymity, which means that
+                          your wallet is not directly connected to yourself.
+                          However, someone may find out, at some point, what is
+                          your wallet and trace back all the activities that you
+                          have done, everyone that you have interacted with, and
+                          your wallet's balance. In the traditional financial
+                          system, bank secrecy offers a basic level of privacy
+                          by keeping transactions confidential between the bank
+                          and authorities. To achieve widespread adoption,
+                          blockchain technology must provide this same level of
+                          privacy and has the potential to enhance it with
+                          innovative solutions such as Zero-Knowledge (ZK)
+                          technology.
                         </Disclosure.Panel>
                       </Transition>
                     </>
