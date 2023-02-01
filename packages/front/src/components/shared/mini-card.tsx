@@ -19,7 +19,7 @@ const MiniCard = ({
         setOpen(true);
       }}
     >
-      <img src="/shield-check.svg" alt="" />
+      <img src="/shield-check.svg" alt="Shild check icon" />
       <h2 className="font-[Sora] text-dark-grafiti font-bold text-xl">
         {title}
       </h2>
