@@ -51,7 +51,7 @@ const Index = () => {
             data-aos="fade-up"
           >
             <div className="p-40">
-              <img src="/mini-logo.svg" alt="" />
+              <img src="/mini-logo.svg" alt="Mini logo hideyourcash" />
             </div>
             <div className="w-full max-w-[650px]">
               <h1 className="text-5xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -182,7 +182,7 @@ const Index = () => {
                 criminal.
               </p>
             </div>
-            <img src="tabs.svg" alt="" className="hidden sm:block" />
+            <img src="tabs.svg" alt="Tabs" className="hidden sm:block" />
             <div className="flex flex-col items-center gap-5 justify-around w-full mt-[40px] sm:flex-row">
               <div className="w-full max-w-[313px] sm:mr-20">
                 <p className="text-xl font-normal text-dark-grafiti text-center">
@@ -202,7 +202,11 @@ const Index = () => {
               </div>
             </div>
             <div className="mt-[138px] bg-white w-full max-w-[1280px] flex flex-col items-center justify-center shadow-md rounded-[20px] px-5 lg:px-56">
-              <img src="/timer.svg" alt="" className="mb-[33px] mt-[26px]" />
+              <img
+                src="/timer.svg"
+                alt="Timer icon"
+                className="mb-[33px] mt-[26px]"
+              />
               <p className="font-normal text-dark-grafiti text-xl w-full max-w-[766px] mb-[64px] text-center">
                 <strong>There’s a time break</strong> in which you need to keep
                 your funds in the protocol, so that it can be actually mixed and
@@ -243,20 +247,28 @@ const Index = () => {
                   tools, such as <strong>hideyour.cash</strong>
                 </p>
               </div>
-              <img src="/cubes.svg" alt="" />
+              <img src="/cubes.svg" alt="Cubes" />
             </div>
             <div className="w-full mt-[20px]">
-              <img src="/small-line.svg" alt="" />
+              <img src="/small-line.svg" alt="Small Line" />
             </div>
             <div className="w-full mt-[32px]">
               <div className="flex gap-10 items-center">
                 <p className="text-dark-grafiti text-2xl font-normal">
                   We <span className="text-aqua">protect</span> you from{" "}
                 </p>
-                <img src="/large-line.svg" alt="" className="hidden lg:block" />
+                <img
+                  src="/large-line.svg"
+                  alt="Large Line"
+                  className="hidden lg:block"
+                />
               </div>
               <div className="hidden lg:flex w-full justify-end">
-                <img src="/mini-line.svg" alt="" className="mr-2 mt-[-8px]" />
+                <img
+                  src="/mini-line.svg"
+                  alt="Mini Line"
+                  className="mr-2 mt-[-8px]"
+                />
               </div>
             </div>
             <ul className="w-full grid grid-cols-[repeat_(auto-fit,minmax(13rem_1rf))] gap-10 mt-[35px] md:grid-cols-auto-fit">
@@ -266,7 +278,7 @@ const Index = () => {
                 "Wallet connections tracking",
                 "Profile analysis",
                 "Portfolio tracking",
-                "Front-run",
+                "Front run",
               ].map((title) => (
                 <MiniCard
                   title={title}
@@ -315,7 +327,7 @@ const Index = () => {
               </div>
             </div>
             <div className="mt-[197px]">
-              <img src="/fluxograma.svg" alt="" />
+              <img src="/fluxograma.svg" alt="Fluxograma" />
             </div>
             <div className="w-full mt-[219px]">
               <div className="bg-white rounded-[20px] shadow-md flex flex-col items-center justify-center gap-10">
@@ -433,20 +445,28 @@ const Index = () => {
               }}
             >
               {[
-                "Hack-a-Chain",
-                "Near Foundation",
-                "Proximity Labs",
-                "Lyrik Ventures",
-                "Hapi.one",
-                "Cypherpunk Guild",
-                "Near Starter",
-                "Near Week",
-              ].map((name) => (
+                { name: "Hack-a-Chain", icon: "/hackachain.svg" },
+                { name: "Near Foundation", icon: "/near_icon.svg" },
+                { name: "Proximity Labs", icon: "/assets/proximity.jpg" },
+                { name: "Lyrik Ventures", icon: "/assets/lyrikventures.png" },
+                { name: "Hapi.one", icon: "/assets/hapione.png" },
+                {
+                  name: "Cypherpunk Guild",
+                  icon: "/assets/cypherpunk-guild.jpg",
+                },
+                { name: "Near Starter", icon: "/near_icon.svg" },
+                { name: "Near Week", icon: "/near_icon.svg" },
+              ].map(({ name, icon }) => (
                 <SwiperSlide
                   key={name}
                   className="max-w-[270px] cursor-pointer"
                 >
-                  <h2 className="text-black font-extrabold font-[Sora] text-center">
+                  <h2 className="text-black font-extrabold font-[Sora] text-center flex items-center gap-5">
+                    <img
+                      src={icon}
+                      alt={name}
+                      className="w-14 h-14 rounded-full"
+                    />{" "}
                     {name}
                   </h2>
                 </SwiperSlide>
@@ -617,7 +637,7 @@ const Index = () => {
           </section>
         </Fade>
         <footer className="p-10 flex flex-col gap-5 justify-between relative z-[10]">
-          <div className="w-full flex justify-between gap-5">
+          <div className="w-full flex flex-col justify-between gap-5 md:flex-row">
             <a
               href=""
               target="_blank"
@@ -632,7 +652,8 @@ const Index = () => {
               rel="noreferrer"
               className="text-dark-grafiti font-semibold text-xl flex gap-5 items-center"
             >
-              <img src="/github.svg" alt="" className="w-10" /> Github
+              <img src="/github.svg" alt="Github Icon" className="w-10" />{" "}
+              Github
             </a>
             <a
               href="https://twitter.com/hideyourcash"
@@ -640,7 +661,8 @@ const Index = () => {
               rel="noreferrer"
               className="text-dark-grafiti font-semibold text-xl flex gap-5 items-center"
             >
-              <img src="/twitter.svg" alt="" className="w-10" /> Twitter
+              <img src="/twitter.svg" alt="Twitter Icon" className="w-10" />{" "}
+              Twitter
             </a>
             <a
               href=""
@@ -648,10 +670,11 @@ const Index = () => {
               rel="noreferrer"
               className="text-dark-grafiti font-semibold text-xl flex gap-5 items-center"
             >
-              <img src="/discord.svg" alt="" className="w-10" /> Discord
+              <img src="/discord.svg" alt="Discord Icon" className="w-10" />{" "}
+              Discord
             </a>
             <button
-              className="bg-aqua-gradient-medium w-10 h-10 rounded-full flex justify-center items-center cursor-pointer"
+              className="ml-auto mt-[-50px] md:m-0 bg-aqua-gradient-medium w-10 h-10 rounded-full flex justify-center items-center cursor-pointer"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
               <ArrowUpIcon width={20} className="font-bold" />

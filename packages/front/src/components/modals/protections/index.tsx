@@ -23,7 +23,7 @@ const protections = {
       "Especially for institutions, you don’t want to have your portfolio tracked by other players!",
   },
   "front run": {
-    messages:
+    message:
       "If you’re a big investor, it’s better to be hidden to prevent front run attacks.",
   },
 };
