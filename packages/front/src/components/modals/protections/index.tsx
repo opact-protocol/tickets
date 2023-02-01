@@ -24,7 +24,7 @@ const protections = {
   },
   "front run": {
     message:
-      "If you’re a big investor, it’s better to be hidden to prevent front run attacks.",
+      "If you’re a big investor, it’s better to be hidden to prevent front-run attacks.",
   },
 };
 
