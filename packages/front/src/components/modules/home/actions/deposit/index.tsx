@@ -88,6 +88,8 @@ export function Deposit({ changingTab }: { changingTab: boolean }) {
 
   const { action } = useAction(transactionHashes!, accountId!);
 
+  const { allowList } = useAllowlist(accountId!, selector);
+
   const preDeposit = async () => {
     if (!accountId) {
       toggleModal();
