@@ -9,7 +9,7 @@ export function Header() {
   const { accountId, toggleModal, signOut, selector } = useWalletSelector();
   const [showModal, setShowModal] = useState(false);
 
-  const { action } = useAction(transactionHashes!, accountId!);
+  const { allowList } = useAllowlist(accountId!, selector);
 
   if (
     action &&
