@@ -17,7 +17,7 @@ export const useAllowlist = (accountId: string, selector: any) => {
         useEnv("VITE_CONTRACT"),
         "view_is_in_allowlist",
         {
-          account_id: accountId,
+          account_id: accountId
         }
       );
 
