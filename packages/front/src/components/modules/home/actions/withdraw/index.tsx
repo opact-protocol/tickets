@@ -3,9 +3,10 @@ import { useApplication } from "@/store";
 import React, { useState, useMemo, useEffect, SetStateAction } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import toast from "react-hot-toast";
+import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 
 export function Withdraw({
-  setChangingTab,
+  setChangingTab
 }: {
   setChangingTab: React.Dispatch<SetStateAction<boolean>>;
 }) {
@@ -17,8 +18,9 @@ export function Withdraw({
   const [showModal, setShowModal] = useState(false);
   const [buttonText, setButtonText] = useState("Withdraw");
   const [errorMessage, setErrorMessage] = useState<{
-    errorHash: string;
-    errorRepicient: string;
+    errorHash?: string;
+    errorRepicient?: string;
+    nullifierValid?: string;
   }>();
 
   const handleMoreInfos = false;
@@ -26,10 +28,11 @@ export function Withdraw({
   const {
     hash: withdrawHash,
     fetchHashData,
-    prepareWithdraw,
+    prepareWithdraw
   } = useApplication();
 
   const { selector, accountId, toggleModal } = useWalletSelector();
+  const { nullifierValid } = useNullfierCheck(hash, selector);
 
   const preWithdraw = async () => {
     if (!accountId) {
@@ -40,17 +43,22 @@ export function Withdraw({
     if (!hash || !withdrawAddress) {
       setErrorMessage({
         errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address",
+        errorRepicient: "Invalid address"
       });
       return;
     }
+
+    // if (!nullifierValid) {
+    //   setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
+    //   return;
+    // }
 
     setButtonText("Preparing your withdraw...");
 
     try {
       await prepareWithdraw(selector, {
         note: hash,
-        recipient: withdrawAddress,
+        recipient: withdrawAddress
       });
       setShowModal(true);
     } catch (err) {
@@ -58,7 +66,7 @@ export function Withdraw({
       toast.error(
         "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes.",
         {
-          duration: 10000,
+          duration: 10000
         }
       );
     }
@@ -124,16 +132,14 @@ export function Withdraw({
                 }
               `}
               value={hash}
-              onInput={(ev) =>
-                handleHash((ev.target as HTMLInputElement).value)
-              }
+              onInput={ev => handleHash((ev.target as HTMLInputElement).value)}
               placeholder="Paste your withdar ticked"
             />
           </div>
           <p className="text-error mt-2 text-sm font-normal">
-            {errorMessage?.errorHash &&
-              hash.length === 0 &&
-              errorMessage.errorHash}
+            {errorMessage?.errorHash && hash.length === 0
+              ? errorMessage.errorHash
+              : errorMessage?.nullifierValid && errorMessage.nullifierValid}
           </p>
         </div>
         {handleMoreInfos && (
@@ -179,7 +185,7 @@ export function Withdraw({
              `}
               placeholder="Wallet Address"
               value={withdrawAddress}
-              onInput={(ev) =>
+              onInput={ev =>
                 setWithdrawAddress((ev.target as HTMLInputElement).value)
               }
             />
@@ -220,9 +226,9 @@ export function Withdraw({
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${
-                  hashData?.amount / 1 - hashData?.relayer_fee
-                } NEAR`}</span>
+                <span className="text-black font-bold">{`${hashData?.amount /
+                  1 -
+                  hashData?.relayer_fee} NEAR`}</span>
               </div>
             </div>
           </div>
