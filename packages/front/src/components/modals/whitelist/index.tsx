@@ -2,6 +2,7 @@ import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWalletSelector } from "@/utils/context/wallet";
+import { useAllowlist } from "@/hooks/useAllowlist";
 
 export function WhitelistModal({
   isOpen,
@@ -11,15 +12,16 @@ export function WhitelistModal({
   onClose: () => void;
 }) {
   const [userAddress, setUserAddress] = useState("");
-  const { selector } = useWalletSelector();
+  const { selector, accountId } = useWalletSelector();
 
   const { sendWhitelist } = useApplication();
+
+  const { allowList } = useAllowlist(accountId!, selector);
 
   const apply = () => {
     if (!userAddress) {
       return;
     }
-    localStorage.setItem("hyc-allowlist", "true");
     sendWhitelist(selector, userAddress);
   };
 
@@ -54,15 +56,19 @@ export function WhitelistModal({
                   as="h1"
                   className="text-black text-[18px] font-medium text-center font-[Sora]"
                 >
-                  Apply for Allowlist
+                  {allowList && accountId
+                    ? "You are already on the allowlist"
+                    : "Apply for Allowlist"}
                 </Dialog.Title>
 
-                <div className="mt-2 text-[16px] text-black space-y-[12px]">
-                  <p className="text-center">
-                    Apply to our allowlist to receive permission to make
-                    anonymous transfers at Hideyour.cash.
-                  </p>
-                </div>
+                {!allowList && (
+                  <div className="mt-2 text-[16px] text-black space-y-[12px]">
+                    <p className="text-center">
+                      Apply to our allowlist to receive permission to make
+                      anonymous transfers at Hideyour.cash.
+                    </p>
+                  </div>
+                )}
 
                 <div>
                   <div className="flex items-center justify-between">
@@ -71,9 +77,10 @@ export function WhitelistModal({
                     </span>
                   </div>
 
-                  <div>
-                    <input
-                      className="
+                  {accountId && allowList ? (
+                    <div>
+                      <input
+                        className="
                         mt-2
                         p-[8px]
                         h-[43px]
@@ -85,23 +92,45 @@ export function WhitelistModal({
                         px-[24px]
                         flex items-center justify-between
                       "
-                      value={userAddress}
-                      onInput={(ev) =>
-                        setUserAddress((ev.target as HTMLInputElement).value)
-                      }
-                      placeholder="near-exemple.testnet"
-                    />
-                  </div>
+                        value={accountId ? accountId : ""}
+                        placeholder="near-exemple.testnet"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        className="
+                        mt-2
+                        p-[8px]
+                        h-[43px]
+                        bg-[#f7f8fa]
+                        rounded-full
+                        text-black
+                        opacity-[.8]
+                        w-full
+                        px-[24px]
+                        flex items-center justify-between
+                      "
+                        value={accountId ? accountId : ""}
+                        onInput={(ev) => {
+                          setUserAddress((ev.target as HTMLInputElement).value);
+                        }}
+                        placeholder="near-exemple.testnet"
+                      />
+                    </div>
+                  )}
                 </div>
 
-                <div>
-                  <button
-                    onClick={() => apply()}
-                    className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                  >
-                    Apply now
-                  </button>
-                </div>
+                {!allowList && (
+                  <div>
+                    <button
+                      onClick={() => apply()}
+                      className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                    >
+                      Apply now
+                    </button>
+                  </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -52,7 +52,6 @@ export function Withdraw({
         note: hash,
         recipient: withdrawAddress,
       });
-
       setShowModal(true);
     } catch (err) {
       console.warn(err);
@@ -95,7 +94,7 @@ export function Withdraw({
   }, [hasErrorHash]);
 
   return (
-    <div className="">
+    <div>
       <div>
         <div className={`${handleMoreInfos ? "mb-2" : "mb-[76px]"}`}>
           <div className="flex items-center justify-between">
