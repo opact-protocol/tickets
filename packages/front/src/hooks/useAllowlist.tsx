@@ -14,9 +14,9 @@ export const useAllowlist = (accountId: string, selector: any) => {
       const result = await viewFunction(
         selector,
         import.meta.env.VITE_CONTRACT,
-        "view_is_in_whitelist",
+        "view_is_in_allowlist",
         {
-          account_id: accountId,
+          account_id: accountId
         }
       );
 

@@ -1,82 +1,52 @@
 import { MerkleTree } from "fixed-merkle-tree";
+import { client } from "./graphqlClient";
+import { gql } from "@apollo/client";
 import { mimc } from "./mimc";
-import { nearRpcClient } from "./near_rpc";
-
-const EVENT_PREFIX = "EVENT_JSON:";
-const EVENT_STANDARD = "hideyour.cash";
-
-const VERCEL_URL = "https://monorepo-hideyour-cash.vercel.app/api/query";
+import {
+  getAllowLists,
+  getDeposits,
+  getLastAllowlist,
+  getLastDeposit
+} from "@/utils/graphql-queries";
+import { verifyStorage } from "@/utils/verify-storage";
 
 const MERKLE_TREE_OPTIONS = {
   zeroElement:
     "21663839004416932945382355908790599225266501822907911457504978515578255421292",
-  hashFunction: mimc.hash,
-};
-
-const eventTypes = {
-  deposit: "deposit",
-  updated_whitelist: "whitelist",
+  hashFunction: mimc.hash
 };
 
 export async function buildTree() {
   await mimc.initMimc();
-  const txResponse = await fetch(VERCEL_URL);
-  const { body: transactions } = await txResponse.json();
 
-  const finalExecutionOutcomes = await Promise.all(
-    transactions.map(
-      ({ transaction_hash: txHash, predecessor_account_id: signerId }) =>
-        nearRpcClient.connection.provider.txStatusReceipts(txHash, signerId)
-    )
-  );
+  const deposit = await getDeposits();
+  const allowlist = await getAllowLists();
+  const lastDeposit = await getLastDeposit();
+  const lastAllowList = await getLastAllowlist();
 
-  const logs = finalExecutionOutcomes
-    .flatMap((feo) =>
-      feo.receipts_outcome.flatMap((receipt) => receipt.outcome.logs)
-    )
-    .filter((logs) => logs.length > 0);
+  if (!verifyStorage("deposit")) {
+    localStorage.setItem("deposit", JSON.stringify(deposit));
+  } else {
+    const depositStorage = JSON.parse(localStorage.getItem("deposit")!);
 
-  const events = logs
-    .map((log) => log.slice(EVENT_PREFIX.length))
-    .map((log) => JSON.parse(log))
-    .filter((event) => (event.standard = EVENT_STANDARD))
-    .filter((event) => (event.version = "1.0.0"))
-    .reduce(
-      (res, event) => {
-        const eventType = eventTypes[event.event];
+    const newStorage = [...depositStorage, ...lastDeposit];
 
-        if (!eventType) {
-          return res;
-        }
+    localStorage.setItem("deposit", JSON.stringify(newStorage));
+  }
 
-        res[eventTypes[event.event]].push(event);
+  if (!verifyStorage("allowlist")) {
+    localStorage.setItem("allowlist", JSON.stringify(allowlist));
+  } else {
+    const allowlistStorage = JSON.parse(localStorage.getItem("allowlist")!);
 
-        return res;
-      },
-      {
-        deposit: [],
-        whitelist: [],
-      }
-    );
+    const newStorage = [...allowlistStorage, ...lastAllowList];
 
-  events.deposit.sort((a, b) =>
-    Number(a.data[0].index) > Number(b.data[0].index) ? 1 : -1
-  );
-  events.whitelist.sort((a, b) =>
-    Number(a.data[0].index) > Number(b.data[0].index) ? 1 : -1
-  );
-
-  console.log("deposit events");
-  console.log(events.deposit.map((a) => a.data[0].index));
-
-  console.log("whitelist events");
-  console.log(events.whitelist.map((a) => a.data[0].index));
+    localStorage.setItem("allowlist", JSON.stringify(newStorage));
+  }
 
   const commitmentsTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
 
-  events.deposit.forEach(({ data }) => {
-    const { index, value } = data[0];
-
+  deposit.forEach(({ index, value }) => {
     try {
       commitmentsTree.update(index, value);
     } catch (e) {
@@ -86,9 +56,7 @@ export async function buildTree() {
 
   const whitelistTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
 
-  events.whitelist.forEach(({ data }) => {
-    const { index, value } = data[0];
-
+  allowlist.forEach(({ index, value }) => {
     try {
       whitelistTree.update(index, value);
     } catch (e) {
