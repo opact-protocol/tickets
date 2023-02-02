@@ -18,7 +18,7 @@ const Toast = ({
 
   useEffect(() => {
     (async () => {
-      await delay(5000);
+      await delay(10000);
       setIsVisible(false);
     })();
   }, []);

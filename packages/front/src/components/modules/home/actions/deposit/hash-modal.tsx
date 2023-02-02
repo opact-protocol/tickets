@@ -149,7 +149,11 @@ export default function Modal({
                       style={{ margin: 0 }}
                       label="Download your ticket in txt file"
                       filename="ticket.txt"
-                      exportFile={() => note}
+                      exportFile={() => {
+                        setCopy(true);
+                        setErrorMessage("");
+                        return note;
+                      }}
                     />
                   </p>
                 </p>
