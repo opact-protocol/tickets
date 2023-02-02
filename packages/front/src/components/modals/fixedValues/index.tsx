@@ -54,23 +54,20 @@ export const FixedValuesModal = ({
 
                 <div className="flex items-center justify-center gap-5 mb-20">
                   {amounts.map((amount, i) => (
-                    <>
+                    <div
+                      key={amount}
+                      className={`bg-transparent rounded-full p-1 ${
+                        i === 1 ? "bg-soft-blue-from-deep-blue" : ""
+                      }`}
+                    >
                       <div
-                        key={i}
-                        className={`bg-transparent rounded-full p-1 ${
-                          i === 1 ? "bg-soft-blue-from-deep-blue" : ""
-                        }`}
+                        className={`bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-pointer`}
                       >
-                        <div
-                          key={i}
-                          className={`bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-pointer`}
-                        >
-                          <span className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue">
-                            {amount} NEAR
-                          </span>
-                        </div>
+                        <span className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue">
+                          {amount} NEAR
+                        </span>
                       </div>
-                    </>
+                    </div>
                   ))}
                 </div>
                 <p className="text-dark-grafiti-medium text-lg max-w-[600px] mx-auto mb-32">

@@ -48,12 +48,12 @@ export default function Modal({
               <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-2">
                 <Dialog.Title
                   as="span"
-                  className="text-[#121315] text-[18px] font-[500]"
+                  className="text-black text-[18px] font-[500]"
                 >
                   Withdraw Confirmation
                 </Dialog.Title>
 
-                <div className="mt-2 text-[16px] text-[#121315] space-y-[12px]">
+                <div className="mt-2 text-[16px] text-black space-y-[12px]">
                   <p>
                     Your zk-Snark proof has ben successfully generated! Please
                     click Confirm to initiate the withdraw
@@ -63,7 +63,7 @@ export default function Modal({
                 <div>
                   <button
                     onClick={() => withdraw()}
-                    className="bg-[#121315] mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
+                    className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
                   >
                     Confirm
                   </button>
