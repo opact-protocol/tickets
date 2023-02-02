@@ -1,11 +1,11 @@
 import { client } from "@/services/graphqlClient";
 import { gql } from "@apollo/client";
 
-export const getDeposits = async () => {
+export const getDeposits = async (startId: string, len: string) => {
   const { data } = await client.query({
     query: gql`
-      query manyTokens($lastID: String) {
-        depositMerkleTreeUpdates(first: 1000, where: { id_gte: "0" }) {
+      query manyTokens($startId: String, $len: String) {
+        depositMerkleTreeUpdates(first: $len, where: { id_gt: $startId }) {
           id
           contract
           signer
@@ -13,17 +13,21 @@ export const getDeposits = async () => {
           value
         }
       }
-    `
+    `,
+    variables: {
+      startId,
+      first: len
+    }
   });
 
   return data.depositMerkleTreeUpdates;
 };
 
-export const getAllowLists = async () => {
+export const getAllowLists = async (startId: string, len: string) => {
   const { data } = await client.query({
     query: gql`
-      query manyTokens($lastID: String) {
-        allowlistMerkleTreeUpdates(first: 1000, where: { id_gte: "0" }) {
+      query manyTokens($startId: String, $len: String) {
+        allowlistMerkleTreeUpdates(first: $len, where: { id_gt: $startId }) {
           id
           contract
           signer
@@ -31,7 +35,11 @@ export const getAllowLists = async () => {
           value
         }
       }
-    `
+    `,
+    variables: {
+      startId,
+      first: len
+    }
   });
   return data.allowlistMerkleTreeUpdates;
 };
@@ -46,15 +54,11 @@ export const getLastDeposit = async () => {
           orderDirection: desc
         ) {
           id
-          contract
-          signer
-          index
-          value
         }
       }
     `
   });
-  return data.depositMerkleTreeUpdates;
+  return data.depositMerkleTreeUpdates[0].id;
 };
 
 export const getLastAllowlist = async () => {
@@ -67,13 +71,9 @@ export const getLastAllowlist = async () => {
           orderDirection: desc
         ) {
           id
-          contract
-          signer
-          index
-          value
         }
       }
     `
   });
-  return data.allowlistMerkleTreeUpdates;
+  return data.allowlistMerkleTreeUpdates[0].id;
 };
