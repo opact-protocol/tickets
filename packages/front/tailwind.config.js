@@ -63,6 +63,7 @@ module.exports = {
           "slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
         "slide-right":
           "slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+        loading: "loading 1s alternate infinite",
       },
       keyframes: {
         "slide-left": {
@@ -79,6 +80,14 @@ module.exports = {
           },
           "100%": {
             transform: "translateX(0)",
+          },
+        },
+        loading: {
+          "0%": {
+            transform: "scale(2)",
+          },
+          "100%": {
+            transform: "scale(1)",
           },
         },
       },

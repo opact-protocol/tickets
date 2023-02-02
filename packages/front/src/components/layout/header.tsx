@@ -3,28 +3,13 @@ import { useWalletSelector } from "@/utils/context/wallet";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
-import { useAction } from "@/hooks/useAction";
-import Toast from "../shared/toast";
-
-const transactionHashes = new URLSearchParams(window.location.search).get(
-  "transactionHashes"
-);
+import { useAllowlist } from "@/hooks/useAllowlist";
 
 export function Header() {
-  const [allowList, setAllowList] = useState(() => {
-    const data = localStorage.getItem("hyc-allowlist");
-    if (data) {
-      return Boolean(data);
-    }
-
-    return null;
-  });
-
-  const { accountId, toggleModal, signOut } = useWalletSelector();
-
+  const { accountId, toggleModal, signOut, selector } = useWalletSelector();
   const [showModal, setShowModal] = useState(false);
 
-  const { action } = useAction(transactionHashes!, accountId!);
+  const { allowList } = useAllowlist(accountId!, selector);
 
   return (
     <>
@@ -49,40 +34,24 @@ export function Header() {
               <button
                 onClick={() => setShowModal(true)}
                 className={`${
-                  action &&
-                  action.methodName === "whitelist" &&
-                  action.status === "success"
-                    ? "bg-green-light"
-                    : action?.status === "error"
-                    ? "bg-warning-3"
-                    : allowList
+                  allowList && accountId
                     ? "bg-green-light"
                     : "bg-soft-blue-normal"
                 } flex items-center justify-center space-x-[8px] text-black px-[24px] py-[10px] rounded-full w-full font-normal ${
-                  allowList ? "hover:bg-green-medium" : "hover:bg-hover-button"
+                  allowList && accountId
+                    ? "hover:bg-green-medium"
+                    : "hover:bg-hover-button"
                 } justify-bettween hover:transition-all`}
               >
-                {action &&
-                action.methodName === "whitelist" &&
-                action.status === "success" ? (
-                  <img src="/copied-icon.svg" alt="Check icon" />
-                ) : action?.status === "error" ? (
-                  <img src="/warning-circle-icon.svg" alt="Warning icon" />
-                ) : allowList ? (
+                {allowList && accountId ? (
                   <img src="/copied-icon.svg" alt="Check icon" />
                 ) : (
                   <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
                 )}
                 <span
-                  className={`whitespace-nowrap font-bold text-base ${
-                    action &&
-                    action.methodName === "whitelist" &&
-                    action.status === "success"
-                      ? "text-success"
-                      : action?.status === "error"
-                      ? "text-warning"
-                      : "text-soft-blue"
-                  } ${allowList && "text-success"}`}
+                  className={`whitespace-nowrap text-soft-blue-medium font-bold text-base ${
+                    allowList && accountId && "text-success"
+                  }`}
                 >
                   Allowlist
                 </span>
@@ -112,44 +81,6 @@ export function Header() {
           </Container>
         </nav>
       </header>
-      <Toast
-        icon={
-          !action && transactionHashes
-            ? "processing"
-            : action?.status === "success" && action.methodName === "whitelist"
-            ? "/check-circle-icon.svg"
-            : action?.status === "error" && action.methodName === "whitelist"
-            ? "/error-circle-icon.svg"
-            : ""
-        }
-        message={
-          !action && transactionHashes
-            ? "This process could take a few moments"
-            : action?.status === "success" && action.methodName === "whitelist"
-            ? "You can start making transactions with safety"
-            : action?.status === "error" && action.methodName === "whitelist"
-            ? "Something went wrong with your address"
-            : ""
-        }
-        title={
-          !action && transactionHashes
-            ? "Verifying your address"
-            : action?.status === "success" && action.methodName === "whitelist"
-            ? "Address verified"
-            : action?.status === "error" && action.methodName === "whitelist"
-            ? "Address denied."
-            : ""
-        }
-        visible={
-          !action && transactionHashes
-            ? true
-            : action?.status === "success" && action.methodName === "whitelist"
-            ? true
-            : action?.status === "error" && action.methodName === "whitelist"
-            ? true
-            : false
-        }
-      />
     </>
   );
 }
