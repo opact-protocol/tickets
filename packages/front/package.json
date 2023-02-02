@@ -12,6 +12,7 @@
     "node": ">=17.5.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.6",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@headlessui/react": "^1.6.6",
@@ -33,6 +34,7 @@
     "fixed-merkle-tree": "^0.7.3",
     "framer-motion": "^7.2.1",
     "g": "^2.0.1",
+    "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "near-api-js": "^1.0.0",
     "node-stdlib-browser": "^1.2.0",
