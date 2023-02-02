@@ -19,50 +19,82 @@ const MERKLE_TREE_OPTIONS = {
 export async function buildTree() {
   await mimc.initMimc();
 
-  const deposit = await getDeposits();
-  const allowlist = await getAllowLists();
-  const lastDeposit = await getLastDeposit();
-  const lastAllowList = await getLastAllowlist();
-
   if (!verifyStorage("deposit")) {
-    localStorage.setItem("deposit", JSON.stringify(deposit));
+    localStorage.setItem(
+      "deposit",
+      JSON.stringify({ lastIndex: null, depositStorage: [] })
+    );
   } else {
-    const depositStorage = JSON.parse(localStorage.getItem("deposit")!);
+    const lastDeposit = await getLastDeposit();
 
-    const newStorage = [...depositStorage, ...lastDeposit];
+    const { lastIndex, depositStorage } = JSON.parse(
+      localStorage.getItem("deposit")!
+    );
 
-    localStorage.setItem("deposit", JSON.stringify(newStorage));
+    if (Number(lastIndex) < Number(lastDeposit)) {
+      const lenStorage = Number(lastDeposit) - Number(lastIndex);
+
+      const deposits = await getDeposits(
+        lastIndex || "0",
+        lenStorage.toString()
+      );
+
+      const newStorage = depositStorage.concat(deposits);
+
+      localStorage.setItem(
+        "deposit",
+        JSON.stringify({ lastIndex: lastDeposit, depositStorage: newStorage })
+      );
+
+      deposits.forEach(({ index, value }) => {
+        try {
+          commitmentsTree.update(index, value);
+        } catch (e) {
+          console.warn(e);
+        }
+      });
+    }
   }
 
   if (!verifyStorage("allowlist")) {
-    localStorage.setItem("allowlist", JSON.stringify(allowlist));
+    localStorage.setItem(
+      "allowlist",
+      JSON.stringify({ lastIndex: null, allowlistStorage: [] })
+    );
   } else {
-    const allowlistStorage = JSON.parse(localStorage.getItem("allowlist")!);
+    const lastAllowlist = await getLastAllowlist();
 
-    const newStorage = [...allowlistStorage, ...lastAllowList];
+    const { lastIndex, allowlistStorage } = JSON.parse(
+      localStorage.getItem("allowlist")!
+    );
 
-    localStorage.setItem("allowlist", JSON.stringify(newStorage));
+    if (Number(lastIndex) < Number(lastAllowlist)) {
+      const lenStorage = Number(lastAllowlist) - Number(lastIndex);
+
+      const allowlists = await getAllowLists(
+        lastIndex || "0",
+        lenStorage.toString()
+      );
+
+      const newStorage = allowlistStorage.concat(allowlists);
+      console.log(newStorage);
+      localStorage.setItem(
+        "allowlist",
+        JSON.stringify({ lastIndex: lastAllowlist, depositStorage: newStorage })
+      );
+
+      allowlists.forEach(({ index, value }) => {
+        try {
+          whitelistTree.update(index, value);
+        } catch (e) {
+          console.warn(e);
+        }
+      });
+    }
   }
-
   const commitmentsTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
 
-  deposit.forEach(({ index, value }) => {
-    try {
-      commitmentsTree.update(index, value);
-    } catch (e) {
-      console.warn(e);
-    }
-  });
-
   const whitelistTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
-
-  allowlist.forEach(({ index, value }) => {
-    try {
-      whitelistTree.update(index, value);
-    } catch (e) {
-      console.warn(e);
-    }
-  });
 
   return { commitmentsTree, whitelistTree };
 }
