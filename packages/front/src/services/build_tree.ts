@@ -1,4 +1,6 @@
 import { MerkleTree } from "fixed-merkle-tree";
+import { client } from "./graphqlClient";
+import { gql } from "@apollo/client";
 import { mimc } from "./mimc";
 import { allowlistStorage, depositsStorage } from "@/utils/set-storages";
 
