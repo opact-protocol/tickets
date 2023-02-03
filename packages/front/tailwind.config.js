@@ -114,6 +114,9 @@ module.exports = {
       },
       gridTemplateColumns: {
         "auto-fit": "repeat(auto-fit, minmax(26rem, 1fr))",
+        "auto-fit-lg": "repeat(auto-fit, minmax(20rem, 1fr))",
+        "auto-fit-md": "repeat(auto-fit, minmax(14rem, 1fr))",
+        "auto-fit-sm": "repeat(auto-fit, minmax(12rem, 1fr))",
       },
     },
   },
