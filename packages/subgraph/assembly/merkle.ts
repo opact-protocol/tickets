@@ -1,7 +1,7 @@
 import { BigInt, json, JSONValue, log } from "@graphprotocol/graph-ts";
 import {
   DepositMerkleTreeUpdate,
-  AllowlistMerkleTreeUpdate
+  AllowlistMerkleTreeUpdate,
 } from "../generated/schema";
 
 export function handleDeposit(
@@ -36,6 +36,7 @@ export function handleDeposit(
       const depositEvent = new DepositMerkleTreeUpdate(
         counter.toU64().toString()
       );
+      depositEvent.counter = BigInt.fromU64(counter.toU64());
       depositEvent.contract = contract;
       depositEvent.signer = signer;
       depositEvent.index = BigInt.fromString(index.toString());
@@ -85,6 +86,7 @@ export function handleAllowlist(
       const allowlistEvent = new AllowlistMerkleTreeUpdate(
         counter.toU64().toString()
       );
+      allowlistEvent.counter = BigInt.fromU64(counter.toU64());
       allowlistEvent.contract = contract;
       allowlistEvent.signer = signer;
       allowlistEvent.index = BigInt.fromString(index.toString());
