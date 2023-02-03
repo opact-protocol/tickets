@@ -256,9 +256,9 @@ export function Withdraw() {
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${hashData?.amount /
-                  1 -
-                  hashData?.relayer_fee} NEAR`}</span>
+                <span className="text-black font-bold">{`${
+                  hashData?.amount / 1 - hashData?.relayer_fee
+                } NEAR`}</span>
               </div>
             </div>
           </div>
