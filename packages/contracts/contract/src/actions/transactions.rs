@@ -60,6 +60,82 @@ impl Contract {
     wxi: G1Point,
     wxi_w: G1Point,
   ) -> Promise {
+    self.evaluate_proof(
+      root,
+      nullifier_hash,
+      recipient.clone(),
+      relayer.clone(),
+      fee,
+      refund,
+      allowlist_root,
+      a,
+      b,
+      c,
+      z,
+      t_1,
+      t_2,
+      t_3,
+      eval_a,
+      eval_b,
+      eval_c,
+      eval_s1,
+      eval_s2,
+      eval_zw,
+      eval_r,
+      wxi,
+      wxi_w,
+    );
+
+    self.nullifier.insert(&nullifier_hash);
+    event_withdrawal(
+      self.nullifier_count,
+      recipient.clone(),
+      relayer.clone(),
+      fee,
+      refund,
+      nullifier_hash,
+    );
+
+    self.nullifier_count += 1;
+
+    if let Some(relayer_account) = relayer {
+      if fee > U256::zero() {
+        Promise::new(relayer_account).transfer(fee.as_u128());
+      }
+    }
+
+    Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
+  }
+}
+
+impl Contract {
+  pub fn evaluate_proof(
+    &self,
+    root: U256,
+    nullifier_hash: U256,
+    recipient: AccountId,
+    relayer: Option<AccountId>,
+    fee: U256,
+    refund: U256,
+    allowlist_root: U256,
+    // proof params
+    a: G1Point,
+    b: G1Point,
+    c: G1Point,
+    z: G1Point,
+    t_1: G1Point,
+    t_2: G1Point,
+    t_3: G1Point,
+    eval_a: U256,
+    eval_b: U256,
+    eval_c: U256,
+    eval_s1: U256,
+    eval_s2: U256,
+    eval_zw: U256,
+    eval_r: U256,
+    wxi: G1Point,
+    wxi_w: G1Point,
+  ) {
     assert!(
       fee < U256::from_dec_str(&self.deposit_value.to_string()).unwrap(),
       "fee cannot be greater than deposit value"
@@ -84,9 +160,6 @@ impl Contract {
     match relayer.clone() {
       Some(relayer_account) => {
         relayer_hash = account_hash(&relayer_account);
-        if fee > U256::zero() {
-          Promise::new(relayer_account).transfer(fee.as_u128());
-        }
       }
       None => {
         relayer_hash = U256::zero();
@@ -126,19 +199,5 @@ impl Contract {
       }),
       "proof submited is invalid"
     );
-
-    self.nullifier.insert(&nullifier_hash);
-    event_withdrawal(
-      self.nullifier_count,
-      recipient.clone(),
-      relayer,
-      fee,
-      refund,
-      nullifier_hash,
-    );
-
-    self.nullifier_count += 1;
-
-    Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
   }
 }
