@@ -1,5 +1,6 @@
 type DepositMerkleTreeUpdate @entity {
-  id: ID!
+  id: ID!,
+  counter: BigInt!,
   contract: String!,
   signer: String!,
   index: BigInt!,
@@ -9,6 +10,7 @@ type DepositMerkleTreeUpdate @entity {
 
 type AllowlistMerkleTreeUpdate @entity {
   id: ID!
+  counter: BigInt!,
   contract: String!,
   signer: String,
   index: BigInt!,
@@ -20,6 +22,7 @@ type AllowlistMerkleTreeUpdate @entity {
 
 type Withdrawal @entity {
   id: ID!
+  counter: BigInt!,
   contract: String!,
   signer: String!,
   relayer: String,

@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class DepositMerkleTreeUpdate extends Entity {
@@ -45,6 +45,15 @@ export class DepositMerkleTreeUpdate extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get counter(): BigInt {
+    let value = this.get("counter");
+    return value!.toBigInt();
+  }
+
+  set counter(value: BigInt) {
+    this.set("counter", Value.fromBigInt(value));
   }
 
   get contract(): string {
@@ -127,6 +136,15 @@ export class AllowlistMerkleTreeUpdate extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get counter(): BigInt {
+    let value = this.get("counter");
+    return value!.toBigInt();
+  }
+
+  set counter(value: BigInt) {
+    this.set("counter", Value.fromBigInt(value));
   }
 
   get contract(): string {
@@ -230,6 +248,15 @@ export class Withdrawal extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get counter(): BigInt {
+    let value = this.get("counter");
+    return value!.toBigInt();
+  }
+
+  set counter(value: BigInt) {
+    this.set("counter", Value.fromBigInt(value));
   }
 
   get contract(): string {

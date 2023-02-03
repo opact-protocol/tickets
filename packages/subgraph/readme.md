@@ -22,10 +22,10 @@ The idea behind the app is that every client must cache the entire merkle trees 
 1. Find current tree length
 ```graphql
 {
-  # This operation will return the id of the most recent
+  # This operation will return the counter of the most recent
   # update to the allowlistMerkleTree
   allowlistMerkleTreeUpdates(first: 1, orderBy: timestamp, orderDirection: desc) {
-    id
+    counter
   }
 }
 ```
@@ -34,7 +34,7 @@ The idea behind the app is that every client must cache the entire merkle trees 
 ```graphql
 {
   # gf
-  allowlistMerkleTreeUpdates(skip: $ALREADY_CACHED_ITEMS, first: $PAGINATION_SIZE, orderBy: timestamp, orderDirection: asc) {
+  allowlistMerkleTreeUpdates(first: $PAGINATION_SIZE, where: {counter_gt: $ALREADY_CACHED_ITEMS}, orderBy: timestamp, orderDirection: asc) {
     id
     contract
     signer
