@@ -15,13 +15,13 @@ const HeaderLanding = () => {
         </a>
       </div>
       <Bars3Icon
-        className="text-black w-8 cursor-pointer md:hidden"
+        className="text-black w-8 cursor-pointer lg:hidden"
         onClick={() => setOpen(true)}
       />
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-[12] md:hidden"
+          className="relative z-[12] lg:hidden"
           onClose={setOpen}
         >
           <Transition.Child
@@ -110,7 +110,7 @@ const HeaderLanding = () => {
           </div>
         </Dialog>
       </Transition.Root>
-      <nav className="hidden md:block">
+      <nav className="hidden lg:block">
         <ul className="flex gap-10 items-center">
           <li className="text-black font-bold text-base border-b-[1px] border-transparent hover:border-black transition-all">
             <a href="#how-it-works">How it works</a>
