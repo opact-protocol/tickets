@@ -11,18 +11,17 @@ export function WhitelistModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [userAddress, setUserAddress] = useState("");
-  const { selector, accountId } = useWalletSelector();
+  const { selector, accountId, toggleModal } = useWalletSelector();
 
   const { sendWhitelist } = useApplication();
 
   const { allowList } = useAllowlist(accountId!, selector);
 
   const apply = () => {
-    if (!userAddress) {
+    if (!accountId) {
       return;
     }
-    sendWhitelist(selector, userAddress);
+    sendWhitelist(selector, accountId!);
   };
 
   return (
@@ -70,58 +69,42 @@ export function WhitelistModal({
                   </div>
                 )}
 
-                <div>
-                  <div className="flex items-center justify-between">
+                {accountId && (
+                  <div className="flex items-center justify-center">
                     <span className="text-black text-[1.1rem] font-medium">
                       Your Address
                     </span>
                   </div>
+                )}
 
+                <div>
                   {accountId && allowList ? (
                     <div>
-                      <input
-                        className="
-                        mt-2
-                        p-[8px]
-                        h-[43px]
-                        bg-[#f7f8fa]
-                        rounded-full
-                        text-black
-                        opacity-[.8]
-                        w-full
-                        px-[24px]
-                        flex items-center justify-between
-                      "
-                        value={accountId ? accountId : ""}
-                        placeholder="near-exemple.testnet"
-                      />
+                      <h2 className="text-dark-grafiti font-bold font-[Sora] mt-4 text-center">
+                        {accountId}
+                      </h2>
                     </div>
                   ) : (
                     <div>
-                      <input
-                        className="
-                        mt-2
-                        p-[8px]
-                        h-[43px]
-                        bg-[#f7f8fa]
-                        rounded-full
-                        text-black
-                        opacity-[.8]
-                        w-full
-                        px-[24px]
-                        flex items-center justify-between
-                      "
-                        value={accountId ? accountId : ""}
-                        onInput={(ev) => {
-                          setUserAddress((ev.target as HTMLInputElement).value);
-                        }}
-                        placeholder="near-exemple.testnet"
-                      />
+                      <h2 className="text-dark-grafiti font-bold font-[Sora] mt-4 text-center">
+                        {accountId}
+                      </h2>
                     </div>
                   )}
                 </div>
 
-                {!allowList && (
+                {!accountId && (
+                  <div>
+                    <button
+                      onClick={() => toggleModal()}
+                      className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                    >
+                      Connect wallet
+                    </button>
+                  </div>
+                )}
+
+                {!allowList && accountId && (
                   <div>
                     <button
                       onClick={() => apply()}
