@@ -2,7 +2,7 @@ import { viewFunction } from "@/utils/tools";
 import { useEffect, useState } from "react";
 
 export const useNullfierCheck = (note: string, selector: any) => {
-  const [nullifierValid, setNullifierValid] = useState<boolean>(false);
+  const [nullifierInvalid, setNullifierInvalid] = useState<boolean>(false);
 
   useEffect(() => {
     if (!note) return;
@@ -13,13 +13,13 @@ export const useNullfierCheck = (note: string, selector: any) => {
         import.meta.env.VITE_CONTRACT,
         "view_was_nullifier_spent",
         {
-          nullifier: note.split("-")[1]
+          nullifier: note.split("-")[1],
         }
       );
 
-      setNullifierValid(result);
+      setNullifierInvalid(result);
     })();
   }, [note]);
 
-  return { nullifierValid };
+  return { nullifierInvalid };
 };

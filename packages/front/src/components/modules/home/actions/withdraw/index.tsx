@@ -1,16 +1,11 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import React, { useState, useMemo, useEffect, SetStateAction } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import toast from "react-hot-toast";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 
-export function Withdraw({
-  setChangingTab
-}: {
-  setChangingTab: React.Dispatch<SetStateAction<boolean>>;
-}) {
-  setChangingTab(true);
+export function Withdraw() {
   const [hash, setHash] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [hashData, setHashData] = useState<any>();
@@ -28,11 +23,11 @@ export function Withdraw({
   const {
     hash: withdrawHash,
     fetchHashData,
-    prepareWithdraw
+    prepareWithdraw,
   } = useApplication();
 
   const { selector, accountId, toggleModal } = useWalletSelector();
-  const { nullifierValid } = useNullfierCheck(hash, selector);
+  const { nullifierInvalid } = useNullfierCheck(hash, selector);
 
   const preWithdraw = async () => {
     if (!accountId) {
@@ -43,22 +38,22 @@ export function Withdraw({
     if (!hash || !withdrawAddress) {
       setErrorMessage({
         errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address"
+        errorRepicient: "Invalid address",
       });
       return;
     }
 
-    // if (!nullifierValid) {
-    //   setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
-    //   return;
-    // }
+    if (nullifierInvalid) {
+      setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
+      return;
+    }
 
     setButtonText("Preparing your withdraw...");
 
     try {
       await prepareWithdraw(selector, {
         note: hash,
-        recipient: withdrawAddress
+        recipient: withdrawAddress,
       });
       setShowModal(true);
     } catch (err) {
@@ -66,7 +61,7 @@ export function Withdraw({
       toast.error(
         "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes.",
         {
-          duration: 10000
+          duration: 10000,
         }
       );
     }
@@ -132,7 +127,9 @@ export function Withdraw({
                 }
               `}
               value={hash}
-              onInput={ev => handleHash((ev.target as HTMLInputElement).value)}
+              onInput={(ev) =>
+                handleHash((ev.target as HTMLInputElement).value)
+              }
               placeholder="Paste your withdar ticked"
             />
           </div>
@@ -185,7 +182,7 @@ export function Withdraw({
              `}
               placeholder="Wallet Address"
               value={withdrawAddress}
-              onInput={ev =>
+              onInput={(ev) =>
                 setWithdrawAddress((ev.target as HTMLInputElement).value)
               }
             />
@@ -226,9 +223,9 @@ export function Withdraw({
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${hashData?.amount /
-                  1 -
-                  hashData?.relayer_fee} NEAR`}</span>
+                <span className="text-black font-bold">{`${
+                  hashData?.amount / 1 - hashData?.relayer_fee
+                } NEAR`}</span>
               </div>
             </div>
           </div>
