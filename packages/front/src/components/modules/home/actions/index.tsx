@@ -1,5 +1,4 @@
 import { Tab } from "@headlessui/react";
-import { useState } from "react";
 import { Deposit } from "./deposit";
 import { Withdraw } from "./withdraw";
 
@@ -7,7 +6,6 @@ const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
-  const [changingTab, setChangingTab] = useState(false);
 
   return (
     <div className="w-[95%] max-w-[479px] bg-background-page px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
@@ -36,10 +34,10 @@ export function Actions() {
 
         <Tab.Panels className="mt-2 w-full">
           <Tab.Panel>
-            <Deposit changingTab={changingTab} />
+            <Deposit />
           </Tab.Panel>
           <Tab.Panel>
-            <Withdraw setChangingTab={setChangingTab} />
+            <Withdraw />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

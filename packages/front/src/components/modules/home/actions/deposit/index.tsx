@@ -36,7 +36,7 @@ const tokens = [
 
 const customId = "deposit-toast";
 
-export function Deposit({ changingTab }: { changingTab: boolean }) {
+export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -80,8 +80,6 @@ export function Deposit({ changingTab }: { changingTab: boolean }) {
   }
 
   const { allowList } = useAllowlist(accountId!, selector);
-
-  const { action } = useAction(transactionHashes!, accountId!);
 
   const { allowList } = useAllowlist(accountId!, selector);
 
