@@ -110,7 +110,7 @@ export function Withdraw() {
     if (!hash || !withdrawAddress) {
       setErrorMessage({
         errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address"
+        errorRepicient: "Invalid address",
       });
       return;
     }
@@ -264,9 +264,9 @@ export function Withdraw() {
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${hashData?.amount /
-                  1 -
-                  hashData?.relayer_fee} NEAR`}</span>
+                <span className="text-black font-bold">{`${
+                  hashData?.amount / 1 - hashData?.relayer_fee
+                } NEAR`}</span>
               </div>
             </div>
           </div>
