@@ -1,17 +1,14 @@
 import { Container } from "@/components";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { DocumentIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import Zoom from "react-reveal/Zoom";
+import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
-import Zoom from "react-reveal/Zoom";
-import Fade from "react-reveal/Fade";
-import "swiper/css";
-import { useEffect, useState } from "react";
-import { ProtectionModal } from "@/components/modals/protections";
 
 const Waves = () => {
   return (
@@ -32,8 +29,6 @@ const Waves = () => {
 
 const Index = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [protection, setProtection] = useState("");
 
   useEffect(() => {
     document.body.style.background =
@@ -43,15 +38,16 @@ const Index = () => {
   return (
     <>
       <Waves />
-      <Container>
+      <Container className="relative z-10">
         <HeaderLanding />
         <Zoom>
-          <section
-            className="flex flex-col justify-center items-center"
-            data-aos="fade-up"
-          >
-            <div className="p-40">
-              <img src="/mini-logo.svg" alt="Mini logo hideyourcash" />
+          <section className="flex flex-col justify-center items-center">
+            <div className="pb-16 pt-40 w-[30px]">
+              <img
+                src="/mini-logo.svg"
+                alt="Mini logo hideyourcash"
+                className="w-[25px] mx-auto object-cover"
+              />
             </div>
             <div className="w-full max-w-[650px]">
               <h1 className="text-5xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -65,7 +61,7 @@ const Index = () => {
                 The first mixer that prevents illicit financial transactions and
                 brings privacy for well-intended users.
               </p>
-              <div className="flex flex-col items-center justify-center w-full gap-8 mt-[80px] md:flex-row">
+              <div className="flex flex-col items-center justify-center w-full gap-8 mt-[50px] md:flex-row">
                 <button
                   className="text-white p-3 rounded-[50px] font-bold text-lg bg-aqua w-full hover:bg-aqua-medium hover:transition-all"
                   onClick={() => navigate("/hideyourcash")}
@@ -79,8 +75,8 @@ const Index = () => {
             </div>
           </section>
         </Zoom>
-        <Fade left cascade>
-          <section className="flex flex-col justify-center items-center mt-[423px]">
+        <Fade right>
+          <section className="flex flex-col justify-center items-center mt-[216px]">
             <div className="w-full">
               <h1 className="text-5xl text-dark-grafiti font-[Sora] font-bold text-center">
                 Privacy with{" "}
@@ -89,7 +85,7 @@ const Index = () => {
                 </span>
                 .
               </h1>
-              <p className="text-dark-grafiti text-2xl font-normal text-center mt-[42px] mb-[325px]">
+              <p className="text-dark-grafiti text-2xl font-normal text-center mt-[42px] mb-[50px]">
                 The future of web3
               </p>
               <Card
@@ -110,9 +106,9 @@ const Index = () => {
             </div>
           </section>
         </Fade>
-        <Fade right cascade>
+        <Fade left>
           <section
-            className="flex flex-col justify-center items-center mt-[147px]"
+            className="flex flex-col justify-center items-center mt-[70px]"
             id="easy-to-use"
           >
             <div className="w-full">
@@ -166,8 +162,8 @@ const Index = () => {
             </div>
           </section>
         </Fade>
-        <Fade left cascade>
-          <section className="flex flex-col justify-center items-center mt-[226px]">
+        <Fade right>
+          <section className="flex flex-col justify-center items-center mt-[125px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center flex items-center justify-center">
                 Get out,{" "}
@@ -219,8 +215,8 @@ const Index = () => {
             </div>
           </section>
         </Fade>
-        <Fade right cascade>
-          <section className="flex flex-col justify-center items-center mt-[324px]">
+        <Fade left>
+          <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
                 Why{" "}
@@ -229,7 +225,7 @@ const Index = () => {
                 </span>
                 !
               </h1>
-              <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[186px]">
+              <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[110px]">
                 Keep your money and identity safe
               </p>
             </div>
@@ -281,20 +277,14 @@ const Index = () => {
                 "Portfolio tracking",
                 "Front run",
               ].map((title) => (
-                <MiniCard
-                  title={title}
-                  key={title}
-                  protection={title}
-                  setProtection={setProtection}
-                  setOpen={setOpen}
-                />
+                <MiniCard title={title} key={title} protection={title} />
               ))}
             </ul>
           </section>
         </Fade>
-        <Fade left cascade>
+        <Fade right>
           <section
-            className="flex flex-col justify-center items-center mt-[337px]"
+            className="flex flex-col justify-center items-center mt-[150px]"
             id="how-it-works"
           >
             <div className="w-full">
@@ -306,8 +296,19 @@ const Index = () => {
                 !
               </h1>
               <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[145px]">
-                The protocol works through a technology called zkSNARKS which is
-                a type of zero-knowledge cryptographic proof
+                Since multiple people are depositing and withdrawing from the
+                protocol at the same time, there is no way to link a withdrawing
+                account to an initial depositor, thus your withdrawing account
+                becomes private, and no one can tell who originally deposited
+                it.
+                <a
+                  href=""
+                  rel="noreferrer"
+                  target="_blank"
+                  className="text-aqua underline"
+                >
+                  Check out the tech specifications here.
+                </a>
               </p>
             </div>
             <div className="w-full flex flex-col gap-24 justify-between items-center xl:flex-row">
@@ -361,8 +362,8 @@ const Index = () => {
             </div>
           </section>
         </Fade>
-        <Fade right cascade>
-          <section className="flex flex-col justify-center items-center mt-[254px]">
+        <Fade left>
+          <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
                 Project{" "}
@@ -412,8 +413,8 @@ const Index = () => {
             </div>
           </section>
         </Fade>
-        <Fade left cascade>
-          <section className="flex flex-col justify-center items-center mt-[350px]">
+        <Fade right>
+          <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
                 Our{" "}
@@ -422,29 +423,7 @@ const Index = () => {
                 </span>{" "}
               </h1>
             </div>
-            <Swiper
-              slidesPerView={4}
-              wrapperTag="ul"
-              className="flex mt-[200px] w-full items-center justify-center"
-              breakpoints={{
-                0: {
-                  slidesPerView: 2,
-                  spaceBetween: 10,
-                },
-                480: {
-                  slidesPerView: 2,
-                  spaceBetween: 10,
-                },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 15,
-                },
-                1024: {
-                  slidesPerView: 4,
-                  spaceBetween: 30,
-                },
-              }}
-            >
+            <ul className="w-full grid grid-cols-auto-fit-sm gap-10 mt-[70px] md:grid-cols-auto-fit-md">
               {[
                 { name: "Hack-a-Chain", icon: "/hackachain.svg" },
                 { name: "Near Foundation", icon: "/near_icon.svg" },
@@ -458,10 +437,7 @@ const Index = () => {
                 { name: "Near Starter", icon: "/near_icon.svg" },
                 { name: "Near Week", icon: "/near_icon.svg" },
               ].map(({ name, icon }) => (
-                <SwiperSlide
-                  key={name}
-                  className="max-w-[270px] cursor-pointer"
-                >
+                <li key={name} className="max-w-[230px]">
                   <h2 className="text-black font-extrabold font-[Sora] text-center flex items-center gap-5">
                     <img
                       src={icon}
@@ -470,14 +446,14 @@ const Index = () => {
                     />{" "}
                     {name}
                   </h2>
-                </SwiperSlide>
+                </li>
               ))}
-            </Swiper>
+            </ul>
           </section>
         </Fade>
-        <Fade right cascade>
+        <Fade left>
           <section
-            className="flex flex-col justify-center items-center mt-[566px]"
+            className="flex flex-col justify-center items-center mt-[150px]"
             id="faq"
           >
             <div className="w-full">
@@ -521,13 +497,13 @@ const Index = () => {
                           will be doing the same thing. So all the transactions
                           will be "mixed" on the protocol, and it won't be
                           possible to know for sure where they came from. The
-                          fact is: if the volume on the protocol is too small,
-                          it will be easier to trace back the transaction to the
-                          wallet that has deposited, since the "mixing" will
-                          have a smaller volume. It's impossible to be 100% sure
-                          of where it came from, but the less volume and the
-                          less time the funds are kept on the mixer, the bigger
-                          the probability of finding out the wallet that has
+                          fact is that if the volume on the protocol is too
+                          small, it will be easier to trace back the transaction
+                          to the deposited wallet since the "mixing" will have a
+                          smaller volume. It's impossible to be 100% sure of
+                          where it came from, but the less volume and the less
+                          time the funds are kept on the mixer, the bigger the
+                          probability of finding out the wallet that has
                           deposited the funds.
                         </Disclosure.Panel>
                       </Transition>
@@ -562,24 +538,23 @@ const Index = () => {
                       >
                         <Disclosure.Panel className="border-t-[1px] border-dark-grafiti mx-16 pt-9 pb-16 text-lg text-dark-grafiti">
                           Hideyour.cash has an allowlist and blocklist
-                          mechanism. Only allowed wallets will be able to
-                          interact with the protocol. We have partners that
-                          trace on-chain wallet's activities and create a
-                          "suspicious score" from this data. Suspicious wallets
-                          won't be able to deposit or withdraw from the
-                          protocol. If a bad actor deposits into the protocol
-                          before our partners can add their wallets to a
-                          suspicious list, they can still be blocked from
-                          withdrawing. Even if they are on the allowlist, they
-                          can be added to a blocklist at any time. If they try
-                          to withdraw their funds before being added to the
-                          suspicious list, they risk being easily tracked, since
-                          it will be a faster transaction, therefore less
-                          mixing. Hideyour.cash utilizes game theory to deter
-                          malicious behavior. It is not profitable for a bad
-                          actor to use hideyour.cash, as they could be blocked
-                          at any moment. Withdrawing funds too quickly also
-                          increases the chance of being traced.
+                          mechanism. Only allowed wallets can interact with the
+                          protocol. We have partners that trace on-chain wallet
+                          activities and create a "suspicion score" from this
+                          data. Suspicious wallets won't be able to deposit or
+                          withdraw from the protocol. If a bad actor deposits
+                          into the protocol before our partners can add their
+                          wallets to a suspicious list, they can still be
+                          blocked from withdrawing. Even if they are on the
+                          allowlist, they can be added to a blocklist at any
+                          time. If they try to withdraw their funds before being
+                          added to the suspicious list, they risk being easily
+                          tracked, since it will be a faster transaction,
+                          therefore less mixing. Hideyour.cash utilizes game
+                          theory to deter malicious behavior. It is not
+                          profitable for a bad actor to use hideyour.cash, as
+                          they could be blocked at any moment. Withdrawing funds
+                          too quickly also increases the chance of being traced.
                         </Disclosure.Panel>
                       </Transition>
                     </>
@@ -587,7 +562,7 @@ const Index = () => {
                 </Disclosure>
               </div>
             </div>
-            <div className="w-full px-4 mb-[600px]">
+            <div className="w-full px-4 mb-[150px]">
               <div className="rounded-[20px] bg-white shadow-md">
                 <Disclosure>
                   {({ open }) => (
@@ -684,14 +659,6 @@ const Index = () => {
           </p>
         </footer>
       </Container>
-      {protection && (
-        <ProtectionModal
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          protection={protection}
-          key={protection}
-        />
-      )}
     </>
   );
 };
