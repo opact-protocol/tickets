@@ -16,7 +16,7 @@ export const useAllowlist = (accountId: string, selector: any) => {
         import.meta.env.VITE_CONTRACT,
         "view_is_in_allowlist",
         {
-          account_id: accountId
+          account_id: accountId,
         }
       );
 

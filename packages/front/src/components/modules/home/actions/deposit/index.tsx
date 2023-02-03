@@ -25,11 +25,11 @@ const tokens = [
   { id: 4, name: "CARDANO" },
 ];
 
-const transactionHashes = new URLSearchParams(window.location.search).get(
-  "transactionHashes"
-);
+// const transactionHashes = new URLSearchParams(window.location.search).get(
+//   "transactionHashes"
+// );
 
-export function Deposit({ changingTab }: { changingTab: boolean }) {
+export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -41,8 +41,6 @@ export function Deposit({ changingTab }: { changingTab: boolean }) {
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
-
-  const { action } = useAction(transactionHashes!, accountId!);
 
   const { allowList } = useAllowlist(accountId!, selector);
 
@@ -237,50 +235,6 @@ export function Deposit({ changingTab }: { changingTab: boolean }) {
           />
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
-        {!changingTab && (
-          <Toast
-            icon={
-              !action && transactionHashes
-                ? "processing"
-                : action?.status === "success" &&
-                  action.methodName === "deposit"
-                ? "/check-circle-icon.svg"
-                : action?.status === "error" && action.methodName === "deposit"
-                ? "/error-circle-icon.svg"
-                : ""
-            }
-            message={
-              !action && transactionHashes
-                ? "This process could take a few moments"
-                : action?.status === "success" &&
-                  action.methodName === "deposit"
-                ? "Wait at least 30 minutes to withdraw"
-                : action?.status === "error" && action.methodName === "deposit"
-                ? "The funds had been sent back to your wallet.Click here to know more"
-                : ""
-            }
-            title={
-              !action && transactionHashes
-                ? "Processing deposit"
-                : action?.status === "success" &&
-                  action.methodName === "deposit"
-                ? "Funds deposited successfully!"
-                : action?.status === "error" && action.methodName === "deposit"
-                ? "Deposit failed"
-                : ""
-            }
-            visible={
-              !action && transactionHashes
-                ? true
-                : action?.status === "success" &&
-                  action.methodName === "deposit"
-                ? true
-                : action?.status === "error" && action.methodName === "deposit"
-                ? true
-                : false
-            }
-          />
-        )}
       </div>
       <WhitelistModal
         isOpen={showAllowlist}
