@@ -1,11 +1,11 @@
 import { client } from "@/services/graphqlClient";
 import { gql } from "@apollo/client";
 
-export const getDeposits = async () => {
+export const getDeposits = async (startID: string, len: number) => {
   const { data } = await client.query({
     query: gql`
-      query manyTokens($lastID: String) {
-        depositMerkleTreeUpdates(first: 1000, where: { id_gte: "0" }) {
+      query manyTokens($startID: String, $len: Number) {
+        depositMerkleTreeUpdates(first: $len, where: { id_gt: $startID }) {
           id
           contract
           signer
@@ -13,7 +13,10 @@ export const getDeposits = async () => {
           value
         }
       }
-    `
+    `,
+    {
+      lastID, len 
+    }
   });
 
   return data.depositMerkleTreeUpdates;
@@ -46,15 +49,11 @@ export const getLastDeposit = async () => {
           orderDirection: desc
         ) {
           id
-          contract
-          signer
-          index
-          value
         }
       }
     `
   });
-  return data.depositMerkleTreeUpdates;
+  return data.depositMerkleTreeUpdates[0].id;
 };
 
 export const getLastAllowlist = async () => {

@@ -16,22 +16,44 @@ const MERKLE_TREE_OPTIONS = {
   hashFunction: mimc.hash
 };
 
+type LocalStorageTree = {
+  lastIndex: string | null,
+  array: Array<any>
+}
+
 export async function buildTree() {
   await mimc.initMimc();
 
-  const deposit = await getDeposits();
-  const allowlist = await getAllowLists();
-  const lastDeposit = await getLastDeposit();
-  const lastAllowList = await getLastAllowlist();
+  // const deposit = await getDeposits();
+  // const allowlist = await getAllowLists();
+  // const lastDeposit = await getLastDeposit();
+  // const lastAllowList = await getLastAllowlist();
 
   if (!verifyStorage("deposit")) {
-    localStorage.setItem("deposit", JSON.stringify(deposit));
+    localStorage.setItem("deposit", JSON.stringify({
+      despositLastIndex: null,
+      depositStorage: []
+    }));
   } else {
-    const depositStorage = JSON.parse(localStorage.getItem("deposit")!);
+    const {despositLastIndex, depositStorage} = JSON.parse(localStorage.getItem("deposit")!);
 
-    const newStorage = [...depositStorage, ...lastDeposit];
+    const lastDeposit = await getLastDeposit();
 
-    localStorage.setItem("deposit", JSON.stringify(newStorage));
+    let newStorage;
+    if (!despositLastIndex || Number(despositLastIndex) < Number(lastDeposit)) {
+      const qtyToQuery = Number(lastDeposit) - Number(despositLastIndex || 0);
+      
+      const newValues = await getDeposits(lastDeposit, qtyToQuery)
+
+      newStorage = [...depositStorage, ...newValues];
+    } else {
+      newStorage = depositStorage;
+    }
+    
+    localStorage.setItem("deposit", JSON.stringify({
+      despositLastIndex: lastDeposit,
+      depositStorage: newStorage
+    }));
   }
 
   if (!verifyStorage("allowlist")) {
@@ -63,6 +85,11 @@ export async function buildTree() {
       console.warn(e);
     }
   });
+
+  // localStorage.setItem("allowlist", JSON.stringify({
+  //   allowlistLastIndex: allowlistLastIndex,
+  //   allowlistStorage: whitelistTree.elements()
+  // }));
 
   return { commitmentsTree, whitelistTree };
 }
