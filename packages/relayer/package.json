@@ -1,0 +1,19 @@
+{
+  "name": "test-cloudflare-workers",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230115.0",
+    "@types/big.js": "^6.1.6",
+    "typescript": "^4.9.5",
+    "wrangler": "2.9.0"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "big.js": "^6.2.1",
+    "near-api-js": "^1.1.0"
+  }
+}
