@@ -1,56 +1,49 @@
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { useEffect, useState } from "react";
 
 export const LoadingModal = ({
-  isOpen,
-  onClose,
+  generatingProof,
 }: {
-  isOpen: boolean;
-  onClose: () => void;
+  generatingProof: boolean;
 }) => {
-  return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-[100000]" onClose={onClose}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-5" />
-        </Transition.Child>
+  const [progress, setProgress] = useState<number>(0);
+  const totalTime = 50;
+  const updateInterval = 100;
+  const increment = 100 / ((totalTime * 1000) / updateInterval);
 
-        <div className="fixed inset-0 overflow-y-hidden">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="w-screen h-screen flex items-center justify-center transform overflow-hidden p-6 text-left align-middle transition-all relative">
-                <div className="flex flex-col items-center justify-center gap-3 w-full max-w-[450px] bg-white p-5 rounded-[35px] shadow-xl">
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-                    <div className="w-[25px] h-[25px] sm:w-[36px] sm:h-[36px] border-[4px] border-dark-grafiti border-l-transparent rounded-[50%] animate-spin" />
-                    <p className="text-dark-grafiti-medium text-center text-sm sm:text-lg font-bold">
-                      Generating your zero knowledge proof
-                    </p>
-                  </div>
-                  <p className="text-dark-grafiti-light text-base font-semibold text-center">
-                    This may take a few seconds
-                  </p>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (generatingProof) {
+          if (prevProgress >= 100) {
+            clearInterval(interval);
+            return prevProgress;
+          }
+          return (prevProgress += increment);
+        } else {
+          return 100;
+        }
+      });
+      return () => clearInterval(interval);
+    }, updateInterval);
+  }, []);
+
+  return (
+    <>
+      <p className="text-dark-grafiti-medium text-center text-lg font-bold mt-2">
+        Generating your zero knowledge proof
+      </p>
+      <div className="relative overflow-hidden w-full max-w-[350px] bg-gray-200 rounded-full">
+        <div
+          className={`bg-dark-grafiti-medium h-full text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full transition-all duration-500`}
+          style={{ width: `${progress.toFixed(0)}%` }}
+        >
+          {" "}
+          {progress.toFixed(0)}%
         </div>
-      </Dialog>
-    </Transition>
+      </div>
+      <p className="text-dark-grafiti-light text-base font-semibold text-center">
+        This may take a few minutes
+      </p>
+    </>
   );
 };
