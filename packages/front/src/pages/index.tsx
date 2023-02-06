@@ -9,6 +9,7 @@ import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
+import { useApplication } from "@/store";
 
 const Waves = () => {
   return (

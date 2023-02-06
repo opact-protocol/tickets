@@ -7,15 +7,10 @@ import {
   viewFunction,
 } from "@/utils/tools";
 import { mimc } from "@/services/mimc";
-import { buildTree } from "@/services";
+import { buildTree, relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
-
-const DEFAULT_HASH_DATA = {
-  amount: 1,
-  relayer_fee: 0.2,
-  tokens_to_receive: 0.8,
-  timestamp: Date.now(),
-};
+import { ToastCustom } from "@/components/shared/toast-custom";
+import { toast } from "react-toastify";
 
 function parseNote(note: string): {
   secret: string;
@@ -32,20 +27,19 @@ function parseNote(note: string): {
 
 const CONTRACT = useEnv("VITE_CONTRACT");
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const useApplication = create<{
   proof: any;
   publicArgs: any;
   hash: any;
   note: any;
+  relayerData: any;
   sendDeposit: (
     connection: any,
     account: string,
     amount: string
   ) => Promise<void>;
-  fetchHashData: () => Promise<any>;
-  sendWithdraw: (connection: any, account: string) => Promise<void>;
+  fetchRelayerData: () => Promise<void>;
+  sendWithdraw: () => Promise<void>;
   prepareWithdraw: (connection, payload: any) => Promise<void>;
   prepareDeposit: (connection: any, account: string) => Promise<string>;
   createSnarkProof: (payload: any) => Promise<any>;
@@ -55,10 +49,9 @@ export const useApplication = create<{
   publicArgs: null,
   hash: null,
   note: null,
+  relayerData: null,
 
   prepareDeposit: async (connection, account) => {
-    const wallet = await connection.wallet();
-
     const secret = randomBN();
     const nullifier = randomBN();
 
@@ -117,12 +110,9 @@ export const useApplication = create<{
     executeMultipleTransactions(transactions, wallet);
   },
 
-  fetchHashData: async () => {
-    await delay(1000);
-
-    return {
-      ...DEFAULT_HASH_DATA,
-    };
+  fetchRelayerData: async () => {
+    const { data } = await relayer.get("/data");
+    set({ relayerData: data.data });
   },
 
   prepareWithdraw: async (connection, { note, recipient }) => {
@@ -136,6 +126,7 @@ export const useApplication = create<{
         account_id: recipient,
       }
     );
+    const relayerData = get().relayerData;
 
     try {
       const parsedNote = parseNote(note);
@@ -148,15 +139,16 @@ export const useApplication = create<{
       const { commitmentsTree, whitelistTree } = await buildTree();
 
       const commitmentProof = commitmentsTree.proof(commitment);
-      console.log("oi");
       const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
 
       const input = {
         root: commitmentProof.pathRoot,
         nullifierHash: mimc.singleHash!(parsedNote.nullifier),
         recipient: recipientHash, // not taking part in any computations
-        relayer: "0", // not taking part in any computations
-        fee: "0", // not taking part in any computations
+        relayer: await viewFunction(connection, CONTRACT, "view_account_hash", {
+          account_id: relayerData.relayerAccount,
+        }), // not taking part in any computations
+        fee: relayerData.feePercent, // not taking part in any computations
         refund: "0", // not taking part in any computations
         nullifier: parsedNote.nullifier,
         secret: parsedNote.secret,
@@ -179,7 +171,7 @@ export const useApplication = create<{
         root: publicSignals[0],
         nullifier_hash: publicSignals[1],
         recipient: recipient,
-        relayer: null,
+        relayer: relayerData.relayerAccount,
         fee: publicSignals[4],
         refund: publicSignals[5],
         allowlist_root: publicSignals[6],
@@ -229,7 +221,6 @@ export const useApplication = create<{
       };
 
       console.timeEnd("SNARK proof time");
-
       set({
         proof,
         publicArgs,
@@ -243,21 +234,24 @@ export const useApplication = create<{
     }
   },
 
-  sendWithdraw: async (connection, account) => {
-    await delay(1000);
-
-    const wallet = await connection.wallet();
-
-    const transactions: any[] = [];
-
+  sendWithdraw: async () => {
     const publicArgs = get().publicArgs;
-    const proof = get().proof;
 
-    transactions.push(
-      getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
-    );
-
-    await executeMultipleTransactions(transactions, wallet);
+    try {
+      await relayer.post("/relay", publicArgs);
+      toast(
+        <ToastCustom
+          icon="/check-circle-icon.svg"
+          title="Withdraw sent"
+          message="The funds has been withdraw to the address."
+        />,
+        {
+          toastId: "withdraw-toast",
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   createSnarkProof: async (input) => {

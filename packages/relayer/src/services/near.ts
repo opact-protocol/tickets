@@ -6,7 +6,7 @@ import { Env } from "@/interfaces/env";
 /* tslint:disable */
 globalThis.Buffer = Buffer;
 globalThis.process = Process;
-/* tslint:enable */
+/* tslint:disable */
 
 export const setupNear = async ({
   RPC_URL,

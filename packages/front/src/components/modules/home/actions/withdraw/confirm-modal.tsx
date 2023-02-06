@@ -1,22 +1,19 @@
 import { useApplication } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useWallet } from "@/store/wallet";
 
 export default function Modal({
   isOpen,
-  onClose
+  onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
 }) {
   const { sendWithdraw } = useApplication();
 
-  const { selector, accountId } = useWallet();
-
   const withdraw = () => {
     onClose();
-    sendWithdraw(selector, accountId!);
+    sendWithdraw();
   };
 
   return (
