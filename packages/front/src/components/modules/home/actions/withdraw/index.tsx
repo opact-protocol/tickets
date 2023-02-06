@@ -1,11 +1,16 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, SetStateAction } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import toast from "react-hot-toast";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 
-export function Withdraw() {
+export function Withdraw({
+  setChangeTab,
+}: {
+  setChangeTab: React.Dispatch<SetStateAction<boolean>>;
+}) {
+  setChangeTab(true);
   const [hash, setHash] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [hashData, setHashData] = useState<any>();
