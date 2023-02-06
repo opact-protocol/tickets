@@ -1,9 +1,9 @@
+import { useEnv } from "@/hooks/useEnv";
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: "https://walrus-app-juy4n.ondigitalocean.app/",
+export const relayer = axios.create({
+  baseURL: useEnv("VITE_RELAYER_URL"),
   headers: {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   },
 });
