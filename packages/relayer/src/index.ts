@@ -24,8 +24,6 @@ router.get("/data", ({ env, res }) => {
 router.post("/relay", async ({ env, req, res, next }) => {
   const resValue = await relayer(req, env);
 
-  console.log(resValue);
-
   res.status = resValue.status;
   res.body = resValue.body;
 

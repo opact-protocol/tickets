@@ -62,7 +62,7 @@ export const provider = new providers.JsonRpcProvider(
 
 export const AttachedGas = "300000000000000";
 
-const refreshPage = transactions => {
+const refreshPage = (transactions) => {
   const newUrl =
     window.location.origin +
     window.location.pathname +
@@ -86,7 +86,7 @@ export const getTransactionsAction = (
   transactions: Partial<TransactionPayload>[]
 ) => {
   return transactions
-    .map(payload => {
+    .map((payload) => {
       const action = actions.find(({ check }) =>
         check(payload as TransactionPayload)
       );
@@ -100,10 +100,10 @@ export const getTransactionsAction = (
       return {
         status,
         message: action[status],
-        methodName: action.methodName
+        methodName: action.methodName,
       };
     })
-    .filter(item => item)[0];
+    .filter((item) => item)[0];
 };
 
 export const executeMultipleTransactions = async (
@@ -136,10 +136,10 @@ export const getTransaction = (
           methodName: method,
           args,
           gas: AttachedGas,
-          deposit: amount
-        }
-      }
-    ]
+          deposit: amount,
+        },
+      },
+    ],
   };
 };
 
@@ -160,7 +160,7 @@ export const viewFunction = async (
     account_id: contractId,
     method_name: methodName,
     args_base64: serializedArgs,
-    finality: "optimistic"
+    finality: "optimistic",
   });
 
   return (
@@ -173,7 +173,7 @@ export const viewFunction = async (
 export const getTokenStorage = async (connection, account, token) => {
   try {
     return await viewFunction(connection, token, "storage_balance_of", {
-      account_id: account
+      account_id: account,
     });
   } catch (e) {
     return;

@@ -1,13 +1,13 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import {
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
   GET_MOST_RECENT_DEPOSIT,
-  GET_MOST_RECENT_WITHDRAW
+  GET_MOST_RECENT_WITHDRAW,
 } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
@@ -36,6 +36,7 @@ export function Withdraw() {
   const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
 
+  const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
   const { selector, accountId, toggleModal } = useWallet();
   const [statistics, setStatistics] = useState<{
     totalDeposits?: number;
@@ -49,12 +50,13 @@ export function Withdraw() {
       .test(
         "isValidTicket",
         "This ticket is not valid anymore",
-        async value => !(await nullifierCheck(value, selector))
+        async (value) => !(await nullifierCheck(value, selector))
       )
       .test(
         "isStored",
         "This ticket has not been deposited yet",
-        async value => {
+        async (value) => {
+          if (await nullifierCheck(value, selector)) return true;
           const commitment = generateCommitment(value);
 
           const ticketStored = await getTicketInTheMerkleTree(commitment!);
@@ -69,8 +71,9 @@ export function Withdraw() {
               +ticketStored.counter;
 
             const totalWithdraws =
-              (+mostRecentWithdraw.withdrawals[0].counter || 0) -
-              (+lastWithdraw.counter || 0);
+              (mostRecentWithdraw.withdrawals[0]
+                ? +mostRecentWithdraw.withdrawals[0]["counter"]
+                : 0) - (+lastWithdraw.counter || 0);
 
             setStatistics({ totalDeposits, totalWithdraws });
 
@@ -82,21 +85,17 @@ export function Withdraw() {
     address: yup
       .string()
       .min(1, "This address is invalid")
-      .required("Invalid address")
+      .required("Invalid address"),
   });
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<WithDrawProps>({
     resolver: yupResolver(withdrawSchema),
-    mode: "onChange"
+    mode: "onChange",
   });
-
-  const handleMoreInfos = false;
-
-  const { prepareWithdraw } = useApplication();
 
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
@@ -112,12 +111,13 @@ export function Withdraw() {
       setGeneratinProof(true);
       await prepareWithdraw(selector, {
         note: data.ticket,
-        recipient: data.address
+        recipient: data.address,
       });
       setGeneratinProof(false);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
+      setGeneratinProof(false);
       toast(
         <ToastCustom
           icon="/error-circle-icon.svg"
@@ -125,27 +125,35 @@ export function Withdraw() {
           message="An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes."
         />,
         {
-          toastId: "error-toast"
+          toastId: "error-toast",
         }
       );
     }
   };
 
+  useEffect(() => {
+    if (!relayerData) {
+      fetchRelayerData();
+    }
+  }, []);
+
   return (
-    <div>
-      <form onSubmit={handleSubmit(preWithdraw)}>
-        <div className={`mb-5`}>
-          <div className="flex items-center justify-between">
-            <span className="text-black text-[1.1rem] font-bold">
-              Withdraw ticket{" "}
-              {errors.ticket?.message && (
-                <span className="text-error"> * </span>
-              )}
-            </span>
-          </div>
-          <div>
-            <input
-              className={`
+    <>
+      <div>
+        <form onSubmit={handleSubmit(preWithdraw)}>
+          <div className={`mb-5`}>
+            <div className="flex items-center justify-between">
+              <span className="text-black text-[1.1rem] font-bold">
+                Withdraw ticket{" "}
+                {errors.ticket?.message && (
+                  <span className="text-error"> * </span>
+                )}
+              </span>
+            </div>
+            <div>
+              <div>
+                <input
+                  className={`
                 mt-2
                 p-[8px]
                 h-[43px]
@@ -160,49 +168,49 @@ export function Withdraw() {
                   errors.ticket?.message ? "border-error" : "border-transparent"
                 }
               `}
-              {...register("ticket")}
-              autoComplete="off"
-              placeholder="Paste your withdraw ticked"
-            />
-          </div>
-          <p className="text-error mt-2 text-sm font-normal">
-            {errors.ticket?.message && errors.ticket.message.toString()}
-          </p>
-        </div>
-        {statistics && !errors.ticket?.message && (
-          <div className={`flex flex-col gap-3`}>
-            <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">
-                Total deposits to date
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics?.totalDeposits}
+                  {...register("ticket")}
+                  autoComplete="off"
+                  placeholder="Paste your withdraw ticked"
+                />
+              </div>
+              <p className="text-error mt-2 text-sm font-normal">
+                {errors.ticket?.message && errors.ticket.message.toString()}
               </p>
             </div>
-            <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">
-                Total withdraws to date
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics?.totalWithdraws}
-              </p>
-            </div>
-          </div>
-        )}
+            {statistics && !errors.ticket?.message && (
+              <div className={`flex flex-col gap-3`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-black text-sm font-normal">
+                    Total deposits to date
+                  </p>
+                  <p className="text-black font-bold text-sm">
+                    {statistics?.totalDeposits}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-black text-sm font-normal">
+                    Total withdraws to date
+                  </p>
+                  <p className="text-black font-bold text-sm">
+                    {statistics?.totalWithdraws}
+                  </p>
+                </div>
+              </div>
+            )}
 
-        <div className={`mt-8 ${handleMoreInfos ? "mb-6" : "mb-44"}`}>
-          <div className="flex items-center justify-between">
-            <span className="text-black text-[1.1rem] font-bold">
-              Recipient Address{" "}
-              {errors.address?.message && (
-                <span className="text-error"> * </span>
-              )}
-            </span>
-          </div>
+            <div className={`mt-8 ${relayerData ? "mb-6" : "mb-44"}`}>
+              <div className="flex items-center justify-between">
+                <span className="text-black text-[1.1rem] font-bold">
+                  Recipient Address{" "}
+                  {errors.address?.message && (
+                    <span className="text-error"> * </span>
+                  )}
+                </span>
+              </div>
 
-          <div>
-            <input
-              className={`
+              <div>
+                <input
+                  className={`
                mt-2
                p-[8px]
                h-[43px]
@@ -217,75 +225,83 @@ export function Withdraw() {
                  errors.address?.message ? "border-error" : "border-transparent"
                }
              `}
-              placeholder="Wallet Address"
-              autoComplete="off"
-              {...register("address")}
-            />
-          </div>
-          <p className="text-error mt-2 text-sm font-normal">
-            {errors.address?.message?.toString()}
-          </p>
-        </div>
-
-        {/* {handleMoreInfos && (
-          <div className="mt-[24px]">
-            <div>
-              <span className="text-black font-bold">Total</span>
+                  placeholder="Wallet Address"
+                  autoComplete="off"
+                  {...register("address")}
+                />
+              </div>
+              <p className="text-error mt-2 text-sm font-normal">
+                {errors.address?.message?.toString()}
+              </p>
             </div>
+          </div>
+          {relayerData && statistics && !errors.ticket?.message && (
+            <div className="mt-[24px]">
+              <div>
+                <span className="text-black font-bold">Total</span>
+              </div>
 
-            <div className="flex flex-col w-full mt-2">
-              <div className="flex items-center justify-between pb-[12px]">
+              <div className="flex flex-col w-full mt-2">
+                {/* <div className="flex items-center justify-between pb-[12px]">
                 <span className="text-black text-[14px]">Network fee</span>
 
-                <span className="text-black font-bold">{`${hashData?.amount} NEAR`}</span>
-              </div>
+                <span className="text-black font-bold">{`${10} NEAR`}</span>
+              </div> */}
 
-              <div className="flex items-center justify-between pb-[12px]">
-                <span className="text-black text-[14px]">Relayer fee:</span>
+                <div className="flex items-center justify-between pb-[12px]">
+                  <span className="text-black text-[14px]">Relayer fee:</span>
 
-                <span className="text-black font-bold">{`${hashData?.relayer_fee} NEAR`}</span>
-              </div>
-              <div className="flex items-center justify-between pb-[12px]">
+                  <span className="text-black font-bold">{`${
+                    relayerData.feePercent * 10
+                  } NEAR`}</span>
+                </div>
+                {/* <div className="flex items-center justify-between pb-[12px]">
                 <span className="text-black text-[14px]">Total fee:</span>
 
-                <span className="text-black font-bold">{`0,200 NEAR`}</span>
-              </div>
+                <span className="text-black font-bold">{`${
+                  relayerData.feePercent
+                } NEAR`}</span>
+              </div> */}
 
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-black text-[14px]">
-                  Tokens to receive:
-                </span>
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-black text-[14px]">
+                    Tokens to receive:
+                  </span>
 
-                <span className="text-black font-bold">{`${hashData?.amount /
-                  1 -
-                  hashData?.relayer_fee} NEAR`}</span>
+                  <span className="text-black font-bold">{`${
+                    10 * (1 - relayerData.feePercent)
+                  } NEAR`}</span>
+                </div>
               </div>
             </div>
-          </div>
-        )} */}
+          )}
 
-        <div>
-          <button
-            type="submit"
-            className="bg-soft-blue-from-deep-blue mt-[15px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-          >
-            {" "}
-            {!accountId ? "Connect Wallet" : buttonText.current}{" "}
-          </button>
-        </div>
-
-        <ConfirmModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(!showModal);
-            buttonText.current = "Withdraw";
-          }}
-        />
-        <LoadingModal
-          isOpen={generatingProof}
-          onClose={() => setGeneratinProof(false)}
-        />
-      </form>
-    </div>
+          {generatingProof ? (
+            <LoadingModal generatingProof={generatingProof} />
+          ) : (
+            <div>
+              <button
+                type="submit"
+                className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+              >
+                {" "}
+                {!accountId
+                  ? "Connect Wallet"
+                  : !showModal
+                  ? "Withdraw"
+                  : buttonText.current}{" "}
+              </button>
+            </div>
+          )}
+          <ConfirmModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+          />
+        </form>
+      </div>
+      {generatingProof && (
+        <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
+      )}
+    </>
   );
 }
