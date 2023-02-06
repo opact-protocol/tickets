@@ -234,7 +234,7 @@ export const useApplication = create<{
         proof,
         publicArgs,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error("prepareWithdraw", e);
 
       throw new Error(e.message);
