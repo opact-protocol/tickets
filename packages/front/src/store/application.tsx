@@ -9,6 +9,7 @@ import {
 } from "@/utils/tools";
 import { mimc } from "@/services/mimc";
 import { buildTree, api } from "@/services";
+import { ToastCustom } from "@/components/shared/toast-custom";
 
 const DEFAULT_HASH_DATA = {
   amount: 1,
@@ -268,7 +269,14 @@ export const useApplication = create<{
 
     executeMultipleTransactions(transactions, wallet);
 
-    toast.success("Withdraw sended!");
+    toast.custom((t) => (
+      <ToastCustom
+        icon="/check-circle-icon.svg"
+        id={t.id}
+        visible={t.visible}
+        key={t.id}
+      />
+    ));
   },
 
   createSnarkProof: async (input) => {
