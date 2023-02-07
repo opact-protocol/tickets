@@ -11,6 +11,17 @@ pub struct ContractParams {
   protocol_fee: U128,
 }
 
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct ContractParams {
+  owner: AccountId,
+  kill_switch: bool,
+  authorizer: (AccountId, Vec<(Category, RiskScore)>),
+  currency: Currency,
+  deposit_value: U128,
+  protocol_fee: U128,
+}
+
 #[near_bindgen]
 impl Contract {
   /// Returns the MiMC hash of the account
@@ -29,7 +40,7 @@ impl Contract {
   }
 
   /// Check if a nullifier was already spent
-  /// nullifier param actually takes the MiMC hash of the nullifier 
+  /// nullifier param actually takes the MiMC hash of the nullifier
   pub fn view_was_nullifier_spent(&self, nullifier: U256) -> bool {
     self.nullifier.contains(&nullifier)
   }
@@ -52,7 +63,7 @@ impl Contract {
   }
 
   /// Evaluates if given withdraw parameters are valid. This can
-  /// be used by relayers to check if a relay request made to them is 
+  /// be used by relayers to check if a relay request made to them is
   /// legitimate or malicious.
   /// Checks:
   /// (1) whether ZK proof is valid with public parameters

@@ -4,6 +4,22 @@ Instance Smart contract is responsible for receiving deposits and issuing withdr
 
 The contract references the registry in its initialization and trusts the registry for all allowlist related data.
 
+## Protocol fees
+The contract implements a protocol fee, which is a percentage taken from every deposit and transferred to the owner account.
+
+This fee is variable and is set during contract initialization. To protect users from fee changes that would affect their deposits, once the fee is set it can never be reset.
+
+## Contract ownership
+The contract implements an ownership model, where a priviledged `owner` account has access to methods that regular users do not.
+
+However, since the intent of the contract is to be totally decentralized, `owner` does not have access to any funds stored in the contract, cannot alter any preset parameters and if `owner` is ever compromised, it represents no risk for the contract whatsoever.
+
+The only method that owner has access to is `toggle_kill_switch`. This method toggles the value of `kill_switch` which is used to lock new deposits to the protocol. This has 2 main use cases:
+1. Upgrading the contract -> new deposits will be forbidden and users will only be able to withdraw. A new contract will be deployed with updated version.
+2. AML failures -> in case the AML system is currepted somehow either by corruption of third party data providors or by attacks on HYC's security model, the owner can stop the contract to prevent further damage while the team works in improving the protocol to upgrade to a new version.
+
+The account that deploys the HYC  contract should burn all it access keys to ensure users that the protocol is fully decentralized and - given a secure source code - their funds cannot be tampered with.
+
 ## API
 
 ### Anonimity methods
