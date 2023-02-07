@@ -3,6 +3,17 @@ use near_bigint::U256;
 use crate::hashes::account_hash;
 use near_mimc::u256_mimc_sponge_single;
 
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct ContractParams {
+  owner: AccountId,
+  kill_switch: bool,
+  authorizer: (AccountId, Vec<(Category, RiskScore)>),
+  currency: Currency,
+  deposit_value: U128,
+  protocol_fee: U128,
+}
+
 #[near_bindgen]
 impl Contract {
   pub fn view_account_hash(&self, account_id: AccountId) -> U256 {
@@ -31,6 +42,19 @@ impl Contract {
 
   pub fn view_kill_switch(&self) -> bool {
     self.kill_switch
+  }
+
+  pub fn view_contract_params(&self) -> ContractParams {
+    let aml_tupple = self.authorizer.get_aml();
+
+    ContractParams {
+      owner: self.owner.clone(),
+      kill_switch: self.kill_switch,
+      authorizer: (aml_tupple.0.clone(), aml_tupple.1),
+      currency: self.currency.clone(),
+      deposit_value: U128(self.deposit_value),
+      protocol_fee: U128(self.protocol_fee),
+    }
   }
 
   pub fn view_is_withdraw_valid(

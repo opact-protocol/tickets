@@ -5,13 +5,25 @@ The smart contract implements a NEAR protocol compatible Registry to allow multi
 The goal is for end users to be able to:
 1. Discover all token and amount options available in HYC;
 2. Discover the correct addresses for every available currency and amount option within HYC;
+3. Allow the seamless replacement of deprecated contracts for their updated versions without compromising users ability to withdraw deposited funds;
+4. Allow relayers to check whether specific contracts should be trusted; 
 
 The ideal logic would be for this to be the single point of contact for every interaction with HYC. However, given NEAR protocol's asynchronous nature, it is not possible to implement a router or proxy as we would for a different blockchain, such as Ethereum.
 
 ## Contract logic
-The contract stores an UnorderedSet containing all different currencies accepted in the protocol. It also contains an UnorderedMap mapping each tuple (Currency, Amount) to its corresponding contract address.
+The contract stores an `UnorderedMap` mapping each currency to a `HashMap` of deposit amounts accepted and the contract address for that amount.
+The contract also stores an `UnorderedSet` containing all HYC contracts ever deployed, to allow relayers and users to validate the addresses of deprecated contracts in case there are still funds to withdraw on them.
 
-Only the owner can insert new currencies and amounts
+Only the owner can insert new currencies and amounts.
+Every time a contract is added to the registry it is added both to the map and the allowlist set. If the contract is removed from the map - be it because HYC frontend doesn't want to support it anymore or because it has been deprecated in an upgrade - it is still going to be available in the allowlist, to allow users to withdraw funds they had previously deposited to them.
+In case a contract ever needs to be removed from the allowlist, this operation should be explicitly done after removing from the map, using `remove_from_allowlist`.
+
+## Security assumptions
+This contract does not handle user funds directly, it is only an on-chain information registry. Therefore, this contract has no intention of being run as a fully decentralized application. It is going to be controlled by the development team during project's early phases and handled over to the DAO structure later on.
+
+If a hacker ever compromises this contract, the main consequence would be the possibility to insert malicious contract into the registry, which would be trusted by frontends and relayers running the protocol - and by its end users in extension. This could carry great consequences, allowing phishing scams to effectivelly attack users. However, there would be no risk for already deposited funds.
+
+To keep maximum security, owner's private keys should be stored in a hardware wallet and later on transferred to a DAO structure.
 
 ## Contract interface
 
@@ -43,6 +55,12 @@ params:
 This method removes one entry from the registry, according to the (currnecy, amount) pair specified in args.
 Panics if currency or amount is not registered.
 
+3. `remove_from_allowlist`
+params:
+  - contract: AccountId -> Address of the HYC contract that you're removing from the allowlist
+
+This method removes one entry from the allowlist. 
+
 ### View methods
 1. `view_all_currencies` -> `Vec<Currency>`
 
@@ -53,3 +71,14 @@ params:
   - currency: Currency -> Currency for which you want to query all available contracts
 
 Returns a HashMap mapping each available deposit amount in the currency to the corresponding HYC contract address 
+
+3. `view_is_in_allowlist` -> `bool`
+params:
+  - contract: AccountId -> Address of the contract whose allowlist membership you want to check
+
+Returns `true` if contract is in allowlist, `false` otherwise.
+
+4. `view_allowlist` -> `Vec<AccountId>`
+
+Returns a Vec containing all contract addresses in the allowlist.
+There is a know limitation to retrive large lists, however allowlist is not expected to ever exceed 100 elements
