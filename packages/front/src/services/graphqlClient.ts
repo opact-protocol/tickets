@@ -1,6 +1,7 @@
+import { useEnv } from "@/hooks/useEnv";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 export const client = new ApolloClient({
-  uri: import.meta.env.VITE_API_GRAPHQL_URL,
-  cache: new InMemoryCache()
+  uri: useEnv("VITE_GRAPHQL_API_URL"),
+  cache: new InMemoryCache(),
 });

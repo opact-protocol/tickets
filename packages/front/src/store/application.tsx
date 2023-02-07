@@ -10,6 +10,7 @@ import {
 import { mimc } from "@/services/mimc";
 import { buildTree, api } from "@/services";
 import { ToastCustom } from "@/components/shared/toast-custom";
+import { useEnv } from "@/hooks/useEnv";
 
 const DEFAULT_HASH_DATA = {
   amount: 1,
@@ -31,7 +32,7 @@ function parseNote(note: string): {
   };
 }
 
-const CONTRACT = import.meta.env.VITE_CONTRACT;
+const CONTRACT = useEnv("VITE_CONTRACT");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
