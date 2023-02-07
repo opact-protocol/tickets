@@ -2,17 +2,21 @@ use merkle_tree::commitment_tree::MerkleTree;
 use merkle_tree::allowlist_tree::AllowlistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
-use near_sdk::collections::{LookupSet};
+use near_sdk::serde::{Serialize, Deserialize};
+use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise, ext_contract, Gas};
+use near_sdk::collections::LookupSet;
 use near_plonk_verifier::{self, Verifier, G1Point, G2Point};
 use near_bigint::U256;
 use hapi_near_connector::aml::*;
+
+use crate::currency::*;
 
 mod actions;
 mod events;
 mod ext_interface;
 mod hashes;
 mod merkle_tree;
+mod currency;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
@@ -23,8 +27,8 @@ pub struct Contract {
   pub authorizer: AML,
   pub max_risk: u8,
   pub commitments: MerkleTree,
-
   pub allowlist: AllowlistMerkleTree,
+  pub currency: Currency,
   pub deposit_value: u128,
   pub verifier: Verifier,
   pub nullifier: LookupSet<U256>,
@@ -62,6 +66,7 @@ impl Contract {
     // wl params
     height_wl: u64,
     last_roots_len_wl: u8,
+    currency: Currency,
     deposit_value: U128,
     // verifier
     power: U256,
@@ -112,6 +117,7 @@ impl Contract {
         q,
         zero_value,
       ),
+      currency,
       deposit_value: deposit_value.0,
       verifier: Verifier::new(
         power, n_public, q_m, q_l, q_r, q_o, q_c, s_1, s_2, s_3, k_1, k_2, x_2, q, qf, w1,
