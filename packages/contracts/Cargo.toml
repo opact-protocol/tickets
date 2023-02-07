@@ -1,5 +1,5 @@
 [workspace]
-#Add location of contracts here
+# Add location of contracts here
 members = [
     "./contract",
     "./registry"
