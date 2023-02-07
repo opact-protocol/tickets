@@ -1,36 +1,52 @@
-use near_sdk::{env, near_bindgen, AccountId, Promise};
+use std::str::FromStr;
+
+use near_sdk::{env, near_bindgen, AccountId, Promise, json_types::U128, is_promise_success};
 use near_bigint::U256;
 use near_plonk_verifier::{Proof, G1Point};
 
+use crate::*;
 use crate::{
-  Contract, ContractExt,
   hashes::{account_hash, serial_hash},
   events::{event_deposit, event_withdrawal},
 };
+
+const CALLBACK_GAS: Gas = Gas(30_000_000_000_000);
+
+#[ext_contract(ext_self)]
+pub trait ExtSelf {
+  fn withdraw_callback(
+    nullifier_hash: U256,
+    recipient: AccountId,
+    relayer: Option<AccountId>,
+    fee: U256,
+    refund: U256,
+  );
+}
 
 #[near_bindgen]
 impl Contract {
   #[payable]
   pub fn deposit(&mut self, secrets_hash: U256) {
-    let deposit_value = self.deposit_value;
-    assert_eq!(
-      env::attached_deposit(),
-      deposit_value,
-      "deposited values must be exactly {} NEAR",
-      deposit_value
+    assert!(
+      self.currency.is_near(),
+      "contract does not accept NEAR token"
     );
+    self.inner_deposit(
+      secrets_hash,
+      env::attached_deposit(),
+      env::predecessor_account_id(),
+    );
+  }
 
-    assert!(!self.kill_switch, "kill_switch was triggered");
-
-    let account_id = env::predecessor_account_id();
-    let account_hash = account_hash(&account_id, self.verifier.q);
-    assert!(self.allowlist.is_in_allowlist(&account_hash));
-
-    let commitment = serial_hash(secrets_hash, account_hash, self.verifier.q);
-    let index = self.commitments.current_insertion_index;
-    self.commitments.insert(commitment);
-
-    event_deposit(index, commitment);
+  pub fn ft_on_trasnfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> U128 {
+    let secrets_hash =
+      U256::from_str(&msg).expect("msg must be U256 number corresponding to secrets hash");
+    assert!(
+      self.currency.is_nep_141(env::predecessor_account_id()),
+      "This contract does not accept this token"
+    );
+    self.inner_deposit(secrets_hash, amount.0, sender_id);
+    U128(0)
   }
 
   pub fn withdraw(
@@ -87,28 +103,74 @@ impl Contract {
     );
 
     self.nullifier.insert(&nullifier_hash);
-    event_withdrawal(
-      self.nullifier_count,
-      recipient.clone(),
-      relayer.clone(),
-      fee,
-      refund,
-      nullifier_hash,
-    );
 
-    self.nullifier_count += 1;
-
-    if let Some(relayer_account) = relayer {
+    if let Some(relayer_account) = relayer.clone() {
       if fee > U256::zero() {
-        Promise::new(relayer_account).transfer(fee.as_u128());
+        self.currency.transfer(relayer_account, fee.as_u128());
       }
     }
 
-    Promise::new(recipient).transfer(self.deposit_value - fee.as_u128())
+    self
+      .currency
+      .transfer(recipient.clone(), self.deposit_value - fee.as_u128())
+      .then(
+        ext_self::ext(env::current_account_id())
+          .with_static_gas(CALLBACK_GAS)
+          .withdraw_callback(nullifier_hash, recipient, relayer, fee, refund),
+      )
+  }
+
+  #[private]
+  pub fn withdraw_callback(
+    &mut self,
+    nullifier_hash: U256,
+    recipient: AccountId,
+    relayer: Option<AccountId>,
+    fee: U256,
+    refund: U256,
+  ) {
+    if is_promise_success() {
+      event_withdrawal(
+        self.nullifier_count,
+        recipient.clone(),
+        relayer.clone(),
+        fee,
+        refund,
+        nullifier_hash,
+      );
+      self.nullifier_count += 1;
+    } else {
+      self.nullifier.remove(&nullifier_hash);
+    }
   }
 }
 
 impl Contract {
+  pub fn inner_deposit(
+    &mut self,
+    secrets_hash: U256,
+    attached_deposit: u128,
+    account_id: AccountId,
+  ) {
+    let deposit_value = self.deposit_value;
+    assert_eq!(
+      attached_deposit, deposit_value,
+      "deposited values must be exactly {}",
+      deposit_value
+    );
+
+    assert!(!self.kill_switch, "kill_switch was triggered");
+
+    let account_hash = account_hash(&account_id);
+    assert!(self.allowlist.is_in_allowlist(&account_hash));
+
+    let commitment = serial_hash(secrets_hash, account_hash);
+    let index = self.commitments.current_insertion_index;
+    self.commitments.insert(commitment);
+
+    event_deposit(index, commitment);
+  }
+
   pub fn evaluate_proof(
     &self,
     root: U256,
