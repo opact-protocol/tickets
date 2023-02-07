@@ -109,3 +109,56 @@ export const getLastAllowlist = async (): Promise<string> => {
   });
   return data.allowlistMerkleTreeUpdates[0].counter;
 };
+
+export const getTicketInTheMerkleTree = async (commitment: string) => {
+  const { data } = await client.query({
+    query: gql`
+      query ticketInTheMerkleTree($commitment: String) {
+        depositMerkleTreeUpdates(where: { value: $commitment }) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    variables: {
+      commitment,
+    },
+  });
+
+  return data.depositMerkleTreeUpdates[0];
+};
+
+export const getLastWithdrawBeforeTheTicketWasCreated = async (
+  timestamp: string
+) => {
+  const { data } = await client.query({
+    query: gql`
+      query teste($timestamp: String) {
+        withdrawals(first: 1, where: { timestamp_lte: $timestamp }) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    variables: { timestamp },
+  });
+
+  return data.withdrawals[0];
+};
+export const GET_CURRENT_GRAETEST_COUNTER = gql`
+  query currentGraetestCounter {
+    depositMerkleTreeUpdates(first: 1, orderBy: counter, orderDirection: desc) {
+      counter
+      timestamp
+    }
+  }
+`;
+
+export const GET_MOST_RECENT_WITHDRAW = gql`
+  query mostRecentWithdraw {
+    withdrawals(first: 1, orderBy: timestamp, orderDirection: desc) {
+      counter
+      timestamp
+    }
+  }
+`;
