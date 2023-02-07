@@ -105,7 +105,12 @@ export function Header() {
                   onClick={() => signOut()}
                   className="flex items-center space-x-[8px] bg-soft-blue px-[24px] py-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
                 >
-                  <span className="text-white truncate">{accountId}</span>
+                  <span
+                    className="w-[150px] text-white truncate"
+                    title={accountId}
+                  >
+                    {accountId}
+                  </span>
 
                   <img src="/power-icon.svg" alt="Power icon" />
                 </button>
