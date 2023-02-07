@@ -110,6 +110,10 @@ impl Contract {
       }
     }
 
+    if self.protocol_fee > 0 {
+      self.currency.transfer(self.owner.clone(), self.protocol_fee);
+    }
+
     self
       .currency
       .transfer(recipient.clone(), self.deposit_value - fee.as_u128())
@@ -198,8 +202,10 @@ impl Contract {
     wxi: G1Point,
     wxi_w: G1Point,
   ) {
+    let deposit_value = U256::from_dec_str(&self.deposit_value.to_string()).unwrap();
+    let protocol_fee = U256::from_dec_str(&self.protocol_fee.to_string()).unwrap();
     assert!(
-      fee < U256::from_dec_str(&self.deposit_value.to_string()).unwrap(),
+      fee < (deposit_value - protocol_fee),
       "fee cannot be greater than deposit value"
     );
     assert!(
