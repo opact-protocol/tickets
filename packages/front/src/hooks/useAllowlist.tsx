@@ -1,5 +1,6 @@
 import { viewFunction } from "@/utils/tools";
 import { useEffect, useState } from "react";
+import { useEnv } from "./useEnv";
 
 export const useAllowlist = (accountId: string, selector: any) => {
   const [allowList, setAllowList] = useState<boolean>(false);
@@ -13,7 +14,7 @@ export const useAllowlist = (accountId: string, selector: any) => {
     (async () => {
       const result = await viewFunction(
         selector,
-        import.meta.env.VITE_CONTRACT,
+        useEnv("VITE_CONTRACT"),
         "view_is_in_allowlist",
         {
           account_id: accountId,

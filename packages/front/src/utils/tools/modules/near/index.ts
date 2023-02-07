@@ -1,3 +1,4 @@
+import { useEnv } from "@/hooks/useEnv";
 import actions from "@/utils/actions";
 import { providers } from "near-api-js";
 import type { CodeResult } from "near-api-js/lib/providers/provider";
@@ -54,9 +55,7 @@ export interface TokenId {
   account_id: string;
 }
 
-export const provider = new providers.JsonRpcProvider(
-  import.meta.env.VITE_NEAR_NODE_URL
-);
+export const provider = new providers.JsonRpcProvider(useEnv("VITE_CONTRACT"));
 
 export const AttachedGas = "300000000000000";
 
