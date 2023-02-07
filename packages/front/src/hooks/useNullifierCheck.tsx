@@ -1,5 +1,6 @@
 import { viewFunction } from "@/utils/tools";
 import { useEffect, useState } from "react";
+import { useEnv } from "./useEnv";
 
 export const useNullfierCheck = (note: string, selector: any) => {
   const [nullifierInvalid, setNullifierInvalid] = useState<boolean>(false);
@@ -10,7 +11,7 @@ export const useNullfierCheck = (note: string, selector: any) => {
     (async () => {
       const result = await viewFunction(
         selector,
-        import.meta.env.VITE_CONTRACT,
+        useEnv("VITE_CONTRACT"),
         "view_was_nullifier_spent",
         {
           nullifier: note.split("-")[1],

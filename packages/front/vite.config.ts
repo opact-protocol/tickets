@@ -36,8 +36,8 @@ export default defineConfig(async () => {
     ],
     define: {
       global: "window",
-      "process.env": {},
     },
+    envPrefix: "VITE_",
     build: {
       target: ["esNext"],
       rollupOptions: {
