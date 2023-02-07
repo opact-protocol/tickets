@@ -104,16 +104,9 @@ impl Contract {
 
     self.nullifier.insert(&nullifier_hash);
 
-    if let Some(relayer_account) = relayer.clone() {
-      if fee > U256::zero() {
-        self.currency.transfer(relayer_account, fee.as_u128());
-      }
-    }
-
-    if self.protocol_fee > 0 {
-      self.currency.transfer(self.owner.clone(), self.protocol_fee);
-    }
-
+    // promise is first built transferring value to user and calling callback to handle failure
+    // Transfers to owner and relayer are attached after it so that they don't get processed in case of failures
+    // Owner and Relayer are assumed to be registered in contract. Failures in transfers will not be reverted
     self
       .currency
       .transfer(recipient.clone(), self.deposit_value - fee.as_u128())
@@ -143,6 +136,18 @@ impl Contract {
         nullifier_hash,
       );
       self.nullifier_count += 1;
+
+      // Owner and Relayer are assumed to be registered in contract. Failures in transfers will not be reverted
+      if let Some(relayer_account) = relayer {
+        if fee > U256::zero() {
+          self.currency.transfer(relayer_account, fee.as_u128());
+        }
+      }
+      if self.protocol_fee > 0 {
+        self
+          .currency
+          .transfer(self.owner.clone(), self.protocol_fee);
+      }
     } else {
       self.nullifier.remove(&nullifier_hash);
     }
