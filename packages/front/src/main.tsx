@@ -1,5 +1,5 @@
 import "./index.css";
-import React from "react";
+import React, { Suspense } from "react";
 import { App } from "@/components";
 import ReactDOM from "react-dom/client";
 import { Toaster } from "react-hot-toast";
@@ -13,7 +13,9 @@ window.Buffer = window.Buffer || Buffer;
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WalletSelectorContextProvider>
-      <App />
+      <Suspense fallback={<p>Loading...</p>}>
+        <App />
+      </Suspense>
       <Toaster position="bottom-right" reverseOrder={false} />
       <WalletSelectorModal />
     </WalletSelectorContextProvider>
