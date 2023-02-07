@@ -150,53 +150,55 @@ export function Deposit({ changeTab }: { changeTab: boolean }) {
             </Listbox>
           </div>
 
-          <div className="mt-8">
-            <div className="flex items-center justify-between">
-              <span className="text-black text-[1.1rem] font-bold ">
-                Amount{" "}
-                {/*<span className="text-error">{errorMessage && "*"}</span> */}
-              </span>
-            </div>
+          {selectedToken ? (
+            <div className="mt-8">
+              <div className="flex items-center justify-between">
+                <span className="text-black text-[1.1rem] font-bold ">
+                  Amount{" "}
+                  {/*<span className="text-error">{errorMessage && "*"}</span> */}
+                </span>
+              </div>
 
-            <RadioGroup
-              value={selectedAmount}
-              onChange={setSelectedAmount}
-              className="mt-2 max-w-[371px]"
-            >
-              <Swiper spaceBetween={40} slidesPerView={3} className="flex">
-                {amounts.map((size) => (
-                  <SwiperSlide key={size}>
-                    <RadioGroup.Option
-                      key={size}
-                      value={size}
-                      as="div"
-                      className={({ checked }) => `
-                    bg-transparent rounded-full p-1 w-[132px] mb-2 ${
-                      size === 10 ? "bg-soft-blue-from-deep-blue" : ""
-                    }
-                  `}
-                    >
-                      <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-not-allowed">
-                        <RadioGroup.Label
-                          as="span"
-                          className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
-                        >
-                          {size} NEAR
-                        </RadioGroup.Label>
-                      </div>
-                    </RadioGroup.Option>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </RadioGroup>
-            <p
-              className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
-              onClick={() => setIsOpen(true)}
-            >
-              Why use fixed values{" "}
-              <QuestionMarkCircleIcon className="w-4 h-4" />
-            </p>
-          </div>
+              <RadioGroup
+                value={selectedAmount}
+                onChange={setSelectedAmount}
+                className="mt-2 max-w-[371px]"
+              >
+                <Swiper spaceBetween={40} slidesPerView={3} className="flex">
+                  {amounts.map((size) => (
+                    <SwiperSlide key={size}>
+                      <RadioGroup.Option
+                        key={size}
+                        value={size}
+                        as="div"
+                        className={({ checked }) => `
+                              bg-transparent rounded-full p-1 w-[132px] mb-2 ${
+                                size === 10 ? "bg-soft-blue-from-deep-blue" : ""
+                              }
+                            `}
+                      >
+                        <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-not-allowed">
+                          <RadioGroup.Label
+                            as="span"
+                            className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
+                          >
+                            {size} NEAR
+                          </RadioGroup.Label>
+                        </div>
+                      </RadioGroup.Option>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </RadioGroup>
+              <p
+                className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
+                onClick={() => setIsOpen(true)}
+              >
+                Why use fixed values{" "}
+                <QuestionMarkCircleIcon className="w-4 h-4" />
+              </p>
+            </div>
+          ) : null}
 
           <div className="mt-16 mb-16">
             <div className="flex items-center justify-between">
