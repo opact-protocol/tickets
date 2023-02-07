@@ -5,6 +5,17 @@ import { useWalletSelector } from "@/utils/context/wallet";
 import toast from "react-hot-toast";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 import { LoadingModal } from "@/components/modals/loading";
+import {
+  getLastWithdrawBeforeTheTicketWasCreated,
+  getTicketInTheMerkleTree,
+  GET_CURRENT_GRAETEST_COUNTER,
+  GET_MOST_RECENT_WITHDRAW,
+} from "@/utils/graphql-queries";
+import { generateCommitment } from "@/utils/generate-commitment";
+import { ToastCustom } from "@/components/shared/toast-custom";
+import { useQuery } from "@apollo/client";
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function Withdraw({
   setChangeTab,
@@ -12,6 +23,8 @@ export function Withdraw({
   setChangeTab: React.Dispatch<SetStateAction<boolean>>;
 }) {
   setChangeTab(true);
+  const { data } = useQuery(GET_CURRENT_GRAETEST_COUNTER);
+  const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [hash, setHash] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [hashData, setHashData] = useState<any>();
@@ -23,7 +36,12 @@ export function Withdraw({
     errorHash?: string;
     errorRepicient?: string;
     nullifierValid?: string;
+    ticketStored?: string;
   }>();
+  const [statistics, setStatistics] = useState<{
+    totalDeposits: number;
+    totalWithdraws: number;
+  }>({} as { totalDeposits: number; totalWithdraws: number });
 
   const handleMoreInfos = false;
 
@@ -35,6 +53,10 @@ export function Withdraw({
 
   const { selector, accountId, toggleModal } = useWalletSelector();
   const { nullifierInvalid } = useNullfierCheck(hash, selector);
+
+  if (nullifierInvalid) {
+    setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
+  }
 
   const preWithdraw = async () => {
     if (!accountId) {
@@ -50,15 +72,9 @@ export function Withdraw({
       return;
     }
 
-    if (nullifierInvalid) {
-      setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
-      return;
-    }
-
-    setButtonText("Preparing your withdraw...");
-    setGeneratingProof(true);
-
     try {
+      setButtonText("Preparing your withdraw...");
+      setGeneratingProof(true);
       await prepareWithdraw(selector, {
         note: hash,
         recipient: withdrawAddress,
@@ -67,23 +83,58 @@ export function Withdraw({
       setShowModal(true);
     } catch (err) {
       console.warn(err);
-      toast.error(
-        "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes.",
-        {
-          duration: 10000,
-        }
+      toast.custom(
+        (t) => (
+          <ToastCustom
+            icon="/error-circle-icon.svg"
+            id={t.id}
+            visible={t.visible}
+            key={t.id}
+          />
+        ),
+        { duration: 10000 }
       );
     }
   };
+
+  console.log(errorMessage);
 
   const hasErrorHash = useMemo(() => {
     return !hash;
   }, [hash]);
 
-  const handleHash = (value: string) => {
+  const handleHash = async (value: string) => {
+    if (!value) setErrorMessage(undefined);
+
     if (value === hash) {
       return;
     }
+    if (value.length < 220) {
+      setErrorMessage({ ticketStored: "This ticket is invalid" });
+      return;
+    }
+    const commitment = generateCommitment(value);
+
+    const ticketStored = await getTicketInTheMerkleTree(commitment!);
+
+    if (!ticketStored) {
+      setErrorMessage({
+        ticketStored: "This ticket has not been deposited yet",
+      });
+      return;
+    }
+
+    const lastWithdraw = await getLastWithdrawBeforeTheTicketWasCreated(
+      ticketStored.timestamp
+    );
+
+    const totalDeposits =
+      +data.depositMerkleTreeUpdates[0].counter - +ticketStored.counter;
+
+    const totalWithdraws =
+      +recentWithdraw.withdrawals[0].counter - +lastWithdraw.counter;
+
+    setStatistics({ totalDeposits, totalWithdraws });
 
     setHash(value);
   };
@@ -108,7 +159,7 @@ export function Withdraw({
   return (
     <div>
       <div>
-        <div className={`${handleMoreInfos ? "mb-2" : "mb-[76px]"}`}>
+        <div className={`mb-5`}>
           <div className="flex items-center justify-between">
             <span className="text-black text-[1.1rem] font-bold">
               Withdraw ticket{" "}
@@ -129,34 +180,47 @@ export function Withdraw({
                 w-full
                 flex items-center justify-between
                 border-[2px]
+                focus:outline-none
                 ${
-                  errorMessage?.errorHash && hash.length === 0
+                  (errorMessage?.errorHash && hash.length === 0) ||
+                  errorMessage?.errorRepicient ||
+                  errorMessage?.nullifierValid ||
+                  errorMessage?.ticketStored
                     ? "border-error"
                     : "border-transparent"
                 }
               `}
-              value={hash}
               onInput={(ev) =>
                 handleHash((ev.target as HTMLInputElement).value)
               }
-              placeholder="Paste your withdar ticked"
+              placeholder="Paste your withdraw ticked"
             />
           </div>
           <p className="text-error mt-2 text-sm font-normal">
             {errorMessage?.errorHash && hash.length === 0
               ? errorMessage.errorHash
-              : errorMessage?.nullifierValid && errorMessage.nullifierValid}
+              : errorMessage?.nullifierValid
+              ? errorMessage.nullifierValid
+              : errorMessage?.ticketStored && errorMessage.ticketStored}
           </p>
         </div>
-        {handleMoreInfos && (
+        {statistics.totalDeposits && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">Amount</p>
-              <p className="text-black font-bold text-sm">1 NEAR</p>
+              <p className="text-black text-sm font-normal">
+                Total deposits to date
+              </p>
+              <p className="text-black font-bold text-sm">
+                {statistics.totalDeposits}
+              </p>
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">Time passes</p>
-              <p className="text-black font-bold text-sm">10 minutes</p>
+              <p className="text-black text-sm font-normal">
+                Total withdraws to date
+              </p>
+              <p className="text-black font-bold text-sm">
+                {statistics.totalWithdraws}
+              </p>
             </div>
           </div>
         )}
@@ -183,6 +247,7 @@ export function Withdraw({
                w-full
                flex items-center justify-between
                border-[2px]
+               focus:outline-none
                ${
                  errorMessage?.errorRepicient && withdrawAddress.length === 0
                    ? "border-error"
