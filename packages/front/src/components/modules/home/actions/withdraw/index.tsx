@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect, SetStateAction } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import toast from "react-hot-toast";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
+import { LoadingModal } from "@/components/modals/loading";
 
 export function Withdraw({
   setChangeTab,
@@ -15,6 +16,7 @@ export function Withdraw({
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [hashData, setHashData] = useState<any>();
   const [fechtingData, setFechtingData] = useState(false);
+  const [generatingProof, setGeneratingProof] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [buttonText, setButtonText] = useState("Withdraw");
   const [errorMessage, setErrorMessage] = useState<{
@@ -54,12 +56,14 @@ export function Withdraw({
     }
 
     setButtonText("Preparing your withdraw...");
+    setGeneratingProof(true);
 
     try {
       await prepareWithdraw(selector, {
         note: hash,
         recipient: withdrawAddress,
       });
+      setGeneratingProof(false);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
@@ -254,6 +258,10 @@ export function Withdraw({
             setShowModal(!showModal);
             setButtonText("Withdraw");
           }}
+        />
+        <LoadingModal
+          isOpen={generatingProof}
+          onClose={() => setGeneratingProof(false)}
         />
       </div>
     </div>
