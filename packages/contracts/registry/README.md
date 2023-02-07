@@ -6,7 +6,7 @@ The goal is for end users to be able to:
 1. Discover all token and amount options available in HYC;
 2. Discover the correct addresses for every available currency and amount option within HYC;
 3. Allow the seamless replacement of deprecated contracts for their updated versions without compromising users ability to withdraw deposited funds;
-4. Allow relayers to check whether specific contracts should be trusted; 
+4. Allow relayers to check whether specific contracts should be trusted;
 
 The ideal logic would be for this to be the single point of contact for every interaction with HYC. However, given NEAR protocol's asynchronous nature, it is not possible to implement a router or proxy as we would for a different blockchain, such as Ethereum.
 
@@ -63,7 +63,7 @@ Panics if currency or amount is not registered.
 params:
   - account_id: AccountId -> Address of the HYC contract that you're removing from the allowlist
 
-This method removes one entry from the allowlist. 
+This method removes one entry from the allowlist.
 
 ### Allowlist methods
 
@@ -91,7 +91,7 @@ Returns a Vec with all supported currencies in HYC.
 params:
   - currency: Currency -> Currency for which you want to query all available contracts
 
-Returns a HashMap mapping each available deposit amount in the currency to the corresponding HYC contract address 
+Returns a HashMap mapping each available deposit amount in the currency to the corresponding HYC contract address
 
 3. `view_is_contract_allowed` -> `bool`
 params:
