@@ -257,18 +257,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "contract"
-version = "0.1.0"
-dependencies = [
- "hapi-near-connector",
- "near-bigint",
- "near-sdk",
- "near_mimc",
- "near_plonk_verifier",
- "rstest",
-]
-
-[[package]]
 name = "convert_case"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -595,6 +583,18 @@ name = "hex"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+
+[[package]]
+name = "hideyourcash-contract-near"
+version = "0.1.0"
+dependencies = [
+ "hapi-near-connector",
+ "near-bigint",
+ "near-sdk",
+ "near_mimc",
+ "near_plonk_verifier",
+ "rstest",
+]
 
 [[package]]
 name = "iana-time-zone"
@@ -1206,6 +1206,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a415a013dd7c5d4221382329a5a3482566da675737494935cbbbcdec04662f9d"
 dependencies = [
  "smallvec",
+]
+
+[[package]]
+name = "registry"
+version = "0.1.0"
+dependencies = [
+ "near-bigint",
+ "near-sdk",
+ "rstest",
 ]
 
 [[package]]
