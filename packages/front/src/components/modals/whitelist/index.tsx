@@ -1,5 +1,5 @@
 import { useApplication } from "@/store";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useAllowlist } from "@/hooks/useAllowlist";
 import { useWallet } from "@/store/wallet";
