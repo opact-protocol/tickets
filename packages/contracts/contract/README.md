@@ -21,6 +21,22 @@ To interact with the protocol for the first time, an account must be added to th
 Once a user has been added to the whitelist, they may deposit funds into the protocol and other users may withdraw them. However, it is always possible for anyone (this will be done by robots in production and rewarded) to challange addresses that are in the whitelist, by performing new queries to hapi.one.
 This is done through the `denylist` method. It will query the account passed into hapi.one and, should the risk be greater than the threshold the account will be added to the denylist and will not be able to deposit new funds nor withdraw previously deposited funds.
 
+## Protocol fees
+The contract implements a protocol fee, which is a percentage taken from every deposit and transferred to the owner account.
+
+This fee is variable and is set during contract initialization. To protect users from fee changes that would affect their deposits, once the fee is set it can never be reset.
+
+## Contract ownership
+The contract implements an ownership model, where a priviledged `owner` account has access to methods that regular users do not.
+
+However, since the intent of the contract is to be totally decentralized, `owner` does not have access to any funds stored in the contract, cannot alter any preset parameters and if `owner` is ever compromised, it represents no risk for the contract whatsoever.
+
+The only method that owner has access to is `toggle_kill_switch`. This method toggles the value of `kill_switch` which is used to lock new deposits to the protocol. This has 2 main use cases:
+1. Upgrading the contract -> new deposits will be forbidden and users will only be able to withdraw. A new contract will be deployed with updated version.
+2. AML failures -> in case the AML system is currepted somehow either by corruption of third party data providors or by attacks on HYC's security model, the owner can stop the contract to prevent further damage while the team works in improving the protocol to upgrade to a new version.
+
+The account that deploys the HYC  contract should burn all it access keys to ensure users that the protocol is fully decentralized and - given a secure source code - their funds cannot be tampered with.
+
 ## API
 
 ### Allowlist methods
@@ -135,6 +151,10 @@ true if nullifier was already spent, false otherwise
 7. `view_kill_switch` -> `bool`
 
 Returns current value of kill_switch variable
+
+7. `view_contract_params` -> `ContractParams`
+
+Returns object containing all setup parameters in place for the contract
 
 8. `view_is_withdraw_valid` -> `bool`
 params:
