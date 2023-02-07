@@ -3,7 +3,10 @@ use merkle_tree::allowlist_tree::AllowlistMerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
 use near_sdk::serde::{Serialize, Deserialize};
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise, ext_contract, Gas};
+use near_sdk::{
+  env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise, ext_contract, Gas,
+  assert_one_yocto,
+};
 use near_sdk::collections::LookupSet;
 use near_plonk_verifier::{self, Verifier, G1Point, G2Point};
 use near_bigint::U256;
@@ -12,26 +15,41 @@ use hapi_near_connector::aml::*;
 use crate::currency::*;
 
 mod actions;
+mod currency;
 mod events;
 mod ext_interface;
 mod hashes;
 mod merkle_tree;
-mod currency;
+
+/// NEAR only represents numbers as integers. This is the base
+/// used to create the contract's percentage fee
+const FEE_DIVISOR: u128 = 100_000;
 
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
+  // account responsible for managing kill_switch and protocol fees
   pub owner: AccountId,
+  // kill_switch toggle
   pub kill_switch: bool,
   // hapi.one contract's account
   pub authorizer: AML,
+  // max risk accepted from hapi.one's evaluation
   pub max_risk: u8,
+  // merkle tree structures acting as cryptographic accumulators
   pub commitments: MerkleTree,
   pub allowlist: AllowlistMerkleTree,
+  // token type that is accepted by this instance of the contract
   pub currency: Currency,
+  // deposit value that is accepted by this instance of the contract
   pub deposit_value: u128,
+  // fee taken from every deposit to the protocol. expressed in absolute amount
+  pub protocol_fee: u128,
+  // Verifier instance responsible for processing zk proofs
   pub verifier: Verifier,
+  // set containing all used nullifiers to avoid double spending of deposits
   pub nullifier: LookupSet<U256>,
+  // counter of nullifier set size to allow indexer to keep track of withdraw order
   pub nullifier_count: u64,
 }
 
@@ -68,6 +86,7 @@ impl Contract {
     last_roots_len_wl: u8,
     currency: Currency,
     deposit_value: U128,
+    percent_fee: U128,
     // verifier
     power: U256,
     n_public: U256,
@@ -90,6 +109,10 @@ impl Contract {
     assert!(
       env::is_valid_account_id(owner.as_bytes()),
       "Invalid owner account"
+    );
+    assert!(
+      percent_fee.0 < FEE_DIVISOR,
+      "protocol fee cannot be greater than 100%"
     );
     Self {
       owner,
@@ -119,6 +142,7 @@ impl Contract {
       ),
       currency,
       deposit_value: deposit_value.0,
+      protocol_fee: (deposit_value.0 * percent_fee.0) / FEE_DIVISOR,
       verifier: Verifier::new(
         power, n_public, q_m, q_l, q_r, q_o, q_c, s_1, s_2, s_3, k_1, k_2, x_2, q, qf, w1,
       ),
@@ -135,5 +159,6 @@ impl Contract {
       self.owner,
       "This function is restricted to the owner"
     );
+    assert_one_yocto();
   }
 }

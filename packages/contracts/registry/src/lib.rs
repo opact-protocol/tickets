@@ -4,7 +4,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Serialize, Deserialize};
 use near_bigint::U256;
 use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
-use near_sdk::collections::{UnorderedMap};
+use near_sdk::collections::{UnorderedMap, UnorderedSet};
 
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
@@ -17,13 +17,18 @@ pub enum Currency {
 #[near_bindgen]
 #[derive(PanicOnDefault, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
+  // account that is authorized to modify registry
   pub owner: AccountId,
+  // map of current production contracts for HYC in different currencies / deposit values
   pub currencies_map: UnorderedMap<Currency, HashMap<U256, AccountId>>,
+  // Set of allowlisted contracts that relayers may trust to service
+  pub allowlist_set: UnorderedSet<AccountId>,
 }
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
   CurrenciesMap,
+  AllowlistSet,
 }
 
 #[near_bindgen]
@@ -38,6 +43,7 @@ impl Contract {
     Self {
       owner,
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
+      allowlist_set: UnorderedSet::new(StorageKey::AllowlistSet),
     }
   }
 }
@@ -48,8 +54,9 @@ impl Contract {
   pub fn add_entry(&mut self, currency: Currency, amount: U256, contract: AccountId) {
     self.only_owner();
     let mut amount_map = self.currencies_map.get(&currency).unwrap_or(HashMap::new());
-    amount_map.insert(amount, contract);
+    amount_map.insert(amount, contract.clone());
     self.currencies_map.insert(&currency, &amount_map);
+    self.allowlist_set.insert(&contract);
   }
 
   #[payable]
@@ -69,12 +76,28 @@ impl Contract {
     }
   }
 
+  #[payable]
+  pub fn remove_from_allowlist(&mut self, contract: AccountId) {
+    self.only_owner();
+    self.allowlist_set.remove(&contract);
+  }
+
   pub fn view_all_currencies(&self) -> Vec<Currency> {
     self.currencies_map.keys().collect()
   }
 
   pub fn view_currency_contracts(&self, currency: Currency) -> HashMap<U256, AccountId> {
     self.currencies_map.get(&currency).unwrap_or(HashMap::new())
+  }
+
+  pub fn view_is_in_allowlist(&self, contract: AccountId) -> bool {
+    self.allowlist_set.contains(&contract)
+  }
+
+  /// Returns all elements in allowlist. There is a know limitation to
+  /// retrive large lists, however allowlist is not expected to ever exceed 100 elements
+  pub fn view_allowlist(&self) -> Vec<AccountId> {
+    self.allowlist_set.to_vec()
   }
 }
 
