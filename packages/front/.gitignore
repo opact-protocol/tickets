@@ -25,3 +25,9 @@ dist-ssr
 .env
 out
 .vercel
+
+# Large files in public
+public/withdraw.wasm
+public/verifier.wasm
+public/withdraw_0000.zkey
+public/circuit.zkey
