@@ -48,7 +48,9 @@ if (code === 0) {
   sh.mkdir("-p", linkDir);
 
   for (let member of contracts) {
-    const memberName = member.split("/")[1];
+    const memberName = member.includes("test_contracts")
+      ? member.split("/")[2]
+      : member.split("/")[1];
     const link = `${calledFromDir}/out/${memberName}.wasm`;
     const outFile = `./target/wasm32-unknown-unknown/${
       debug ? "debug" : "release"
