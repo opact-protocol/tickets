@@ -9,7 +9,7 @@ import {
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
   GET_MOST_RECENT_DEPOSIT,
-  GET_MOST_RECENT_WITHDRAW,
+  GET_MOST_RECENT_WITHDRAW
 } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
@@ -32,16 +32,16 @@ export function Withdraw() {
     ticketStored?: string;
   }>();
   const [statistics, setStatistics] = useState<{
-    totalDeposits: number;
-    totalWithdraws: number;
-  }>({} as { totalDeposits: number; totalWithdraws: number });
+    totalDeposits?: number;
+    totalWithdraws?: number;
+  }>();
 
   const handleMoreInfos = false;
 
   const {
     hash: withdrawHash,
     fetchHashData,
-    prepareWithdraw,
+    prepareWithdraw
   } = useApplication();
 
   const { selector, accountId, toggleModal } = useWalletSelector();
@@ -60,7 +60,7 @@ export function Withdraw() {
     if (!hash || !withdrawAddress) {
       setErrorMessage({
         errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address",
+        errorRepicient: "Invalid address"
       });
       return;
     }
@@ -70,14 +70,14 @@ export function Withdraw() {
       setGeneratingProof(true);
       await prepareWithdraw(selector, {
         note: hash,
-        recipient: withdrawAddress,
+        recipient: withdrawAddress
       });
       setGeneratingProof(false);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
       toast.custom(
-        (t) => (
+        t => (
           <ToastCustom
             success={false}
             icon="/error-circle-icon.svg"
@@ -96,23 +96,23 @@ export function Withdraw() {
   }, [hash]);
 
   const handleHash = async (value: string) => {
-    if (!value) setErrorMessage(undefined);
-
-    if (value === hash) {
+    if (!value) {
       setErrorMessage(undefined);
-      return;
+      setStatistics(undefined);
     }
+
     if (value.length < 220) {
       setErrorMessage({ ticketStored: "This ticket is invalid" });
       return;
     }
+
     const commitment = generateCommitment(value);
 
     const ticketStored = await getTicketInTheMerkleTree(commitment!);
 
     if (!ticketStored) {
       setErrorMessage({
-        ticketStored: "This ticket has not been deposited yet",
+        ticketStored: "This ticket has not been deposited yet"
       });
       return;
     }
@@ -126,6 +126,8 @@ export function Withdraw() {
 
     const totalWithdraws =
       +recentWithdraw.withdrawals[0].counter || 0 - +lastWithdraw.counter || 0;
+
+    setErrorMessage(undefined);
 
     setStatistics({ totalDeposits, totalWithdraws });
 
@@ -183,9 +185,7 @@ export function Withdraw() {
                     : "border-transparent"
                 }
               `}
-              onInput={(ev) =>
-                handleHash((ev.target as HTMLInputElement).value)
-              }
+              onInput={ev => handleHash((ev.target as HTMLInputElement).value)}
               placeholder="Paste your withdraw ticked"
             />
           </div>
@@ -197,27 +197,26 @@ export function Withdraw() {
               : errorMessage?.ticketStored && errorMessage.ticketStored}
           </p>
         </div>
-        {statistics.totalDeposits ||
-          (statistics.totalWithdraws && (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <p className="text-black text-sm font-normal">
-                  Total deposits to date
-                </p>
-                <p className="text-black font-bold text-sm">
-                  {statistics.totalDeposits}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <p className="text-black text-sm font-normal">
-                  Total withdraws to date
-                </p>
-                <p className="text-black font-bold text-sm">
-                  {statistics.totalWithdraws}
-                </p>
-              </div>
+        {statistics && (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-black text-sm font-normal">
+                Total deposits to date
+              </p>
+              <p className="text-black font-bold text-sm">
+                {statistics.totalDeposits}
+              </p>
             </div>
-          ))}
+            <div className="flex items-center justify-between">
+              <p className="text-black text-sm font-normal">
+                Total withdraws to date
+              </p>
+              <p className="text-black font-bold text-sm">
+                {statistics.totalWithdraws}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className={`mt-8 ${handleMoreInfos ? "mb-6" : "mb-44"}`}>
           <div className="flex items-center justify-between">
@@ -250,7 +249,7 @@ export function Withdraw() {
              `}
               placeholder="Wallet Address"
               value={withdrawAddress}
-              onInput={(ev) =>
+              onInput={ev =>
                 setWithdrawAddress((ev.target as HTMLInputElement).value)
               }
             />
@@ -291,9 +290,9 @@ export function Withdraw() {
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${
-                  hashData?.amount / 1 - hashData?.relayer_fee
-                } NEAR`}</span>
+                <span className="text-black font-bold">{`${hashData?.amount /
+                  1 -
+                  hashData?.relayer_fee} NEAR`}</span>
               </div>
             </div>
           </div>

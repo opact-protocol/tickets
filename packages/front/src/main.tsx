@@ -14,12 +14,14 @@ window.Buffer = window.Buffer || Buffer;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <WalletSelectorContextProvider>
-      <Suspense fallback={<p>Loading...</p>}>
-        <App />
-      </Suspense>
-      <Toaster position="bottom-right" reverseOrder={false} />
-      <WalletSelectorModal />
-    </WalletSelectorContextProvider>
+    <ApolloProvider client={client}>
+      <WalletSelectorContextProvider>
+        <Suspense fallback={<p>Loading...</p>}>
+          <App />
+        </Suspense>
+        <Toaster position="bottom-right" reverseOrder={false} />
+        <WalletSelectorModal />
+      </WalletSelectorContextProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );
