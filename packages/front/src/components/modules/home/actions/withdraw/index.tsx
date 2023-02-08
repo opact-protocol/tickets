@@ -8,22 +8,15 @@ import { LoadingModal } from "@/components/modals/loading";
 import {
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
-  GET_CURRENT_GRAETEST_COUNTER,
+  GET_MOST_RECENT_DEPOSIT,
   GET_MOST_RECENT_WITHDRAW,
 } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { useQuery } from "@apollo/client";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-export function Withdraw({
-  setChangeTab,
-}: {
-  setChangeTab: React.Dispatch<SetStateAction<boolean>>;
-}) {
-  setChangeTab(true);
-  const { data } = useQuery(GET_CURRENT_GRAETEST_COUNTER);
+export function Withdraw() {
+  const { data } = useQuery(GET_MOST_RECENT_DEPOSIT);
   const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [hash, setHash] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
@@ -86,6 +79,7 @@ export function Withdraw({
       toast.custom(
         (t) => (
           <ToastCustom
+            success={false}
             icon="/error-circle-icon.svg"
             id={t.id}
             visible={t.visible}
@@ -97,8 +91,6 @@ export function Withdraw({
     }
   };
 
-  console.log(errorMessage);
-
   const hasErrorHash = useMemo(() => {
     return !hash;
   }, [hash]);
@@ -107,6 +99,7 @@ export function Withdraw({
     if (!value) setErrorMessage(undefined);
 
     if (value === hash) {
+      setErrorMessage(undefined);
       return;
     }
     if (value.length < 220) {
@@ -129,10 +122,10 @@ export function Withdraw({
     );
 
     const totalDeposits =
-      +data.depositMerkleTreeUpdates[0].counter - +ticketStored.counter;
+      +data.depositMerkleTreeUpdates[0].counter || 0 - +ticketStored.counter;
 
     const totalWithdraws =
-      +recentWithdraw.withdrawals[0].counter - +lastWithdraw.counter;
+      +recentWithdraw.withdrawals[0].counter || 0 - +lastWithdraw.counter || 0;
 
     setStatistics({ totalDeposits, totalWithdraws });
 
@@ -204,26 +197,27 @@ export function Withdraw({
               : errorMessage?.ticketStored && errorMessage.ticketStored}
           </p>
         </div>
-        {statistics.totalDeposits && (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">
-                Total deposits to date
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics.totalDeposits}
-              </p>
+        {statistics.totalDeposits ||
+          (statistics.totalWithdraws && (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <p className="text-black text-sm font-normal">
+                  Total deposits to date
+                </p>
+                <p className="text-black font-bold text-sm">
+                  {statistics.totalDeposits}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-black text-sm font-normal">
+                  Total withdraws to date
+                </p>
+                <p className="text-black font-bold text-sm">
+                  {statistics.totalWithdraws}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <p className="text-black text-sm font-normal">
-                Total withdraws to date
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics.totalWithdraws}
-              </p>
-            </div>
-          </div>
-        )}
+          ))}
 
         <div className={`mt-8 ${handleMoreInfos ? "mb-6" : "mb-44"}`}>
           <div className="flex items-center justify-between">
