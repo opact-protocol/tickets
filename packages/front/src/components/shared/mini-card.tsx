@@ -44,10 +44,10 @@ const MiniCard = ({
           {({ open }) => (
             <>
               <Disclosure.Button className="flex w-full items-center justify-between px-16 py-5 font-bold text-xl text-black">
-                <span className="flex gap-3 items-center">
-                  {" "}
-                  <img src="/shield-check.svg" alt="" /> {title}
-                </span>
+                <div className="w-full flex gap-5 items-center">
+                  <img src="/shield-check.svg" alt="" />
+                  <p className="w-full text-start">{title}</p>
+                </div>
                 <ChevronUpIcon
                   className={`${
                     open ? "rotate-180 transform" : ""
