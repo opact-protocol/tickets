@@ -17,16 +17,6 @@ export const actions = [
       return action.FunctionCall.method_name === "deposit";
     },
   },
-  {
-    error: "Verify your address to be able to make transactions",
-    success: "You can start making transactions with safety",
-    methodName: "allowlist",
-    check: ({ transaction: { actions } }: TransactionPayload) => {
-      const [action] = actions;
-
-      return action.FunctionCall.method_name === "allowlist";
-    },
-  },
 ];
 
 export default actions;

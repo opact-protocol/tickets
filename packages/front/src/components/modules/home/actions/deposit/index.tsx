@@ -10,7 +10,6 @@ import {
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { useAction } from "@/hooks/useAction";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Toast from "@/components/shared/toast";
 
 import "swiper/css";
 import { WhitelistModal } from "@/components/modals";
@@ -25,11 +24,7 @@ const tokens = [
   { id: 4, name: "CARDANO" },
 ];
 
-const transactionHashes = new URLSearchParams(window.location.search).get(
-  "transactionHashes"
-);
-
-export function Deposit({ changeTab }: { changeTab: boolean }) {
+export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -41,11 +36,6 @@ export function Deposit({ changeTab }: { changeTab: boolean }) {
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
-
-  const { depositAction, allowlistAction } = useAction(
-    transactionHashes!,
-    accountId!
-  );
 
   const { allowList } = useAllowlist(accountId!, selector);
 
@@ -243,46 +233,6 @@ export function Deposit({ changeTab }: { changeTab: boolean }) {
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
-      {!changeTab && !allowlistAction && (
-        <Toast
-          icon={
-            !depositAction && transactionHashes
-              ? "processing"
-              : depositAction?.status === "success"
-              ? "/check-circle-icon.svg"
-              : depositAction?.status === "error"
-              ? "/error-circle-icon.svg"
-              : ""
-          }
-          message={
-            !depositAction && transactionHashes
-              ? "This process could take a few moments"
-              : depositAction?.status === "success"
-              ? depositAction.message
-              : depositAction?.status === "error"
-              ? depositAction.message
-              : ""
-          }
-          title={
-            !depositAction && transactionHashes
-              ? "Processing deposit"
-              : depositAction?.status === "success"
-              ? "Funds deposited successfully!"
-              : depositAction?.status === "error"
-              ? "Deposit failed"
-              : ""
-          }
-          visible={
-            !depositAction && transactionHashes
-              ? true
-              : depositAction?.status === "success"
-              ? true
-              : depositAction?.status === "error"
-              ? true
-              : false
-          }
-        />
-      )}
       <WhitelistModal
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}

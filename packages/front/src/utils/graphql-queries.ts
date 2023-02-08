@@ -134,7 +134,12 @@ export const getLastWithdrawBeforeTheTicketWasCreated = async (
   const { data } = await client.query({
     query: gql`
       query teste($timestamp: String) {
-        withdrawals(first: 1, where: { timestamp_lte: $timestamp }) {
+        withdrawals(
+          first: 1
+          where: { timestamp_lte: $timestamp }
+          orderBy: counter
+          orderDirection: desc
+        ) {
           counter
           timestamp
         }
@@ -143,9 +148,10 @@ export const getLastWithdrawBeforeTheTicketWasCreated = async (
     variables: { timestamp },
   });
 
-  return data.withdrawals[0];
+  if (data.withdrawals[0]) return data.withdrawals[0];
+  else return 0;
 };
-export const GET_CURRENT_GRAETEST_COUNTER = gql`
+export const GET_MOST_RECENT_DEPOSIT = gql`
   query currentGraetestCounter {
     depositMerkleTreeUpdates(first: 1, orderBy: counter, orderDirection: desc) {
       counter
