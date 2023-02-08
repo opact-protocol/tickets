@@ -25,7 +25,7 @@ mod tests {
     let user3 = create_user_account(&root, &worker, "user3").await;
     let user4 = create_user_account(&root, &worker, "user4").await;
     let non_registered_user = create_user_account(&root, &worker, "non_registered_user").await;
-    
+
     // SPOON HAPI.ONE FROM MAINNET
     let hapi_one_account: &str = "proxy.hapiprotocol.near";
 
@@ -89,7 +89,7 @@ mod tests {
     allowlist(&worker, &registry, &owner, &user4).await?;
 
     // 1. commit deposits
-    
+
     // assert deposit without registration fails
     let should_fail = deposit_near(
       &worker,

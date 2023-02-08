@@ -193,7 +193,7 @@ pub async fn deposit_near(
     final_result.push(value.clone());
   }
   anyhow::Ok(result)
-  
+
 }
 
 pub async fn allowlist(
@@ -301,7 +301,7 @@ pub async fn add_entry(
     .args_json(json!({
       "currency": currency,
       "amount": amount.to_string(),
-      "account_id": entry_account.id()  
+      "account_id": entry_account.id()
     }))?
     .deposit(1)
     .gas(300000000000000)
@@ -349,7 +349,7 @@ pub async fn remove_from_allowlist(
   let result = sender
     .call(&worker, contract.id(), "remove_from_allowlist")
     .args_json(json!({
-      "account_id": entry_account.id()  
+      "account_id": entry_account.id()
     }))?
     .deposit(1)
     .gas(300000000000000)
