@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 
 export const LoadingModal = ({
   isOpen,
-  onClose,
+  onClose
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -35,10 +35,15 @@ export const LoadingModal = ({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-screen h-screen flex items-center justify-center transform overflow-hidden p-6 text-left align-middle transition-all relative">
-                <div className="flex items-center justify-center gap-5 w-full max-w-[450px] bg-white p-5 rounded-[35px] shadow-xl">
-                  <div className="w-[36px] h-[36px] border-[4px] border-dark-grafiti border-l-transparent rounded-[50%] animate-spin" />
-                  <p className="text-dark-grafiti-medium text-lg font-bold">
-                    Generating your zero knowledge proof
+                <div className="flex flex-col items-center justify-center gap-3 w-full max-w-[450px] bg-white p-5 rounded-[35px] shadow-xl">
+                  <div className="flex items-center justify-center gap-5">
+                    <div className="w-[36px] h-[36px] border-[4px] border-dark-grafiti border-l-transparent rounded-[50%] animate-spin" />
+                    <p className="text-dark-grafiti-medium text-lg font-bold">
+                      Generating your zero knowledge proof
+                    </p>
+                  </div>
+                  <p className="text-dark-grafiti-light text-base font-semibold text-center">
+                    This may take a few seconds
                   </p>
                 </div>
               </Dialog.Panel>

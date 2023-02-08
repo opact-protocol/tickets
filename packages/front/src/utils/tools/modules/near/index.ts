@@ -1,7 +1,6 @@
 import { useEnv } from "@/hooks/useEnv";
 import actions from "@/utils/actions";
 import { providers } from "near-api-js";
-import type { CodeResult } from "near-api-js/lib/providers/provider";
 
 export interface Transaction {
   signerId: string;
@@ -55,9 +54,21 @@ export interface TokenId {
   account_id: string;
 }
 
-export const provider = new providers.JsonRpcProvider(useEnv("VITE_CONTRACT"));
+export const provider = new providers.JsonRpcProvider(
+  useEnv("VITE_NEAR_NODE_URL")
+);
 
 export const AttachedGas = "300000000000000";
+
+const refreshPage = transactions => {
+  const newUrl =
+    window.location.origin +
+    window.location.pathname +
+    "?transactionHashes=" +
+    transactions;
+
+  window.location.href = newUrl;
+};
 
 export const getTransactionState = async (txHash: string, accountId: string) =>
   await provider.txStatus(txHash, accountId);
@@ -73,7 +84,7 @@ export const getTransactionsAction = (
   transactions: Partial<TransactionPayload>[]
 ) => {
   return transactions
-    .map((payload) => {
+    .map(payload => {
       const action = actions.find(({ check }) =>
         check(payload as TransactionPayload)
       );
@@ -87,17 +98,23 @@ export const getTransactionsAction = (
       return {
         status,
         message: action[status],
-        methodName: action.methodName,
+        methodName: action.methodName
       };
     })
-    .filter((item) => item)[0];
+    .filter(item => item)[0];
 };
 
 export const executeMultipleTransactions = async (
   transactions: Transaction[],
   wallet: any
 ) => {
-  return wallet.signAndSendTransactions({ transactions });
+  try {
+    const result = await wallet.signAndSendTransactions({ transactions });
+
+    refreshPage(result.map(({ transaction }) => transaction.hash).join(","));
+  } catch (e) {
+    console.warn(e);
+  }
 };
 
 export const getTransaction = (
@@ -117,10 +134,10 @@ export const getTransaction = (
           methodName: method,
           args,
           gas: AttachedGas,
-          deposit: amount,
-        },
-      },
-    ],
+          deposit: amount
+        }
+      }
+    ]
   };
 };
 
@@ -141,7 +158,7 @@ export const viewFunction = async (
     account_id: contractId,
     method_name: methodName,
     args_base64: serializedArgs,
-    finality: "optimistic",
+    finality: "optimistic"
   });
 
   return (
@@ -154,7 +171,7 @@ export const viewFunction = async (
 export const getTokenStorage = async (connection, account, token) => {
   try {
     return await viewFunction(connection, token, "storage_balance_of", {
-      account_id: account,
+      account_id: account
     });
   } catch (e) {
     return;

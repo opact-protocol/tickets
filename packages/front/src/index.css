@@ -50,3 +50,8 @@ body {
   height: 100vh;
   background: #e8eaff;
 }
+
+.toast-position {
+  bottom: 1em !important;
+  right: 10em !important;
+}

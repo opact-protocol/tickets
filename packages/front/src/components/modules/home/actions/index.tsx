@@ -1,4 +1,5 @@
 import { Tab } from "@headlessui/react";
+import { useState } from "react";
 import { Deposit } from "./deposit";
 import { Withdraw } from "./withdraw";
 
@@ -6,6 +7,7 @@ const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
+  const [changeTab, setChangeTab] = useState(false);
 
   return (
     <div className="w-[95%] max-w-[479px] bg-background-page px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
@@ -14,7 +16,7 @@ export function Actions() {
         className="flex flex-col items-center max-w-[431px] bg-white rounded-[30px] mx-auto p-8 shadow-sm border-[3px] border-solid border-[#616dd333]"
       >
         <Tab.List className="flex gap-4 py-6 w-full rounded-[30px]">
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <Tab
               key={tab}
               className={({ selected }) =>
@@ -34,10 +36,10 @@ export function Actions() {
 
         <Tab.Panels className="mt-2 w-full">
           <Tab.Panel>
-            <Deposit />
+            <Deposit changeTab={changeTab} />
           </Tab.Panel>
           <Tab.Panel>
-            <Withdraw />
+            <Withdraw setChangeTab={setChangeTab} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
