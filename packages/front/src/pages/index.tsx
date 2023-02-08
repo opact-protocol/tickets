@@ -423,7 +423,7 @@ const Index = () => {
                 </span>{" "}
               </h1>
             </div>
-            <ul className="w-full grid grid-cols-auto-fit-sm gap-10 mt-[70px] md:grid-cols-auto-fit-md">
+            <ul className="w-full grid grid-cols-auto-fit-sm justify-items-center gap-10 mt-[70px] md:grid-cols-auto-fit-md">
               {[
                 { name: "Hack-a-Chain", icon: "/hackachain.svg" },
                 { name: "Near Foundation", icon: "/near_icon.svg" },
