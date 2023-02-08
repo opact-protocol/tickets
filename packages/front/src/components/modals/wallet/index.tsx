@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import type { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useEnv } from "@/hooks/useEnv";
 
 export function WalletSelectorModal() {
   const { selector, showModal, toggleModal } = useWalletSelector();
@@ -42,7 +43,7 @@ export function WalletSelectorModal() {
       }
 
       await wallet.signIn({
-        contractId: import.meta.env.VITE_CONTRACT,
+        contractId: useEnv("VITE_CONTRACT"),
         methodNames: [],
       });
     } catch (e) {

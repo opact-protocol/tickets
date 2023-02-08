@@ -8,7 +8,6 @@ interface ActionProps {
 }
 
 export const useAction = (transactionHashes: string, accountId: string) => {
-  const [allowlistAction, setAllowlistAction] = useState<ActionProps>();
   const [depositAction, setDepositAction] = useState<ActionProps>();
 
   useEffect(() => {
@@ -33,9 +32,9 @@ export const useAction = (transactionHashes: string, accountId: string) => {
 
       if (action.methodName === "deposit") {
         setDepositAction(action);
-      } else if (action.methodName === "allowlist") setAllowlistAction(action);
+      }
     })();
   }, [accountId]);
 
-  return { allowlistAction, depositAction };
+  return { depositAction };
 };

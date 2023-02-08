@@ -150,7 +150,7 @@ export const useApplication = create<{
       const { commitmentsTree, whitelistTree } = await buildTree();
 
       const commitmentProof = commitmentsTree.proof(commitment);
-      console.log("oi");
+
       const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
 
       const input = {
@@ -272,6 +272,7 @@ export const useApplication = create<{
 
     toast.custom((t) => (
       <ToastCustom
+        success={true}
         icon="/check-circle-icon.svg"
         id={t.id}
         visible={t.visible}
@@ -308,7 +309,8 @@ export const useApplication = create<{
         ""
       )
     );
+    const transaction = await executeMultipleTransactions(transactions, wallet);
 
-    executeMultipleTransactions(transactions, wallet);
+    if (transaction.length > 0) window.location.reload();
   },
 }));
