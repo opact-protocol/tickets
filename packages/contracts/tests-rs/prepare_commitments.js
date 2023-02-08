@@ -156,7 +156,7 @@ async function buildCommitments() {
     mimc.hash(commitment1.secret_hash, accountsHashes[0]),
     mimc.hash(commitment2.secret_hash, accountsHashes[1]),
     mimc.hash(commitment3.secret_hash, accountsHashes[2]),
-    mimc.hash(commitment4.secret_hash, accountsHashes[3]),
+    mimc.hash(commitment4.secret_hash, accountsHashes[2]),
   ];
 
   let commitmentTree = new MerkleTree(20, commitmentLeaves, {
