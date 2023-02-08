@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use near_sdk::{env, near_bindgen, AccountId, Promise, json_types::U128, is_promise_success};
 use near_bigint::U256;
 use near_plonk_verifier::{Proof, G1Point};
@@ -38,14 +36,12 @@ impl Contract {
     );
   }
 
-  pub fn ft_on_trasnfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> U128 {
-    let secrets_hash =
-      U256::from_str(&msg).expect("msg must be U256 number corresponding to secrets hash");
+  pub fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: U256) -> U128 {
     assert!(
       self.currency.is_nep_141(env::predecessor_account_id()),
       "This contract does not accept this token"
     );
-    self.inner_deposit(secrets_hash, amount.0, sender_id);
+    self.inner_deposit(msg, amount.0, sender_id);
     U128(0)
   }
 
@@ -109,7 +105,7 @@ impl Contract {
     // Owner and Relayer are assumed to be registered in contract. Failures in transfers will not be reverted
     self
       .currency
-      .transfer(recipient.clone(), self.deposit_value - fee.as_u128())
+      .transfer(recipient.clone(), self.deposit_value - self.protocol_fee - fee.as_u128())
       .then(
         ext_self::ext(env::current_account_id())
           .with_static_gas(CALLBACK_GAS)
