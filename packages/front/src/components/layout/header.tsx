@@ -4,22 +4,12 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
-import Toast from "../shared/toast";
-import { useAction } from "@/hooks/useAction";
-
-const transactionHashes = new URLSearchParams(window.location.search).get(
-  "transactionHashes"
-);
 
 export function Header() {
   const { accountId, toggleModal, signOut, selector } = useWalletSelector();
   const [showModal, setShowModal] = useState(false);
 
   const { allowList } = useAllowlist(accountId!, selector);
-  const { allowlistAction, depositAction } = useAction(
-    transactionHashes!,
-    accountId!
-  );
 
   if (
     action &&
@@ -142,46 +132,6 @@ export function Header() {
           </Container>
         </nav>
       </header>
-      {depositAction ? null : (
-        <Toast
-          icon={
-            !allowlistAction && transactionHashes
-              ? "processing"
-              : allowlistAction?.status === "success"
-              ? "/check-circle-icon.svg"
-              : allowlistAction?.status === "error"
-              ? "/error-circle-icon.svg"
-              : ""
-          }
-          message={
-            !allowlistAction && transactionHashes
-              ? "This process could take a few moments"
-              : allowlistAction?.status === "success"
-              ? allowlistAction.message
-              : allowlistAction?.status === "error"
-              ? allowlistAction.message
-              : ""
-          }
-          title={
-            !allowlistAction && transactionHashes
-              ? "Verifying your address"
-              : allowlistAction?.status === "success"
-              ? "Address verified"
-              : allowlistAction?.status === "error"
-              ? "Allowlist failed"
-              : ""
-          }
-          visible={
-            !allowlistAction && transactionHashes
-              ? true
-              : allowlistAction?.status === "success"
-              ? true
-              : allowlistAction?.status === "error"
-              ? true
-              : false
-          }
-        />
-      )}
     </>
   );
 }
