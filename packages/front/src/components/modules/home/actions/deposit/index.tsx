@@ -5,10 +5,9 @@ import { useApplication } from "@/store/application";
 import { useWalletSelector } from "@/utils/context/wallet";
 import {
   QuestionMarkCircleIcon,
-  ChevronDownIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
-import { useAction } from "@/hooks/useAction";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
@@ -21,7 +20,7 @@ const tokens = [
   { id: 1, name: "NEAR" },
   { id: 2, name: "AVAX" },
   { id: 3, name: "BTC" },
-  { id: 4, name: "CARDANO" },
+  { id: 4, name: "CARDANO" }
 ];
 
 export function Deposit() {
@@ -155,7 +154,7 @@ export function Deposit() {
                 className="mt-2 max-w-[371px]"
               >
                 <Swiper spaceBetween={40} slidesPerView={3} className="flex">
-                  {amounts.map((size) => (
+                  {amounts.map(size => (
                     <SwiperSlide key={size}>
                       <RadioGroup.Option
                         key={size}
@@ -197,7 +196,7 @@ export function Deposit() {
               </span>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              {[1, 2, 3].map((item) => (
+              {[1, 2, 3].map(item => (
                 <div
                   key={item}
                   className="w-[77px] h-[9px] bg-gray-300 rounded-full"

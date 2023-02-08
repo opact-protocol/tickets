@@ -3,7 +3,13 @@ import { Feedback } from "@/components/layout/feedback";
 import { Header } from "@/components/layout/header";
 import { NeedHelp } from "@/components/layout/needHelp";
 import { AboutUsModal } from "@/components/modals";
+import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect, useState } from "react";
+
+const methods = {
+  deposit: "hyc-deposits",
+  allowlist: "hyc-allowlists"
+};
 
 export const handleOpenModal = (callback: (value: boolean) => void) => {
   if (localStorage.getItem("@hyc-first-interaction")) {
@@ -13,6 +19,18 @@ export const handleOpenModal = (callback: (value: boolean) => void) => {
   callback(true);
 
   localStorage.setItem("@hyc-first-interaction", "true");
+  if (!verifyStorage(methods.allowlist)) {
+    localStorage.setItem(
+      methods.deposit,
+      JSON.stringify({ despositLastIndex: null, depositStorage: [] })
+    );
+  }
+  if (!verifyStorage(methods.allowlist)) {
+    localStorage.setItem(
+      methods.allowlist,
+      JSON.stringify({ allowlistLastIndex: null, allowlistStorage: [] })
+    );
+  }
 };
 
 function BackgroundIllustration() {
@@ -37,7 +55,7 @@ export function Index() {
 
   useEffect(() => {
     document.body.style.background = "#e8eaff";
-    handleOpenModal((show) => setShowModal(show));
+    handleOpenModal(show => setShowModal(show));
   });
   return (
     <>
