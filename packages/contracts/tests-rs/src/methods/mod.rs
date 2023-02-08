@@ -2,9 +2,13 @@ use crate::*;
 
 mod storage;
 mod token;
+mod hyc;
 
 pub use token::*;
 pub use storage::*;
+pub use hyc::*;
+
+use workspaces::result::ExecutionOutcome;
 
 pub fn get_wasm(file_name: &str) -> Result<Vec<u8>, Error> {
   std::fs::read(Path::new(OUT_DIR).join(file_name))
@@ -77,4 +81,14 @@ pub async fn time_travel(worker: &Worker<Sandbox>, seconds_to_advance: u64) -> a
   let blocks_to_advance = (seconds_to_advance * TO_NANO) / AVERAGE_BLOCK_TIME;
   worker.fast_forward(blocks_to_advance).await?;
   anyhow::Ok(())
+}
+
+pub fn is_cross_contract_full_success(outcomes: Vec<ExecutionOutcome>) -> bool {
+  let mut success = true;
+    for outcome in outcomes {
+        if outcome.is_failure() {
+          success = false;
+        }
+    }
+    success
 }
