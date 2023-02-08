@@ -1,6 +1,7 @@
 import { useEnv } from "@/hooks/useEnv";
 import actions from "@/utils/actions";
 import { providers } from "near-api-js";
+import { CodeResult } from "near-api-js/lib/providers/provider";
 
 export interface Transaction {
   signerId: string;
