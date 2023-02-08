@@ -14,40 +14,37 @@ export default defineConfig(async () => {
       react(),
       reactRefresh(),
       Pages({
-        pagesDir: "src/pages",
+        pagesDir: "src/pages"
       }),
       {
         ...inject({
           global: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "global",
+            "global"
           ],
           process: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "process",
+            "process"
           ],
           Buffer: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "Buffer",
-          ],
+            "Buffer"
+          ]
         }),
-        enforce: "post",
-      },
+        enforce: "post"
+      }
     ],
-    define: {
-      global: "window",
-    },
     envPrefix: "VITE_",
     build: {
       target: ["esNext"],
       rollupOptions: {
         output: {
-          format: "es",
-        },
-      },
+          format: "es"
+        }
+      }
     },
     optimizeDeps: {
-      include: ["buffer", "process"],
+      include: ["buffer", "process"]
     },
     server: {
       port: 3000,
@@ -55,15 +52,15 @@ export default defineConfig(async () => {
         "/api": {
           target: "http://localhost:8081",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
-        },
-      },
+          rewrite: path => path.replace(/^\/api/, "")
+        }
+      }
     },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
-        ...stdLibBrowser,
-      },
-    },
+        ...stdLibBrowser
+      }
+    }
   };
 });
