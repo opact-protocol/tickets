@@ -148,6 +148,7 @@ export const useApplication = create<{
       const { commitmentsTree, whitelistTree } = await buildTree();
 
       const commitmentProof = commitmentsTree.proof(commitment);
+      console.log("oi");
       const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
 
       const input = {
@@ -295,7 +296,16 @@ export const useApplication = create<{
       getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
     );
 
-    await executeMultipleTransactions(transactions, wallet);
+    executeMultipleTransactions(transactions, wallet);
+
+    toast.custom((t) => (
+      <ToastCustom
+        icon="/check-circle-icon.svg"
+        id={t.id}
+        visible={t.visible}
+        key={t.id}
+      />
+    ));
   },
 
   createSnarkProof: async (input) => {
@@ -326,6 +336,7 @@ export const useApplication = create<{
         ""
       )
     );
-    await executeMultipleTransactions(transactions, wallet);
+
+    executeMultipleTransactions(transactions, wallet);
   },
 }));
