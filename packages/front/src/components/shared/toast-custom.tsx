@@ -5,10 +5,12 @@ export const ToastCustom = ({
   visible,
   id,
   icon,
+  success = false,
 }: {
   visible: boolean;
   id: string;
   icon: string;
+  success: boolean;
 }) => {
   return (
     <div
@@ -18,9 +20,9 @@ export const ToastCustom = ({
     >
       <div className="flex gap-2 pl-4 items-cente justify-between">
         <div className="flex gap-2 items-center">
-          <img src={icon} alt="Error circle" />
+          <img src={icon} alt="" className="w-5" />
           <h1 className="text-dark-grafiti-medium font-bold font-[Sora] text-md">
-            Withdraw error
+            {success ? "Withdraw send" : "Withdraw error"}
           </h1>
         </div>
         <button onClick={() => toast.dismiss(id)} className="text-black">
@@ -28,8 +30,9 @@ export const ToastCustom = ({
         </button>
       </div>
       <p className="text-dark-grafiti-medium text-md font-normal pl-4">
-        An error occured. It may be intermittent due to RPC cache, please try
-        again in 10 minutes.
+        {success
+          ? "The funds has been sent to the address."
+          : "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes."}
       </p>
     </div>
   );

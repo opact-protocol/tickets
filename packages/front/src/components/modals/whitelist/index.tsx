@@ -1,5 +1,5 @@
 import { useApplication } from "@/store";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { useAllowlist } from "@/hooks/useAllowlist";
@@ -81,7 +81,7 @@ export function WhitelistModal({
                   {accountId && allowList ? (
                     <div>
                       <h2
-                        className="text-dark-grafiti font-bold font-[Sora] mt-4 text-center truncate"
+                        className="text-dark-grafiti font-bold font-[Sora] mt-4 mx-28 text-center truncate"
                         title={accountId}
                       >
                         {accountId}
@@ -90,7 +90,7 @@ export function WhitelistModal({
                   ) : (
                     <div>
                       <h2
-                        className="text-dark-grafiti font-bold font-[Sora] mt-4 text-center truncate"
+                        className="text-dark-grafiti font-bold font-[Sora] mt-4 mx-28 text-center truncate"
                         title={accountId!}
                       >
                         {accountId}

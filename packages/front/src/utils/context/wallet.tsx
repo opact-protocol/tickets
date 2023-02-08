@@ -56,7 +56,6 @@ export const WalletSelectorContextProvider: React.FC<
     });
 
     const state = _selector.store.getState();
-
     setAccounts(state.accounts);
     setSelector(_selector);
   }, []);
