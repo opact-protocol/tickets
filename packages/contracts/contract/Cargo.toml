@@ -1,5 +1,5 @@
 [package]
-name = "hideyourcash-contract-near"
+name = "contract"
 version = "0.1.0"
 authors = ["jack the dev"]
 edition = "2018"

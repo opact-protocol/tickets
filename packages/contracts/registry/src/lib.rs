@@ -51,12 +51,12 @@ impl Contract {
 #[near_bindgen]
 impl Contract {
   #[payable]
-  pub fn add_entry(&mut self, currency: Currency, amount: U256, contract: AccountId) {
+  pub fn add_entry(&mut self, currency: Currency, amount: U256, account_id: AccountId) {
     self.only_owner();
     let mut amount_map = self.currencies_map.get(&currency).unwrap_or(HashMap::new());
-    amount_map.insert(amount, contract.clone());
+    amount_map.insert(amount, account_id.clone());
     self.currencies_map.insert(&currency, &amount_map);
-    self.allowlist_set.insert(&contract);
+    self.allowlist_set.insert(&account_id);
   }
 
   #[payable]
@@ -77,9 +77,9 @@ impl Contract {
   }
 
   #[payable]
-  pub fn remove_from_allowlist(&mut self, contract: AccountId) {
+  pub fn remove_from_allowlist(&mut self, account_id: AccountId) {
     self.only_owner();
-    self.allowlist_set.remove(&contract);
+    self.allowlist_set.remove(&account_id);
   }
 
   pub fn view_all_currencies(&self) -> Vec<Currency> {
@@ -90,8 +90,8 @@ impl Contract {
     self.currencies_map.get(&currency).unwrap_or(HashMap::new())
   }
 
-  pub fn view_is_in_allowlist(&self, contract: AccountId) -> bool {
-    self.allowlist_set.contains(&contract)
+  pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
+    self.allowlist_set.contains(&account_id)
   }
 
   /// Returns all elements in allowlist. There is a know limitation to

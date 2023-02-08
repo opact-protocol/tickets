@@ -2,7 +2,8 @@
 # Add location of contracts here
 members = [
     "./contract",
-    "./registry"
+    "./registry",
+    "./test_contracts/fungible_token"
 ]
 
 [profile.release]
