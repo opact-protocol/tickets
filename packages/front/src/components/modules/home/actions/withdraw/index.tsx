@@ -2,7 +2,7 @@ import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
 import React, { useState, useMemo, useEffect, SetStateAction } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 import { LoadingModal } from "@/components/modals/loading";
 import {
@@ -15,7 +15,12 @@ import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { useQuery } from "@apollo/client";
 
-export function Withdraw() {
+export function Withdraw({
+  setChangeTab
+}: {
+  setChangeTab: React.Dispatch<SetStateAction<boolean>>;
+}) {
+  setChangeTab(true);
   const { data } = useQuery(GET_MOST_RECENT_DEPOSIT);
   const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [hash, setHash] = useState("");
@@ -76,17 +81,15 @@ export function Withdraw() {
       setShowModal(true);
     } catch (err) {
       console.warn(err);
-      toast.custom(
-        t => (
-          <ToastCustom
-            success={false}
-            icon="/error-circle-icon.svg"
-            id={t.id}
-            visible={t.visible}
-            key={t.id}
-          />
-        ),
-        { duration: 10000 }
+      toast(
+        <ToastCustom
+          icon="/error-circle-icon.svg"
+          title="Withdraw error"
+          message="An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes."
+        />,
+        {
+          toastId: "error-toast"
+        }
       );
     }
   };
@@ -122,10 +125,11 @@ export function Withdraw() {
     );
 
     const totalDeposits =
-      +data.depositMerkleTreeUpdates[0].counter || 0 - +ticketStored.counter;
+      (+data.depositMerkleTreeUpdates[0].counter || 0) - +ticketStored.counter;
 
     const totalWithdraws =
-      +recentWithdraw.withdrawals[0].counter || 0 - +lastWithdraw.counter || 0;
+      (+recentWithdraw.withdrawals[0].counter || 0) -
+      (+lastWithdraw.counter || 0);
 
     setErrorMessage(undefined);
 

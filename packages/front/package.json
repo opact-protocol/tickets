@@ -51,6 +51,7 @@
     "react-reveal": "^1.2.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.1.1",
     "rollup-plugin-polyfill-node": "^0.10.2",
     "rxjs": "^7.5.7",
     "snarkjs": "^0.4.27",
