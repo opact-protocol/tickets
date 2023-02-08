@@ -1,6 +1,5 @@
 import create from "zustand";
 import { plonk } from "snarkjs";
-import toast from "react-hot-toast";
 import { randomBN } from "@/utils/crypto-utils";
 import {
   getTransaction,
@@ -8,8 +7,7 @@ import {
   viewFunction
 } from "@/utils/tools";
 import { mimc } from "@/services/mimc";
-import { buildTree, api } from "@/services";
-import { ToastCustom } from "@/components/shared/toast-custom";
+import { buildTree } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 
 const DEFAULT_HASH_DATA = {
@@ -255,32 +253,11 @@ export const useApplication = create<{
     const publicArgs = get().publicArgs;
     const proof = get().proof;
 
-    // try {
-    //   await api.post("/money/withdraw", {
-    //     proof,
-    //     ...publicArgs,
-    //   });
-
-    //   toast.success("Withdraw sent!");
-    // } catch (e) {
-    //   toast.error("Error on withdraw");
-    // }
-
     transactions.push(
       getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
     );
 
     await executeMultipleTransactions(transactions, wallet);
-
-    // toast.custom((t) => (
-    //   <ToastCustom
-    //     success={true}
-    //     icon="/check-circle-icon.svg"
-    //     id={t.id}
-    //     visible={t.visible}
-    //     key={t.id}
-    //   />
-    // ));
   },
 
   createSnarkProof: async input => {
