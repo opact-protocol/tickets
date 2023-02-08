@@ -13,6 +13,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
+import { useAction } from "@/hooks/useAction";
+import { toast } from "react-toastify";
+import { ToastCustom } from "@/components/shared/toast-custom";
+import { returnMessages } from "@/utils/returnMessages";
+
+const transactionHashes = new URLSearchParams(window.location.search).get(
+  "transactionHashes"
+);
 
 const amounts = [0.1, 1, 10, 20, 50];
 
@@ -23,7 +31,9 @@ const tokens = [
   { id: 4, name: "CARDANO" }
 ];
 
-export function Deposit() {
+const customId = "deposit-toast";
+
+export function Deposit({ changeTab }: { changeTab: boolean }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -35,6 +45,35 @@ export function Deposit() {
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
+  const { action } = useAction(transactionHashes!, accountId!);
+
+  if (!action && transactionHashes && !changeTab) {
+    toast(
+      <ToastCustom
+        icon="processing"
+        message="This process could take a few moments"
+        title="Processing"
+      />,
+      {
+        toastId: customId
+      }
+    );
+  } else if (!changeTab && transactionHashes) {
+    const { message, title } = returnMessages(action!);
+    toast.update(customId, {
+      render: () => (
+        <ToastCustom
+          icon={
+            action?.status === "success"
+              ? "/check-circle-icon.svg"
+              : "/error-circle-icon.svg"
+          }
+          title={title}
+          message={message}
+        />
+      )
+    });
+  }
 
   const { allowList } = useAllowlist(accountId!, selector);
 
