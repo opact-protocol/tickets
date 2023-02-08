@@ -38,10 +38,9 @@ Method to initialize the contract with a specified owner. The owner is going to 
 ### Change methods (owner restricted)
 1. `add_entry`
 params:
-currency: Currency, amount: U256, contract: AccountId
   - currency: Currency -> The currency of the contract address you want to add
   - amount: U256 -> Amount value of deposits for HYC contract you want to add
-  - contract: AccountId -> Address of the HYC contract that you're adding to the registry
+  - account_id: AccountId -> Address of the HYC contract that you're adding to the registry
 
 This method can only be called by the contract owner.
 It adds a specific entry to the registry (adds a contract address for the (currency, amount) pair).
@@ -57,7 +56,7 @@ Panics if currency or amount is not registered.
 
 3. `remove_from_allowlist`
 params:
-  - contract: AccountId -> Address of the HYC contract that you're removing from the allowlist
+  - account_id: AccountId -> Address of the HYC contract that you're removing from the allowlist
 
 This method removes one entry from the allowlist. 
 
@@ -74,7 +73,7 @@ Returns a HashMap mapping each available deposit amount in the currency to the c
 
 3. `view_is_in_allowlist` -> `bool`
 params:
-  - contract: AccountId -> Address of the contract whose allowlist membership you want to check
+  - account_id: AccountId -> Address of the contract whose allowlist membership you want to check
 
 Returns `true` if contract is in allowlist, `false` otherwise.
 

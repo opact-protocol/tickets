@@ -1,3 +1,5 @@
+use workspaces::result::ExecutionOutcome;
+
 use crate::*;
 
 pub async fn ft_transfer(
@@ -28,7 +30,7 @@ pub async fn ft_transfer_call(
   receiver: &Account,
   amount: u128,
   msg: String,
-) -> anyhow::Result<()> {
+) -> anyhow::Result<Vec<ExecutionOutcome>> {
   let result = sender
     .call(&worker, contract.id(), "ft_transfer_call")
     .args_json(json!({
@@ -42,28 +44,33 @@ pub async fn ft_transfer_call(
     .transact()
     .await?;
   println!("{:#?}", result.outcomes());
-
-  anyhow::Ok(())
+    let mut final_result = vec![];
+    for value in result.outcomes() {
+      final_result.push(value.clone());
+    }
+  anyhow::Ok(final_result)
 }
 
 pub async fn ft_balance_of(
   worker: &Worker<Sandbox>,
   contract: &Contract,
   account: &Account,
-) -> anyhow::Result<String> {
+) -> anyhow::Result<u128> {
+  let string_response: String = contract
+  .view(
+    worker,
+    "ft_balance_of",
+    json!({
+      "account_id": account.id()
+    })
+    .to_string()
+    .into_bytes(),
+  )
+  .await?
+  .json()?;
+
   anyhow::Ok(
-    contract
-      .view(
-        worker,
-        "ft_balance_of",
-        json!({
-          "account_id": account.id()
-        })
-        .to_string()
-        .into_bytes(),
-      )
-      .await?
-      .json()?,
+    string_response.parse().unwrap()
   )
 }
 
@@ -76,7 +83,7 @@ pub async fn initialize_ft_contract(
     .call(&worker, "new")
     .args_json(json!({
       "owner_id": owner.id(),
-      "total_supply": "1000000000000000000000",
+      "total_supply": "1000000000000000000000000000000",
       "metadata": {
           "spec": "ft-1.0.0",
           "name": "name",
