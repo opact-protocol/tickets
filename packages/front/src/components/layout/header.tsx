@@ -11,29 +11,6 @@ export function Header() {
 
   const { allowList } = useAllowlist(accountId!, selector);
 
-  if (
-    action &&
-    action?.methodName === "whitelist" &&
-    action.status === "success"
-  ) {
-    toast.custom((t) => (
-      <div>
-        <div className="flex items-center gap-3 p-5">
-          <img src="/check-circle-icon.svg" alt="Check Icon" />
-          <h1 className="text-dark-grafiti-medium font-[Sora] font-bold text-base">
-            Address verified
-          </h1>
-        </div>
-        <p className="text-dark-grafiti-medium text-base font-normal">
-          The funds has been sent to the address.
-        </p>
-      </div>
-    ));
-    setIsOpen(true);
-  }
-
-  const { action } = useAction(transactionHashes!, accountId!);
-
   return (
     <>
       <header className="bg-white/80">
@@ -72,9 +49,9 @@ export function Header() {
                   <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
                 )}
                 <span
-                  className={`whitespace-nowrap text-soft-blue-medium font-bold text-base ${
-                    allowList && accountId && "text-success"
-                  }`}
+                  className={`whitespace-nowrap text-soft-blue-medium font-bold text-base ${allowList &&
+                    accountId &&
+                    "text-success"}`}
                 >
                   Allowlist
                 </span>
