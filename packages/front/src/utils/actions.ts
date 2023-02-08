@@ -15,8 +15,29 @@ export const actions = [
       const [action] = actions;
 
       return action.FunctionCall.method_name === "deposit";
-    },
+    }
   },
+  {
+    error:
+      "An error occured. It may be intermittent due to RPC cache, please try again in 10 minutes.",
+    success: "The funds has been withdraw to the address.",
+    methodName: "withdraw",
+    check: ({ transaction: { actions } }: TransactionPayload) => {
+      const [action] = actions;
+
+      return action.FunctionCall.method_name === "withdraw";
+    }
+  },
+  {
+    error: "An error occurred when applying the address in the allowlist",
+    success: "The funds has been sent to the address.",
+    methodName: "allowlist",
+    check: ({ transaction: { actions } }: TransactionPayload) => {
+      const [action] = actions;
+
+      return action.FunctionCall.method_name === "allowlist";
+    }
+  }
 ];
 
 export default actions;

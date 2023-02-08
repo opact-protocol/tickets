@@ -9,7 +9,7 @@ import { formatInteger } from "@/utils/formatInteger";
 export default function Modal({
   isOpen,
   onClose,
-  amount,
+  amount
 }: {
   isOpen: boolean;
   amount: string;
@@ -50,6 +50,7 @@ export default function Modal({
       closeModal();
       setSending(false);
       setButtonText(`Deposit ${amount} Near`);
+      setCopy(false);
     } catch (e) {
       console.warn(e);
     }
@@ -144,7 +145,7 @@ export default function Modal({
                 </div>
                 <p className="text-dark-grafiti-medium flex gap-3 w-full max-w-[609px] mx-auto pl-3 mt-2">
                   or{" "}
-                  <p
+                  <span
                     className="text-info underline flex gap-3 cursor-pointer"
                     onClick={() => {
                       setCopy(true);
@@ -162,7 +163,7 @@ export default function Modal({
                         return note;
                       }}
                     />
-                  </p>
+                  </span>
                 </p>
                 <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[30px]">
                   To ensure the anonimity of your transaction, we recommend you
