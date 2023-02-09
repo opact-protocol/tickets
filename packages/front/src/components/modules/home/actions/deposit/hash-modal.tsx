@@ -1,10 +1,10 @@
 import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useWalletSelector } from "@/utils/context/wallet";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import { formatInteger } from "@/utils/formatInteger";
+import { useWallet } from "@/store/wallet";
 
 export default function Modal({
   isOpen,
@@ -19,7 +19,7 @@ export default function Modal({
   const [buttonText, setButtonText] = useState<string>("");
   const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { selector, accountId } = useWalletSelector();
+  const { selector, accountId } = useWallet();
 
   const { note, sendDeposit } = useApplication();
 

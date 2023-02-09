@@ -1,13 +1,11 @@
-import { useApplication } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useWalletSelector } from "@/utils/context/wallet";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { WhitelistModal } from "./whitelist";
 
 export const AboutUsModal = ({
   isOpen,
-  onClose,
+  onClose
 }: {
   isOpen: boolean;
   onClose: () => void;

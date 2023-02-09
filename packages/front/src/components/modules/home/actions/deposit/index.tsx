@@ -2,21 +2,25 @@ import HashModal from "./hash-modal";
 import { Fragment, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
-import { useWalletSelector } from "@/utils/context/wallet";
 import {
   QuestionMarkCircleIcon,
   ChevronDownIcon
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-import "swiper/css";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
+import { useWallet } from "@/store/wallet";
+import "swiper/css";
+
+interface SelectedTokenProps {
+  id: number;
+  name: string;
+}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -41,12 +45,14 @@ export function Deposit() {
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<any>();
+  const [selectedToken, setSelectedToken] = useState<SelectedTokenProps>(
+    {} as SelectedTokenProps
+  );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
 
   const { prepareDeposit } = useApplication();
-  const { selector, accountId, toggleModal } = useWalletSelector();
+  const { selector, accountId, toggleModal } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
 
@@ -183,7 +189,7 @@ export function Deposit() {
             </Listbox>
           </div>
 
-          {selectedToken ? (
+          {selectedToken.id ? (
             <div className="mt-8">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
