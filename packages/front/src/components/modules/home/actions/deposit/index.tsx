@@ -35,7 +35,7 @@ const tokens = [
 
 const customId = "deposit-toast";
 
-export function Deposit({ changeTab }: { changeTab: boolean }) {
+export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
