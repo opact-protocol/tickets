@@ -3,6 +3,7 @@ import { Feedback } from "@/components/layout/feedback";
 import { Header } from "@/components/layout/header";
 import { NeedHelp } from "@/components/layout/needHelp";
 import { AboutUsModal } from "@/components/modals";
+import { useWallet } from "@/store/wallet";
 import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect, useState } from "react";
 
@@ -52,6 +53,13 @@ function BackgroundIllustration() {
 
 export function Index() {
   const [showModal, setShowModal] = useState(false);
+  const { initWallet } = useWallet();
+
+  useEffect(() => {
+    void (async () => {
+      await initWallet();
+    })();
+  }, [initWallet]);
 
   useEffect(() => {
     document.body.style.background = "#e8eaff";
