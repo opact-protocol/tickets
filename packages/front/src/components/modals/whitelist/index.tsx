@@ -1,17 +1,17 @@
 import { useApplication } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useWalletSelector } from "@/utils/context/wallet";
 import { useAllowlist } from "@/hooks/useAllowlist";
+import { useWallet } from "@/store/wallet";
 
 export function WhitelistModal({
   isOpen,
-  onClose,
+  onClose
 }: {
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { selector, accountId, toggleModal } = useWalletSelector();
+  const { selector, accountId, toggleModal } = useWallet();
 
   const { sendWhitelist } = useApplication();
 
