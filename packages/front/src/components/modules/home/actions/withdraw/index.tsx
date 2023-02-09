@@ -219,6 +219,7 @@ export function Withdraw() {
                }
              `}
               placeholder="Wallet Address"
+              autoComplete="off"
               {...register("address")}
             />
           </div>
