@@ -1,5 +1,25 @@
 {
-  "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }],
+  "routes": [
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
+    },
+    {
+      "src": "/circuit.zkey",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, must-revalidate"
+      },
+      "status": 200
+    },
+    {
+      "src": "/verifier.wasm",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, must-revalidate"
+      },
+      "status": 200
+    }
+  ],
   "github": {
     "enabled": false,
     "silent": true
