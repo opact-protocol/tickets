@@ -1,5 +1,6 @@
 import { viewFunction } from "@/utils/tools";
 import { useEffect, useState } from "react";
+import { mimc } from "@/services/mimc";
 import { useEnv } from "./useEnv";
 
 export const useNullfierCheck = (note: string, selector: any) => {
@@ -14,7 +15,7 @@ export const useNullfierCheck = (note: string, selector: any) => {
         useEnv("VITE_CONTRACT"),
         "view_was_nullifier_spent",
         {
-          nullifier: note.split("-")[1],
+          nullifier: mimc.singleHash!(note.split("-")[1]),
         }
       );
 
