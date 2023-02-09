@@ -111,7 +111,7 @@ export const executeMultipleTransactions = async (
 ) => {
   try {
     const result = await wallet.signAndSendTransactions({ transactions });
-
+    localStorage.removeItem("hyc-approved-transaction");
     refreshPage(result.map(({ transaction }) => transaction.hash).join(","));
   } catch (e) {
     console.warn(e);
