@@ -1,6 +1,8 @@
 import { mimc } from "@/services";
 
-function parseNote(note: string): {
+function parseNote(
+  note: string
+): {
   secret: string;
   nullifier: string;
   account_hash: string;
@@ -9,12 +11,12 @@ function parseNote(note: string): {
   return {
     secret: splitString[0],
     nullifier: splitString[1],
-    account_hash: splitString[2],
+    account_hash: splitString[2]
   };
 }
 
 export const generateCommitment = (note: string): string | undefined => {
-  if (!note) return;
+  if (note.length < 220) return;
 
   const parsedNote = parseNote(note);
 

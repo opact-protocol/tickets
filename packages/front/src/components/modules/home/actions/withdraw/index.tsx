@@ -1,9 +1,8 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { toast } from "react-toastify";
-import { useNullfierCheck } from "@/hooks/useNullifierCheck";
 import { LoadingModal } from "@/components/modals/loading";
 import {
   getLastWithdrawBeforeTheTicketWasCreated,
@@ -14,6 +13,15 @@ import {
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { useQuery } from "@apollo/client";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { nullifierCheck } from "@/utils/nullifierCheck";
+
+interface WithDrawProps {
+  ticket: string;
+  address: string;
+}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -22,61 +30,81 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 const hycTransaction = "hyc-transaction";
 
 export function Withdraw() {
-  const { data } = useQuery(GET_MOST_RECENT_DEPOSIT);
-  const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
-  const [hash, setHash] = useState("");
-  const [withdrawAddress, setWithdrawAddress] = useState("");
-  const [hashData, setHashData] = useState<any>();
-  const [fechtingData, setFechtingData] = useState(false);
+  const { data: mostRecentDeposit } = useQuery(GET_MOST_RECENT_DEPOSIT);
+  const { data: mostRecentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
-  const nullifierValid = useRef("");
-  const [errorMessage, setErrorMessage] = useState<{
-    errorHash?: string;
-    errorRepicient?: string;
-    nullfierValid?: string;
-    ticketStored?: string;
-  }>();
+  const { selector, accountId, toggleModal } = useWalletSelector();
   const [statistics, setStatistics] = useState<{
     totalDeposits?: number;
     totalWithdraws?: number;
   }>();
+  const withdrawSchema = yup.object().shape({
+    ticket: yup
+      .string()
+      .min(220, "This ticket is invalid")
+      .required("Invalid withdraw ticket")
+      .test(
+        "isValidTicket",
+        "This ticket is not valid anymore",
+        async value => !(await nullifierCheck(value, selector))
+      )
+      .test(
+        "isStored",
+        "This ticket has not been deposited yet",
+        async value => {
+          const commitment = generateCommitment(value);
+
+          const ticketStored = await getTicketInTheMerkleTree(commitment!);
+
+          if (ticketStored) {
+            const lastWithdraw = await getLastWithdrawBeforeTheTicketWasCreated(
+              ticketStored.timestamp
+            );
+
+            const totalDeposits =
+              (+mostRecentDeposit.depositMerkleTreeUpdates[0].counter || 0) -
+              +ticketStored.counter;
+
+            const totalWithdraws =
+              (+mostRecentWithdraw.withdrawals[0].counter || 0) -
+              (+lastWithdraw.counter || 0);
+
+            setStatistics({ totalDeposits, totalWithdraws });
+
+            return true;
+          }
+          return false;
+        }
+      ),
+    address: yup
+      .string()
+      .min(1, "This address is invalid")
+      .required("Invalid address")
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<WithDrawProps>({
+    resolver: yupResolver(withdrawSchema),
+    mode: "onChange"
+  });
 
   const handleMoreInfos = false;
 
-  const {
-    hash: withdrawHash,
-    fetchHashData,
-    prepareWithdraw
-  } = useApplication();
-
-  const { selector, accountId, toggleModal } = useWalletSelector();
-  const { nullfierInvalid } = useNullfierCheck(hash, selector);
-
-  if (nullfierInvalid) {
-    nullifierValid.current = "This hash is not valid anymore";
-  }
+  const { prepareWithdraw } = useApplication();
 
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
-  const preWithdraw = async () => {
+  const preWithdraw = async (data: WithDrawProps) => {
     if (!accountId) {
       toggleModal();
 
-      return;
-    }
-    if (!hash || !withdrawAddress) {
-      setErrorMessage({
-        errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address"
-      });
-      return;
-    }
-
-    if (nullfierInvalid) {
       return;
     }
 
@@ -84,8 +112,8 @@ export function Withdraw() {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
       await prepareWithdraw(selector, {
-        note: hash,
-        recipient: withdrawAddress
+        note: data.ticket,
+        recipient: data.address
       });
       setGeneratinProof(false);
       setShowModal(true);
@@ -104,76 +132,14 @@ export function Withdraw() {
     }
   };
 
-  const hasErrorHash = useMemo(() => {
-    return !hash;
-  }, [hash]);
-
-  const handleHash = async (value: string) => {
-    if (!value) {
-      nullifierValid.current = "";
-      setErrorMessage(undefined);
-      setStatistics(undefined);
-      setHash("");
-    }
-
-    if (value.length < 220) {
-      setErrorMessage({ ticketStored: "This ticket is invalid" });
-      return;
-    }
-
-    const commitment = generateCommitment(value);
-
-    const ticketStored = await getTicketInTheMerkleTree(commitment!);
-
-    if (!ticketStored) {
-      setErrorMessage({
-        ticketStored: "This ticket has not been deposited yet"
-      });
-      return;
-    }
-
-    const lastWithdraw = await getLastWithdrawBeforeTheTicketWasCreated(
-      ticketStored.timestamp
-    );
-
-    const totalDeposits =
-      (+data.depositMerkleTreeUpdates[0].counter || 0) - +ticketStored.counter;
-
-    const totalWithdraws =
-      (+recentWithdraw.withdrawals[0].counter || 0) -
-      (+lastWithdraw.counter || 0);
-
-    setErrorMessage(undefined);
-
-    setStatistics({ totalDeposits, totalWithdraws });
-    setHash(value);
-  };
-
-  useEffect(() => {
-    if (hasErrorHash) {
-      setHashData(null);
-
-      return;
-    }
-
-    (async () => {
-      setFechtingData(true);
-
-      const hashData = await fetchHashData();
-
-      setHashData(hashData);
-      setFechtingData(false);
-    })();
-  }, [hasErrorHash]);
-
   return (
     <div>
-      <div>
+      <form onSubmit={handleSubmit(preWithdraw)}>
         <div className={`mb-5`}>
           <div className="flex items-center justify-between">
             <span className="text-black text-[1.1rem] font-bold">
               Withdraw ticket{" "}
-              {errorMessage?.errorHash && hash.length === 0 && (
+              {errors.ticket?.message && (
                 <span className="text-error"> * </span>
               )}
             </span>
@@ -192,27 +158,19 @@ export function Withdraw() {
                 border-[2px]
                 focus:outline-none
                 ${
-                  (errorMessage?.errorHash && hash.length === 0) ||
-                  errorMessage?.errorRepicient ||
-                  nullifierValid.current ||
-                  errorMessage?.ticketStored
-                    ? "border-error"
-                    : "border-transparent"
+                  errors.ticket?.message ? "border-error" : "border-transparent"
                 }
               `}
-              onInput={ev => handleHash((ev.target as HTMLInputElement).value)}
+              {...register("ticket")}
+              autoComplete="off"
               placeholder="Paste your withdraw ticked"
             />
           </div>
           <p className="text-error mt-2 text-sm font-normal">
-            {errorMessage?.errorHash && hash.length === 0
-              ? errorMessage.errorHash
-              : nullifierValid.current
-              ? nullifierValid.current
-              : errorMessage?.ticketStored && errorMessage.ticketStored}
+            {errors.ticket?.message && errors.ticket.message.toString()}
           </p>
         </div>
-        {statistics && (
+        {statistics && !errors.ticket?.message && (
           <div className={`flex flex-col gap-3`}>
             <div className="flex items-center justify-between">
               <p className="text-black text-sm font-normal">
@@ -237,7 +195,7 @@ export function Withdraw() {
           <div className="flex items-center justify-between">
             <span className="text-black text-[1.1rem] font-bold">
               Recipient Address{" "}
-              {errorMessage?.errorRepicient && withdrawAddress.length === 0 && (
+              {errors.address?.message && (
                 <span className="text-error"> * </span>
               )}
             </span>
@@ -257,26 +215,19 @@ export function Withdraw() {
                border-[2px]
                focus:outline-none
                ${
-                 errorMessage?.errorRepicient && withdrawAddress.length === 0
-                   ? "border-error"
-                   : "border-transparent"
+                 errors.address?.message ? "border-error" : "border-transparent"
                }
              `}
               placeholder="Wallet Address"
-              value={withdrawAddress}
-              onInput={ev =>
-                setWithdrawAddress((ev.target as HTMLInputElement).value)
-              }
+              {...register("address")}
             />
           </div>
           <p className="text-error mt-2 text-sm font-normal">
-            {errorMessage?.errorRepicient &&
-              withdrawAddress.length === 0 &&
-              errorMessage.errorRepicient}
+            {errors.address?.message?.toString()}
           </p>
         </div>
 
-        {handleMoreInfos && (
+        {/* {handleMoreInfos && (
           <div className="mt-[24px]">
             <div>
               <span className="text-black font-bold">Total</span>
@@ -305,17 +256,17 @@ export function Withdraw() {
                   Tokens to receive:
                 </span>
 
-                <span className="text-black font-bold">{`${hashData?.amount /
-                  1 -
-                  hashData?.relayer_fee} NEAR`}</span>
+                <span className="text-black font-bold">{`${
+                  hashData?.amount / 1 - hashData?.relayer_fee
+                } NEAR`}</span>
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div>
           <button
-            onClick={() => preWithdraw()}
+            type="submit"
             className="bg-soft-blue-from-deep-blue mt-[15px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {" "}
@@ -326,8 +277,6 @@ export function Withdraw() {
         <ConfirmModal
           isOpen={showModal}
           onClose={() => {
-            setHash("");
-            setWithdrawAddress("");
             setShowModal(!showModal);
             buttonText.current = "Withdraw";
           }}
@@ -336,7 +285,7 @@ export function Withdraw() {
           isOpen={generatingProof}
           onClose={() => setGeneratinProof(false)}
         />
-      </div>
+      </form>
     </div>
   );
 }
