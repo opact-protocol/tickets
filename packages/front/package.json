@@ -21,6 +21,7 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.4",
+    "@hookform/resolvers": "^2.9.11",
     "@near-wallet-selector/core": "^7.0.3",
     "@near-wallet-selector/meteor-wallet": "^7.0.3",
     "@near-wallet-selector/near-wallet": "^7.0.3",
@@ -50,6 +51,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.0.0",
     "react-download-link": "^2.3.0",
+    "react-hook-form": "^7.43.1",
     "react-hot-toast": "^2.3.0",
     "react-near": "^3.4.8",
     "react-reveal": "^1.2.2",
@@ -65,6 +67,7 @@
     "vite-plugin-pages": "^0.25.0",
     "wasmsnark": "^0.0.10",
     "web3-utils": "^1.7.5",
+    "yup": "^1.0.0",
     "zustand": "^4.1.1"
   },
   "devDependencies": {
