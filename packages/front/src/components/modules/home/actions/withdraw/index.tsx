@@ -115,6 +115,10 @@ export function Withdraw() {
       return;
     }
 
+    if (nullfierInvalid) {
+      return;
+    }
+
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
