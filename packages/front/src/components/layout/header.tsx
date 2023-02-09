@@ -1,12 +1,12 @@
 import { Container } from "@/components";
-import { useWalletSelector } from "@/utils/context/wallet";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
+import { useWallet } from "@/store/wallet";
 
 export function Header() {
-  const { accountId, toggleModal, signOut, selector } = useWalletSelector();
+  const { selector, accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
 
   const { allowList } = useAllowlist(accountId!, selector);
