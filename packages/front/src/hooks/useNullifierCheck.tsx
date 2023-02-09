@@ -4,10 +4,13 @@ import { mimc } from "@/services/mimc";
 import { useEnv } from "./useEnv";
 
 export const useNullfierCheck = (note: string, selector: any) => {
-  const [nullifierInvalid, setNullifierInvalid] = useState<boolean>(false);
+  const [nullfierInvalid, setNullfierInvalid] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!note) return;
+    if (!note) {
+      setNullfierInvalid(false);
+      return;
+    }
 
     (async () => {
       const result = await viewFunction(
@@ -15,13 +18,13 @@ export const useNullfierCheck = (note: string, selector: any) => {
         useEnv("VITE_CONTRACT"),
         "view_was_nullifier_spent",
         {
-          nullifier: mimc.singleHash!(note.split("-")[1]),
+          nullifier: mimc.singleHash!(note.split("-")[1])
         }
       );
 
-      setNullifierInvalid(result);
+      setNullfierInvalid(result);
     })();
   }, [note]);
 
-  return { nullifierInvalid };
+  return { nullfierInvalid };
 };

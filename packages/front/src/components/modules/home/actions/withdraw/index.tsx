@@ -1,12 +1,6 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  SetStateAction,
-  useRef
-} from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { toast } from "react-toastify";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
@@ -34,13 +28,14 @@ export function Withdraw() {
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [hashData, setHashData] = useState<any>();
   const [fechtingData, setFechtingData] = useState(false);
-  const [generatingProof, setGeneratingProof] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
+  const nullifierValid = useRef("");
   const [errorMessage, setErrorMessage] = useState<{
     errorHash?: string;
     errorRepicient?: string;
-    nullifierValid?: string;
+    nullfierValid?: string;
     ticketStored?: string;
   }>();
   const [statistics, setStatistics] = useState<{
@@ -57,10 +52,10 @@ export function Withdraw() {
   } = useApplication();
 
   const { selector, accountId, toggleModal } = useWalletSelector();
-  const { nullifierInvalid } = useNullfierCheck(hash, selector);
+  const { nullfierInvalid } = useNullfierCheck(hash, selector);
 
-  if (nullifierInvalid) {
-    setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
+  if (nullfierInvalid) {
+    nullifierValid.current = "This hash is not valid anymore";
   }
 
   if (transactionHashes) {
@@ -81,14 +76,18 @@ export function Withdraw() {
       return;
     }
 
+    if (nullfierInvalid) {
+      return;
+    }
+
     try {
       buttonText.current = "Preparing your withdraw...";
-      setGeneratingProof(true);
+      setGeneratinProof(true);
       await prepareWithdraw(selector, {
         note: hash,
         recipient: withdrawAddress
       });
-      setGeneratingProof(false);
+      setGeneratinProof(false);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
@@ -111,8 +110,10 @@ export function Withdraw() {
 
   const handleHash = async (value: string) => {
     if (!value) {
+      nullifierValid.current = "";
       setErrorMessage(undefined);
       setStatistics(undefined);
+      setHash("");
     }
 
     if (value.length < 220) {
@@ -145,7 +146,6 @@ export function Withdraw() {
     setErrorMessage(undefined);
 
     setStatistics({ totalDeposits, totalWithdraws });
-
     setHash(value);
   };
 
@@ -194,7 +194,7 @@ export function Withdraw() {
                 ${
                   (errorMessage?.errorHash && hash.length === 0) ||
                   errorMessage?.errorRepicient ||
-                  errorMessage?.nullifierValid ||
+                  nullifierValid.current ||
                   errorMessage?.ticketStored
                     ? "border-error"
                     : "border-transparent"
@@ -207,19 +207,19 @@ export function Withdraw() {
           <p className="text-error mt-2 text-sm font-normal">
             {errorMessage?.errorHash && hash.length === 0
               ? errorMessage.errorHash
-              : errorMessage?.nullifierValid
-              ? errorMessage.nullifierValid
+              : nullifierValid.current
+              ? nullifierValid.current
               : errorMessage?.ticketStored && errorMessage.ticketStored}
           </p>
         </div>
         {statistics && (
-          <div className="flex flex-col gap-3">
+          <div className={`flex flex-col gap-3`}>
             <div className="flex items-center justify-between">
               <p className="text-black text-sm font-normal">
                 Total deposits to date
               </p>
               <p className="text-black font-bold text-sm">
-                {statistics.totalDeposits}
+                {statistics?.totalDeposits}
               </p>
             </div>
             <div className="flex items-center justify-between">
@@ -227,7 +227,7 @@ export function Withdraw() {
                 Total withdraws to date
               </p>
               <p className="text-black font-bold text-sm">
-                {statistics.totalWithdraws}
+                {statistics?.totalWithdraws}
               </p>
             </div>
           </div>
@@ -334,7 +334,7 @@ export function Withdraw() {
         />
         <LoadingModal
           isOpen={generatingProof}
-          onClose={() => setGeneratingProof(false)}
+          onClose={() => setGeneratinProof(false)}
         />
       </div>
     </div>
