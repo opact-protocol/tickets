@@ -41,7 +41,7 @@ export function WalletSelectorModal() {
 
       await wallet.signIn({
         contractId: useEnv("VITE_CONTRACT"),
-        methodNames: [],
+        methodNames: []
       });
       wallet.id === "meteor-wallet" && window.location.reload();
     } catch (e) {
@@ -83,7 +83,7 @@ export function WalletSelectorModal() {
                 </div>
 
                 <div className="space-y-[12px] flex flex-col">
-                  {modules.map((module) => (
+                  {modules.map(module => (
                     <button
                       key={"wallet-selector-modal-module" + module.id}
                       onClick={() => handleWalletClick(module)}
