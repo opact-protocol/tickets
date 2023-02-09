@@ -33,7 +33,7 @@ const tokens = [
 
 const customId = "deposit-toast";
 
-export function Deposit({ changeTab }: { changeTab: boolean }) {
+export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
@@ -46,8 +46,9 @@ export function Deposit({ changeTab }: { changeTab: boolean }) {
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
   const { action } = useAction(transactionHashes!, accountId!);
+  const approved = localStorage.getItem("hyc-approved-transaction");
 
-  if (!action && transactionHashes && !changeTab) {
+  if (!action && transactionHashes && !approved) {
     toast(
       <ToastCustom
         icon="processing"
@@ -58,7 +59,7 @@ export function Deposit({ changeTab }: { changeTab: boolean }) {
         toastId: customId
       }
     );
-  } else if (!changeTab && transactionHashes) {
+  } else if (!approved && transactionHashes) {
     const { message, title } = returnMessages(action!);
     toast.update(customId, {
       render: () => (

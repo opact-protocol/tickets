@@ -15,12 +15,11 @@ import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { useQuery } from "@apollo/client";
 
-export function Withdraw({
-  setChangeTab
-}: {
-  setChangeTab: React.Dispatch<SetStateAction<boolean>>;
-}) {
-  setChangeTab(true);
+const transactionHashes = new URLSearchParams(window.location.search).get(
+  "transactionHashes"
+);
+
+export function Withdraw() {
   const { data } = useQuery(GET_MOST_RECENT_DEPOSIT);
   const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [hash, setHash] = useState("");
@@ -54,6 +53,10 @@ export function Withdraw({
 
   if (nullifierInvalid) {
     setErrorMessage({ nullifierValid: "This hash is not valid anymore" });
+  }
+
+  if (transactionHashes) {
+    localStorage.setItem("hyc-approved-transaction", JSON.stringify(true));
   }
 
   const preWithdraw = async () => {
