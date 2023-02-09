@@ -1,17 +1,17 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import { useWalletSelector } from "@/utils/context/wallet";
-import type { ModuleState } from "@near-wallet-selector/core";
+import { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useEnv } from "@/hooks/useEnv";
+import { useWallet } from "@/store/wallet";
 
 export function WalletSelectorModal() {
-  const { selector, showModal, toggleModal } = useWalletSelector();
+  const { selector, showWalletModal, toggleModal } = useWallet();
 
   const [modules, setModules] = useState<ModuleState[]>([]);
 
   useEffect(() => {
-    const subscription = selector.store.observable.subscribe((state) => {
+    const subscription = selector?.store.observable.subscribe(state => {
       state.modules.sort((current, next) => {
         if (current.metadata.deprecated === next.metadata.deprecated) {
           return 0;
@@ -22,9 +22,8 @@ export function WalletSelectorModal() {
 
       setModules(state.modules);
     });
-
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => subscription?.unsubscribe();
+  }, [selector]);
 
   const handleWalletClick = async (module: ModuleState) => {
     try {
@@ -44,7 +43,7 @@ export function WalletSelectorModal() {
 
       await wallet.signIn({
         contractId: useEnv("VITE_CONTRACT"),
-        methodNames: [],
+        methodNames: []
       });
     } catch (e) {
       console.warn(e);
@@ -52,7 +51,7 @@ export function WalletSelectorModal() {
   };
 
   return (
-    <Transition appear show={showModal} as={Fragment}>
+    <Transition appear show={showWalletModal} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={() => toggleModal()}>
         <Transition.Child
           as={Fragment}
@@ -85,7 +84,7 @@ export function WalletSelectorModal() {
                 </div>
 
                 <div className="space-y-[12px] flex flex-col">
-                  {modules.map((module) => (
+                  {modules.map(module => (
                     <button
                       key={"wallet-selector-modal-module" + module.id}
                       onClick={() => handleWalletClick(module)}
