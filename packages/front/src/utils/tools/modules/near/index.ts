@@ -54,6 +54,7 @@ export interface TokenId {
   type: string;
   account_id: string;
 }
+const hycTransaction = "hyc-transaction";
 
 export const provider = new providers.JsonRpcProvider(
   useEnv("VITE_NEAR_NODE_URL")
@@ -111,7 +112,7 @@ export const executeMultipleTransactions = async (
 ) => {
   try {
     const result = await wallet.signAndSendTransactions({ transactions });
-    localStorage.removeItem("hyc-approved-transaction");
+    localStorage.removeItem(hycTransaction);
     refreshPage(result.map(({ transaction }) => transaction.hash).join(","));
   } catch (e) {
     console.warn(e);
