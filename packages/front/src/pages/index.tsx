@@ -142,7 +142,7 @@ const Index = () => {
                   </h2>
                   <p className="text-dark-grafiti text-xl font-normal pl-14">
                     Since your address is verified, deposit your funds and save
-                    your withdraw ticket.
+                    your withdrawal ticket.
                   </p>
                 </div>
                 <div className="flex flex-col mb-14">
@@ -151,7 +151,7 @@ const Index = () => {
                     Withdraw
                   </h2>
                   <p className="text-dark-grafiti text-xl font-normal pl-14">
-                    Withdraw the funds to a chosen wallet using your withdraw
+                    Withdraw the funds to a chosen wallet using your withdrawal
                     ticket.
                   </p>
                 </div>
@@ -174,8 +174,7 @@ const Index = () => {
                 !
               </h1>
               <p className="text-black text-2xl font-normal text-center mt-[42px] sm:mb-[164px]">
-                It doesn’t worth the risk of using hideyour.cash if you are a
-                criminal.
+                It’s not worth using hideyour.cash if you’re a bad actor.
               </p>
             </div>
             <img src="tabs.svg" alt="Tabs" className="hidden sm:block" />
@@ -206,7 +205,7 @@ const Index = () => {
               />
               <p className="font-normal text-dark-grafiti text-xl w-full max-w-[766px] mb-[64px] text-center">
                 <strong>There is an interval</strong> in which you need to keep
-                your funds in the protocol so that they can be actually mixed
+                your funds in the protocol so that they can be actually mixed,
                 and the transaction becomes anonymous. If you are a bad actor
                 and need to remove your funds fast, it is likely that your
                 transaction will be tracked. If you take too long, you might get
@@ -275,8 +274,8 @@ const Index = () => {
                 "Wallet connections tracking",
                 "Profile analysis",
                 "Portfolio tracking",
-                "Front run",
-              ].map((title) => (
+                "Front run"
+              ].map(title => (
                 <MiniCard title={title} key={title} protection={title} />
               ))}
             </ul>
@@ -296,19 +295,8 @@ const Index = () => {
                 !
               </h1>
               <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[145px]">
-                Since multiple people are depositing and withdrawing from the
-                protocol at the same time, there is no way to link a withdrawing
-                account to an initial depositor, thus your withdrawing account
-                becomes private, and no one can tell who originally deposited
-                it.
-                <a
-                  href=""
-                  rel="noreferrer"
-                  target="_blank"
-                  className="text-aqua underline"
-                >
-                  Check out the tech specifications here.
-                </a>
+                The protocol works through a technology called zkSNARKS, a type
+                of zero-knowledge cryptographic proof
               </p>
             </div>
             <div className="w-full flex flex-col gap-24 justify-between items-center xl:flex-row">
@@ -373,9 +361,9 @@ const Index = () => {
                 Vision
               </h1>
               <p className="text-dark-grafiti text-2xl font-normal text-center mt-[24px] mb-[12px]">
-                Our goal is to create a privacy tool that is extremely easy for
-                you to use, by integrating with other dApps, such as wallets,
-                DeFi, NFTs, etc.
+                Our goal is to create a privacy tool that is easy for you to
+                use, by integrating with other dApps, such as wallets, DeFi,
+                NFTs, etc.
               </p>
             </div>
             <div className="border-l-[3px] border-aqua border-dotted h-14 mb-[30px]" />
@@ -395,8 +383,8 @@ const Index = () => {
                 { title: "Q3 2023", message: "Native integration to wallets" },
                 {
                   title: "Q4 2023",
-                  message: "Explore new use cases and integartions",
-                },
+                  message: "Explore new use cases and integartions"
+                }
               ].map(({ title, message }) => (
                 <div
                   key={title}
@@ -432,10 +420,10 @@ const Index = () => {
                 { name: "Hapi.one", icon: "/assets/hapione.png" },
                 {
                   name: "Cypherpunk Guild",
-                  icon: "/assets/cypherpunk-guild.jpg",
+                  icon: "/assets/cypherpunk-guild.jpg"
                 },
                 { name: "Near Starter", icon: "/near_icon.svg" },
-                { name: "Near Week", icon: "/near_icon.svg" },
+                { name: "Near Week", icon: "/near_icon.svg" }
               ].map(({ name, icon }) => (
                 <li key={name} className="max-w-[230px]">
                   <h2 className="text-black font-extrabold font-[Sora] text-center flex items-center gap-5">
@@ -470,7 +458,7 @@ const Index = () => {
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex w-full items-center justify-between px-16 py-5 font-bold text-xl text-black">
-                        <span>How to garantee a transaction is private?</span>
+                        <span>How to guarantee a transaction is private?</span>
                         <ChevronUpIcon
                           className={`${
                             open ? "rotate-180 transform" : ""
@@ -493,13 +481,13 @@ const Index = () => {
                           cryptographic transaction to the mixer, get a proof of
                           your deposit, which can't be traced back to your
                           wallet, and you can use this proof to withdraw your
-                          funds. By the time you're doing that, a lot of people
-                          will be doing the same thing. So all the transactions
-                          will be "mixed" on the protocol, and it won't be
-                          possible to know for sure where they came from. The
-                          fact is that if the volume on the protocol is too
-                          small, it will be easier to trace back the transaction
-                          to the deposited wallet since the "mixing" will have a
+                          funds. By the time you're doing that, many people will
+                          be doing the same thing. So all the transactions will
+                          be "mixed" on the protocol, and it won't be possible
+                          to know for sure where they came from. The fact is
+                          that if the volume on the protocol is too small, it
+                          will be easier to trace back the transaction to the
+                          deposited wallet since the "mixing" will have a
                           smaller volume. It's impossible to be 100% sure of
                           where it came from, but the less volume and the less
                           time the funds are kept on the mixer, the bigger the
@@ -588,19 +576,19 @@ const Index = () => {
                           Blockchains such as Ethereum and NEAR are transparent
                           by design, which means that every transaction is
                           stored and publicly available for anyone to see. You
-                          have what is called pseudonymity, which means that
-                          your wallet is not directly connected to yourself.
-                          However, someone may find out, at some point, what is
-                          your wallet and trace back all the activities that you
-                          have done, everyone that you have interacted with, and
-                          your wallet's balance. In the traditional financial
-                          system, bank secrecy offers a basic level of privacy
-                          by keeping transactions confidential between the bank
-                          and authorities. To achieve widespread adoption,
-                          blockchain technology must provide this same level of
-                          privacy and has the potential to enhance it with
-                          innovative solutions such as Zero-Knowledge (ZK)
-                          technology.
+                          have what is called pseudonymous accounts, which means
+                          that your wallet is not directly connected to
+                          yourself. However, someone may find out, at some
+                          point, what is your wallet and trace back all the
+                          activities that you have done, everyone that you have
+                          interacted with, and your wallet's balance. In the
+                          traditional financial system, bank secrecy offers a
+                          basic level of privacy by keeping transactions
+                          confidential between the bank and authorities. To
+                          achieve widespread adoption, blockchain technology
+                          must provide this same level of privacy and has the
+                          potential to enhance it with innovative solutions such
+                          as Zero-Knowledge (ZK) technology.
                         </Disclosure.Panel>
                       </Transition>
                     </>
