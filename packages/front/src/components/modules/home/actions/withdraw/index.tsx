@@ -1,6 +1,12 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import React, { useState, useMemo, useEffect, SetStateAction } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  SetStateAction,
+  useRef
+} from "react";
 import { useWalletSelector } from "@/utils/context/wallet";
 import { toast } from "react-toastify";
 import { useNullfierCheck } from "@/hooks/useNullifierCheck";
@@ -19,6 +25,8 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
 );
 
+const hycTransaction = "hyc-transaction";
+
 export function Withdraw() {
   const { data } = useQuery(GET_MOST_RECENT_DEPOSIT);
   const { data: recentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
@@ -28,7 +36,7 @@ export function Withdraw() {
   const [fechtingData, setFechtingData] = useState(false);
   const [generatingProof, setGeneratingProof] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [buttonText, setButtonText] = useState("Withdraw");
+  const buttonText = useRef("Withdraw");
   const [errorMessage, setErrorMessage] = useState<{
     errorHash?: string;
     errorRepicient?: string;
@@ -56,7 +64,7 @@ export function Withdraw() {
   }
 
   if (transactionHashes) {
-    localStorage.setItem("hyc-approved-transaction", JSON.stringify(true));
+    localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
   const preWithdraw = async () => {
@@ -74,7 +82,7 @@ export function Withdraw() {
     }
 
     try {
-      setButtonText("Preparing your withdraw...");
+      buttonText.current = "Preparing your withdraw...";
       setGeneratingProof(true);
       await prepareWithdraw(selector, {
         note: hash,
@@ -311,7 +319,7 @@ export function Withdraw() {
             className="bg-soft-blue-from-deep-blue mt-[15px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {" "}
-            {!accountId ? "Connect Wallet" : buttonText}{" "}
+            {!accountId ? "Connect Wallet" : buttonText.current}{" "}
           </button>
         </div>
 
@@ -321,7 +329,7 @@ export function Withdraw() {
             setHash("");
             setWithdrawAddress("");
             setShowModal(!showModal);
-            setButtonText("Withdraw");
+            buttonText.current = "Withdraw";
           }}
         />
         <LoadingModal

@@ -22,6 +22,8 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
 );
 
+const hycTransaction = "hyc-transaction";
+
 const amounts = [0.1, 1, 10, 20, 50];
 
 const tokens = [
@@ -46,7 +48,7 @@ export function Deposit() {
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
   const { action } = useAction(transactionHashes!, accountId!);
-  const approved = localStorage.getItem("hyc-approved-transaction");
+  const approved = localStorage.getItem("hycTransaction");
 
   if (!action && transactionHashes && !approved) {
     toast(
