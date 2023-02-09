@@ -48,7 +48,7 @@ export function Deposit() {
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWalletSelector();
   const { action } = useAction(transactionHashes!, accountId!);
-  const approved = localStorage.getItem("hycTransaction");
+  const approved = localStorage.getItem(hycTransaction);
 
   if (!action && transactionHashes && !approved) {
     toast(
