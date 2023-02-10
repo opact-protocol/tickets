@@ -20,7 +20,7 @@ export const relayer = async (
     return getResponse(
       JSON.stringify({
         status: "failure",
-        error: "payload not is valid",
+        error: "payload not is valid"
       })
     );
   }
@@ -37,24 +37,22 @@ export const relayer = async (
     return getResponse(
       JSON.stringify({
         status: "failure",
-        error: `should specify correct relayer address: ${ACCOUNT_ID}`,
+        error: `should specify correct relayer address: ${ACCOUNT_ID}`
       })
     );
   }
 
   try {
     // check if payload uses correct fee
-    const minimumFee = new Big(payload.quantity).mul(new Big(RELAYER_FEE));
+    const minimumFee = new Big(payload.quantity || 0).mul(new Big(RELAYER_FEE));
 
-    const payloadFee = new Big(payload.fee);
+    const payloadFee = new Big(payload.fee || 0);
 
     if (payloadFee.lt(minimumFee)) {
       return getResponse(
         JSON.stringify({
           status: "failure",
-          error: `should at least minimum relayer fee: ${minimumFee.toFixed(
-            0
-          )}`,
+          error: `should at least minimum relayer fee: ${minimumFee.toFixed(0)}`
         })
       );
     }
@@ -76,7 +74,7 @@ export const relayer = async (
     return new Response(
       JSON.stringify({
         status: "failure",
-        error: "Payload is not valid",
+        error: "Payload is not valid"
       }),
       { headers: HEADERS, status: 402 }
     );
@@ -88,7 +86,7 @@ export const relayer = async (
       contractId: HYC_CONTRACT,
       methodName: "withdraw",
       args: payload,
-      gas: AttachedGas,
+      gas: AttachedGas
     });
 
     console.log(
@@ -99,7 +97,7 @@ export const relayer = async (
     return new Response(
       JSON.stringify({
         status: "success",
-        transaction,
+        transaction
       }),
       { headers: HEADERS }
     );
@@ -109,7 +107,7 @@ export const relayer = async (
     return new Response(
       JSON.stringify({
         status: "failure",
-        error: "Error on withdraw",
+        error: "Error on withdraw"
       }),
       { headers: HEADERS, status: 402 }
     );

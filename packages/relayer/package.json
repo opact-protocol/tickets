@@ -17,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^3.11.0",
+    "@types/big.js": "^6.1.6",
     "@types/jest": "^27.5.1",
     "esbuild": "^0.14.41",
     "jest": "^28.1.0",
