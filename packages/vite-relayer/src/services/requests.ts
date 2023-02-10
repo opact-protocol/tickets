@@ -42,13 +42,13 @@ export const handlePost = async (event: FetchEvent): Promise<Response> => {
 export const fetch = async (event: FetchEvent): Promise<void> => {
   const method = event.request.method;
 
-  if (method === "get") {
+  if (method === "GET") {
     event.respondWith(handleGet(event));
 
     return;
   }
 
-  if (method === "post") {
+  if (method === "POST") {
     event.respondWith(handlePost(event));
 
     return;
