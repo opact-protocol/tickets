@@ -1,5 +1,4 @@
 export interface RelayerPayload {
-  currency: string;
   quantity: string;
   root: string;
   nullifier_hash: string;

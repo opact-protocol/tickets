@@ -5,7 +5,7 @@ export interface Env {
   RPC_URL: string;
   // Data for relayer account
   PRIVATE_KEY: string;
-  ACCOUNT_NAME: string;
+  ACCOUNT_ID: string;
   // Data for HYC contracts
   HYC_CONTRACT: string;
   // Fee charged for relaying (0.25 == 25%)

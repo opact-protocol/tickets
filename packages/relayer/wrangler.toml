@@ -1,4 +1,13 @@
-name = "test-cloudflare-workers"
-main = "src/index.ts"
-compatibility_date = "2023-02-02"
+name = "miniflare-typescript-esbuild-jest"
+main = "dist/index.mjs"
+compatibility_date = "2022-05-28"
 node_compat = true
+
+[build]
+command = "node build.js"
+
+[miniflare]
+kv_persist = true
+cache_persist = true
+durable_objects_persist = true
+env_path = ".env"
