@@ -226,47 +226,8 @@ export const useApplication = create<{
         },
         wxi_w: {
           x: proof["Wxiw"][0],
-          y: proof["Wxiw"][1],
-        },
-        b: {
-          x: proof["B"][0],
-          y: proof["B"][1],
-        },
-        c: {
-          x: proof["C"][0],
-          y: proof["C"][1],
-        },
-        z: {
-          x: proof["Z"][0],
-          y: proof["Z"][1],
-        },
-        t_1: {
-          x: proof["T1"][0],
-          y: proof["T1"][1],
-        },
-        t_2: {
-          x: proof["T2"][0],
-          y: proof["T2"][1],
-        },
-        t_3: {
-          x: proof["T3"][0],
-          y: proof["T3"][1],
-        },
-        eval_a: proof["eval_a"],
-        eval_b: proof["eval_b"],
-        eval_c: proof["eval_c"],
-        eval_s1: proof["eval_s1"],
-        eval_s2: proof["eval_s2"],
-        eval_zw: proof["eval_zw"],
-        eval_r: proof["eval_r"],
-        wxi: {
-          x: proof["Wxi"][0],
-          y: proof["Wxi"][1],
-        },
-        wxi_w: {
-          x: proof["Wxiw"][0],
-          y: proof["Wxiw"][1],
-        },
+          y: proof["Wxiw"][1]
+        }
       };
 
       console.timeEnd("SNARK proof time");
@@ -299,15 +260,6 @@ export const useApplication = create<{
     );
 
     await executeMultipleTransactions(transactions, wallet);
-
-    toast.custom((t) => (
-      <ToastCustom
-        icon="/check-circle-icon.svg"
-        id={t.id}
-        visible={t.visible}
-        key={t.id}
-      />
-    ));
   },
 
   createSnarkProof: async input => {
@@ -340,5 +292,5 @@ export const useApplication = create<{
     );
 
     executeMultipleTransactions(transactions, wallet);
-  },
+  }
 }));

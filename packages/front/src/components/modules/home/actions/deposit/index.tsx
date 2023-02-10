@@ -86,8 +86,6 @@ export function Deposit() {
 
   const { allowList } = useAllowlist(accountId!, selector);
 
-  const { allowList } = useAllowlist(accountId!, selector);
-
   const preDeposit = async () => {
     if (!accountId) {
       toggleModal();
