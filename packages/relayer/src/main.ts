@@ -98,12 +98,12 @@ export const relayer = async (
       { headers: HEADERS }
     );
   } catch (e) {
-    console.warn(e);
+    console.warn(e.message);
 
     return new Response(
       JSON.stringify({
         status: "failure",
-        error: "Payload is not valid",
+        error: "Error on withdraw",
       }),
       { headers: HEADERS, status: 402 }
     );
