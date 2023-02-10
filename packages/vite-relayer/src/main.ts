@@ -71,7 +71,7 @@ export const relayer = async (event: FetchEvent): Promise<Response> => {
     const isValidArgs = buildArgs("view_is_withdraw_valid", HYC_CONTRACT, args);
 
     const res = await fetch(RPC_URL, {
-      method: "query",
+      method: "POST",
       headers: HEADERS,
       body: isValidArgs,
     });
@@ -91,18 +91,10 @@ export const relayer = async (event: FetchEvent): Promise<Response> => {
     );
   }
 
-  // since payload is valid, submit transaction and return hash
-  const transaction = await account.functionCall({
-    contractId: HYC_CONTRACT,
-    methodName: "withdraw",
-    args,
-    gas: "300000000000000",
-  });
-
   return new Response(
     JSON.stringify({
       status: "success",
-      transaction,
+      transaction: "",
     }),
     { headers: HEADERS }
   );
