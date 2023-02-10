@@ -42,18 +42,24 @@ export const relayer = async (
     );
   }
 
-  // check if payload uses correct fee
-  const minimumFee = new Big(payload.quantity).mul(new Big(RELAYER_FEE));
+  try {
+    // check if payload uses correct fee
+    const minimumFee = new Big(payload.quantity).mul(new Big(RELAYER_FEE));
 
-  const payloadFee = new Big(payload.fee);
+    const payloadFee = new Big(payload.fee);
 
-  if (payloadFee.lt(minimumFee)) {
-    return getResponse(
-      JSON.stringify({
-        status: "failure",
-        error: `should at least minimum relayer fee: ${minimumFee.toFixed(0)}`,
-      })
-    );
+    if (payloadFee.lt(minimumFee)) {
+      return getResponse(
+        JSON.stringify({
+          status: "failure",
+          error: `should at least minimum relayer fee: ${minimumFee.toFixed(
+            0
+          )}`,
+        })
+      );
+    }
+  } catch (e) {
+    console.warn(e);
   }
 
   // check if payload is valid
