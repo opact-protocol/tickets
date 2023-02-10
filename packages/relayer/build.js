@@ -1,6 +1,6 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { build } from "esbuild";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +17,8 @@ try {
     outdir: path.join(__dirname, "dist"),
     outExtension: { ".js": ".mjs" },
   });
-} catch {
+} catch (e) {
+  console.warn(e);
+
   process.exitCode = 1;
 }
