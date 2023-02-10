@@ -1,7 +1,6 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
 import { useState, useRef } from "react";
-import { useWalletSelector } from "@/utils/context/wallet";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import {
@@ -17,6 +16,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { nullifierCheck } from "@/utils/nullifierCheck";
+import { useWallet } from "@/store/wallet";
 
 interface WithDrawProps {
   ticket: string;
@@ -35,7 +35,8 @@ export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
-  const { selector, accountId, toggleModal } = useWalletSelector();
+
+  const { selector, accountId, toggleModal } = useWallet();
   const [statistics, setStatistics] = useState<{
     totalDeposits?: number;
     totalWithdraws?: number;
@@ -104,21 +105,8 @@ export function Withdraw() {
   const preWithdraw = async (data: WithDrawProps) => {
     if (!accountId) {
       toggleModal();
-
       return;
     }
-    if (!hash || !withdrawAddress) {
-      setErrorMessage({
-        errorHash: "Invalid withdraw ticket",
-        errorRepicient: "Invalid address"
-      });
-      return;
-    }
-
-    if (nullfierInvalid) {
-      return;
-    }
-
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
@@ -189,12 +177,14 @@ export function Withdraw() {
               </p>
               <p className="text-black font-bold text-sm">
                 {statistics?.totalDeposits}
-            </div>
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics?.totalWithdraws}
               </p>
             </div>
+            <p className="text-black text-sm font-normal">
+              Total withdraws to date
+            </p>
+            <p className="text-black font-bold text-sm">
+              {statistics?.totalWithdraws}
+            </p>
           </div>
         )}
 
