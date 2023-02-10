@@ -1,24 +1,49 @@
 import Big from "big.js";
-import { setupNear } from "./services/near";
 import { RelayerPayload } from "./interfaces/relayer";
 import {
+  HEADERS,
+  RPC_URL,
   ACCOUNT_ID,
   RELAYER_FEE,
   HYC_CONTRACT,
-  AttachedGas,
 } from "./constants";
 import { getResponse } from "./services/requests";
-import { viewFunction, connectionConfig } from "./services/near";
+
+export const sha256 = async (message: string) => {
+  // encode as UTF-8
+  const msgBuffer = new TextEncoder().encode(message);
+
+  // hash the message
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+
+  // convert bytes to hex string
+  return [...new Uint8Array(hashBuffer)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+};
+
+const buildArgs = (methodName: string, contractId: string, args: any) => {
+  const serializedArgs = self.btoa(JSON.stringify(args));
+
+  return JSON.stringify({
+    jsonrpc: "2.0",
+    id: "dontcare",
+    method: "query",
+    params: {
+      finality: "optimistic",
+      account_id: contractId,
+      method_name: methodName,
+      args_base64: serializedArgs,
+      request_type: "call_function",
+    },
+  });
+};
 
 export const relayer = async (event: FetchEvent): Promise<Response> => {
   const args: RelayerPayload = await event.request.json();
 
-  const nearConnection = await setupNear();
-
-  const account = await nearConnection.account(ACCOUNT_ID);
-
   // check if payload uses correct relayer
-  if (args.relayer != ACCOUNT_ID) {
+  if (args.relayer !== ACCOUNT_ID) {
     return getResponse(
       JSON.stringify({
         status: "failure",
@@ -43,18 +68,26 @@ export const relayer = async (event: FetchEvent): Promise<Response> => {
 
   // check if payload is valid
   try {
-    await viewFunction(
-      connectionConfig.nodeUrl,
-      HYC_CONTRACT,
-      "view_is_withdraw_valid",
-      args
-    );
+    const isValidArgs = buildArgs("view_is_withdraw_valid", HYC_CONTRACT, args);
+
+    const res = await fetch(RPC_URL, {
+      method: "query",
+      headers: HEADERS,
+      body: isValidArgs,
+    });
+
+    const { result } = JSON.parse(await res.text());
+
+    const data = JSON.parse(Buffer.from(result.result).toString());
+
+    console.log("data", data);
   } catch (error) {
-    return getResponse(
+    return new Response(
       JSON.stringify({
         status: "failure",
         error,
-      })
+      }),
+      { headers: HEADERS }
     );
   }
 
@@ -63,13 +96,14 @@ export const relayer = async (event: FetchEvent): Promise<Response> => {
     contractId: HYC_CONTRACT,
     methodName: "withdraw",
     args,
-    gas: AttachedGas,
+    gas: "300000000000000",
   });
 
-  return getResponse(
+  return new Response(
     JSON.stringify({
       status: "success",
       transaction,
-    })
+    }),
+    { headers: HEADERS }
   );
 };
