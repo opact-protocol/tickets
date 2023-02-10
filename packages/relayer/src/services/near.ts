@@ -1,9 +1,12 @@
 import { connect, keyStores, KeyPair, providers } from "near-api-js";
-import type { CodeResult } from "near-api-js/lib/providers/provider";
 import { Buffer } from "buffer";
+import Process from "process";
 import { Env } from "@/interfaces/env";
 
 self.Buffer = Buffer;
+
+globalThis.Buffer = Buffer;
+globalThis.process = Process;
 
 export const setupNear = async ({
   RPC_URL,
@@ -37,13 +40,13 @@ export const viewFunction = async (
 
   const serializedArgs = Buffer.from(JSON.stringify(args)).toString("base64");
 
-  const res = await provider.query<CodeResult>({
+  const res = (await provider.query({
     request_type: "call_function",
     account_id: contractId,
     method_name: methodName,
     args_base64: serializedArgs,
     finality: "optimistic",
-  });
+  })) as any;
 
   return JSON.parse(Buffer.from(res.result).toString());
 };
