@@ -274,8 +274,8 @@ const Index = () => {
                 "Wallet connections tracking",
                 "Profile analysis",
                 "Portfolio tracking",
-                "Front run"
-              ].map(title => (
+                "Front run",
+              ].map((title) => (
                 <MiniCard title={title} key={title} protection={title} />
               ))}
             </ul>
@@ -383,8 +383,8 @@ const Index = () => {
                 { title: "Q3 2023", message: "Native integration to wallets" },
                 {
                   title: "Q4 2023",
-                  message: "Explore new use cases and integartions"
-                }
+                  message: "Explore new use cases and integartions",
+                },
               ].map(({ title, message }) => (
                 <div
                   key={title}
@@ -414,16 +414,16 @@ const Index = () => {
             <ul className="w-full grid grid-cols-auto-fit-sm justify-items-center gap-10 mt-[70px] md:grid-cols-auto-fit-md">
               {[
                 { name: "Hack-a-Chain", icon: "/hackachain.svg" },
-                { name: "Near Foundation", icon: "/near_icon.svg" },
-                { name: "Proximity Labs", icon: "/assets/proximity.jpg" },
-                { name: "Lyrik Ventures", icon: "/assets/lyrikventures.png" },
+                // { name: "Near Foundation", icon: "/near_icon.svg" },
+                // { name: "Proximity Labs", icon: "/assets/proximity.jpg" },
+                // { name: "Lyrik Ventures", icon: "/assets/lyrikventures.png" },
                 { name: "Hapi.one", icon: "/assets/hapione.png" },
                 {
                   name: "Cypherpunk Guild",
-                  icon: "/assets/cypherpunk-guild.jpg"
+                  icon: "/assets/cypherpunk-guild.jpg",
                 },
                 { name: "Near Starter", icon: "/near_icon.svg" },
-                { name: "Near Week", icon: "/near_icon.svg" }
+                // { name: "Near Week", icon: "/near_icon.svg" }
               ].map(({ name, icon }) => (
                 <li key={name} className="max-w-[230px]">
                   <h2 className="text-black font-extrabold font-[Sora] text-center flex items-center gap-5">
