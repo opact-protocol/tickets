@@ -15,19 +15,7 @@ export async function buildTree() {
 
   const allowlists = await allowlistStorage();
 
-      const allowlists = await getAllowLists(
-        lastIndex || "0",
-        lenStorage.toString()
-      );
-
-  if (deposits)
-    deposits.forEach(({ index, value }) => {
-      try {
-        commitmentsTree.update(+index, value);
-      } catch (e) {
-        console.warn(e);
-      }
-    });
+  const commitmentsTree = new MerkleTree(20, [], MERKLE_TREE_OPTIONS);
 
   if (deposits)
     deposits.forEach(({ index, value }) => {
