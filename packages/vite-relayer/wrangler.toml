@@ -1,4 +1,0 @@
-name = "test-cloudflare-workers"
-main = "./dist/worker.js"
-compatibility_date = "2023-02-02"
-node_compat = true

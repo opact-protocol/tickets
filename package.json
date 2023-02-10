@@ -9,7 +9,7 @@
     "contracts": "yarn workspace @near/contracts",
     "circuits": "yarn workspace circuits",
     "contract_libraries": "yarn workspace @near/contract_libraries",
-    "relayer": "yarn workspace @near/relayer"
+    "relayer": "yarn workspace relayer"
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
