@@ -260,15 +260,6 @@ export const useApplication = create<{
     );
 
     await executeMultipleTransactions(transactions, wallet);
-
-    toast.custom((t) => (
-      <ToastCustom
-        icon="/check-circle-icon.svg"
-        id={t.id}
-        visible={t.visible}
-        key={t.id}
-      />
-    ));
   },
 
   createSnarkProof: async input => {

@@ -27,23 +27,6 @@ const Waves = () => {
   );
 };
 
-const Waves = () => {
-  return (
-    <>
-      <img
-        src="/waves.svg"
-        alt=""
-        className="fixed top-[-10px] w-full h-[1000px] -left-[50rem] selection:none"
-      />
-      <img
-        src="/waves.svg"
-        alt=""
-        className="fixed top-[-10px] w-full h-[1000px] -right-[47rem] selection:none"
-      />
-    </>
-  );
-};
-
 const Index = () => {
   const navigate = useNavigate();
 
