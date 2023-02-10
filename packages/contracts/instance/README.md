@@ -9,6 +9,16 @@ The contract implements a protocol fee, which is a percentage taken from every d
 
 This fee is variable and is set during contract initialization. To protect users from fee changes that would affect their deposits, once the fee is set it can never be reset.
 
+## NEP-141 storage
+According to NEP-141 documentation, tokens should implement storage registration for anyone that wants to hold a token balance.
+
+This has implications for this contract when using a NEP-141 token.
+
+Whenever a user tries to withdraw to an account that is not registered in the contract for the token, the transaction is going to be reverted so that the user does not lose their funds.
+Relayers and front end apps should check registration and pay for storage in case the accounts are not registered.
+
+However, if owner or relayer are not registered in the NEP-141 contract, the fees that are transferred to them on each withdraw are going to fail and the funds will be locked in the HYC contract forever. So make sure that owner and relayers are registered in the contract. 
+
 ## Contract ownership
 The contract implements an ownership model, where a priviledged `owner` account has access to methods that regular users do not.
 
