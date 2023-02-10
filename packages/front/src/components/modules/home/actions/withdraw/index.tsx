@@ -177,12 +177,14 @@ export function Withdraw() {
               </p>
               <p className="text-black font-bold text-sm">
                 {statistics?.totalDeposits}
-            </div>
-              </p>
-              <p className="text-black font-bold text-sm">
-                {statistics?.totalWithdraws}
               </p>
             </div>
+            <p className="text-black text-sm font-normal">
+              Total withdraws to date
+            </p>
+            <p className="text-black font-bold text-sm">
+              {statistics?.totalWithdraws}
+            </p>
           </div>
         )}
 
