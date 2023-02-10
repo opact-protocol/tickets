@@ -1,23 +1,26 @@
-import {
-  RPC_URL,
-  PRIVATE_KEY,
-  ACCOUNT_ID,
-  NEAR_NETWORK,
-} from "../constants/env";
 import { connect, keyStores, KeyPair, providers } from "near-api-js";
 import type { CodeResult } from "near-api-js/lib/providers/provider";
+import { Buffer } from "buffer";
+import { Env } from "@/interfaces/env";
 
-export const connectionConfig = {
-  nodeUrl: RPC_URL,
-  networkId: NEAR_NETWORK,
-};
+self.Buffer = Buffer;
 
-export const setupNear = async () => {
+export const setupNear = async ({
+  RPC_URL,
+  ACCOUNT_ID,
+  PRIVATE_KEY,
+  NEAR_NETWORK,
+}: Env) => {
   const myKeyStore = new keyStores.InMemoryKeyStore();
 
   const keyPair = KeyPair.fromString(PRIVATE_KEY);
 
   await myKeyStore.setKey(NEAR_NETWORK, ACCOUNT_ID, keyPair);
+
+  const connectionConfig = {
+    nodeUrl: RPC_URL,
+    networkId: NEAR_NETWORK,
+  };
 
   return connect({ ...connectionConfig, keyStore: myKeyStore });
 };
@@ -28,6 +31,8 @@ export const viewFunction = async (
   methodName: string,
   args: any
 ) => {
+  console.log("contract id: ", contractId);
+
   const provider = new providers.JsonRpcProvider({ url: nodeUrl });
 
   const serializedArgs = Buffer.from(JSON.stringify(args)).toString("base64");
