@@ -29,6 +29,7 @@ export const viewFunction = async (
   args: any
 ) => {
   const provider = new providers.JsonRpcProvider({ url: nodeUrl });
+
   const serializedArgs = Buffer.from(JSON.stringify(args)).toString("base64");
 
   const res = await provider.query<CodeResult>({
