@@ -60,10 +60,6 @@ export const provider = new providers.JsonRpcProvider(
   useEnv("VITE_NEAR_NODE_URL")
 );
 
-export const provider = new providers.JsonRpcProvider(
-  useEnv("VITE_NEAR_NODE_URL")
-);
-
 export const AttachedGas = "300000000000000";
 
 const refreshPage = transactions => {
