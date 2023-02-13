@@ -1,37 +1,24 @@
 import { HEADERS } from "@/constants";
 import { fetch } from "@/services/router";
-import payload from "./json/payload.json";
+import testnetSetup from "../temp/testnet_setup.json";
 
-// import { connect, KeyPair } from "near-api-js";
-// import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
-// let user;
-
-beforeAll(async () => {
-  const envs = getMiniflareBindings();
-
-  console.log(envs);
-
-  // const keyStore = new InMemoryKeyStore();
-  // const keyPair = KeyPair.fromString(account.privateKey);
-  // keyStore.setKey(config.networkId, account.accountid, keyPair);
-
-  // user = await connect({
-  //   ...config,
-  //   keyStore,
-  // });
-
-  // console.log(commitment, proof, publicArgs);
-});
+const baseEnvs = {
+  RELAYER_FEE: "0.25",
+  NEAR_NETWORK: "testnet",
+  RPC_URL: "https://rpc.testnet.near.org",
+  ACCOUNT_ID: "ade0e80e6ba045a93e69owner.testnet",
+  PRIVATE_KEY:
+    "ed25519:3GmSyXipyFfiabnVjmbXv17oa7NAx38tELqFEqdjsJ6EKsLWSs8kgpRb89W8nZqV1diMwmFFygMN7HKVUoaKcFu7",
+  HYC_CONTRACT: testnetSetup.hyc_contract,
+};
 
 test("should return 402 - payload not is valid", async () => {
-  const env = getMiniflareBindings();
-
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
   });
 
-  const res = await fetch(baseRequest, env);
+  const res = await fetch(baseRequest, baseEnvs as any);
 
   const textRes = await res.text();
 
@@ -42,15 +29,16 @@ test("should return 402 - payload not is valid", async () => {
 });
 
 test("should return 402 - should specify correct relayer address", async () => {
-  const env = getMiniflareBindings();
-
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify({ ...payload, relayer: "foo.ba" }),
+    body: JSON.stringify({
+      ...testnetSetup.user_withdraw_payload,
+      relayer: "foo.ba",
+    }),
   });
 
-  const res = await fetch(baseRequest, env);
+  const res = await fetch(baseRequest, baseEnvs as any);
 
   const textRes = await res.text();
 
@@ -61,32 +49,37 @@ test("should return 402 - should specify correct relayer address", async () => {
 });
 
 test("should return 402 - should at least minimum relayer fee", async () => {
-  const env = getMiniflareBindings();
-
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
-      ...payload,
-      relayer: "ade0e80e6ba045a93e69owner.testnet",
+      ...testnetSetup.user_withdraw_payload,
+      relayer: baseEnvs.ACCOUNT_ID,
     }),
   });
 
-  const res = await fetch(baseRequest, env);
+  const res = await fetch(baseRequest, baseEnvs as any);
 
-  console.log(res);
+  const textRes = await res.text();
+  expect(res.status).toBe(402);
+  expect(textRes).toContain(
+    '{"status":"failure","error":"should at least minimum relayer fee: 1"}'
+  );
 });
 
 test("should return 402 - Withdraw is not valid", async () => {
-  const env = getMiniflareBindings();
-
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      ...testnetSetup.user_withdraw_payload,
+      nullifier_hash: "1234",
+      relayer: baseEnvs.ACCOUNT_ID,
+      fee: "3",
+    }),
   });
 
-  const res = await fetch(baseRequest, env);
+  const res = await fetch(baseRequest, baseEnvs as any);
 
   const textRes = await res.text();
 
@@ -96,33 +89,17 @@ test("should return 402 - Withdraw is not valid", async () => {
   );
 });
 
-// test("should return 402 - Error on withdraw", async () => {
-//   const env = getMiniflareBindings();
+test("should return 200 - success withdraw", async () => {
+  const baseRequest = new Request("http://localhost/relay", {
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      ...testnetSetup.user_withdraw_payload,
+      relayer: baseEnvs.ACCOUNT_ID,
+      fee: "3",
+    }),
+  });
+  const res = await fetch(baseRequest, baseEnvs as any);
 
-//   const baseRequest = new Request("http://localhost/relay", {
-//     method: "POST",
-//     headers: HEADERS,
-//     body: JSON.stringify(payload),
-//   });
-
-//   const res = await fetch(baseRequest, env);
-
-//   const textRes = await res.text();
-
-//   expect(res.status).toBe(402);
-//   expect(textRes).toContain('{"status":"failure","error":"Error on withdraw"}');
-// });
-
-// test("should return 200 - success withdraw", async () => {
-//   const env = getMiniflareBindings();
-
-//   const baseRequest = new Request("http://localhost/relay", {
-//     method: "POST",
-//     headers: HEADERS,
-//     body: JSON.stringify(payload),
-//   });
-
-//   const res = await fetch(baseRequest, env);
-
-//   expect(res.status).toBe(200);
-// });
+  expect(res.status).toBe(200);
+});

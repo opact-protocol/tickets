@@ -11,7 +11,8 @@
     "deploy": "yarn build:contract && yarn deploy:contract",
     "test:rust": "yarn build:contract && cargo test -- --nocapture",
     "test:lib": "yarn build:contract && cd tests-rs && yarn test:full",
-    "seed:testnet": "yarn build:contract && cd testnet_seeder && yarn seeder"
+    "seed:testnet": "yarn build:contract && cd testnet_seeder && yarn seeder",
+    "relayer:setup": "yarn build:contract && (cd relayer_setup && yarn seeder)"
   },
   "devDependencies": {
     "env-cmd": "~10.1.0",
