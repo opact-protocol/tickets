@@ -17,8 +17,6 @@ const config = {
 };
 
 beforeAll(async () => {
-  // const { HYC_CONTRACT } = getMiniflareBindings();
-
   const { account } = readInputs();
 
   const keyStore = new InMemoryKeyStore();
