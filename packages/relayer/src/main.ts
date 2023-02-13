@@ -14,7 +14,7 @@ export const relayer = async (
   try {
     payload = await request.json();
 
-    console.log("relayer/main.tsx: POST relay with payload: ", payload);
+    console.log("relayer/main.tsx: POST relay with payload");
   } catch (e) {
     console.warn(e);
     return getResponse(
