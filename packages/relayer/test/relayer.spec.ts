@@ -92,19 +92,19 @@ test("should return 402 - Error on withdraw", async () => {
   expect(textRes).toContain('{"status":"failure","error":"Error on withdraw"}');
 });
 
-// test("should return 200 - success withdraw", async () => {
-//   const env = getMiniflareBindings();
+test("should return 200 - success withdraw", async () => {
+  const env = getMiniflareBindings();
 
-//   const baseRequest = new Request('http://localhost/relay', {
-//     method: 'POST',
-//     headers: HEADERS,
-//     body: JSON.stringify(payload),
-//   });
+  const baseRequest = new Request("http://localhost/relay", {
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify(payload),
+  });
 
-//   const res = await fetch(baseRequest, env);
+  const res = await fetch(baseRequest, env);
 
-//   const textRes = await res.text();
+  const textRes = await res.text();
 
-//   expect(res.status).toBe(200);
-//   expect(textRes).toContain('{"status":"success","error":"Error on withdraw"}');
-// });
+  expect(res.status).toBe(200);
+  expect(textRes).toContain('{"status":"success","error":"Error on withdraw"}');
+});
