@@ -20,6 +20,9 @@
     "isolatedModules": true,
     "typeRoots": ["@types/"],
     "baseUrl": ".",
+    "paths": {
+      "@relayer": ["./packages/src/*"]
+    }
   },
   "exclude": ["node_modules"],
   "include": ["./packages/**/*"]

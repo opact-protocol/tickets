@@ -1,20 +1,20 @@
 {
-    "name": "contract-testnet-seeder",
-    "version": "0.0.1",
-    "license": "UNLICENSED",
-    "main": "lib/index.ts",
-    "scripts": {
-      "copy:verificationkey": "mkdir -p temp && cp ../../circuits/out/verification_key.json ./temp/verification_key.json",
-      "seeder": "yarn copy:verificationkey && node index.js"
-    },
-    "dependencies": {
-      "web3-utils": "1.7.5",
-      "circomlibjs": "0.1.2",
-      "fixed-merkle-tree": "0.7.3",
-      "snarkjs": "0.4.27",
-      "bfj": "7.0.2",
-      "ffjavascript": "0.2.56",
-      "logplease": "1.2.15"
-    }
+  "name": "contract-testnet-seeder",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "main": "lib/index.ts",
+  "scripts": {
+    "copy:verificationkey": "mkdir -p temp && cp ../../circuits/out/verification_key.json ./temp/verification_key.json",
+    "seeder": "yarn copy:verificationkey && node index.js"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "bfj": "7.0.2",
+    "circomlibjs": "0.1.2",
+    "ffjavascript": "0.2.56",
+    "fixed-merkle-tree": "0.7.3",
+    "logplease": "1.2.15",
+    "snarkjs": "0.4.27",
+    "web3-utils": "1.7.5"
   }
-  
+}
