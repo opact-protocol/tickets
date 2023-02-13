@@ -55,6 +55,7 @@ test("should return 402 - should at least minimum relayer fee", async () => {
     body: JSON.stringify({
       ...testnetSetup.user_withdraw_payload,
       relayer: baseEnvs.ACCOUNT_ID,
+      quantity: 3,
     }),
   });
 
