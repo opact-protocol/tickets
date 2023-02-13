@@ -15,7 +15,8 @@ const { buildCommitments } = require("./prepareCommitments");
 module.exports = { testnetSetup };
 
 async function testnetSetup() {
-  // set connection
+  console.log("testnet_seeder/deployTestnet.js: init testnet setup");
+
   const CREDENTIALS_DIR = ".near-credentials";
   const keyStore = new keyStores.UnencryptedFileSystemKeyStore(CREDENTIALS_DIR);
 
@@ -34,7 +35,8 @@ async function testnetSetup() {
   let last_block = await near.connection.provider.block({ finality: "final" });
   let last_block_height = last_block.header.height;
 
-  // save all base accounts to be created
+  console.log("testnet_seeder/deployTestnet.js: create all accounts");
+
   const random_prefix = crypto.randomBytes(10).toString("hex");
   const contractAccount = await createAccount(
     accountCreator,
@@ -66,6 +68,12 @@ async function testnetSetup() {
     near,
     random_prefix + "user4.testnet"
   );
+  const relayerUser = await createAccount(
+    accountCreator,
+    config,
+    near,
+    random_prefix + "relayer-user.testnet"
+  );
   const receiver = await createAccount(
     accountCreator,
     config,
@@ -80,6 +88,8 @@ async function testnetSetup() {
   const verifyKey = JSON.parse(
     fs.readFileSync("../../circuits/out/verification_key.json")
   );
+
+  console.log("testnet_seeder/deployTestnet.js: init hyc contract");
 
   await contractAccount.functionCall({
     contractId: contractAccount.accountId,
@@ -142,7 +152,8 @@ async function testnetSetup() {
     gas: "300000000000000",
   });
 
-  // seed with deposits and withdrawals
+  console.log("testnet_seeder/deployTestnet.js: build commitments");
+
   await buildCommitments(
     config,
     contractAccount,
@@ -150,7 +161,8 @@ async function testnetSetup() {
     user2,
     user3,
     user4,
-    receiver
+    receiver,
+    relayerUser
   );
 
   const proofInputs = readInputs();
@@ -159,24 +171,17 @@ async function testnetSetup() {
   await registerUser(contractAccount, user2);
   await registerUser(contractAccount, user3);
   await registerUser(contractAccount, user4);
+  await registerUser(contractAccount, relayerUser);
   await registerUser(contractAccount, receiver);
+
+  console.log("testnet_seeder/deployTestnet.js: deposit all storages");
 
   await deposit(contractAccount, user1, proofInputs.commitment1);
   await deposit(contractAccount, user2, proofInputs.commitment2);
   await deposit(contractAccount, user3, proofInputs.commitment3);
   await deposit(contractAccount, user4, proofInputs.commitment4);
 
-  console.log(
-    "WITHDRAAAAAW",
-    JSON.stringify(
-      contractAccount,
-      user1,
-      receiver,
-      null,
-      proofInputs.proof1,
-      proofInputs.public1
-    )
-  );
+  console.log("testnet_seeder/deployTestnet.js: init withdraws");
 
   await withdraw(
     contractAccount,
