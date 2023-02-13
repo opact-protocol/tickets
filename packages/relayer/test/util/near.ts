@@ -21,15 +21,9 @@ export function readInputs() {
         "utf8"
       )
     ),
-    account: JSON.parse(
+    relayer: JSON.parse(
       fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer-user.json",
-        "utf8"
-      )
-    ),
-    contract: JSON.parse(
-      fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer-contract.json",
+        "../../../../../contracts/testnet_seeder/temp/relayer.json",
         "utf8"
       )
     ),
