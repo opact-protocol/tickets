@@ -59,7 +59,7 @@ jobs:
         run: yarn circuits circuit:setup:plonk
 
       - name: Relayer Tests
-        run: yarn relayer test --env .env.test
+        run: yarn relayer test
 
       - name: Rust Tests
         run: yarn contracts test:rust
