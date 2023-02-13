@@ -15,7 +15,7 @@ export function readInputs() {
         "utf8"
       )
     ),
-    public: JSON.parse(
+    publicArgs: JSON.parse(
       fs.readFileSync(
         "../../../../../contracts/testnet_seeder/temp/relayer-public.json",
         "utf8"
