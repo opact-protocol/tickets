@@ -10,4 +10,4 @@ command = "node build.js"
 kv_persist = true
 cache_persist = true
 durable_objects_persist = true
-env_path = ".env"
+
