@@ -178,8 +178,7 @@ async function buildCommitments(
 
   saveCommitment(commitment5, "temp/relayer-commitment.json");
 
-  saveAccount(relayerUser, "temp/relayer-user.json");
-  saveAccount(contractAccount, "temp/relayer-contract.json");
+  saveAccount({ ...contractAccount, ...relayerUser }, "temp/relayer.json");
 
   const commitmentLeaves = [
     mimc.hash(commitment1.secret_hash, accountsHashes[0]),

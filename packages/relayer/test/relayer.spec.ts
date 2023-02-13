@@ -28,7 +28,7 @@ beforeAll(async () => {
     keyStore,
   });
 
-  console.log(commitment, proof, publicArgs, account, contract);
+  console.log(commitment, proof, publicArgs, account, contract, user);
 });
 
 test("should return 402 - payload not is valid", async () => {
