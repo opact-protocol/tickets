@@ -3,7 +3,7 @@ const web3utils = require("web3-utils");
 const fs = require("fs");
 const { readFileSync } = fs;
 
-import core from "@actions/core";
+const core = require("@actions/core");
 
 const { providers } = require("near-api-js");
 
@@ -349,9 +349,11 @@ async function buildCommitments(
   try {
     const proof = fs.readFileSync("/temp/proof5.json");
 
-    core.saveState("HYC_ACCOUNT_ID", contractAccount.accountId);
-    core.saveState("HYC_PRIVATE_KEY", contractAccount.JSON());
-    core.saveState("USER_PROOF", proof);
+    core.setSecret("RELAYER_TEST_HYC_CONTRACT", contractAccount.JSON());
+    core.setSecret("RELAYER_TEST_HYC_PROOF", proof);
+
+    // core.setSecret("HYC_ACCOUNT_ID", contractAccount.accountId);
+    // core.setSecret("HYC_PRIVATE_KEY", contractAccount.JSON());
   } catch (e) {
     console.warn(e);
   }
