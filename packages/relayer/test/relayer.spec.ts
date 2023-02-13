@@ -6,7 +6,7 @@ import { connect, KeyPair } from "near-api-js";
 import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
 import { readInputs } from "./util";
 
-let user;
+// let user;
 
 const config = {
   networkId: "testnet",
@@ -17,18 +17,18 @@ const config = {
 };
 
 beforeAll(async () => {
-  const { commitment, proof, publicArgs, account, contract } = readInputs();
+  const { commitment, proof, publicArgs, relayer } = readInputs();
 
-  const keyStore = new InMemoryKeyStore();
-  const keyPair = KeyPair.fromString(account.privateKey);
-  keyStore.setKey(config.networkId, account.accountid, keyPair);
+  // const keyStore = new InMemoryKeyStore();
+  // const keyPair = KeyPair.fromString(account.privateKey);
+  // keyStore.setKey(config.networkId, account.accountid, keyPair);
 
-  user = await connect({
-    ...config,
-    keyStore,
-  });
+  // user = await connect({
+  //   ...config,
+  //   keyStore,
+  // });
 
-  console.log(commitment, proof, publicArgs, account, contract, user);
+  console.log(commitment, proof, publicArgs, relayer, user);
 });
 
 test("should return 402 - payload not is valid", async () => {
