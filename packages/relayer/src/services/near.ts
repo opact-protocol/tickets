@@ -3,10 +3,10 @@ import { Buffer } from "buffer";
 import Process from "process";
 import { Env } from "@/interfaces/env";
 
-self.Buffer = Buffer;
-
+/* tslint:disable */
 globalThis.Buffer = Buffer;
 globalThis.process = Process;
+/* tslint:enable */
 
 export const setupNear = async ({
   RPC_URL,
