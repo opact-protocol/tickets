@@ -68,7 +68,7 @@ async function testnetSetup() {
     near,
     random_prefix + "user4.testnet"
   );
-  const relayerUser = await createAccount(
+  const user5 = await createAccount(
     accountCreator,
     config,
     near,
@@ -161,8 +161,8 @@ async function testnetSetup() {
     user2,
     user3,
     user4,
-    receiver,
-    relayerUser
+    user5,
+    receiver
   );
 
   const proofInputs = readInputs();
@@ -171,7 +171,7 @@ async function testnetSetup() {
   await registerUser(contractAccount, user2);
   await registerUser(contractAccount, user3);
   await registerUser(contractAccount, user4);
-  await registerUser(contractAccount, relayerUser);
+  await registerUser(contractAccount, user5);
   await registerUser(contractAccount, receiver);
 
   console.log("testnet_seeder/deployTestnet.js: deposit all storages");
@@ -180,6 +180,7 @@ async function testnetSetup() {
   await deposit(contractAccount, user2, proofInputs.commitment2);
   await deposit(contractAccount, user3, proofInputs.commitment3);
   await deposit(contractAccount, user4, proofInputs.commitment4);
+  await deposit(contractAccount, user5, proofInputs.commitment5);
 
   console.log("testnet_seeder/deployTestnet.js: init withdraws");
 

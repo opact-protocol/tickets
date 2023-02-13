@@ -1,23 +1,22 @@
 import { HEADERS } from "@/constants";
 import { fetch } from "@/services/router";
 import payload from "./json/payload.json";
+import core from "@actions/core";
 
 // import { connect, KeyPair } from "near-api-js";
 // import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
-import { readInputs } from "./util";
-
 // let user;
 
-// const config = {
-//   networkId: "testnet",
-//   nodeUrl: "https://rpc.testnet.near.org",
-//   walletUrl: "https://wallet.testnet.near.org",
-//   helperUrl: "https://helper.testnet.near.org",
-//   explorerUrl: "https://explorer.testnet.near.org",
-// };
-
 beforeAll(async () => {
-  const { commitment, proof, publicArgs, relayer } = readInputs();
+  const { isActions } = getMiniflareBindings();
+
+  if (isActions) {
+    const proof = core.getState("USER_PROOF");
+    const hycPrivate = core.getState("HYC_PRIVATE_KEY");
+    const hycAccountId = core.getState("HYC_ACCOUNT_ID");
+
+    console.log(proof, hycPrivate, hycAccountId);
+  }
 
   // const keyStore = new InMemoryKeyStore();
   // const keyPair = KeyPair.fromString(account.privateKey);
@@ -28,7 +27,7 @@ beforeAll(async () => {
   //   keyStore,
   // });
 
-  console.log(commitment, proof, publicArgs, relayer);
+  // console.log(commitment, proof, publicArgs);
 });
 
 test("should return 402 - payload not is valid", async () => {

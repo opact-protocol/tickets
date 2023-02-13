@@ -1,7 +1,9 @@
 const crypto = require("crypto");
 const web3utils = require("web3-utils");
 const fs = require("fs");
-const { readFileSync, writeFile } = fs;
+const { readFileSync } = fs;
+
+import core from "@actions/core";
 
 const { providers } = require("near-api-js");
 
@@ -35,8 +37,8 @@ async function buildCommitments(
   user2,
   user3,
   user4,
-  receiver,
-  relayerUser
+  user5,
+  receiver
 ) {
   class Mimc {
     constructor() {
@@ -108,7 +110,7 @@ async function buildCommitments(
   }
 
   // set accounts that will be used
-  const accounts = [user1, user2, user3, user4, receiver, relayerUser];
+  const accounts = [user1, user2, user3, user4, user5, receiver];
 
   const accountsHashes = [
     await hashAccount(config, contractAccount, accounts[0]),
@@ -177,8 +179,6 @@ async function buildCommitments(
   saveCommitment(commitment4, "temp/commitment4.json");
 
   saveCommitment(commitment5, "temp/relayer-commitment.json");
-
-  saveAccount({ ...contractAccount, ...relayerUser }, "temp/relayer.json");
 
   const commitmentLeaves = [
     mimc.hash(commitment1.secret_hash, accountsHashes[0]),
@@ -317,8 +317,7 @@ async function buildCommitments(
   await generate_witness(commitment2Input, "temp/witness2.wtns");
   await generate_witness(commitment3Input, "temp/witness3.wtns");
   await generate_witness(commitment4Input, "temp/witness4.wtns");
-
-  await generate_witness(commitment5Input, "temp/relayer-witness.wtns");
+  await generate_witness(commitment5Input, "temp/witness5.wtns");
 
   // generate proofs
   await generate_proof(
@@ -341,12 +340,21 @@ async function buildCommitments(
     "./temp/proof4.json",
     "./temp/public4.json"
   );
-
   await generate_proof(
-    "./temp/relayer-witness.wtns",
-    "./temp/relayer-proof.json",
-    "./temp/relayer-public.json"
+    "./temp/witness5.wtns",
+    "./temp/proof5.json",
+    "./temp/public5.json"
   );
+
+  try {
+    const proof = fs.readFileSync("/temp/proof5.json");
+
+    core.saveState("HYC_ACCOUNT_ID", contractAccount.accountId);
+    core.saveState("HYC_PRIVATE_KEY", contractAccount.JSON());
+    core.saveState("USER_PROOF", proof);
+  } catch (e) {
+    console.warn(e);
+  }
 }
 
 async function viewFunction(config, contractId, methodName, args = {}) {
