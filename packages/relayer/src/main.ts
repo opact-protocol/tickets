@@ -1,7 +1,7 @@
 import Big from "big.js";
 import { Env } from "./interfaces";
+import { AttachedGas } from "./constants";
 import { getResponse } from "./services/router";
-import { HEADERS, AttachedGas } from "./constants";
 import { setupNear, viewFunction } from "./services/near";
 import { RelayerPayload } from "./interfaces/relayer";
 
@@ -18,10 +18,11 @@ export const relayer = async (
   } catch (e) {
     console.warn(e);
     return getResponse(
-      JSON.stringify({
+      {
         status: "failure",
-        error: "payload not is valid"
-      })
+        error: "payload not is valid",
+      },
+      402
     );
   }
 
@@ -35,10 +36,11 @@ export const relayer = async (
   // check if payload uses correct relayer
   if (payload.relayer !== ACCOUNT_ID) {
     return getResponse(
-      JSON.stringify({
+      {
         status: "failure",
-        error: `should specify correct relayer address: ${ACCOUNT_ID}`
-      })
+        error: `should specify correct relayer address: ${ACCOUNT_ID}`,
+      },
+      402
     );
   }
 
@@ -50,10 +52,13 @@ export const relayer = async (
 
     if (payloadFee.lt(minimumFee)) {
       return getResponse(
-        JSON.stringify({
+        {
           status: "failure",
-          error: `should at least minimum relayer fee: ${minimumFee.toFixed(0)}`
-        })
+          error: `should at least minimum relayer fee: ${minimumFee.toFixed(
+            0
+          )}`,
+        },
+        402
       );
     }
   } catch (e) {
@@ -71,12 +76,12 @@ export const relayer = async (
   } catch (error) {
     console.warn(error);
 
-    return new Response(
-      JSON.stringify({
+    return getResponse(
+      {
         status: "failure",
-        error: "Payload is not valid"
-      }),
-      { headers: HEADERS, status: 402 }
+        error: "Withdraw is not valid",
+      },
+      402
     );
   }
 
@@ -86,7 +91,7 @@ export const relayer = async (
       contractId: HYC_CONTRACT,
       methodName: "withdraw",
       args: payload,
-      gas: AttachedGas
+      gas: AttachedGas as any,
     });
 
     console.log(
@@ -94,22 +99,19 @@ export const relayer = async (
       transaction
     );
 
-    return new Response(
-      JSON.stringify({
-        status: "success",
-        transaction
-      }),
-      { headers: HEADERS }
-    );
+    return getResponse({
+      status: "success",
+      transaction,
+    });
   } catch (e) {
-    console.warn(e.message);
+    console.warn(e);
 
-    return new Response(
-      JSON.stringify({
+    return getResponse(
+      {
         status: "failure",
-        error: "Error on withdraw"
-      }),
-      { headers: HEADERS, status: 402 }
+        error: "Error on withdraw",
+      },
+      402
     );
   }
 };

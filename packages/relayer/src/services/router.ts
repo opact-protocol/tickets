@@ -2,8 +2,9 @@ import { relayer } from "../main";
 import { HEADERS } from "../constants";
 import { Env } from "@/interfaces";
 
-export const getResponse = async (args: string, skip = false) => {
+export const getResponse = async (args: any, status = 200, skip = false) => {
   return new Response(JSON.stringify(args), {
+    status,
     headers: skip ? { "x-skip-request": "" } : HEADERS,
   });
 };
@@ -26,7 +27,14 @@ export const handleGet = async (
     case "/data":
       return handleData(env);
     default:
-      return getResponse("", true);
+      return getResponse(
+        {
+          status: "failure",
+          error: "Route not found",
+        },
+        402,
+        true
+      );
   }
 };
 
