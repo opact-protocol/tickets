@@ -1,22 +1,15 @@
 import { HEADERS } from "@/constants";
 import { fetch } from "@/services/router";
 import payload from "./json/payload.json";
-import core from "@actions/core";
 
 // import { connect, KeyPair } from "near-api-js";
 // import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
 // let user;
 
 beforeAll(async () => {
-  const { isActions } = getMiniflareBindings();
+  const envs = getMiniflareBindings();
 
-  if (isActions) {
-    const proof = core.getState("USER_PROOF");
-    const hycPrivate = core.getState("HYC_PRIVATE_KEY");
-    const hycAccountId = core.getState("HYC_ACCOUNT_ID");
-
-    console.log(proof, hycPrivate, hycAccountId);
-  }
+  console.log(envs);
 
   // const keyStore = new InMemoryKeyStore();
   // const keyPair = KeyPair.fromString(account.privateKey);
