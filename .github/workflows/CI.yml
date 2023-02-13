@@ -58,7 +58,7 @@ jobs:
         run: yarn circuits circuit:setup:plonk
 
       - name: Relayer Tests
-        run: yarn relayer test
+        run: yarn relayer test --binding RELAYER_TEST_HYC_CONTRACT=${{ secrets.RELAYER_TEST_HYC_CONTRACT }} --binding RELAYER_TEST_HYC_PROOF=${{ secrets.RELAYER_TEST_HYC_PROOF }}
 
       - name: Rust Tests
         run: yarn contracts test:rust
