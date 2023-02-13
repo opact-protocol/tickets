@@ -1,51 +1,10 @@
-import fs from "fs";
-
-/* tslint:disable */
-export function readInputs() {
-  return {
-    commitment: JSON.parse(
-      fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer-commitment.json",
-        "utf8"
-      )
-    ),
-    proof: JSON.parse(
-      fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer-proof.json",
-        "utf8"
-      )
-    ),
-    publicArgs: JSON.parse(
-      fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer-public.json",
-        "utf8"
-      )
-    ),
-    relayer: JSON.parse(
-      fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/relayer.json",
-        "utf8"
-      )
-    ),
-  };
-}
-/* tslint:enable */
-
-export async function deposit(
-  contractAccount: any,
-  account: any,
-  commitment: any
-) {
-  return await account.functionCall({
-    contractId: contractAccount.accountId,
-    methodName: "deposit",
-    args: {
-      secrets_hash: commitment.secret_hash,
-    },
-    gas: "300000000000000",
-    attachedDeposit: "10000000000000000000000000",
-  });
-}
+export const config = {
+  networkId: "testnet",
+  nodeUrl: "https://rpc.testnet.near.org",
+  walletUrl: "https://wallet.testnet.near.org",
+  helperUrl: "https://helper.testnet.near.org",
+  explorerUrl: "https://explorer.testnet.near.org",
+};
 
 export async function withdraw(
   contractAccount: any,

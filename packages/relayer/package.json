@@ -29,6 +29,7 @@
     "wrangler": "^2.0.7"
   },
   "dependencies": {
+    "@actions/core": "^1.10.0",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
