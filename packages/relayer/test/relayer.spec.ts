@@ -17,7 +17,7 @@ const config = {
 };
 
 beforeAll(async () => {
-  const { account } = readInputs();
+  const { commitment, proof, publicArgs, account, contract } = readInputs();
 
   const keyStore = new InMemoryKeyStore();
   const keyPair = KeyPair.fromString(account.privateKey);
@@ -28,7 +28,7 @@ beforeAll(async () => {
     keyStore,
   });
 
-  console.log(user);
+  console.log(commitment, proof, publicArgs, account, contract);
 });
 
 test("should return 402 - payload not is valid", async () => {
