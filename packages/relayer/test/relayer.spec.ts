@@ -2,19 +2,19 @@ import { HEADERS } from "@/constants";
 import { fetch } from "@/services/router";
 import payload from "./json/payload.json";
 
-import { connect, KeyPair } from "near-api-js";
-import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
+// import { connect, KeyPair } from "near-api-js";
+// import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
 import { readInputs } from "./util";
 
 // let user;
 
-const config = {
-  networkId: "testnet",
-  nodeUrl: "https://rpc.testnet.near.org",
-  walletUrl: "https://wallet.testnet.near.org",
-  helperUrl: "https://helper.testnet.near.org",
-  explorerUrl: "https://explorer.testnet.near.org",
-};
+// const config = {
+//   networkId: "testnet",
+//   nodeUrl: "https://rpc.testnet.near.org",
+//   walletUrl: "https://wallet.testnet.near.org",
+//   helperUrl: "https://helper.testnet.near.org",
+//   explorerUrl: "https://explorer.testnet.near.org",
+// };
 
 beforeAll(async () => {
   const { commitment, proof, publicArgs, relayer } = readInputs();
