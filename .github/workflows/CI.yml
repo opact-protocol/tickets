@@ -58,7 +58,7 @@ jobs:
         run: yarn circuits circuit:setup:plonk
 
       - name: Relayer Tests
-        run: yarn relayer test
+        run: yarn relayer test --env .env.test
 
       - name: Rust Tests
         run: yarn contracts test:rust
@@ -98,7 +98,7 @@ jobs:
 
       - name: Installing Dependencies
         run: yarn
-      
+
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
