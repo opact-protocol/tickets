@@ -5,19 +5,19 @@ export function readInputs() {
   return {
     commitment: JSON.parse(
       fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/commitment5.json",
+        "../../../../../contracts/testnet_seeder/temp/relayer-commitment.json",
         "utf8"
       )
     ),
     proof: JSON.parse(
       fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/proof5.json",
+        "../../../../../contracts/testnet_seeder/temp/relayer-proof.json",
         "utf8"
       )
     ),
     public: JSON.parse(
       fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/public5.json",
+        "../../../../../contracts/testnet_seeder/temp/relayer-public.json",
         "utf8"
       )
     ),
@@ -29,7 +29,7 @@ export function readInputs() {
     ),
     contract: JSON.parse(
       fs.readFileSync(
-        "../../../../../contracts/testnet_seeder/temp/contract.json",
+        "../../../../../contracts/testnet_seeder/temp/relayer-contract.json",
         "utf8"
       )
     ),
