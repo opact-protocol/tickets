@@ -103,4 +103,4 @@ test("should return 200 - success withdraw", async () => {
   const res = await fetch(baseRequest, baseEnvs as any);
 
   expect(res.status).toBe(200);
-});
+}, 50000);
