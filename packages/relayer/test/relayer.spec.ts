@@ -6,9 +6,8 @@ const baseEnvs = {
   RELAYER_FEE: "0.25",
   NEAR_NETWORK: "testnet",
   RPC_URL: "https://rpc.testnet.near.org",
-  ACCOUNT_ID: "ade0e80e6ba045a93e69owner.testnet",
-  PRIVATE_KEY:
-    "ed25519:3GmSyXipyFfiabnVjmbXv17oa7NAx38tELqFEqdjsJ6EKsLWSs8kgpRb89W8nZqV1diMwmFFygMN7HKVUoaKcFu7",
+  ACCOUNT_ID: testnetSetup.relayer.account_id,
+  PRIVATE_KEY: testnetSetup.relayer.private_key,
   HYC_CONTRACT: testnetSetup.hyc_contract,
 };
 
@@ -96,8 +95,6 @@ test("should return 200 - success withdraw", async () => {
     headers: HEADERS,
     body: JSON.stringify({
       ...testnetSetup.user_withdraw_payload,
-      relayer: baseEnvs.ACCOUNT_ID,
-      fee: "3",
     }),
   });
   const res = await fetch(baseRequest, baseEnvs as any);
