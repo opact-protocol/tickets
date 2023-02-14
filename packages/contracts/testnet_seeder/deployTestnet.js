@@ -15,8 +15,7 @@ const { buildCommitments } = require("./prepareCommitments");
 module.exports = { testnetSetup };
 
 async function testnetSetup() {
-  console.log("testnet_seeder/deployTestnet.js: init testnet setup");
-
+  // set connection
   const CREDENTIALS_DIR = ".near-credentials";
   const keyStore = new keyStores.UnencryptedFileSystemKeyStore(CREDENTIALS_DIR);
 
@@ -35,8 +34,7 @@ async function testnetSetup() {
   let last_block = await near.connection.provider.block({ finality: "final" });
   let last_block_height = last_block.header.height;
 
-  console.log("testnet_seeder/deployTestnet.js: create all accounts");
-
+  // save all base accounts to be created
   const random_prefix = crypto.randomBytes(10).toString("hex");
   const contractAccount = await createAccount(
     accountCreator,
@@ -82,8 +80,6 @@ async function testnetSetup() {
   const verifyKey = JSON.parse(
     fs.readFileSync("../../circuits/out/verification_key.json")
   );
-
-  console.log("testnet_seeder/deployTestnet.js: init hyc contract");
 
   await contractAccount.functionCall({
     contractId: contractAccount.accountId,
@@ -146,8 +142,7 @@ async function testnetSetup() {
     gas: "300000000000000",
   });
 
-  console.log("testnet_seeder/deployTestnet.js: build commitments");
-
+  // seed with deposits and withdrawals
   await buildCommitments(
     config,
     contractAccount,
@@ -166,14 +161,10 @@ async function testnetSetup() {
   await registerUser(contractAccount, user4);
   await registerUser(contractAccount, receiver);
 
-  console.log("testnet_seeder/deployTestnet.js: deposit all storages");
-
   await deposit(contractAccount, user1, proofInputs.commitment1);
   await deposit(contractAccount, user2, proofInputs.commitment2);
   await deposit(contractAccount, user3, proofInputs.commitment3);
   await deposit(contractAccount, user4, proofInputs.commitment4);
-
-  console.log("testnet_seeder/deployTestnet.js: init withdraws");
 
   await withdraw(
     contractAccount,
