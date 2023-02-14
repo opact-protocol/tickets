@@ -3,7 +3,7 @@ import { fetch } from "@/services/router";
 import testnetSetup from "../temp/testnet_setup.json";
 
 const baseEnvs = {
-  RELAYER_FEE: "0.25",
+  RELAYER_FEE: "0",
   NEAR_NETWORK: "testnet",
   RPC_URL: "https://rpc.testnet.near.org",
   ACCOUNT_ID: testnetSetup.relayer.account_id,
@@ -43,7 +43,7 @@ test("should return 402 - should specify correct relayer address", async () => {
 
   expect(res.status).toBe(402);
   expect(textRes).toContain(
-    '{"status":"failure","error":"should specify correct relayer address: ade0e80e6ba045a93e69owner.testnet"}'
+    `{"status":"failure","error":"should specify correct relayer address: ${baseEnvs.ACCOUNT_ID}"}`
   );
 });
 
