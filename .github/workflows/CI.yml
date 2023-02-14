@@ -57,9 +57,6 @@ jobs:
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
-      - name: Relayer Setup
-        run: yarn contracts relayer:setup
-
       - name: Relayer Tests
         run: yarn relayer test
 
