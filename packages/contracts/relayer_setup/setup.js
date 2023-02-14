@@ -102,6 +102,24 @@ async function testnetSetup() {
     near,
     random_prefix + "user1.testnet"
   );
+  const user2 = await createAccount(
+    accountCreator,
+    config,
+    near,
+    random_prefix + "user2.testnet"
+  );
+  const user3 = await createAccount(
+    accountCreator,
+    config,
+    near,
+    random_prefix + "user3.testnet"
+  );
+  const user4 = await createAccount(
+    accountCreator,
+    config,
+    near,
+    random_prefix + "user4.testnet"
+  );
   const receiver = await createAccount(
     accountCreator,
     config,
@@ -188,17 +206,31 @@ async function testnetSetup() {
 
   console.log("relayer_setup/setup.js: build commitments");
 
-  await buildCommitments(config, contractAccount, user1, receiver);
+  await buildCommitments(
+    config,
+    contractAccount,
+    user1,
+    user2,
+    user3,
+    user4,
+    receiver
+  );
 
   const proofInputs = readInputs(relayerAccount.accountId);
 
   await registerUser(contractAccount, user1);
+  await registerUser(contractAccount, user2);
+  await registerUser(contractAccount, user3);
+  await registerUser(contractAccount, user4);
   await registerUser(contractAccount, receiver);
   await registerUser(contractAccount, relayerAccount);
 
   console.log("relayer_setup/setup.js: deposit all storages");
 
   await deposit(contractAccount, user1, proofInputs.commitment1);
+  await deposit(contractAccount, user2, proofInputs.commitment2);
+  await deposit(contractAccount, user3, proofInputs.commitment3);
+  await deposit(contractAccount, user4, proofInputs.commitment4);
 
   const user_withdraw_payload = await getWithdrawPayload(
     relayerAccount,
@@ -233,8 +265,17 @@ async function createAccount(accountCreator, config, near, account_id) {
 function readInputs(relayer) {
   return {
     commitment1: JSON.parse(fs.readFileSync("temp/commitment1.json")),
+    commitment2: JSON.parse(fs.readFileSync("temp/commitment2.json")),
+    commitment3: JSON.parse(fs.readFileSync("temp/commitment3.json")),
+    commitment4: JSON.parse(fs.readFileSync("temp/commitment4.json")),
     proof1: JSON.parse(fs.readFileSync("temp/proof1.json")),
+    proof2: JSON.parse(fs.readFileSync("temp/proof2.json")),
+    proof3: JSON.parse(fs.readFileSync("temp/proof3.json")),
+    proof4: JSON.parse(fs.readFileSync("temp/proof4.json")),
     public1: JSON.parse(fs.readFileSync("temp/public1.json")),
+    public2: JSON.parse(fs.readFileSync("temp/public2.json")),
+    public3: JSON.parse(fs.readFileSync("temp/public3.json")),
+    public4: JSON.parse(fs.readFileSync("temp/public4.json")),
     relayer: JSON.parse(
       fs.readFileSync(`.near-credentials/testnet/${relayer}.json`)
     ),
