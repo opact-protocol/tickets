@@ -14,12 +14,12 @@ const { buildCommitments } = require("./prepareCommitments");
 
 module.exports = { setup: testnetSetup };
 
-async function getWithdrawPayload(receiver, proof, publicArgs) {
+async function getWithdrawPayload(relayer, receiver, proof, publicArgs) {
   return {
     root: publicArgs[0],
     nullifier_hash: publicArgs[1],
     recipient: receiver.accountId,
-    relayer: null,
+    relayer: relayer.accountId,
     fee: publicArgs[4],
     refund: publicArgs[5],
     allowlist_root: publicArgs[6],
@@ -108,6 +108,12 @@ async function testnetSetup() {
     near,
     random_prefix + "receiver.testnet"
   );
+  const relayerAccount = await createAccount(
+    accountCreator,
+    config,
+    near,
+    random_prefix + "relayer.testnet"
+  );
 
   // deploy and initialize contract
   const contractWasm = fs.readFileSync("../out/contract.wasm");
@@ -184,16 +190,18 @@ async function testnetSetup() {
 
   await buildCommitments(config, contractAccount, user1, receiver);
 
-  const proofInputs = readInputs();
+  const proofInputs = readInputs(relayerAccount.accountId);
 
   await registerUser(contractAccount, user1);
   await registerUser(contractAccount, receiver);
+  await registerUser(contractAccount, relayerAccount);
 
   console.log("relayer_setup/setup.js: deposit all storages");
 
   await deposit(contractAccount, user1, proofInputs.commitment1);
 
   const user_withdraw_payload = await getWithdrawPayload(
+    relayerAccount,
     receiver,
     proofInputs.proof1,
     proofInputs.public1
@@ -202,6 +210,7 @@ async function testnetSetup() {
   const relayerTestSetup = JSON.stringify({
     hyc_contract: contractAccount.accountId,
     user_withdraw_payload: user_withdraw_payload,
+    relayer: proofInputs.relayer,
   });
 
   fs.writeFileSync("../../relayer/temp/testnet_setup.json", relayerTestSetup);
@@ -221,11 +230,14 @@ async function createAccount(accountCreator, config, near, account_id) {
   }
 }
 
-function readInputs() {
+function readInputs(relayer) {
   return {
     commitment1: JSON.parse(fs.readFileSync("temp/commitment1.json")),
     proof1: JSON.parse(fs.readFileSync("temp/proof1.json")),
     public1: JSON.parse(fs.readFileSync("temp/public1.json")),
+    relayer: JSON.parse(
+      fs.readFileSync(`.near-credentials/testnet/${relayer}.json`)
+    ),
   };
 }
 
