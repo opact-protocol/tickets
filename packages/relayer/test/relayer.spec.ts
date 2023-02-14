@@ -3,7 +3,7 @@ import { fetch } from "@/services/router";
 import testnetSetup from "../temp/testnet_setup.json";
 
 const baseEnvs = {
-  RELAYER_FEE: "0",
+  RELAYER_FEE: "0.25",
   NEAR_NETWORK: "testnet",
   RPC_URL: "https://rpc.testnet.near.org",
   ACCOUNT_ID: testnetSetup.relayer.account_id,
@@ -97,6 +97,7 @@ test("should return 200 - success withdraw", async () => {
       ...testnetSetup.user_withdraw_payload,
     }),
   });
+
   const res = await fetch(baseRequest, baseEnvs as any);
 
   expect(res.status).toBe(200);
