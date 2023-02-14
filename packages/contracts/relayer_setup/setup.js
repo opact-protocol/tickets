@@ -213,7 +213,8 @@ async function testnetSetup() {
     user2,
     user3,
     user4,
-    receiver
+    receiver,
+    relayerAccount
   );
 
   const proofInputs = readInputs(relayerAccount.accountId);
