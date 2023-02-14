@@ -90,7 +90,7 @@ export const relayer = async (
     const transaction = await account.functionCall({
       contractId: HYC_CONTRACT,
       methodName: "withdraw",
-      args: payload,
+      args: { ...payload },
       gas: AttachedGas as any,
     });
 
