@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const web3utils = require("web3-utils");
 const fs = require("fs");
-const { readFileSync } = fs;
+const { readFileSync, writeFile } = fs;
 
 const { providers } = require("near-api-js");
 
@@ -80,21 +80,25 @@ async function buildCommitments(
     const buffer = readFileSync("../../circuits/out/withdraw_js/withdraw.wasm");
     const witnessCalculator = await wc(buffer);
     const buff = await witnessCalculator.calculateWTNSBin(input, 0);
-    fs.writeFileSync(name, buff, function (err) {
+    fs.writeFileSync("temp/" + name, buff, function (err) {
       if (err) throw err;
     });
   }
 
-  async function generate_proof(witnessPath, proofPath, publicPath) {
+  async function generate_proof(number) {
     const { proof, publicSignals } = await plonk.prove(
       "../../circuits/out/withdraw_0000.zkey",
-      witnessPath,
+      `temp/witness${number}.wtns`,
       logger
     );
-    await bfj.write(proofPath, stringifyBigInts(proof), {
+    await bfj.write(`./temp/proof${number}.json`, stringifyBigInts(proof), {
       space: 1,
     });
-    await bfj.write(publicPath, stringifyBigInts(publicSignals), { space: 1 });
+    await bfj.write(
+      `./temp/public${number}.json`,
+      stringifyBigInts(publicSignals),
+      { space: 1 }
+    );
   }
 
   // set accounts that will be used
@@ -265,32 +269,16 @@ async function buildCommitments(
   };
 
   // generate witness
-  await generate_witness(commitment1Input, "temp/witness1.wtns");
-  await generate_witness(commitment2Input, "temp/witness2.wtns");
-  await generate_witness(commitment3Input, "temp/witness3.wtns");
-  await generate_witness(commitment4Input, "temp/witness4.wtns");
+  await generate_witness(commitment1Input, "witness1.wtns");
+  await generate_witness(commitment2Input, "witness2.wtns");
+  await generate_witness(commitment3Input, "witness3.wtns");
+  await generate_witness(commitment4Input, "witness4.wtns");
 
   // generate proofs
-  await generate_proof(
-    "./temp/witness1.wtns",
-    "./temp/proof1.json",
-    "./temp/public1.json"
-  );
-  await generate_proof(
-    "./temp/witness2.wtns",
-    "./temp/proof2.json",
-    "./temp/public2.json"
-  );
-  await generate_proof(
-    "./temp/witness3.wtns",
-    "./temp/proof3.json",
-    "./temp/public3.json"
-  );
-  await generate_proof(
-    "./temp/witness4.wtns",
-    "./temp/proof4.json",
-    "./temp/public4.json"
-  );
+  await generate_proof(1);
+  await generate_proof(2);
+  await generate_proof(3);
+  await generate_proof(4);
 }
 
 async function viewFunction(config, contractId, methodName, args = {}) {
