@@ -35,7 +35,8 @@ async function buildCommitments(
   user2,
   user3,
   user4,
-  receiver
+  receiver,
+  relayer
 ) {
   class Mimc {
     constructor() {
@@ -191,8 +192,8 @@ async function buildCommitments(
     root: path1.pathRoot,
     nullifierHash: mimc.single_hash(commitment1.nullifier),
     recipient: accountsHashes[4], // not taking part in any computations
-    relayer: "0", // not taking part in any computations
-    fee: "0", // not taking part in any computations
+    relayer: await hashAccount(config, contractAccount, relayer), // not taking part in any computations
+    fee: "3", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment1.nullifier,
     secret: commitment1.secret,
@@ -212,8 +213,8 @@ async function buildCommitments(
     root: path2.pathRoot,
     nullifierHash: mimc.single_hash(commitment2.nullifier),
     recipient: accountsHashes[4], // not taking part in any computations
-    relayer: accountsHashes[0], // not taking part in any computations
-    fee: "1000", // not taking part in any computations
+    relayer: await hashAccount(config, contractAccount, relayer), // not taking part in any computations
+    fee: "1", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment2.nullifier,
     secret: commitment2.secret,
@@ -232,8 +233,8 @@ async function buildCommitments(
     root: path3.pathRoot,
     nullifierHash: mimc.single_hash(commitment3.nullifier),
     recipient: accountsHashes[4], // not taking part in any computations
-    relayer: accountsHashes[0], // not taking part in any computations
-    fee: "1000", // not taking part in any computations
+    relayer: await hashAccount(config, contractAccount, relayer), // not taking part in any computations
+    fee: "1", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment3.nullifier,
     secret: commitment3.secret,
@@ -252,8 +253,8 @@ async function buildCommitments(
     root: path4.pathRoot,
     nullifierHash: mimc.single_hash(commitment4.nullifier),
     recipient: accountsHashes[4], // not taking part in any computations
-    relayer: accountsHashes[0], // not taking part in any computations
-    fee: "1000", // not taking part in any computations
+    relayer: await hashAccount(config, contractAccount, relayer), // not taking part in any computations
+    fee: "3", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment4.nullifier,
     secret: commitment4.secret,

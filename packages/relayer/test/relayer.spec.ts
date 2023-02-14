@@ -53,8 +53,8 @@ test("should return 402 - should at least minimum relayer fee", async () => {
     headers: HEADERS,
     body: JSON.stringify({
       ...testnetSetup.user_withdraw_payload,
-      relayer: baseEnvs.ACCOUNT_ID,
-      quantity: 3,
+      fee: 0,
+      quantity: 10,
     }),
   });
 
@@ -63,7 +63,7 @@ test("should return 402 - should at least minimum relayer fee", async () => {
   const textRes = await res.text();
   expect(res.status).toBe(402);
   expect(textRes).toContain(
-    '{"status":"failure","error":"should at least minimum relayer fee: 1"}'
+    '{"status":"failure","error":"should at least minimum relayer fee: 3"}'
   );
 });
 
@@ -74,7 +74,6 @@ test("should return 402 - Withdraw is not valid", async () => {
     body: JSON.stringify({
       ...testnetSetup.user_withdraw_payload,
       nullifier_hash: "1234",
-      relayer: baseEnvs.ACCOUNT_ID,
       fee: "3",
     }),
   });
