@@ -23,8 +23,9 @@ export function Header() {
           <Container className="relative z-50 flex justify-between py-4">
             <div className="relative z-10 flex items-center gap-16">
               <a href="/" aria-label="Home">
+                <img className="sm:hidden h-6 w-auto" src="/mini-logo.svg" />
                 <img
-                  className="h-10 w-auto"
+                  className="hidden h-6 w-auto sm:block"
                   src="./assets/logo-horizontal.png"
                 />
               </a>
@@ -37,7 +38,7 @@ export function Header() {
                   allowList && accountId
                     ? "bg-green-light"
                     : "bg-soft-blue-normal"
-                } flex items-center justify-center space-x-[8px] text-black px-[24px] py-[10px] rounded-full w-full font-normal ${
+                } flex h-[3rem] sm:h-full items-center justify-center space-x-[8px] text-black px-[24px] py-[12px] sm:py-[10px] rounded-full w-full font-normal ${
                   allowList && accountId
                     ? "hover:bg-green-medium"
                     : "hover:bg-hover-button"
@@ -49,9 +50,9 @@ export function Header() {
                   <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
                 )}
                 <span
-                  className={`whitespace-nowrap text-soft-blue-medium font-bold text-base ${allowList &&
-                    accountId &&
-                    "text-success"}`}
+                  className={`hidden sm:block whitespace-nowrap text-soft-blue-medium font-bold text-base ${
+                    allowList && accountId && "text-success"
+                  }`}
                 >
                   Allowlist
                 </span>
@@ -70,7 +71,7 @@ export function Header() {
               ) : (
                 <button
                   onClick={() => signOut()}
-                  className="flex items-center space-x-[8px] bg-soft-blue px-[24px] py-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
+                  className="flex items-center space-x-[8px] bg-soft-blue px-[24px] py-[12px] rounded-full w-full max-w-[150px] sm:max-w-full font-[400] hover:opacity-[.9]"
                 >
                   <span
                     className="w-[150px] text-white truncate"
