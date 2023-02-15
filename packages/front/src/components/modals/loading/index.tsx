@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 
 export const LoadingModal = ({
   isOpen,
-  onClose
+  onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -36,9 +36,9 @@ export const LoadingModal = ({
             >
               <Dialog.Panel className="w-screen h-screen flex items-center justify-center transform overflow-hidden p-6 text-left align-middle transition-all relative">
                 <div className="flex flex-col items-center justify-center gap-3 w-full max-w-[450px] bg-white p-5 rounded-[35px] shadow-xl">
-                  <div className="flex items-center justify-center gap-5">
-                    <div className="w-[36px] h-[36px] border-[4px] border-dark-grafiti border-l-transparent rounded-[50%] animate-spin" />
-                    <p className="text-dark-grafiti-medium text-lg font-bold">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+                    <div className="w-[25px] h-[25px] sm:w-[36px] sm:h-[36px] border-[4px] border-dark-grafiti border-l-transparent rounded-[50%] animate-spin" />
+                    <p className="text-dark-grafiti-medium text-center text-sm sm:text-lg font-bold">
                       Generating your zero knowledge proof
                     </p>
                   </div>

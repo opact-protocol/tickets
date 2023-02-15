@@ -24,7 +24,12 @@ export function Feedback() {
         >
           <ClipboardDocumentListIcon className="w-[18px]" />
 
-          <span className="text-lg font-medium">Feedback</span>
+          <span
+            className="text-lg font-medium hidden sm:block"
+            title="Feedback"
+          >
+            Feedback
+          </span>
         </div>
       </button>
 
@@ -46,7 +51,12 @@ export function Feedback() {
         >
           <PlayCircleIcon className="w-[18px]" />
 
-          <span className="text-lg font-medium">Tutorials</span>
+          <span
+            className="text-lg font-medium hidden sm:block"
+            title="Tutorials"
+          >
+            Tutorials
+          </span>
         </div>
       </button>
     </div>
