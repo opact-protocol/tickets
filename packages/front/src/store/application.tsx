@@ -261,11 +261,17 @@ export const useApplication = create<{
   },
 
   createSnarkProof: async (input) => {
+    console.log(
+      `CRIANDO A PROVA ${new Date().getHours}: ${new Date().getMinutes}`
+    );
     // _input, wasmFile, zkeyFileName, logger
     const { proof, publicSignals } = await plonk.fullProve(
       input,
       "./verifier.wasm",
       "./circuit.zkey"
+    );
+    console.log(
+      `PROVA CRIADA: ${new Date().getHours}: ${new Date().getMinutes}`
     );
 
     return { proof, publicSignals };
