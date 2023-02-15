@@ -6,6 +6,7 @@ const Pages = () => {
 };
 
 export const App = () => {
+  console.log(window.performance.memory);
   return (
     <Router>
       <Pages />
