@@ -6,22 +6,18 @@
       "status": 200
     },
     {
+      "src": "/circuit.zkey",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, must-revalidate"
+      },
+      "status": 200
+    },
+    {
       "src": "/verifier.wasm",
       "headers": {
         "Cache-Control": "public, max-age=31536000, must-revalidate"
       },
       "status": 200
-    }
-  ],
-  "headers": [
-    {
-      "source": "/circuit.zkey",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, s-maxage=1, must-revalidate"
-        }
-      ]
     }
   ],
   "github": {
