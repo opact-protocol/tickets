@@ -6,7 +6,7 @@
   "module": "./dist/index.mjs",
   "scripts": {
     "build": "node build.js",
-    "dev": "miniflare --live-reload --debug --modules dist/index.mjs --env .env.dev",
+    "dev": "miniflare --live-reload --debug --modules dist/index.mjs --env .env",
     "dev:remote": "wrangler dev",
     "test": "(cd ../contracts && yarn relayer:setup) && yarn build && node --experimental-vm-modules --no-warnings node_modules/.bin/jest",
     "types:check": "tsc && tsc -p test/tsconfig.json",
