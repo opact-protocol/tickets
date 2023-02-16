@@ -24,13 +24,3 @@ export interface RelayerPayload {
   wxi: any;
   wxi_w: any;
 }
-
-export type RelayerResponse =
-  | {
-      status: "success";
-      transaction: string;
-    }
-  | {
-      status: "failure";
-      error: any;
-    };

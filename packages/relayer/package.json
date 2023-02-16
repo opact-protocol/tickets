@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
+    "@tsndr/cloudflare-worker-router": "^2.3.2",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",

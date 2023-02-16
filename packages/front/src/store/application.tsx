@@ -9,6 +9,7 @@ import {
 import { mimc } from "@/services/mimc";
 import { buildTree } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
+import axios from "axios";
 
 const DEFAULT_HASH_DATA = {
   amount: 1,
@@ -246,20 +247,22 @@ export const useApplication = create<{
   },
 
   sendWithdraw: async (connection, account) => {
-    await delay(1000);
+    // await delay(1000);
 
-    const wallet = await connection.wallet();
+    // const wallet = await connection.wallet();
 
-    const transactions: any[] = [];
+    // const transactions: any[] = [];
 
-    const publicArgs = get().publicArgs;
-    const proof = get().proof;
+    // const publicArgs = get().publicArgs;
+    // const proof = get().proof;
 
-    transactions.push(
-      getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
-    );
+    // transactions.push(
+    //   getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
+    // );
 
-    await executeMultipleTransactions(transactions, wallet);
+    // await executeMultipleTransactions(transactions, wallet);
+
+    await relayer.post("/relay", publicArgs);
   },
 
   createSnarkProof: async input => {
