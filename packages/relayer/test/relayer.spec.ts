@@ -1,4 +1,10 @@
+import { getRouter } from "@/index";
 import testnetSetup from "../temp/testnet_setup.json";
+
+const router = getRouter();
+
+const errorStatus = 500;
+const successStatus = 200;
 
 const HEADERS = {
   "Content-Type": "application/json",
@@ -13,23 +19,25 @@ const baseEnvs = {
   HYC_CONTRACT: testnetSetup.hyc_contract,
 };
 
-test("should return 402 - payload not is valid", async () => {
+test("should return error - payload not is valid", async () => {
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
   });
 
-  const res = await fetch(baseRequest, baseEnvs as any);
+  const res = await router.handle(baseEnvs as any, baseRequest);
 
   const textRes = await res.text();
 
-  expect(res.status).toBe(402);
+  console.log(textRes);
+
+  expect(res.status).toBe(errorStatus);
   expect(textRes).toContain(
-    '{"status":"failure","error":"payload not is valid"}'
+    '{"status":"failure","error":"Your withdraw payload is not valid"}'
   );
 });
 
-test("should return 402 - should specify correct relayer address", async () => {
+test("should return error - should specify correct relayer address", async () => {
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
@@ -39,17 +47,17 @@ test("should return 402 - should specify correct relayer address", async () => {
     }),
   });
 
-  const res = await fetch(baseRequest, baseEnvs as any);
+  const res = await router.handle(baseEnvs as any, baseRequest);
 
   const textRes = await res.text();
 
-  expect(res.status).toBe(402);
+  expect(res.status).toBe(errorStatus);
   expect(textRes).toContain(
     `{"status":"failure","error":"should specify correct relayer address: ${baseEnvs.ACCOUNT_ID}"}`
   );
 });
 
-test("should return 402 - should at least minimum relayer fee", async () => {
+test("should return error - should at least minimum relayer fee", async () => {
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
@@ -60,16 +68,16 @@ test("should return 402 - should at least minimum relayer fee", async () => {
     }),
   });
 
-  const res = await fetch(baseRequest, baseEnvs as any);
+  const res = await router.handle(baseEnvs as any, baseRequest);
 
   const textRes = await res.text();
-  expect(res.status).toBe(402);
+  expect(res.status).toBe(errorStatus);
   expect(textRes).toContain(
     '{"status":"failure","error":"should at least minimum relayer fee: 3"}'
   );
 });
 
-test("should return 402 - Withdraw is not valid", async () => {
+test("should return error - Withdraw is not valid", async () => {
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
@@ -80,17 +88,17 @@ test("should return 402 - Withdraw is not valid", async () => {
     }),
   });
 
-  const res = await fetch(baseRequest, baseEnvs as any);
+  const res = await router.handle(baseEnvs as any, baseRequest);
 
   const textRes = await res.text();
 
-  expect(res.status).toBe(402);
+  expect(res.status).toBe(errorStatus);
   expect(textRes).toContain(
     '{"status":"failure","error":"Withdraw is not valid"}'
   );
 });
 
-test("should return 200 - success withdraw", async () => {
+test("should return sucess - withdraw", async () => {
   const baseRequest = new Request("http://localhost/relay", {
     method: "POST",
     headers: HEADERS,
@@ -99,7 +107,7 @@ test("should return 200 - success withdraw", async () => {
     }),
   });
 
-  const res = await fetch(baseRequest, baseEnvs as any);
+  const res = await router.handle(baseEnvs as any, baseRequest);
 
-  expect(res.status).toBe(200);
+  expect(res.status).toBe(successStatus);
 }, 50000);
