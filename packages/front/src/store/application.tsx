@@ -31,6 +31,7 @@ function parseNote(note: string): {
 }
 
 const CONTRACT = useEnv("VITE_CONTRACT");
+const CIRCUIT_URL = useEnv("CIRCUIT_URL");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -264,7 +265,7 @@ export const useApplication = create<{
     const { proof, publicSignals } = await plonk.fullProve(
       input,
       "./verifier.wasm",
-      "https://www.hideyour.cash/circuit.zkey"
+      CIRCUIT_URL
     );
 
     return { proof, publicSignals };
