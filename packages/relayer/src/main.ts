@@ -1,7 +1,6 @@
 import Big from "big.js";
 import { Env } from "./interfaces";
 import { AttachedGas } from "./constants";
-import { getResponse } from "./services/router";
 import { setupNear, viewFunction } from "./services/near";
 import { RelayerPayload } from "./interfaces/relayer";
 import { RouterRequest } from "@tsndr/cloudflare-worker-router";
@@ -21,10 +20,10 @@ export const relayer = async (
     console.log("relayer/main.tsx: POST relay with payload");
   } catch (e) {
     return {
-      status: 402,
+      status: errorStatus,
       body: JSON.stringify({
         status: "failure",
-        error: "payload not is valid",
+        error: "Your withdraw payload is not valid",
       }),
     };
   }
@@ -55,7 +54,7 @@ export const relayer = async (
 
     if (payloadFee.lt(minimumFee)) {
       return {
-        status: 402,
+        status: errorStatus,
         body: JSON.stringify({
           status: "failure",
           error: `should at least minimum relayer fee: ${minimumFee.toFixed(
@@ -80,10 +79,10 @@ export const relayer = async (
     console.warn(error);
 
     return {
-      status: 402,
+      status: errorStatus,
       body: JSON.stringify({
         status: "failure",
-        error: "Withdraw is not valid",
+        error: "Your withdraw payload is not valid",
       }),
     };
   }
