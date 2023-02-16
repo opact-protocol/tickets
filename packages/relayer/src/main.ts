@@ -38,7 +38,7 @@ export const relayer = async (
   // check if payload uses correct relayer
   if (payload.relayer !== ACCOUNT_ID) {
     return {
-      status: 402,
+      status: errorStatus,
       body: JSON.stringify({
         status: "failure",
         error: `should specify correct relayer address: ${ACCOUNT_ID}`,
