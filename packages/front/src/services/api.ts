@@ -7,5 +7,3 @@ export const api = axios.create({
     "Access-Control-Allow-Origin": "*",
   },
 });
-
-export default api;

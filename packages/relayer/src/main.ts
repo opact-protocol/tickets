@@ -4,30 +4,29 @@ import { AttachedGas } from "./constants";
 import { getResponse } from "./services/router";
 import { setupNear, viewFunction } from "./services/near";
 import { RelayerPayload } from "./interfaces/relayer";
+import { RouterRequest } from "@tsndr/cloudflare-worker-router";
 
 const errorStatus = 500;
 const successStatus = 200;
 
 export const relayer = async (
-  request: Request,
+  request: RouterRequest,
   env: Env
-): Promise<Response> => {
+): Promise<{ status: number; body: string }> => {
   let payload: RelayerPayload;
 
   try {
-    payload = await request.json();
+    payload = await request.body;
 
     console.log("relayer/main.tsx: POST relay with payload");
   } catch (e) {
-    console.warn(e);
-
-    return getResponse(
-      {
+    return {
+      status: 402,
+      body: JSON.stringify({
         status: "failure",
-        error: "Your withdraw payload is not valid",
-      },
-      errorStatus
-    );
+        error: "payload not is valid",
+      }),
+    };
   }
 
   const { RPC_URL, ACCOUNT_ID, RELAYER_FEE, HYC_CONTRACT } = env;
@@ -39,13 +38,13 @@ export const relayer = async (
 
   // check if payload uses correct relayer
   if (payload.relayer !== ACCOUNT_ID) {
-    return getResponse(
-      {
+    return {
+      status: 402,
+      body: JSON.stringify({
         status: "failure",
         error: `should specify correct relayer address: ${ACCOUNT_ID}`,
-      },
-      errorStatus
-    );
+      }),
+    };
   }
 
   try {
@@ -55,15 +54,15 @@ export const relayer = async (
     const payloadFee = new Big(payload.fee || 0);
 
     if (payloadFee.lt(minimumFee)) {
-      return getResponse(
-        {
+      return {
+        status: 402,
+        body: JSON.stringify({
           status: "failure",
           error: `should at least minimum relayer fee: ${minimumFee.toFixed(
             0
           )}`,
-        },
-        errorStatus
-      );
+        }),
+      };
     }
   } catch (e) {
     console.warn(e);
@@ -80,13 +79,13 @@ export const relayer = async (
   } catch (error) {
     console.warn(error);
 
-    return getResponse(
-      {
+    return {
+      status: 402,
+      body: JSON.stringify({
         status: "failure",
-        error: "Your withdraw payload is not valid",
-      },
-      errorStatus
-    );
+        error: "Withdraw is not valid",
+      }),
+    };
   }
 
   // since payload is valid, submit transaction and return hash
@@ -103,19 +102,21 @@ export const relayer = async (
       transaction
     );
 
-    return getResponse({
-      status: "success",
-      transaction,
-    });
+    return {
+      status: successStatus,
+      body: JSON.stringify({
+        transaction,
+      }),
+    };
   } catch (e) {
     console.warn(e);
 
-    return getResponse(
-      {
+    return {
+      status: errorStatus,
+      body: JSON.stringify({
         status: "failure",
         error: "We have an error to process your withdraw",
-      },
-      errorStatus
-    );
+      }),
+    };
   }
 };
