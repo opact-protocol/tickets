@@ -1,10 +1,10 @@
-import { create } from "zustand";
+import create from "zustand";
 import { plonk } from "snarkjs";
 import { randomBN } from "@/utils/crypto-utils";
 import {
   getTransaction,
   executeMultipleTransactions,
-  viewFunction
+  viewFunction,
 } from "@/utils/tools";
 import { mimc } from "@/services/mimc";
 import { buildTree } from "@/services";
@@ -14,12 +14,10 @@ const DEFAULT_HASH_DATA = {
   amount: 1,
   relayer_fee: 0.2,
   tokens_to_receive: 0.8,
-  timestamp: Date.now()
+  timestamp: Date.now(),
 };
 
-function parseNote(
-  note: string
-): {
+function parseNote(note: string): {
   secret: string;
   nullifier: string;
   account_hash: string;
@@ -28,13 +26,13 @@ function parseNote(
   return {
     secret: splitString[0],
     nullifier: splitString[1],
-    account_hash: splitString[2]
+    account_hash: splitString[2],
   };
 }
 
 const CONTRACT = useEnv("VITE_CONTRACT");
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const useApplication = create<{
   proof: any;
@@ -54,8 +52,11 @@ export const useApplication = create<{
   sendWhitelist: (connection: any, account: string) => Promise<any>;
 }>((set, get) => ({
   proof: null,
+
   publicArgs: null,
+
   hash: null,
+
   note: null,
 
   prepareDeposit: async (connection, account) => {
@@ -71,7 +72,7 @@ export const useApplication = create<{
       CONTRACT,
       "view_account_hash",
       {
-        account_id: account
+        account_id: account,
       }
     );
 
@@ -81,7 +82,7 @@ export const useApplication = create<{
       nullifier,
       secrets_hash,
       account_hash,
-      commitment
+      commitment,
     });
 
     const note =
@@ -93,7 +94,7 @@ export const useApplication = create<{
 
     set({
       hash: secrets_hash,
-      note
+      note,
     });
 
     return secrets_hash;
@@ -110,7 +111,7 @@ export const useApplication = create<{
         CONTRACT,
         "deposit",
         {
-          secrets_hash: get().hash
+          secrets_hash: get().hash,
         },
         amount
       )
@@ -123,7 +124,7 @@ export const useApplication = create<{
     await delay(1000);
 
     return {
-      ...DEFAULT_HASH_DATA
+      ...DEFAULT_HASH_DATA,
     };
   },
 
@@ -135,7 +136,7 @@ export const useApplication = create<{
       CONTRACT,
       "view_account_hash",
       {
-        account_id: recipient
+        account_id: recipient,
       }
     );
 
@@ -150,7 +151,7 @@ export const useApplication = create<{
       const { commitmentsTree, whitelistTree } = await buildTree();
 
       const commitmentProof = commitmentsTree.proof(commitment);
-      console.log("oi");
+
       const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
 
       const input = {
@@ -170,7 +171,7 @@ export const useApplication = create<{
         // reference to original depositor to enforce whitelist
         originDepositor: parsedNote.account_hash,
         whitelistPathElements: whitelistProof.pathElements,
-        whitelistPathIndices: whitelistProof.pathIndices
+        whitelistPathIndices: whitelistProof.pathIndices,
       };
 
       // const { tree, root } = await buildTree(parseNote);
@@ -187,31 +188,31 @@ export const useApplication = create<{
         allowlist_root: publicSignals[6],
         a: {
           x: proof["A"][0],
-          y: proof["A"][1]
+          y: proof["A"][1],
         },
         b: {
           x: proof["B"][0],
-          y: proof["B"][1]
+          y: proof["B"][1],
         },
         c: {
           x: proof["C"][0],
-          y: proof["C"][1]
+          y: proof["C"][1],
         },
         z: {
           x: proof["Z"][0],
-          y: proof["Z"][1]
+          y: proof["Z"][1],
         },
         t_1: {
           x: proof["T1"][0],
-          y: proof["T1"][1]
+          y: proof["T1"][1],
         },
         t_2: {
           x: proof["T2"][0],
-          y: proof["T2"][1]
+          y: proof["T2"][1],
         },
         t_3: {
           x: proof["T3"][0],
-          y: proof["T3"][1]
+          y: proof["T3"][1],
         },
         eval_a: proof["eval_a"],
         eval_b: proof["eval_b"],
@@ -222,19 +223,19 @@ export const useApplication = create<{
         eval_r: proof["eval_r"],
         wxi: {
           x: proof["Wxi"][0],
-          y: proof["Wxi"][1]
+          y: proof["Wxi"][1],
         },
         wxi_w: {
           x: proof["Wxiw"][0],
-          y: proof["Wxiw"][1]
-        }
+          y: proof["Wxiw"][1],
+        },
       };
 
       console.timeEnd("SNARK proof time");
 
       set({
         proof,
-        publicArgs
+        publicArgs,
       });
     } catch (e) {
       console.error("prepareWithdraw", e);
@@ -262,12 +263,43 @@ export const useApplication = create<{
     await executeMultipleTransactions(transactions, wallet);
   },
 
-  createSnarkProof: async input => {
+  createSnarkProof: async (input) => {
+    console.log(
+      `CRIANDO A PROVA ${new Date().getHours}: ${new Date().getMinutes}`
+    );
+
+    const res = await fetch("./circuit.zkey");
+
+    const reader = res.body?.getReader();
+
+    const stream = new ReadableStream({
+      start(controller) {
+        return pump();
+        function pump() {
+          return reader?.read().then(({ done, value }) => {
+            // When no more data needs to be consumed, close the stream
+            if (done) {
+              controller.close();
+              return;
+            }
+            // Enqueue the next data chunk into our target stream
+            controller.enqueue(value);
+            return pump();
+          });
+        }
+      },
+    });
+
+    const circuitUrl = URL.createObjectURL(await new Response(stream).blob());
+
     // _input, wasmFile, zkeyFileName, logger
     const { proof, publicSignals } = await plonk.fullProve(
       input,
       "./verifier.wasm",
-      "./circuit.zkey"
+      circuitUrl
+    );
+    console.log(
+      `PROVA CRIADA: ${new Date().getHours}: ${new Date().getMinutes}`
     );
 
     return { proof, publicSignals };
@@ -285,12 +317,11 @@ export const useApplication = create<{
         "allowlist",
         {
           account_id: accountId,
-          auth_code: "nearcon"
+          auth_code: "nearcon",
         },
         ""
       )
     );
-
-    executeMultipleTransactions(transactions, wallet);
-  }
+    await executeMultipleTransactions(transactions, wallet);
+  },
 }));
