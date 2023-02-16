@@ -1,6 +1,8 @@
-import { HEADERS } from "@/constants";
-import { fetch } from "@/services/router";
 import testnetSetup from "../temp/testnet_setup.json";
+
+const HEADERS = {
+  "Content-Type": "application/json",
+};
 
 const baseEnvs = {
   RELAYER_FEE: "0.25",
