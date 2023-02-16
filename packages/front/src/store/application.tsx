@@ -52,11 +52,8 @@ export const useApplication = create<{
   sendWhitelist: (connection: any, account: string) => Promise<any>;
 }>((set, get) => ({
   proof: null,
-
   publicArgs: null,
-
   hash: null,
-
   note: null,
 
   prepareDeposit: async (connection, account) => {
@@ -296,10 +293,7 @@ export const useApplication = create<{
     const { proof, publicSignals } = await plonk.fullProve(
       input,
       "./verifier.wasm",
-      circuitUrl
-    );
-    console.log(
-      `PROVA CRIADA: ${new Date().getHours}: ${new Date().getMinutes}`
+      "./circuit.zkey"
     );
 
     return { proof, publicSignals };
