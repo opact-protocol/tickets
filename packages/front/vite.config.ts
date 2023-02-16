@@ -2,9 +2,9 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import Pages from "vite-plugin-pages";
 import react from "@vitejs/plugin-react";
-import reactRefresh from "@vitejs/plugin-react-refresh";
+import { VitePWA } from "vite-plugin-pwa";
 
-const inject = require("@rollup/plugin-inject");
+import inject from "@rollup/plugin-inject";
 
 export default defineConfig(async () => {
   const { default: stdLibBrowser } = await import("node-stdlib-browser");
@@ -12,55 +12,44 @@ export default defineConfig(async () => {
   return {
     plugins: [
       react(),
-      reactRefresh(),
       Pages({
-        pagesDir: "src/pages"
+        pagesDir: "src/pages",
       }),
       {
         ...inject({
           global: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "global"
+            "global",
           ],
           process: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "process"
+            "process",
           ],
           Buffer: [
             require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
-            "Buffer"
-          ]
+            "Buffer",
+          ],
         }),
-        enforce: "post"
-      }
+        enforce: "post",
+      },
     ],
     envPrefix: "VITE_",
     build: {
       target: ["esNext"],
       rollupOptions: {
         output: {
-          format: "es"
-        }
-      }
+          format: "es",
+        },
+      },
     },
     optimizeDeps: {
-      include: ["buffer", "process"]
-    },
-    server: {
-      port: 3000,
-      proxy: {
-        "/api": {
-          target: "http://localhost:8081",
-          changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, "")
-        }
-      }
+      include: ["buffer", "process"],
     },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
-        ...stdLibBrowser
-      }
-    }
+        ...stdLibBrowser,
+      },
+    },
   };
 });
