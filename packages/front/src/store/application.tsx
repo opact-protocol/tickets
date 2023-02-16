@@ -251,7 +251,6 @@ export const useApplication = create<{
     const transactions: any[] = [];
 
     const publicArgs = get().publicArgs;
-    const proof = get().proof;
 
     transactions.push(
       getTransaction(account, CONTRACT, "withdraw", publicArgs, "0")
