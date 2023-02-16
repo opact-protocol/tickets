@@ -5,6 +5,9 @@ import { getResponse } from "./services/router";
 import { setupNear, viewFunction } from "./services/near";
 import { RelayerPayload } from "./interfaces/relayer";
 
+const errorStatus = 500;
+const successStatus = 200;
+
 export const relayer = async (
   request: Request,
   env: Env
@@ -17,12 +20,13 @@ export const relayer = async (
     console.log("relayer/main.tsx: POST relay with payload");
   } catch (e) {
     console.warn(e);
+
     return getResponse(
       {
         status: "failure",
-        error: "payload not is valid",
+        error: "Your withdraw payload is not valid",
       },
-      402
+      errorStatus
     );
   }
 
@@ -40,7 +44,7 @@ export const relayer = async (
         status: "failure",
         error: `should specify correct relayer address: ${ACCOUNT_ID}`,
       },
-      402
+      errorStatus
     );
   }
 
@@ -58,14 +62,14 @@ export const relayer = async (
             0
           )}`,
         },
-        402
+        errorStatus
       );
     }
   } catch (e) {
     console.warn(e);
   }
 
-  // check if payload is valid
+  // check if withdraw payload is valid
   try {
     await viewFunction(
       RPC_URL,
@@ -79,9 +83,9 @@ export const relayer = async (
     return getResponse(
       {
         status: "failure",
-        error: "Withdraw is not valid",
+        error: "Your withdraw payload is not valid",
       },
-      402
+      errorStatus
     );
   }
 
@@ -109,9 +113,9 @@ export const relayer = async (
     return getResponse(
       {
         status: "failure",
-        error: "Error on withdraw",
+        error: "We have an error to process your withdraw",
       },
-      402
+      errorStatus
     );
   }
 };
