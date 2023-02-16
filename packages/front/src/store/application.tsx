@@ -261,34 +261,6 @@ export const useApplication = create<{
   },
 
   createSnarkProof: async (input) => {
-    console.log(
-      `CRIANDO A PROVA ${new Date().getHours}: ${new Date().getMinutes}`
-    );
-
-    const res = await fetch("./circuit.zkey");
-
-    const reader = res.body?.getReader();
-
-    const stream = new ReadableStream({
-      start(controller) {
-        return pump();
-        function pump() {
-          return reader?.read().then(({ done, value }) => {
-            // When no more data needs to be consumed, close the stream
-            if (done) {
-              controller.close();
-              return;
-            }
-            // Enqueue the next data chunk into our target stream
-            controller.enqueue(value);
-            return pump();
-          });
-        }
-      },
-    });
-
-    const circuitUrl = URL.createObjectURL(await new Response(stream).blob());
-
     // _input, wasmFile, zkeyFileName, logger
     const { proof, publicSignals } = await plonk.fullProve(
       input,
