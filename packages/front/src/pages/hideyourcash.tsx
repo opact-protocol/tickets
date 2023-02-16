@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 const methods = {
   deposit: "hyc-deposits",
-  allowlist: "hyc-allowlists"
+  allowlist: "hyc-allowlists",
 };
 
 export const handleOpenModal = (callback: (value: boolean) => void) => {
@@ -63,7 +63,7 @@ export function Index() {
 
   useEffect(() => {
     document.body.style.background = "#e8eaff";
-    handleOpenModal(show => setShowModal(show));
+    handleOpenModal((show) => setShowModal(show));
   });
   return (
     <>

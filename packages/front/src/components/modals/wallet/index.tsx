@@ -11,7 +11,7 @@ export function WalletSelectorModal() {
   const [modules, setModules] = useState<ModuleState[]>([]);
 
   useEffect(() => {
-    const subscription = selector?.store.observable.subscribe(state => {
+    const subscription = selector?.store.observable.subscribe((state) => {
       state.modules.sort((current, next) => {
         if (current.metadata.deprecated === next.metadata.deprecated) {
           return 0;
@@ -27,8 +27,6 @@ export function WalletSelectorModal() {
 
   const handleWalletClick = async (module: ModuleState) => {
     try {
-      console.log(module);
-
       const { available } = module.metadata;
 
       if (module.type === "injected" && !available) {
@@ -43,8 +41,9 @@ export function WalletSelectorModal() {
 
       await wallet.signIn({
         contractId: useEnv("VITE_CONTRACT"),
-        methodNames: []
+        methodNames: [],
       });
+      wallet.id === "meteor-wallet" && window.location.reload();
     } catch (e) {
       console.warn(e);
     }
@@ -84,7 +83,7 @@ export function WalletSelectorModal() {
                 </div>
 
                 <div className="space-y-[12px] flex flex-col">
-                  {modules.map(module => (
+                  {modules.map((module) => (
                     <button
                       key={"wallet-selector-modal-module" + module.id}
                       onClick={() => handleWalletClick(module)}
