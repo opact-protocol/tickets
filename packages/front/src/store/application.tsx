@@ -264,7 +264,7 @@ export const useApplication = create<{
     const { proof, publicSignals } = await plonk.fullProve(
       input,
       "./verifier.wasm",
-      "./circuit.zkey"
+      "https://www.hideyour.cash/circuit.zkey"
     );
 
     return { proof, publicSignals };
