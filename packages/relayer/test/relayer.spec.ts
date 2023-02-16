@@ -22,10 +22,10 @@ test("should return error - should specify correct relayer address", async () =>
     url: "http://localhost/relay",
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify({
+    body: {
       ...testnetSetup.user_withdraw_payload,
       relayer: "foo.ba",
-    }),
+    },
   };
 
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
@@ -41,11 +41,11 @@ test("should return error - should at least minimum relayer fee", async () => {
     url: "http://localhost/relay",
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify({
+    body: {
       ...testnetSetup.user_withdraw_payload,
       fee: 0,
       quantity: 10,
-    }),
+    },
   };
 
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
@@ -61,11 +61,11 @@ test("should return error - Your withdraw payload is not valid", async () => {
     url: "http://localhost/relay",
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify({
+    body: {
       ...testnetSetup.user_withdraw_payload,
       nullifier_hash: "1234",
       fee: "3",
-    }),
+    },
   };
 
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
@@ -81,9 +81,9 @@ test("should return sucess - withdraw", async () => {
     url: "http://localhost/relay",
     method: "POST",
     headers: HEADERS,
-    body: JSON.stringify({
+    body: {
       ...testnetSetup.user_withdraw_payload,
-    }),
+    },
   };
 
   const { status } = await relayer(baseRequest as any, baseEnvs as any);
