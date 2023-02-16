@@ -7,9 +7,7 @@ const router = new Router<Env>();
 
 // Enabling build in CORS support
 router.cors({
-  allowOrigin: "*",
-  allowMethods: "*",
-  allowHeaders: "*",
+  allowMethods: "POST, GET",
 });
 
 // Register global middleware
