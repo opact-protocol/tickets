@@ -12,13 +12,9 @@ export const relayer = async (
   request: RouterRequest,
   env: Env
 ): Promise<{ status: number; body: string }> => {
-  let payload: RelayerPayload;
+  const payload: RelayerPayload = request.body;
 
-  try {
-    payload = await request.body;
-
-    console.log("relayer/main.tsx: POST relay with payload");
-  } catch (e) {
+  if (!payload) {
     return {
       status: errorStatus,
       body: JSON.stringify({
@@ -65,6 +61,14 @@ export const relayer = async (
     }
   } catch (e) {
     console.warn(e);
+
+    return {
+      status: errorStatus,
+      body: JSON.stringify({
+        status: "failure",
+        error: "should at least minimum relayer fee",
+      }),
+    };
   }
 
   // check if withdraw payload is valid
