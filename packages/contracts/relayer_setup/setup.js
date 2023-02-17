@@ -248,6 +248,21 @@ async function testnetSetup() {
 
   fs.writeFileSync("../../relayer/temp/testnet_setup.json", relayerTestSetup);
 
+  if (isCI) {
+    console.log("The code is running on a CI server");
+
+    core.exportVariable("TESTNET_HYC_CONTRACT", contractAccount.accountId);
+
+    core.exportVariable(
+      "TESTNET_RELAYER_ACCOUNT_ID",
+      proofInputs.relayer.account_id
+    );
+    core.exportVariable(
+      "TESTNET_RELAYER_PRIVATE_KEY",
+      proofInputs.relayer.private_key
+    );
+  }
+
   process.exit();
 }
 

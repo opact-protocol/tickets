@@ -1,4 +1,4 @@
-name = "miniflare-typescript-esbuild-jest"
+name = "hydeyour-cash production relayer"
 main = "dist/index.mjs"
 compatibility_date = "2022-05-28"
 node_compat = true
