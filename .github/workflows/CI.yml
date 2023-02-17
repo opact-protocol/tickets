@@ -183,7 +183,7 @@ jobs:
         env:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ secrests.TESTNET_RELAYER_ACCOUNT_ID }}
-          PRIVATE_KEY: ${{ secrests.TESTNET_RELAYER_PRIVATE_KEY }}
+          ACCOUNT_ID: ${{ secrets.TESTNET_RELAYER_ACCOUNT_ID }}
+          PRIVATE_KEY: ${{ secrets.TESTNET_RELAYER_PRIVATE_KEY }}
           HYC_CONTRACT: ${{ secrets.TESTNET_HYC_CONTRACT }}
           RPC_URL: "https://rpc.testnet.near.org"
