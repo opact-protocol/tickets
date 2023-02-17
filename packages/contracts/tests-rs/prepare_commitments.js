@@ -11,7 +11,7 @@ const { buildMimcSponge } = circomlibjs;
 const fixedMerkleTree = require("fixed-merkle-tree");
 const { MerkleTree } = fixedMerkleTree;
 
-const wc = require("../../circuits/out/withdraw_js/witness_calculator.js");
+// const wc = require("../../circuits/out/withdraw_js/witness_calculator.js");
 
 const snarkjs = require("snarkjs");
 const { plonk } = snarkjs;
