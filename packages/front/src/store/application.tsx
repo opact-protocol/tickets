@@ -273,6 +273,8 @@ export const useApplication = create<{
 
       return { proof, publicSignals };
     } catch (e) {
+      console.warn(e);
+
       const { proof, publicSignals } = await plonk.fullProve(
         input,
         "./verifier.wasm",
