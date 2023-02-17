@@ -1917,7 +1917,7 @@
     "@near-wallet-selector/core" "7.8.0"
     "@near-wallet-selector/wallet-utils" "7.8.0"
 
-"@near-wallet-selector/my-near-wallet@7.8.0":
+"@near-wallet-selector/my-near-wallet@7.8.0", "@near-wallet-selector/my-near-wallet@^7.8.0":
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/@near-wallet-selector/my-near-wallet/-/my-near-wallet-7.8.0.tgz#57ff616af71654ce342e11f2dfed3acc0c694af8"
   integrity sha512-+mRCOuPtiJRrPCTnSDjzbzIU8e7QHAQKPG3b/Kx/z1DFrOogvOXN37UPsS3CxHz0d8UVPQZBuTgFH/iQ7RcQrg==
