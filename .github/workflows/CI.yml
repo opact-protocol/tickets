@@ -24,7 +24,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: yarn relayer deploy --name dev-relayer
+          command: (cd packages/relayer && publish --name dev-relayer)
           secrets: |
               RELAYER_FEE
               NEAR_NETWORK
