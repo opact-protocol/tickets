@@ -5,7 +5,7 @@ import { WhitelistModal } from "./whitelist";
 
 export const AboutUsModal = ({
   isOpen,
-  onClose
+  onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -61,7 +61,7 @@ export const AboutUsModal = ({
                     The first privacy transactions platform currently deployed
                     on <strong>NEAR</strong>
                   </p>
-                  <p className="text-dark-grafiti-medium text-lg font-normal text-center w-[607px] mt-2 mb-16 mx-auto">
+                  <p className="text-dark-grafiti-medium text-lg font-normal text-center w-full max-w-[607px] mt-5 mb-16 mx-auto">
                     You'll need to add yourself to the allowlist and then you'll
                     be able to make transactions. We highly recommend it to
                     ensure security. It will take <strong>X time</strong> to
