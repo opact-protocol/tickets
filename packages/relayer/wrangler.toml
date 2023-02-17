@@ -1,4 +1,3 @@
-name = "hideyour-cash production level relayer v1"
 main = "dist/index.mjs"
 compatibility_date = "2022-05-28"
 node_compat = true
@@ -10,3 +9,9 @@ command = "node build.js"
 kv_persist = true
 cache_persist = true
 durable_objects_persist = true
+
+[env.stage]
+name = "dev-relayer"
+
+[env.production]
+name = "prod-relayer"
