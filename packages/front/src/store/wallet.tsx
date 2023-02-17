@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import {
   setupWalletSelector,
-  WalletSelector,
+  WalletSelector
 } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 import { useEnv } from "@/hooks/useEnv";
 
 export interface WalletStoreInterface {
@@ -32,18 +33,18 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
     const newSelector = await setupWalletSelector({
       network: useEnv("VITE_NEAR_NETWORK"),
       debug: true,
-      modules: [setupMeteorWallet(), setupNearWallet()],
+      modules: [setupMeteorWallet(), setupNearWallet(), setupMyNearWallet()]
     });
 
     const state = newSelector.store.getState();
 
     const newAccount =
-      state?.accounts.find((account) => account.active)?.accountId || "";
+      state?.accounts.find(account => account.active)?.accountId || "";
 
     try {
       set(() => ({
         accountId: newAccount,
-        selector: newSelector,
+        selector: newSelector
       }));
     } catch (e) {
       console.warn(e);
@@ -72,5 +73,5 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
     }
 
     set(() => ({ accountId: "" }));
-  },
+  }
 }));
