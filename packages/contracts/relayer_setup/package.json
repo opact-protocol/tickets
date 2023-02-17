@@ -4,7 +4,6 @@
   "license": "UNLICENSED",
   "main": "lib/index.ts",
   "scripts": {
-    "copy:verificationkey": "(cd ../../relayer && mkdir -p temp && mkdir -p .near-credentials) && mkdir -p temp && cp ../../circuits/out/verification_key.json ./temp/verification_key.json",
     "seeder": "node index.js"
   },
   "dependencies": {
