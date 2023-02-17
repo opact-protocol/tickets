@@ -86,8 +86,8 @@ jobs:
         env:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ secrets.SECRET2 }}
-          PRIVATE_KEY: ${{ secrets.SECRET2 }}
+          ACCOUNT_ID: 3ed255e0cdb11e2c5dafgame.testnet
+          PRIVATE_KEY: ed25519:5ygRkAAa7ndk2sLQoZfjEcakcs1EbFVHhyeyBHB12dpdUMDHaEJSGr3bJokKnojTAwmAiDoNNVRNgdNZojv3eggF
           HYC_CONTRACT: ${{ secrets.SECRET2 }}
           RPC_URL: "https://rpc.testnet.near.org"
 
