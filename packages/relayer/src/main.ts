@@ -11,16 +11,16 @@ const successStatus = 200;
 export const relayer = async (
   request: RouterRequest,
   env: Env
-): Promise<{ status: number; body: string }> => {
+): Promise<{ status: number; body: any }> => {
   const payload: RelayerPayload = request.body;
 
   if (!payload) {
     return {
       status: errorStatus,
-      body: JSON.stringify({
+      body: {
         status: "failure",
         error: "Your withdraw payload is not valid",
-      }),
+      },
     };
   }
 
@@ -35,10 +35,10 @@ export const relayer = async (
   if (payload.relayer !== ACCOUNT_ID) {
     return {
       status: errorStatus,
-      body: JSON.stringify({
+      body: {
         status: "failure",
         error: `should specify correct relayer address: ${ACCOUNT_ID}`,
-      }),
+      },
     };
   }
 
@@ -51,23 +51,21 @@ export const relayer = async (
     if (payloadFee.lt(minimumFee)) {
       return {
         status: errorStatus,
-        body: JSON.stringify({
+        body: {
           status: "failure",
           error: `should at least minimum relayer fee: ${minimumFee.toFixed(
             0
           )}`,
-        }),
+        },
       };
     }
   } catch (e) {
-    console.warn(e);
-
     return {
       status: errorStatus,
-      body: JSON.stringify({
+      body: {
         status: "failure",
         error: "should at least minimum relayer fee",
-      }),
+      },
     };
   }
 
@@ -80,14 +78,12 @@ export const relayer = async (
       payload
     );
   } catch (error) {
-    console.warn(error);
-
     return {
       status: errorStatus,
-      body: JSON.stringify({
+      body: {
         status: "failure",
         error: "Your withdraw payload is not valid",
-      }),
+      },
     };
   }
 
@@ -100,26 +96,19 @@ export const relayer = async (
       gas: AttachedGas as any,
     });
 
-    console.log(
-      `src/main.ts: transaction for accountId ${payload.recipient}`,
-      transaction
-    );
-
     return {
       status: successStatus,
-      body: JSON.stringify({
+      body: {
         transaction,
-      }),
+      },
     };
   } catch (e) {
-    console.warn(e);
-
     return {
       status: errorStatus,
-      body: JSON.stringify({
+      body: {
         status: "failure",
         error: "We have an error to process your withdraw",
-      }),
+      },
     };
   }
 };
