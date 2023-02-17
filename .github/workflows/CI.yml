@@ -77,7 +77,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          postCommands: wrangler --name dev-relayer
+          command: publish --name dev-relayer
           secrets: |
               RELAYER_FEE
               NEAR_NETWORK
@@ -85,6 +85,7 @@ jobs:
               PRIVATE_KEY
               HYC_CONTRACT
               RPC_URL
+              name
         env:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
