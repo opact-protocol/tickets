@@ -54,7 +54,7 @@ jobs:
         run: yarn relayer build
 
       - name: Fucking evens
-        run: echo ${{ $TESTNET_RELAYER_ACCOUNT_ID }}
+        run: echo "$TESTNET_RELAYER_ACCOUNT_ID"
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
