@@ -34,4 +34,4 @@ jobs:
         run: yarn contracts relayer:setup
 
       - name: Fucking evens
-        run: echo ${{ $TESTNET_RELAYER_ACCOUNT_ID }}
+        run: echo ${{ secrets.TESTNET_RELAYER_ACCOUNT_ID }}
