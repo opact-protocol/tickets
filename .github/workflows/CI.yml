@@ -33,23 +33,6 @@ jobs:
       - name: Relayer Tests
         run: yarn contracts relayer:setup
 
-  relayer-deploy:
-    needs: check_build_and_tests
-    runs-on: ubuntu-latest
-    name: Relayer Deploy
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.12.1
-          cache: 'yarn'
-
-      - name: Installing Dependencies
-        run: yarn
-
       - name: Building Relayer
         run: yarn relayer build
 
@@ -60,7 +43,8 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ztY_5KVqTuVDv2Nnl7Nl9TtpVT-9MToTWeMXa13H
-          command: publish --name dev-relayer
+          command: publish --name dev-relayer --env
+
           workingDirectory: 'packages/relayer'
           secrets: |
               RELAYER_FEE
