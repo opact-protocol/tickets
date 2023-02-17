@@ -68,7 +68,7 @@ jobs:
         run: yarn contracts test:lib
 
   relayer-deploy:
-    depends: check_build_and_tests
+    needs: check_build_and_tests
     runs-on: ubuntu-latest
     name: Relayer Deploy
     steps:
