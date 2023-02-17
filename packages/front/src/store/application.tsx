@@ -261,14 +261,20 @@ export const useApplication = create<{
   },
 
   createSnarkProof: async (input) => {
-    // _input, wasmFile, zkeyFileName, logger
-    const { proof, publicSignals } = await plonk.fullProve(
-      input,
-      "./verifier.wasm",
-      CIRCUIT_URL
-    );
+    try {
+      const { proof, publicSignals } = await plonk.fullProve(
+        input,
+        "./verifier.wasm",
+        CIRCUIT_URL
+      );
 
-    return { proof, publicSignals };
+      return { proof, publicSignals };
+    } catch (e) {
+      console.log('error when crate proof');
+      console.log(e);
+
+      throw(e);
+    }
   },
 
   sendWhitelist: async (connection, accountId) => {
