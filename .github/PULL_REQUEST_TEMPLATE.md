@@ -1,11 +1,7 @@
-### What does it do?
+### URL to Jira task (this should explain the task)
 
-### What has to be tested?
+### Explain what the code alterations do
 
-### Any helpful background information?
+### What has to be tested? How to test it?
 
 ### Any new dependencies? Why were they added?
-
-### Relevant screenshots/gifs
-
-### Does it close any issues?
