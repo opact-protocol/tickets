@@ -32,6 +32,7 @@ jobs:
         run: yarn
 
       - name: Relayer Tests
+        output:
         run: yarn contracts relayer:setup
 
       - name: Building Relayer
@@ -53,12 +54,10 @@ jobs:
               PRIVATE_KEY
               HYC_CONTRACT
               RPC_URL
-              TEST_ENV
         env:
-          TEST_ENV: "foo"
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: $TESTNET_RELAYER_ACCOUNT_ID
-          PRIVATE_KEY: $TESTNET_RELAYER_PRIVATE_KEY
-          HYC_CONTRACT: $TESTNET_HYC_CONTRACT
+          ACCOUNT_ID: "$TESTNET_RELAYER_ACCOUNT_ID"
+          PRIVATE_KEY: "$TESTNET_RELAYER_PRIVATE_KEY"
+          HYC_CONTRACT: "$TESTNET_HYC_CONTRACT"
           RPC_URL: "https://rpc.testnet.near.org"
