@@ -8,6 +8,7 @@ env:
   VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc3
   VITE_NEAR_NODE_URL: https://rpc.testnet.near.org
   VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+  VITE_CIRCUIT_URL: https://www.hideyour.cash/circuit.zkey
 on: pull_request
 
 concurrency:

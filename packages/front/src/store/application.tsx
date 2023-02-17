@@ -31,7 +31,7 @@ function parseNote(note: string): {
 }
 
 const CONTRACT = useEnv("VITE_CONTRACT");
-const CIRCUIT_URL = useEnv("CIRCUIT_URL");
+const CIRCUIT_URL = useEnv("VITE_CIRCUIT_URL");
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
