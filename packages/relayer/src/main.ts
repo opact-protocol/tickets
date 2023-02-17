@@ -15,7 +15,9 @@ export const relayer = async (
   const payload: RelayerPayload = request.body;
 
   console.log("ALL ENVS");
+  console.log("ALLOOOOOOOW");
   console.log(env);
+  console.log("ALLOOOOOOOW");
   console.log("ALL ENVS");
 
   if (!payload) {
