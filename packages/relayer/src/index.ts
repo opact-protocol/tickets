@@ -10,13 +10,6 @@ router.cors({
   allowMethods: "POST, GET",
 });
 
-// Register global middleware
-router.use(({ res, next }) => {
-  res.headers.set("X-Global-Middlewares", "true");
-
-  next();
-});
-
 // Simple get
 router.get("/data", ({ env, res }) => {
   res.body = {
@@ -28,16 +21,20 @@ router.get("/data", ({ env, res }) => {
 });
 
 // Post route with url parameter
-router.post("/relay", async ({ env, req, res }) => {
-  const { status, body } = await relayer(req, env);
+router.post("/relay", async ({ env, req, res, next }) => {
+  const resValue = await relayer(req, env);
 
-  res.status = status;
-  res.body = body;
+  console.log(resValue);
+
+  res.status = resValue.status;
+  res.body = resValue.body;
+
+  await next();
 });
 
 // Listen Cloudflare Workers Fetch Event
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    return router.handle(env, request);
+  fetch: async (request: Request, env: Env): Promise<Response> => {
+    return await router.handle(env, request);
   },
 };
