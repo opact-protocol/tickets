@@ -2,6 +2,8 @@ const nearAPI = require("near-api-js");
 const { BN, KeyPair } = require("near-workspaces");
 const fs = require("fs");
 const crypto = require("crypto");
+const isCI = require("is-ci");
+const core = require("@actions/core");
 
 const {
   connect,
