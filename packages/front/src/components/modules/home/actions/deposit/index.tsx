@@ -4,7 +4,7 @@ import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -34,7 +34,7 @@ const tokens = [
   { id: 1, name: "NEAR" },
   { id: 2, name: "AVAX" },
   { id: 3, name: "BTC" },
-  { id: 4, name: "CARDANO" }
+  { id: 4, name: "CARDANO" },
 ];
 
 const customId = "deposit-toast";
@@ -64,7 +64,7 @@ export function Deposit() {
         title="Processing"
       />,
       {
-        toastId: customId
+        toastId: customId,
       }
     );
   } else if (!approved && transactionHashes) {
@@ -80,7 +80,7 @@ export function Deposit() {
           title={title}
           message={message}
         />
-      )
+      ),
     });
   }
 
@@ -201,8 +201,27 @@ export function Deposit() {
                 onChange={setSelectedAmount}
                 className="mt-2 max-w-[371px]"
               >
-                <Swiper spaceBetween={40} slidesPerView={3} className="flex">
-                  {amounts.map(size => (
+                <Swiper
+                  spaceBetween={40}
+                  slidesPerView={3}
+                  breakpoints={{
+                    320: {
+                      slidesPerView: 2,
+                      spaceBetween: 20,
+                    },
+                    // when window width is >= 480px
+                    480: {
+                      slidesPerView: 3,
+                      spaceBetween: 30,
+                    },
+                    // when window width is >= 640px
+                    640: {
+                      slidesPerView: 3,
+                      spaceBetween: 40,
+                    },
+                  }}
+                >
+                  {amounts.map((size) => (
                     <SwiperSlide key={size}>
                       <RadioGroup.Option
                         key={size}
@@ -244,7 +263,7 @@ export function Deposit() {
               </span>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              {[1, 2, 3].map(item => (
+              {[1, 2, 3].map((item) => (
                 <div
                   key={item}
                   className="w-[77px] h-[9px] bg-gray-300 rounded-full"
