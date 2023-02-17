@@ -32,7 +32,6 @@ jobs:
         run: yarn
 
       - name: Relayer Tests
-        output:
         run: yarn contracts relayer:setup
 
       - name: Building Relayer
