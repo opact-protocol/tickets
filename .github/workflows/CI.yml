@@ -37,13 +37,13 @@ jobs:
         run: yarn relayer build
 
       - name: Fucking evens
-        run: echo "$TESTNET_RELAYER_ACCOUNT_ID"
+        run: echo env
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ztY_5KVqTuVDv2Nnl7Nl9TtpVT-9MToTWeMXa13H
-          command: publish --name dev-relayer
+          command: publish --name dev-relayer --env env
 
           workingDirectory: 'packages/relayer'
           secrets: |
