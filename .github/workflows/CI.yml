@@ -39,7 +39,13 @@ jobs:
         run: yarn relayer build
 
       - name: Fucking evens
-        run: echo ${{ vars }}
+        run: echo ${{ steps.setup.outputs.TESTNET_HYC_CONTRACT }}
+
+      - name: Fucking evens
+        run: echo ${{ steps.setup.outputs.TESTNET_RELAYER_PRIVATE_KEY }}
+
+      - name: Fucking evens
+        run: echo ${{ steps.setup.outputs.TESTNET_RELAYER_ACCOUNT_ID }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
