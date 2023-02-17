@@ -3,9 +3,9 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VITE_RELAYER: ${{ secrets.VITE_RELAYER }}
-  VITE_CONTRACT: c28a0b8ab1211fa0bec1hyctest.testnet
+  VITE_CONTRACT: 13f7a05920e419a4b8c0hyctest.testnet
   VITE_NEAR_NETWORK: testnet
-  VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc3
+  VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc
   VITE_NEAR_NODE_URL: https://rpc.testnet.near.org
   VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
 
