@@ -43,7 +43,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ztY_5KVqTuVDv2Nnl7Nl9TtpVT-9MToTWeMXa13H
-          command: publish --name dev-relayer --env
+          command: publish --name dev-relayer
 
           workingDirectory: 'packages/relayer'
           secrets: |
