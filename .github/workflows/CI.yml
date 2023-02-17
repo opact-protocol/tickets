@@ -67,30 +67,6 @@ jobs:
       - name: Lib Tests
         run: yarn contracts test:lib
 
-  relayer-deploy:
-    runs-on: ubuntu-latest
-    name: Deploy
-    steps:
-      - uses: actions/checkout@v3
-      - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
-        env:
-          RELAYER_FEE: "0"
-          NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ secrests.TESTNET_RELAYER_ACCOUNT_ID }}
-          PRIVATE_KEY: ${{ secrests.TESTNET_RELAYER_PRIVATE_KEY }}
-          HYC_CONTRACT: ${{ secrets.TESTNET_HYC_CONTRACT }}
-          RPC_URL: "https://rpc.testnet.near.org"
-
   cypress-run:
     runs-on: ubuntu-latest
     steps:
@@ -188,3 +164,26 @@ jobs:
           --prebuilt
           --token=${{ secrets.VERCEL_TOKEN }}
 
+  relayer-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          secrets: |
+              RELAYER_FEE
+              NEAR_NETWORK
+              ACCOUNT_ID
+              PRIVATE_KEY
+              HYC_CONTRACT
+              RPC_URL
+        env:
+          RELAYER_FEE: "0"
+          NEAR_NETWORK: "testnet"
+          ACCOUNT_ID: ${{ secrests.TESTNET_RELAYER_ACCOUNT_ID }}
+          PRIVATE_KEY: ${{ secrests.TESTNET_RELAYER_PRIVATE_KEY }}
+          HYC_CONTRACT: ${{ secrets.TESTNET_HYC_CONTRACT }}
+          RPC_URL: "https://rpc.testnet.near.org"
