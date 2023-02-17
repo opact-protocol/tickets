@@ -14,6 +14,10 @@ export const relayer = async (
 ): Promise<{ status: number; body: any }> => {
   const payload: RelayerPayload = request.body;
 
+  console.log("ALL ENVS");
+  console.log(env);
+  console.log("ALL ENVS");
+
   if (!payload) {
     return {
       status: errorStatus,
