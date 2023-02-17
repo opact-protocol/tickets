@@ -255,15 +255,16 @@ async function testnetSetup() {
   if (isCI) {
     console.log("The code is running on a CI server");
 
-    core.setSecret(
+    core.exportVariable("TESTNET_HYC_CONTRACT", contractAccount.accountId);
+
+    core.exportVariable(
       "TESTNET_RELAYER_ACCOUNT_ID",
       proofInputs.relayer.account_id
     );
-    core.setSecret(
+    core.exportVariable(
       "TESTNET_RELAYER_PRIVATE_KEY",
       proofInputs.relayer.private_key
     );
-    core.setSecret("TESTNET_HYC_CONTRACT", contractAccount.accountId);
   }
 
   process.exit();
