@@ -68,6 +68,7 @@ jobs:
         run: yarn contracts test:lib
 
   cypress-run:
+    needs: check_build_and_tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -112,7 +113,34 @@ jobs:
           build: yarn front build
           start: yarn front dev
 
+  relayer-deploy:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          worker-name: https://dev-relayer.hideyourcash.workers.dev/
+          secrets: |
+              RELAYER_FEE
+              NEAR_NETWORK
+              ACCOUNT_ID
+              PRIVATE_KEY
+              HYC_CONTRACT
+              RPC_URL
+        env:
+          RELAYER_FEE: "0"
+          NEAR_NETWORK: "testnet"
+          ACCOUNT_ID: ${{ secrets.TESTNET_RELAYER_ACCOUNT_ID }}
+          PRIVATE_KEY: ${{ secrets.TESTNET_RELAYER_PRIVATE_KEY }}
+          HYC_CONTRACT: ${{ secrets.TESTNET_HYC_CONTRACT }}
+          RPC_URL: "https://rpc.testnet.near.org"
+
   dev_deploy:
+    needs: relayer-deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -163,28 +191,3 @@ jobs:
           deploy
           --prebuilt
           --token=${{ secrets.VERCEL_TOKEN }}
-
-  relayer-deploy:
-    runs-on: ubuntu-latest
-    name: Deploy
-    steps:
-      - uses: actions/checkout@v3
-      - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          worker-name: https://dev-relayer.hideyourcash.workers.dev/
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
-        env:
-          RELAYER_FEE: "0"
-          NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ secrets.TESTNET_RELAYER_ACCOUNT_ID }}
-          PRIVATE_KEY: ${{ secrets.TESTNET_RELAYER_PRIVATE_KEY }}
-          HYC_CONTRACT: ${{ secrets.TESTNET_HYC_CONTRACT }}
-          RPC_URL: "https://rpc.testnet.near.org"
