@@ -3,6 +3,7 @@ import { Router } from "@tsndr/cloudflare-worker-router";
 import { relayer } from "./main";
 
 // Initialize router
+
 const router = new Router<Env>();
 
 // Enabling build in CORS support
