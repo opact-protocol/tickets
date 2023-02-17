@@ -244,7 +244,9 @@ async function testnetSetup() {
 
   const relayerTestSetup = JSON.stringify({
     hyc_contract: contractAccount.accountId,
+
     user_withdraw_payload: user_withdraw_payload,
+
     relayer: proofInputs.relayer,
   });
 
