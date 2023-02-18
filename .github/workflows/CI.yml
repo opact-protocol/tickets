@@ -42,8 +42,10 @@ jobs:
       - name: Building Relayer
         run: yarn relayer build
 
+      - name: Log Envs
+        run: echo "$TESTNET_RELAYER_ACCOUNT_ID $TESTNET_RELAYER_PRIVATE_KEY $TESTNET_HYC_CONTRACT"
+
       - name: Publish
-        runs-on: ${{ needs.setup.outputs }}
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ztY_5KVqTuVDv2Nnl7Nl9TtpVT-9MToTWeMXa13H
