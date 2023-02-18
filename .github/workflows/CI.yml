@@ -44,7 +44,13 @@ jobs:
 
       - name: Log Envs
         run: |
-          echo ${{ vars[0] }}
+          echo "vars"
+          echo ${{ vars }}
+          echo "env"
+          echo ${{ env }}
+          echo "outps"
+          echo ${{ steps }}
+          echo "fim"
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
