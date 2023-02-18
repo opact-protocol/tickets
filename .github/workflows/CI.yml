@@ -45,11 +45,9 @@ jobs:
       - name: Log Envs
         run: |
           echo "vars"
-          echo ${{ vars.TESTNET_RELAYER_ACCOUNT_ID }}
-          echo "env"
           echo ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
-          echo "outps"
-          echo ${{ steps.setup.outputs.TESTNET_RELAYER_ACCOUNT_ID }}
+          echo ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
+          echo ${{ env.TESTNET_HYC_CONTRACT }}
           echo "fim"
 
       - name: Publish
@@ -69,6 +67,6 @@ jobs:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
           ACCOUNT_ID: "foo baa"
-          PRIVATE_KEY: ${{ vars.TESTNET_RELAYER_ACCOUNT_ID }}
-          HYC_CONTRACT: ${{ vars.TESTNET_HYC_CONTRACT }}
+          PRIVATE_KEY: ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
+          HYC_CONTRACT: ${{ env.TESTNET_HYC_CONTRACT }}
           RPC_URL: "https://rpc.testnet.near.org"
