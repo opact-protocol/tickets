@@ -2,6 +2,8 @@ const nearAPI = require("near-api-js");
 const { BN, KeyPair } = require("near-workspaces");
 const fs = require("fs");
 const crypto = require("crypto");
+const isCI = require("is-ci");
+const core = require("@actions/core");
 
 const {
   connect,
@@ -247,6 +249,26 @@ async function testnetSetup() {
   });
 
   fs.writeFileSync("../../relayer/temp/testnet_setup.json", relayerTestSetup);
+
+  if (isCI) {
+    console.log("The code is running on a CI server");
+
+    console.log("Exporting env vars");
+
+    core.exportVariable("TESTNET_HYC_CONTRACT", contractAccount.accountId);
+
+    core.exportVariable(
+      "TESTNET_RELAYER_ACCOUNT_ID",
+      proofInputs.relayer.account_id
+    );
+
+    core.exportVariable(
+      "TESTNET_RELAYER_PRIVATE_KEY",
+      proofInputs.relayer.private_key
+    );
+
+    console.log("Exported env vars");
+  }
 
   process.exit();
 }

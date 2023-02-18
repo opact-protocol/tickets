@@ -35,6 +35,6 @@ router.post("/relay", async ({ env, req, res, next }) => {
 // Listen Cloudflare Workers Fetch Event
 export default {
   fetch: async (request: Request, env: Env): Promise<Response> => {
-    return await router.handle(env, request);
+    return router.handle(env, request);
   },
 };
