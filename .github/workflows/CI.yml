@@ -33,10 +33,14 @@ jobs:
 
       - name: Relayer Tests
         id: setup
-        run: yarn contracts relayer:setup
+        run: |
+          yarn contracts relayer:setup
+          echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_OUTPUT
+          echo "TESTNET_RELAYER_PRIVATE_KEY=$TESTNET_RELAYER_PRIVATE_KEY" >> $GITHUB_OUTPUT
+          echo "TESTNET_HYC_CONTRACT=$TESTNET_HYC_CONTRACT" >> $GITHUB_OUTPUT
 
       - name: Building Relayer
-        run: yarn relayer build && echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_ENV
+        run: yarn relayer build
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
