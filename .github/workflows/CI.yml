@@ -45,11 +45,11 @@ jobs:
       - name: Log Envs
         run: |
           echo "vars"
-          echo ${{ vars }}
-          echo "env"
+          echo ${{ vars.TESTNET_RELAYER_ACCOUNT_ID }}
+          echo "env.TESTNET_RELAYER_ACCOUNT_ID"
           echo ${{ env }}
           echo "outps"
-          echo ${{ steps }}
+          echo ${{ steps.setup.outputs }}
           echo "fim"
 
       - name: Publish
