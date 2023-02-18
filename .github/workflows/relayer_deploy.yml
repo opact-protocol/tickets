@@ -1,0 +1,50 @@
+name: Relayer Deploy (Prod)
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Relayer Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.12.1
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn
+
+      - name: Building Relayer
+        run: yarn relayer build
+
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          command: publish --name prod-relayer
+          workingDirectory: 'packages/relayer'
+          secrets: |
+              RELAYER_FEE
+              NEAR_NETWORK
+              ACCOUNT_ID
+              PRIVATE_KEY
+              HYC_CONTRACT
+              RPC_URL
+        env:
+          RELAYER_FEE: "0"
+          NEAR_NETWORK: "testnet"
+          ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
+          PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
+          HYC_CONTRACT: ${{ env.HYC_CONTRACT }}
+          RPC_URL: "https://rpc.testnet.near.org"
