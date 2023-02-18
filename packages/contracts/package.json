@@ -24,6 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@types/uuid": "^8.3.4",
+    "is-ci": "^3.0.1",
     "near-api-js": "~0.43.1",
     "near-workspaces": "^2.0.0",
     "regenerator-runtime": "~0.13.5",
