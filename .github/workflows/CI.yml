@@ -43,6 +43,7 @@ jobs:
         run: yarn relayer build
 
       - name: Publish
+        runs-on: ${{ needs.setup.outputs }}
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ztY_5KVqTuVDv2Nnl7Nl9TtpVT-9MToTWeMXa13H
