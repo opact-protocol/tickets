@@ -44,7 +44,6 @@ jobs:
 
       - name: Log Envs
         run: |
-          echo "$TESTNET_RELAYER_ACCOUNT_ID $TESTNET_RELAYER_PRIVATE_KEY $TESTNET_HYC_CONTRACT"
           echo ${{ vars[0] }}
 
       - name: Publish
