@@ -44,11 +44,10 @@ jobs:
 
       - name: Log Envs
         run: |
-          echo "vars"
+          echo "Relayer Vars"
           echo ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
           echo ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
           echo ${{ env.TESTNET_HYC_CONTRACT }}
-          echo "fim"
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
@@ -66,7 +65,7 @@ jobs:
         env:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: "foo baa"
+          ACCOUNT_ID: ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
           PRIVATE_KEY: ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
           HYC_CONTRACT: ${{ env.TESTNET_HYC_CONTRACT }}
           RPC_URL: "https://rpc.testnet.near.org"

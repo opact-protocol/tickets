@@ -75,27 +75,20 @@ async function testnetSetup() {
   if (isCI) {
     console.log("The code is running on a CI server");
 
-    // core.exportVariable("TESTNET_HYC_CONTRACT", contractAccount.accountId);
+    console.log("Exporting env vars");
 
-    // core.exportVariable(
-    //   "TESTNET_RELAYER_ACCOUNT_ID",
-    //   proofInputs.relayer.account_id
-    // );
-    // core.exportVariable(
-    //   "TESTNET_RELAYER_PRIVATE_KEY",
-    //   proofInputs.relayer.private_key
-    // );
+    core.exportVariable("TESTNET_HYC_CONTRACT", contractAccount.accountId);
 
     core.exportVariable(
-      "TESTNET_HYC_CONTRACT",
-      "13f7a05920e419a4b8c0hyctest.testnet"
+      "TESTNET_RELAYER_ACCOUNT_ID",
+      proofInputs.relayer.account_id
     );
-
-    core.exportVariable("TESTNET_RELAYER_ACCOUNT_ID", "jackson31.testnet");
     core.exportVariable(
       "TESTNET_RELAYER_PRIVATE_KEY",
-      "ed25519:32yyLi4GnEaMrdn7DLEzDkXPbbmdFZEZ1R6B1pAjQqPZNv2dgLiN31eMJpNU674SLDDK3qnWw2DFhcFsgMc196K"
+      proofInputs.relayer.private_key
     );
+
+    console.log("Exported env vars");
   }
 
   process.exit();
