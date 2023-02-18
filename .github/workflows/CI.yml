@@ -37,9 +37,8 @@ jobs:
 
       - name: Building Relayer
         run: yarn relayer build
-
-      - name: Fucking evens
-        run: echo ${{ vars.TESTNET_HYC_CONTRACT }}
+        run: echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_ENV
+        run: echo "TESTNET_RELAYER_PRIVATE_KEY=$TESTNET_RELAYER_PRIVATE_KEY" >> $GITHUB_ENV
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
@@ -57,7 +56,7 @@ jobs:
         env:
           RELAYER_FEE: "0"
           NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ steps.setup.outputs.TESTNET_RELAYER_ACCOUNT_ID }}
+          ACCOUNT_ID: "foo account"
           PRIVATE_KEY: ${{ steps.setup.outputs.TESTNET_RELAYER_PRIVATE_KEY }}
           HYC_CONTRACT: ${{ steps.setup.outputs.TESTNET_HYC_CONTRACT }}
           RPC_URL: "https://rpc.testnet.near.org"
