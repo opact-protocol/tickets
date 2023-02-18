@@ -46,10 +46,10 @@ jobs:
         run: |
           echo "vars"
           echo ${{ vars.TESTNET_RELAYER_ACCOUNT_ID }}
-          echo "env.TESTNET_RELAYER_ACCOUNT_ID"
-          echo ${{ env }}
+          echo "env"
+          echo ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
           echo "outps"
-          echo ${{ steps.setup.outputs }}
+          echo ${{ steps.setup.outputs.TESTNET_RELAYER_ACCOUNT_ID }}
           echo "fim"
 
       - name: Publish
