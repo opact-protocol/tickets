@@ -32,7 +32,7 @@ test("should return error - should specify correct relayer address", async () =>
 
   expect(status).toBe(errorStatus);
   expect(body.error).toContain(
-    "should specify correct relayer address: dc718987d66c8ac6cd72relayer.testnet"
+    `should specify correct relayer address: ${baseEnvs.ACCOUNT_ID}`
   );
 });
 
