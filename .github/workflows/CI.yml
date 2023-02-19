@@ -60,7 +60,7 @@ jobs:
 
       - name: Relayer Tests
         run: |
-          yarn contracts relayer:setup
+          yarn relayer test
           echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_OUTPUT
           echo "TESTNET_RELAYER_PRIVATE_KEY=$TESTNET_RELAYER_PRIVATE_KEY" >> $GITHUB_OUTPUT
           echo "TESTNET_HYC_CONTRACT=$TESTNET_HYC_CONTRACT" >> $GITHUB_OUTPUT
@@ -76,16 +76,12 @@ jobs:
 
       - name: Log Envs
         run: |
-          echo "Relayer Vars"
-          echo
           echo "Relayer Account Id"
           echo ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
           echo "Relayer Private key"
           echo ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
           echo "Relayer HYC Contract"
           echo ${{ env.TESTNET_HYC_CONTRACT }}
-          echo
-          echo "Relayer Vars"
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0

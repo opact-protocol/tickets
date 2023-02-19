@@ -31,7 +31,7 @@ test("should return error - should specify correct relayer address", async () =>
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
 
   expect(status).toBe(errorStatus);
-  expect(body).toContain({
+  expect(JSON.stringify(body)).toContain({
     error:
       "should specify correct relayer address: dc718987d66c8ac6cd72relayer.testnet",
     status: "failure",
@@ -53,7 +53,7 @@ test("should return error - should at least minimum relayer fee", async () => {
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
 
   expect(status).toBe(errorStatus);
-  expect(body).toContain({
+  expect(JSON.stringify(body)).toContain({
     status: "failure",
     error: "should at least minimum relayer fee: 3",
   });
@@ -74,7 +74,7 @@ test("should return error - Your withdraw payload is not valid", async () => {
   const { body, status } = await relayer(baseRequest as any, baseEnvs as any);
 
   expect(status).toBe(errorStatus);
-  expect(body).toContain({
+  expect(JSON.stringify(body)).toContain({
     status: "failure",
     error: "Your withdraw payload is not valid",
   });
