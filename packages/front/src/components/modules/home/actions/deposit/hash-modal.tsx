@@ -1,15 +1,16 @@
 import { useApplication } from "@/store";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import { formatInteger } from "@/utils/formatInteger";
 import { useWallet } from "@/store/wallet";
+import FileSaver from "file-saver";
 
 export default function Modal({
   isOpen,
   onClose,
-  amount
+  amount,
 }: {
   isOpen: boolean;
   amount: string;
@@ -56,6 +57,12 @@ export default function Modal({
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const blob = new Blob([note], { type: "text/plain;charset=utf-8" });
+    FileSaver.saveAs(blob, "ticket.txt");
+  }, [isOpen]);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -101,7 +108,11 @@ export default function Modal({
                   The number bellow is your withdraw ticket, and it will be
                   necessary to withdraw the funds you`ve deposited. We encourage
                   you copy this number, and paste in a notepad or somewhere
-                  safe.
+                  safe. The ticket is downloaded automatically to ensure that
+                  you do not foresee copying or downloading manually.
+                  <strong className="text-error block">
+                    If you lose this ticket you’ll lose your funds
+                  </strong>
                 </p>
 
                 <p className="text-error text-sm font-normal text-center mt-[19px] mb-2">
@@ -173,7 +184,7 @@ export default function Modal({
                 <button
                   disabled={sending}
                   onClick={() => deposit()}
-                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[118px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[90px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
                   {buttonText ? buttonText : `Deposit ${amount} Near`}
                 </button>
