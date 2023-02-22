@@ -32,7 +32,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish
+          command: publish --name prod-relayer
           workingDirectory: 'packages/relayer'
           secrets: |
               RELAYER_FEE
