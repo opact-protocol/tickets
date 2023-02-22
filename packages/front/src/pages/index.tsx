@@ -9,7 +9,8 @@ import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
-import { useApplication } from "@/store";
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const Waves = () => {
   return (
@@ -34,6 +35,13 @@ const Index = () => {
   useEffect(() => {
     document.body.style.background =
       "linear-gradient(90deg, #ffffff -1.75%, #d5eef4 105.87%)";
+
+    (async () => {
+      if (location.hash === "#faq") {
+        await delay(100);
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    })();
   }, []);
 
   return (
