@@ -44,6 +44,7 @@
     "clsx": "^1.2.1",
     "ethers": "^5.7.0",
     "ffjavascript": "^0.2.56",
+    "file-saver": "^2.0.5",
     "fixed-merkle-tree": "^0.7.3",
     "framer-motion": "^7.2.1",
     "g": "^2.0.1",
