@@ -77,7 +77,6 @@ export function Index() {
         </Container>
       </div>
       <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
-      <Feedback />
       <NeedHelp />
     </>
   );
