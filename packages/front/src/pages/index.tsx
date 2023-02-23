@@ -392,7 +392,7 @@ const Index = () => {
                 { title: "Q3 2023", message: "Native integration to wallets" },
                 {
                   title: "Q4 2023",
-                  message: "Explore new use cases and integartions",
+                  message: "Explore new use cases and integrations",
                 },
               ].map(({ title, message }) => (
                 <div
