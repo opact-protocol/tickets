@@ -17,10 +17,10 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "yarn prettier --config .prettierrc --write"
+      "eslint --fix"
     ],
     "*.{js,jsx}": [
-      "yarn prettier --config .prettierrc --write"
+      "eslint --fix"
     ],
     "*.rs": [
       "sh ./format_rust.sh"
