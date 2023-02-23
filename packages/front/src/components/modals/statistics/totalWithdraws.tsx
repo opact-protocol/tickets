@@ -51,7 +51,7 @@ const TotalWithdrawsModal = ({
                 </Dialog.Title>
 
                 <p className="text-dark-grafiti-medium text-lg max-w-[600px] mx-auto mb-10">
-                  The total number of withdrawals that were made after your have
+                  The total number of withdrawals that were made after you have
                   deposited. The more withdrawals, the more anonymity. We
                   recommend waiting at least 10 withdrawals before withdrawing
                   yours.
