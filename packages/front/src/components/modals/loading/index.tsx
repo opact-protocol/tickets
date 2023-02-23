@@ -14,7 +14,7 @@ export const LoadingModal = ({
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
         if (generatingProof) {
-          if (prevProgress >= 100) {
+          if (prevProgress === 99) {
             clearInterval(interval);
             return prevProgress;
           }

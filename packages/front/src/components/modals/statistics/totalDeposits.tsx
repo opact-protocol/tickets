@@ -51,7 +51,7 @@ const TotalDepositsModal = ({
                 </Dialog.Title>
 
                 <p className="text-dark-grafiti-medium text-lg max-w-[600px] mx-auto mb-10">
-                  The total number of deposits that were made after your have
+                  The total number of deposits that were made after you have
                   deposited. The more deposits, the more anonymity. We recommend
                   waiting at least 10 deposits before withdrawing yours.
                 </p>
