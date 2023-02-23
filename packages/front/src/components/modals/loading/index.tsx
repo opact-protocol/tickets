@@ -6,7 +6,7 @@ export const LoadingModal = ({
   generatingProof: boolean;
 }) => {
   const [progress, setProgress] = useState<number>(0);
-  const totalTime = 50;
+  const totalTime = 90;
   const updateInterval = 100;
   const increment = 100 / ((totalTime * 1000) / updateInterval);
 

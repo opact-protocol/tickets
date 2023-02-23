@@ -17,6 +17,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { nullifierCheck } from "@/utils/nullifierCheck";
 import { useWallet } from "@/store/wallet";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
+import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 
 interface WithDrawProps {
   ticket: string;
@@ -34,6 +37,8 @@ export function Withdraw() {
   const { data: mostRecentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
+  const [showModalDeposits, setShowModalDeposits] = useState(false);
+  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
 
   const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
@@ -144,7 +149,7 @@ export function Withdraw() {
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
-                Withdraw ticket{" "}
+                Withdrawal ticket{" "}
                 {errors.ticket?.message && (
                   <span className="text-error"> * </span>
                 )}
@@ -180,16 +185,24 @@ export function Withdraw() {
             {statistics && !errors.ticket?.message && (
               <div className={`flex flex-col gap-3`}>
                 <div className="flex items-center justify-between">
-                  <p className="text-black text-sm font-normal">
-                    Total deposits to date
+                  <p
+                    className="text-black text-sm font-normal flex items-center gap-2 cursor-pointer"
+                    onClick={() => setShowModalDeposits(true)}
+                  >
+                    Total deposits to date{" "}
+                    <QuestionMarkCircleIcon className="w-4 h-4" />
                   </p>
                   <p className="text-black font-bold text-sm">
                     {statistics?.totalDeposits}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-black text-sm font-normal">
-                    Total withdraws to date
+                  <p
+                    className="text-black text-sm font-normal flex items-center gap-2 cursor-pointer"
+                    onClick={() => setShowModalWithdrawals(true)}
+                  >
+                    Total withdrawals to date{" "}
+                    <QuestionMarkCircleIcon className="w-4 h-4" />
                   </p>
                   <p className="text-black font-bold text-sm">
                     {statistics?.totalWithdraws}
@@ -302,6 +315,14 @@ export function Withdraw() {
       {generatingProof && (
         <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
       )}
+      <TotalDepositsModal
+        isOpen={showModalDeposits}
+        onClose={() => setShowModalDeposits(false)}
+      />
+      <TotalWithdrawsModal
+        isOpen={showModalWithdrawals}
+        onClose={() => setShowModalWithdrawals(false)}
+      />
     </>
   );
 }
