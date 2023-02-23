@@ -7,6 +7,7 @@ import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 import { setupSender } from "@near-wallet-selector/sender";
+import { setupNightly } from "@near-wallet-selector/nightly";
 import { useEnv } from "@/hooks/useEnv";
 
 export interface WalletStoreInterface {
@@ -37,7 +38,8 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
         setupMeteorWallet(),
         setupNearWallet(),
         setupMyNearWallet(),
-        setupSender()
+        setupSender(),
+        setupNightly()
       ]
     });
 
