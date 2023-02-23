@@ -1,5 +1,4 @@
-use merkle_tree::commitment_tree::MerkleTree;
-use merkle_tree::allowlist_tree::AllowlistMerkleTree;
+use commitment_tree::MerkleTree;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U128;
 use near_sdk::serde::{Serialize, Deserialize};
@@ -12,14 +11,15 @@ use near_plonk_verifier::{self, Verifier, G1Point, G2Point};
 use near_bigint::U256;
 use hapi_near_connector::aml::*;
 
-use crate::currency::*;
+use currency::*;
+use ext_interface::*;
 
 mod actions;
 mod currency;
 mod events;
 mod ext_interface;
 mod hashes;
-mod merkle_tree;
+mod commitment_tree;
 
 /// NEAR only represents numbers as integers. This is the base
 /// used to create the contract's percentage fee
@@ -30,6 +30,8 @@ const FEE_DIVISOR: u128 = 100_000;
 pub struct Contract {
   // account responsible for managing kill_switch and protocol fees
   pub owner: AccountId,
+  // account of the registry contract - which holds the allowlist merkle tree
+  pub registry: AccountId,
   // kill_switch toggle
   pub kill_switch: bool,
   // hapi.one contract's account
@@ -38,7 +40,6 @@ pub struct Contract {
   pub max_risk: u8,
   // merkle tree structures acting as cryptographic accumulators
   pub commitments: MerkleTree,
-  pub allowlist: AllowlistMerkleTree,
   // token type that is accepted by this instance of the contract
   pub currency: Currency,
   // deposit value that is accepted by this instance of the contract
@@ -62,12 +63,6 @@ pub enum StorageKey {
   LastRootsPrefix,
   ZeroValuesPrefix,
   PreviousCommitmentsPrefix,
-  // allow list keys
-  DataStorePrefix,
-  DataLocationsPrefix,
-  LastRootsPrefixWL,
-  DenylistSetPrefix,
-  ZeroValuesPrefixWL,
 }
 
 #[near_bindgen]
@@ -75,15 +70,14 @@ impl Contract {
   #[init]
   pub fn new(
     owner: AccountId,
+    registry: AccountId,
     authorizer: AccountId,
     max_risk: u8,
     // merkle tree params
     height: u64,
     last_roots_len: u8,
     zero_value: U256,
-    // wl params
-    height_wl: u64,
-    last_roots_len_wl: u8,
+    // currency and fee setup
     currency: Currency,
     deposit_value: U128,
     percent_fee: U128,
@@ -116,6 +110,7 @@ impl Contract {
     );
     Self {
       owner,
+      registry,
       kill_switch: false,
       authorizer: AML::new(authorizer, max_risk),
       max_risk,
@@ -126,17 +121,6 @@ impl Contract {
         StorageKey::LastRootsPrefix,
         StorageKey::ZeroValuesPrefix,
         StorageKey::PreviousCommitmentsPrefix,
-        q,
-        zero_value,
-      ),
-      allowlist: AllowlistMerkleTree::new(
-        height_wl,
-        last_roots_len_wl,
-        StorageKey::DataStorePrefix,
-        StorageKey::DataLocationsPrefix,
-        StorageKey::LastRootsPrefixWL,
-        StorageKey::DenylistSetPrefix,
-        StorageKey::ZeroValuesPrefixWL,
         q,
         zero_value,
       ),
