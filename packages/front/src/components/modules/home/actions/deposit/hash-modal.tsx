@@ -104,13 +104,12 @@ export default function Modal({
                   Withdrawal ticket
                 </Dialog.Title>
 
-                <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[61px]">
+                <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-5 mb-[61px]">
                   The number below is your withdrawal ticket, and it will be
                   necessary to withdraw the funds you’ve deposited. The ticket
                   is downloaded automatically to ensure that you do not forget
                   to manually copy or download. We also encourage you to copy
                   this number and paste it in a notepad or somewhere else safe.
-                  If you loose this ticket, you'll loose your funds.
                   <strong className="text-error block">
                     If you lose this ticket you’ll lose your funds
                   </strong>
