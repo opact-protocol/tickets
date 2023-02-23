@@ -21,6 +21,7 @@ fn log_basic_event_format(
     .to_string()
   )
 }
+
 /// New account was added or removed from allowlist
 pub fn event_allowlist_update(
   counter: u64,

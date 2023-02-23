@@ -1,6 +1,7 @@
 use ff_wasm_unknown_unknown::{Field};
 use near_bigint::U256;
 use crate::{fp::Fp, round_constants::ROUND_CONSTANTS};
+use near_sdk::AccountId;
 
 extern crate ff_wasm_unknown_unknown;
 
@@ -55,6 +56,24 @@ pub fn mimc_sponge_single(k: Fp, inputs: [Fp; 1]) -> [Fp; 1] {
 
     outputs
 }
+
+pub fn account_hash(account_id: &AccountId, q: U256) -> U256 {
+    let account_string = account_id.to_string();
+    let account_str = account_string.as_str();
+  
+    let id_bytes = account_str.clone().as_bytes();
+    let id_len = id_bytes.len();
+    let left = U256::from_little_endian(&id_bytes[..id_len / 2]);
+    let right = U256::from_little_endian(&id_bytes[id_len / 2..]);
+  
+    serial_hash(left, right, q)
+  }
+  
+  pub fn serial_hash(left: U256, right: U256, q: U256) -> U256 {
+    let left = left % q;
+    let right = right % q;
+    u256_mimc_sponge(U256::zero(), [left, right])[0]
+  }
 
 fn mimc_feistel(k: Fp, left: Fp, right: Fp) -> (Fp, Fp) {
     let mut x_left = left;
