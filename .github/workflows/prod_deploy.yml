@@ -12,6 +12,7 @@ env:
   # front envs
   VITE_RELAYER: ${{ secrets.VITE_RELAYER }}
   VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+  VITE_RELAYER_URL: https://prod-relayer.hideyourcash.workers.dev/
   VITE_API_GRAPHQL_URL: "https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc"
 
   # relayer envs
