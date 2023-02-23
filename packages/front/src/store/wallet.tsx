@@ -10,6 +10,7 @@ import { setupSender } from "@near-wallet-selector/sender";
 import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
+import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { useEnv } from "@/hooks/useEnv";
 
 export interface WalletStoreInterface {
@@ -43,6 +44,7 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
         setupSender(),
         setupNightly(),
         setupWelldoneWallet(),
+        setupXDEFI(),
         setupHereWallet()
       ]
     });
