@@ -37,15 +37,11 @@ const NeedHelpModal = ({
     formState: { errors },
   } = useForm<FormProps>({ resolver: yupResolver(contactUsSchema) });
 
-  const onSubmit = async (data: FormProps) => {
+  const onSubmit = (data: FormProps) => {
     try {
-      await axios.post(
-        "https://formsubmit.co/ajax/hideyourcash@gmail.com",
-        data,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", data, {
+        headers: { "Content-Type": "application/json" },
+      });
       reset();
       onClose();
       toast(
@@ -207,7 +203,7 @@ const NeedHelpModal = ({
                   </div>
                   <button
                     type="submit"
-                    className="bg-soft-blue-from-deep-blue p-[12px] rounded-full block w-full mt-2 mx-auto font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                    className="bg-soft-blue-from-deep-blue p-[12px] rounded-full block w-full mt-6 mx-auto font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                   >
                     Send
                   </button>
