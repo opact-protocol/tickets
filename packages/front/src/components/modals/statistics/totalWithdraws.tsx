@@ -56,12 +56,6 @@ const TotalWithdrawsModal = ({
                   recommend waiting at least 10 withdrawals before withdrawing
                   yours.
                 </p>
-                <button
-                  className="block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-2 rounded-full w-full font-[400] hover:opacity-[.9]"
-                  onClick={() => onClose()}
-                >
-                  Close
-                </button>
               </Dialog.Panel>
             </Transition.Child>
           </div>
