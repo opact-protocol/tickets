@@ -145,7 +145,6 @@ impl Contract {
       wxi_w,
     );
 
-
     ext_registry::ext(self.registry.clone())
       .with_static_gas(ALLOWLIST_GAS)
       .view_is_allowlist_root_valid(allowlist_root)
