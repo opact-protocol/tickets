@@ -28,6 +28,7 @@
     "@near-wallet-selector/near-wallet": "^7.0.3",
     "@near-wallet-selector/nightly": "^7.8.2",
     "@near-wallet-selector/sender": "^7.8.2",
+    "@near-wallet-selector/welldone-wallet": "^7.8.2",
     "@near/contracts": "*",
     "@rollup/plugin-inject": "^4.0.4",
     "@types/react-gtm-module": "^2.0.1",
