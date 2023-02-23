@@ -8,13 +8,13 @@ use near_sdk::collections::{UnorderedMap, UnorderedSet};
 use hapi_near_connector::aml::*;
 
 use allowlist_tree::AllowlistMerkleTree;
-use hashes::*;
+use near_mimc::account_hash;
+use hyc_events::*;
+use ext_interface::*;
 
 mod actions;
 mod allowlist_tree;
-mod events;
 mod ext_interface;
-mod hashes;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde", tag = "type")]

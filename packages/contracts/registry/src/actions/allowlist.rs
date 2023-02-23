@@ -1,9 +1,6 @@
 use near_sdk::{env, near_bindgen, AccountId, Promise, PromiseResult};
 
-use crate::{
-  Contract, ContractExt, hashes::account_hash, events::event_allowlist_update,
-  ext_interface::ext_self, ext_aml, AML_CHECK_GAS, CALLBACK_AML_GAS, CategoryRisk,
-};
+use crate::*;
 
 #[near_bindgen]
 impl Contract {
@@ -41,7 +38,7 @@ impl Contract {
         //   ))
         // }
 
-        let account_hash = account_hash(&account_id, self.verifier.q);
+        let account_hash = account_hash(&account_id, self.allowlist.field_size);
 
         let index = self.allowlist.current_insertion_index;
         event_allowlist_update(self.allowlist.event_count, index, account_hash, account_id, true);
@@ -86,7 +83,11 @@ impl Contract {
         //   ))
         // }
 
+<<<<<<< HEAD
         let account_hash = account_hash(&account_id, self.verifier.q);
+=======
+        let account_hash = account_hash(&account_id, self.allowlist.field_size);
+>>>>>>> 817204c (refact(contracts): move events into separate lib)
 
         let event_counter = self.allowlist.event_count;
         let index = self.allowlist.add_to_denylist(account_hash);
