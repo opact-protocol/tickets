@@ -41,7 +41,7 @@ impl Contract {
   /// Method to evaluate if a given account is found in the allowlist
   /// Returns true if the account is in allowlist, false otherwise
   pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
-    self.allowlist.is_in_allowlist(&account_hash(&account_id))
+    self.allowlist.is_in_allowlist(&account_hash(&account_id, self.allowlist.field_size))
   }
 
   /// Method to evaluate if an allowlist root used to build a ZK proof is valid
