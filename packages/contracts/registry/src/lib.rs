@@ -3,18 +3,20 @@ use std::collections::HashMap;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Serialize, Deserialize};
 use near_bigint::U256;
-use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
+use near_sdk::{env, near_bindgen, ext_contract, Gas, Promise, PromiseResult, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
 use near_sdk::collections::{UnorderedMap, UnorderedSet};
-use hapi_near_connector::aml::*;
 
 use allowlist_tree::AllowlistMerkleTree;
 use near_mimc::account_hash;
+
+use hapi_connector::*;
 use hyc_events::*;
 use ext_interface::*;
 
 mod actions;
 mod allowlist_tree;
 mod ext_interface;
+mod hapi_connector;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde", tag = "type")]
@@ -41,6 +43,7 @@ pub struct Contract {
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
+  AML,
   CurrenciesMap,
   AllowlistSet,
   DataStorePrefix,
@@ -55,8 +58,11 @@ impl Contract {
   #[init]
   pub fn new(
     owner: AccountId,
+    // hapi.one account
     authorizer: AccountId,
-    max_risk: u8,
+    // vec of tupples (category, max_risk_threshold)
+    risk_params: Vec<CategoryRisk>,
+    // merkle tree params
     height: u64,
     last_roots_len: u8,
     q: U256,
@@ -67,11 +73,15 @@ impl Contract {
       env::is_valid_account_id(owner.as_bytes()),
       "Invalid owner account"
     );
+
+    let mut authorizer = AML::new(authorizer, StorageKey::AML);
+    authorizer.bulk_update_category(risk_params);
+
     Self {
       owner,
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
       contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
-      authorizer: AML::new(authorizer, max_risk),
+      authorizer,
       allowlist: AllowlistMerkleTree::new(
         height,
         last_roots_len,
@@ -172,7 +182,7 @@ mod tests {
       owner: OWNER.parse().unwrap(),
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
       contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
-      authorizer: AML::new(AUTHORIZER.parse().unwrap(), 5),
+      authorizer: AML::new(AUTHORIZER.parse().unwrap(), StorageKey::AML),
       allowlist: AllowlistMerkleTree::new(
         20,
         50,
