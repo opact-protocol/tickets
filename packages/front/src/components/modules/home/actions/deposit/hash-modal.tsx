@@ -67,7 +67,7 @@ export default function Modal({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-[999]"
         onClose={() => {
           closeModal();
           setCopy(false);
@@ -101,25 +101,26 @@ export default function Modal({
                   as="h1"
                   className="text-black text-xl font-bold font-[Sora] text-center mt-[40px]"
                 >
-                  Withdraw ticket
+                  Withdrawal ticket
                 </Dialog.Title>
 
                 <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[61px]">
-                  The number bellow is your withdraw ticket, and it will be
-                  necessary to withdraw the funds you`ve deposited. We encourage
-                  you copy this number, and paste in a notepad or somewhere
-                  safe. The ticket is downloaded automatically to ensure that
-                  you do not foresee copying or downloading manually.
+                  The number below is your withdrawal ticket, and it will be
+                  necessary to withdraw the funds you’ve deposited. The ticket
+                  is downloaded automatically to ensure that you do not forget
+                  to manually copy or download. We also encourage you to copy
+                  this number and paste it in a notepad or somewhere else safe.
+                  If you loose this ticket, you'll loose your funds.
                   <strong className="text-error block">
                     If you lose this ticket you’ll lose your funds
                   </strong>
                 </p>
 
-                <p className="text-error text-sm font-normal text-center mt-[19px] mb-2">
+                <p className="text-error text-sm font-normal text-center mt-[19px]">
                   {errorMessage}
                 </p>
                 <div
-                  className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto mt-[48px] border-[2px] ${
+                  className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto border-[2px] ${
                     errorMessage
                       ? "border-error mt-0"
                       : copy
@@ -176,8 +177,8 @@ export default function Modal({
                     />
                   </span>
                 </p>
-                <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[30px]">
-                  To ensure the anonimity of your transaction, we recommend you
+                <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[50px]">
+                  To ensure the anonymity of your transaction, we recommend you
                   wait <strong>at least 30 minutes</strong> to withdraw the
                   funds deposited.{" "}
                 </p>
