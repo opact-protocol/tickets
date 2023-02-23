@@ -28,14 +28,6 @@ impl Contract {
     self.commitments.get_last_root()
   }
 
-  pub fn view_allowlist_root(&self) -> U256 {
-    self.allowlist.get_last_root()
-  }
-
-  pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
-    self.allowlist.is_in_allowlist(&account_hash(&account_id, self.verifier.q))
-  }
-
   pub fn view_was_nullifier_spent(&self, nullifier: U256) -> bool {
     self.nullifier.contains(&nullifier)
   }
