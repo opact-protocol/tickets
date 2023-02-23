@@ -9,9 +9,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 near-sdk = { version = "4.0.0", features = ["unstable"] }
-near-bigint = {path = "../../contract-libraries/near_bigint"}
-near_mimc = {path = "../../contract-libraries/near_mimc"}
-near_plonk_verifier = {path = "../../contract-libraries/plonk_verifier/near_plonk_verifier"}
+near-bigint = { path = "../../contract-libraries/near_bigint" }
+near_mimc = { path = "../../contract-libraries/near_mimc" }
+near_plonk_verifier = { path = "../../contract-libraries/plonk_verifier/near_plonk_verifier" }
+hyc-events = { path = "../../contract-libraries/hyc_events" }
 hapi-near-connector = "0.1"
 
 [dev-dependencies]
