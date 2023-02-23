@@ -183,7 +183,7 @@ mod tests {
       owner: OWNER.parse().unwrap(),
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
       contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
-      authorizer: AML::new(AUTHORIZER.parse().unwrap(), 5),
+      authorizer: AML::new(AUTHORIZER.parse().unwrap(), StorageKey::AML),
       allowlist: AllowlistMerkleTree::new(
         20,
         50,
