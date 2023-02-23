@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "big.js": "^6.2.1",
+    "circomlibjs": "^0.1.7",
     "near-api-js": "^1.1.0"
   }
 }

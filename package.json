@@ -8,6 +8,7 @@
     "front": "yarn workspace @near/front",
     "contracts": "yarn workspace @near/contracts",
     "circuits": "yarn workspace circuits",
+    "sdk": "yarn workspace hideyour-cash-sdk",
     "contract_libraries": "yarn workspace @near/contract_libraries",
     "relayer": "yarn workspace relayer"
   },
