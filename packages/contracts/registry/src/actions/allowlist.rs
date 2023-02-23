@@ -7,8 +7,9 @@ use crate::{
 
 #[near_bindgen]
 impl Contract {
-  /// Verify if caller is one of the authorizers
-  /// Add them to WL if they are
+  /// Perform cross contract call to check accounts risk score with AML provider
+  /// Callback should process the score and add user to allowlist if score is below threshold
+  /// Must charge storage fees to permanently add a new entry to allowlist
   pub fn allowlist(&mut self, account_id: AccountId) -> Promise {
     ext_aml::ext(self.authorizer.get_account())
       .with_static_gas(AML_CHECK_GAS)
@@ -20,21 +21,25 @@ impl Contract {
       )
   }
 
+  /// Callback after checking AML score for account
+  /// Is risk score is below threshold, add to allowlist
+  /// Otherwise panic
   #[private]
   pub fn allowlist_callback(&mut self, account_id: AccountId) {
     assert_eq!(env::promise_results_count(), 1, "ERR_TOO_MANY_RESULTS");
     match env::promise_result(0) {
       PromiseResult::NotReady => unreachable!(),
       PromiseResult::Successful(security_score) => {
-        let (_category, risk) =
+        let (category, risk) =
           near_sdk::serde_json::from_slice::<CategoryRisk>(&security_score).unwrap();
 
-        if risk > self.max_risk {
-          env::panic_str(&format!(
-            "Account risk score too high. {}, limit is {}",
-            risk, &self.max_risk
-          ))
-        }
+        self.authorizer.assert_risk((category, risk));
+        // if risk > self.max_risk {
+        //   env::panic_str(&format!(
+        //     "Account risk score too high. {}, limit is {}",
+        //     risk, &self.max_risk
+        //   ))
+        // }
 
         let account_hash = account_hash(&account_id, self.verifier.q);
 
@@ -47,8 +52,10 @@ impl Contract {
     }
   }
 
-  /// Verify if caller is one of the authorizers
-  /// Add them to WL if they are
+  /// Perform cross contract call to check accounts risk score with AML provider
+  /// Callback should process the score and add user to denylist if score is above threshold
+  /// This method can be called by anyone that wants to block a malicious account from the platform
+  /// In practice, incentives must be created to foster this behavior
   pub fn denylist(&mut self, account_id: AccountId) -> Promise {
     ext_aml::ext(self.authorizer.get_account())
       .with_static_gas(AML_CHECK_GAS)
@@ -60,6 +67,9 @@ impl Contract {
       )
   }
 
+  /// Callback after checking AML score for account
+  /// Is risk score is above threshold, add to denylist
+  /// Otherwise panic
   #[private]
   pub fn denylist_callback(&mut self, account_id: AccountId) {
     assert_eq!(env::promise_results_count(), 1, "ERR_TOO_MANY_RESULTS");
@@ -69,12 +79,12 @@ impl Contract {
         let (_category, risk) =
           near_sdk::serde_json::from_slice::<CategoryRisk>(&security_score).unwrap();
 
-        if risk <= self.max_risk {
-          env::panic_str(&format!(
-            "Account risk is acceptable. {}, limit is {}",
-            risk, &self.max_risk
-          ))
-        }
+        // if risk <= self.max_risk {
+        //   env::panic_str(&format!(
+        //     "Account risk is acceptable. {}, limit is {}",
+        //     risk, &self.max_risk
+        //   ))
+        // }
 
         let account_hash = account_hash(&account_id, self.verifier.q);
 

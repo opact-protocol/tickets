@@ -5,6 +5,16 @@ use near_sdk::serde::{Serialize, Deserialize};
 use near_bigint::U256;
 use near_sdk::{env, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
 use near_sdk::collections::{UnorderedMap, UnorderedSet};
+use hapi_near_connector::aml::*;
+
+use allowlist_tree::AllowlistMerkleTree;
+use hashes::*;
+
+mod actions;
+mod allowlist_tree;
+mod events;
+mod ext_interface;
+mod hashes;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde", tag = "type")]
@@ -22,19 +32,36 @@ pub struct Contract {
   // map of current production contracts for HYC in different currencies / deposit values
   pub currencies_map: UnorderedMap<Currency, HashMap<U256, AccountId>>,
   // Set of allowlisted contracts that relayers may trust to service
-  pub allowlist_set: UnorderedSet<AccountId>,
+  pub contracts_allowlist: UnorderedSet<AccountId>,
+  // hapi.one contract connector
+  pub authorizer: AML,
+  // merkle tree containing all authorized accounts after AML
+  pub allowlist: AllowlistMerkleTree,
 }
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
 pub enum StorageKey {
   CurrenciesMap,
   AllowlistSet,
+  DataStorePrefix,
+  DataLocationsPrefix,
+  LastRootsPrefix,
+  DenylistSetPrefix,
+  ZeroValuesPrefix,
 }
 
 #[near_bindgen]
 impl Contract {
   #[init]
-  pub fn new(owner: AccountId) -> Self {
+  pub fn new(
+    owner: AccountId,
+    authorizer: AccountId,
+    max_risk: u8,
+    height: u64,
+    last_roots_len: u8,
+    q: U256,
+    zero_value: U256,
+  ) -> Self {
     assert!(!env::state_exists(), "Already initialized");
     assert!(
       env::is_valid_account_id(owner.as_bytes()),
@@ -43,61 +70,20 @@ impl Contract {
     Self {
       owner,
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
-      allowlist_set: UnorderedSet::new(StorageKey::AllowlistSet),
+      contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
+      authorizer: AML::new(authorizer, max_risk),
+      allowlist: AllowlistMerkleTree::new(
+        height,
+        last_roots_len,
+        StorageKey::DataStorePrefix,
+        StorageKey::DataLocationsPrefix,
+        StorageKey::LastRootsPrefix,
+        StorageKey::DenylistSetPrefix,
+        StorageKey::ZeroValuesPrefix,
+        q,
+        zero_value,
+      ),
     }
-  }
-}
-
-#[near_bindgen]
-impl Contract {
-  #[payable]
-  pub fn add_entry(&mut self, currency: Currency, amount: U256, account_id: AccountId) {
-    self.only_owner();
-    let mut amount_map = self.currencies_map.get(&currency).unwrap_or(HashMap::new());
-    amount_map.insert(amount, account_id.clone());
-    self.currencies_map.insert(&currency, &amount_map);
-    self.allowlist_set.insert(&account_id);
-  }
-
-  #[payable]
-  pub fn remove_entry(&mut self, currency: Currency, amount: U256) {
-    self.only_owner();
-    let mut amount_map = self
-      .currencies_map
-      .get(&currency)
-      .expect("Currency is not registered");
-    amount_map
-      .remove(&amount)
-      .expect("Amount was not registered for this currency");
-    if amount_map.len() == 0 {
-      self.currencies_map.remove(&currency);
-    } else {
-      self.currencies_map.insert(&currency, &amount_map);
-    }
-  }
-
-  #[payable]
-  pub fn remove_from_allowlist(&mut self, account_id: AccountId) {
-    self.only_owner();
-    self.allowlist_set.remove(&account_id);
-  }
-
-  pub fn view_all_currencies(&self) -> Vec<Currency> {
-    self.currencies_map.keys().collect()
-  }
-
-  pub fn view_currency_contracts(&self, currency: Currency) -> HashMap<U256, AccountId> {
-    self.currencies_map.get(&currency).unwrap_or(HashMap::new())
-  }
-
-  pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
-    self.allowlist_set.contains(&account_id)
-  }
-
-  /// Returns all elements in allowlist. There is a know limitation to
-  /// retrive large lists, however allowlist is not expected to ever exceed 100 elements
-  pub fn view_allowlist(&self) -> Vec<AccountId> {
-    self.allowlist_set.to_vec()
   }
 }
 
@@ -111,6 +97,23 @@ impl Contract {
     assert_one_yocto();
   }
 }
+
+// pub fn assert_risk(authorizer: AML, category_risk: CategoryRisk) -> bool {
+//   let (category, risk) = category_risk;
+//   if category != Category::None {
+//     let accepted_risk = match authorizer.aml_conditions.get(&category) {
+//       Some(risk) => risk,
+//       None => self
+//         .aml_conditions
+//         .get(&Category::All)
+//         .expect("ERR_NO_DEFAULT_CATEGORY"),
+//     };
+
+//     risk <= accepted_risk
+//   } else {
+//     true
+//   }
+// }
 
 #[cfg(test)]
 mod tests {
@@ -129,6 +132,7 @@ mod tests {
   pub use super::*;
 
   const CONTRACT: &str = "contract.testnet";
+  const AUTHORIZER: &str = "hapione.testnet";
   const OWNER: &str = "owner.testnet";
   const NON_OWNER: &str = "other.testnet";
   const CURRENCY_1: &str = "currency.testnet";
@@ -167,7 +171,19 @@ mod tests {
     Contract {
       owner: OWNER.parse().unwrap(),
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
-      allowlist_set: UnorderedSet::new(StorageKey::AllowlistSet),
+      contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
+      authorizer: AML::new(AUTHORIZER.parse().unwrap(), 5),
+      allowlist: AllowlistMerkleTree::new(
+        20,
+        50,
+        StorageKey::DataStorePrefix,
+        StorageKey::DataLocationsPrefix,
+        StorageKey::LastRootsPrefix,
+        StorageKey::DenylistSetPrefix,
+        StorageKey::ZeroValuesPrefix,
+        U256::from_dec_str("10").unwrap(),
+        U256::from_dec_str("10").unwrap(),
+      ),
     }
   }
 
@@ -187,14 +203,15 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
 
     let entries_map = contract.currencies_map.get(&currency).unwrap();
 
-    assert_eq!(
-      entries_map.len(), 1
-    );
+    assert_eq!(entries_map.len(), 1);
     assert_eq!(
       entries_map.get(&amount).unwrap().clone(),
       HYC.parse::<AccountId>().unwrap()
@@ -218,9 +235,11 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
-
   }
 
   #[test]
@@ -240,9 +259,11 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
-
   }
 
   // #[test]
