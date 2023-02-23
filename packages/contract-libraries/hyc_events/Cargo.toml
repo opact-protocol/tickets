@@ -1,0 +1,29 @@
+[package]
+name = "hyc-events"
+version = "1.0.0"
+authors = ["jack the dev <joao@hackachain.io>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/hideyour-cash/monorepo"
+keywords = ["near_protocol", "events"]
+description = "Event types for HYC contracts"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { version = "4.0.0" }
+near-bigint = {path = "../near_bigint"}
+
+[dev-dependencies]
+rstest = "0.14.0"
+
+[profile.release]
+codegen-units = 1
+# s = optimize for binary size ("z" would additionally turn off loop vectorization)
+opt-level = "z"
+# link time optimization
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true

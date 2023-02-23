@@ -3,10 +3,6 @@ use near_bigint::U256;
 use near_plonk_verifier::{Proof, G1Point};
 
 use crate::*;
-use crate::{
-  hashes::{account_hash, serial_hash},
-  events::{event_deposit, event_withdrawal},
-};
 
 const ALLOWLIST_GAS: Gas = Gas(10_000_000_000_000);
 
@@ -82,7 +78,7 @@ impl Contract {
     assert!(!self.kill_switch, "kill_switch was triggered");
     assert!(is_in_allowlist, "account is not registered in allowlist");
 
-    let commitment = serial_hash(secrets_hash, account_hash(&account_id));
+    let commitment = serial_hash(secrets_hash, account_hash(&account_id, self.verifier.q), self.verifier.q);
     let index = self.commitments.current_insertion_index;
     self.commitments.insert(commitment);
 
