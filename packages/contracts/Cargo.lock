@@ -261,6 +261,7 @@ name = "contract"
 version = "0.1.0"
 dependencies = [
  "hapi-near-connector",
+ "hyc-events",
  "near-bigint",
  "near-sdk",
  "near_mimc",
@@ -611,6 +612,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
+name = "hyc-events"
+version = "1.0.0"
+dependencies = [
+ "near-bigint",
+ "near-sdk",
+]
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.47"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -915,7 +924,7 @@ dependencies = [
 
 [[package]]
 name = "near_mimc"
-version = "1.0.0"
+version = "1.0.2"
 dependencies = [
  "ff_wasm_unknown_unknown",
  "near-bigint",
@@ -1251,6 +1260,7 @@ name = "registry"
 version = "0.1.0"
 dependencies = [
  "hapi-near-connector",
+ "hyc-events",
  "near-bigint",
  "near-sdk",
  "near_mimc",

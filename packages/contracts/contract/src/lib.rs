@@ -9,6 +9,8 @@ use near_sdk::{
 use near_sdk::collections::LookupSet;
 use near_plonk_verifier::{self, Verifier, G1Point, G2Point};
 use near_bigint::U256;
+use near_mimc::{account_hash, serial_hash, u256_mimc_sponge_single};
+use hyc_events::*;
 use hapi_near_connector::aml::*;
 
 use currency::*;
@@ -16,9 +18,7 @@ use ext_interface::*;
 
 mod actions;
 mod currency;
-mod events;
 mod ext_interface;
-mod hashes;
 mod commitment_tree;
 
 /// NEAR only represents numbers as integers. This is the base
