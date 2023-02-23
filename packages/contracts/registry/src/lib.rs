@@ -109,6 +109,23 @@ impl Contract {
   }
 }
 
+// pub fn assert_risk(authorizer: AML, category_risk: CategoryRisk) -> bool {
+//   let (category, risk) = category_risk;
+//   if category != Category::None {
+//     let accepted_risk = match authorizer.aml_conditions.get(&category) {
+//       Some(risk) => risk,
+//       None => self
+//         .aml_conditions
+//         .get(&Category::All)
+//         .expect("ERR_NO_DEFAULT_CATEGORY"),
+//     };
+
+//     risk <= accepted_risk
+//   } else {
+//     true
+//   }
+// }
+
 #[cfg(test)]
 mod tests {
   pub use near_sdk::{testing_env, Balance, MockedBlockchain, VMContext, Gas};
@@ -126,6 +143,7 @@ mod tests {
   pub use super::*;
 
   const CONTRACT: &str = "contract.testnet";
+  const AUTHORIZER: &str = "hapione.testnet";
   const OWNER: &str = "owner.testnet";
   const NON_OWNER: &str = "other.testnet";
   const CURRENCY_1: &str = "currency.testnet";
@@ -164,7 +182,19 @@ mod tests {
     Contract {
       owner: OWNER.parse().unwrap(),
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
-      allowlist_set: UnorderedSet::new(StorageKey::AllowlistSet),
+      contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
+      authorizer: AML::new(AUTHORIZER.parse().unwrap(), 5),
+      allowlist: AllowlistMerkleTree::new(
+        20,
+        50,
+        StorageKey::DataStorePrefix,
+        StorageKey::DataLocationsPrefix,
+        StorageKey::LastRootsPrefix,
+        StorageKey::DenylistSetPrefix,
+        StorageKey::ZeroValuesPrefix,
+        U256::from_dec_str("10").unwrap(),
+        U256::from_dec_str("10").unwrap(),
+      ),
     }
   }
 
@@ -184,14 +214,15 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
 
     let entries_map = contract.currencies_map.get(&currency).unwrap();
 
-    assert_eq!(
-      entries_map.len(), 1
-    );
+    assert_eq!(entries_map.len(), 1);
     assert_eq!(
       entries_map.get(&amount).unwrap().clone(),
       HYC.parse::<AccountId>().unwrap()
@@ -215,9 +246,11 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
-
   }
 
   #[test]
@@ -237,9 +270,11 @@ mod tests {
     let amount = U256::from_dec_str("10").unwrap();
 
     let mut contract = init_contract();
-    assert!(contract.currencies_map.len() == 0, "initialized with values");
+    assert!(
+      contract.currencies_map.len() == 0,
+      "initialized with values"
+    );
     contract.add_entry(currency.clone(), amount, HYC.parse().unwrap());
-
   }
 
   // #[test]

@@ -15,7 +15,8 @@ use hyc_events::*;
 use currency::*;
 use ext_interface::*;
 
-use crate::currency::*;
+use currency::*;
+use ext_interface::*;
 
 mod actions;
 mod currency;
