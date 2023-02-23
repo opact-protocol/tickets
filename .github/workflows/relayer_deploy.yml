@@ -42,7 +42,7 @@ jobs:
               HYC_CONTRACT
               RPC_URL
         env:
-          RELAYER_FEE: "0"
+          RELAYER_FEE: "0.10"
           NEAR_NETWORK: "testnet"
           ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
           PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
