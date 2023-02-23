@@ -4,6 +4,7 @@ import { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useEnv } from "@/hooks/useEnv";
 import { useWallet } from "@/store/wallet";
+import { reloadPage } from "@/utils/reloadPage";
 
 export function WalletSelectorModal() {
   const { selector, showWalletModal, toggleModal } = useWallet();
@@ -11,7 +12,7 @@ export function WalletSelectorModal() {
   const [modules, setModules] = useState<ModuleState[]>([]);
 
   useEffect(() => {
-    const subscription = selector?.store.observable.subscribe((state) => {
+    const subscription = selector?.store.observable.subscribe(state => {
       state.modules.sort((current, next) => {
         if (current.metadata.deprecated === next.metadata.deprecated) {
           return 0;
@@ -43,7 +44,7 @@ export function WalletSelectorModal() {
         contractId: useEnv("VITE_CONTRACT"),
         methodNames: []
       });
-      wallet.id === "meteor-wallet" && window.location.reload();
+      reloadPage(wallet.id);
     } catch (e) {
       console.warn(e);
     }
