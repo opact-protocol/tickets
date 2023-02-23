@@ -36,7 +36,7 @@ impl Contract {
           ))
         }
 
-        let account_hash = account_hash(&account_id);
+        let account_hash = account_hash(&account_id, self.verifier.q);
 
         let index = self.allowlist.current_insertion_index;
         event_allowlist_update(self.allowlist.event_count, index, account_hash, account_id, true);
@@ -76,7 +76,7 @@ impl Contract {
           ))
         }
 
-        let account_hash = account_hash(&account_id);
+        let account_hash = account_hash(&account_id, self.verifier.q);
 
         let event_counter = self.allowlist.event_count;
         let index = self.allowlist.add_to_denylist(account_hash);

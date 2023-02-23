@@ -6,7 +6,7 @@ use near_mimc::u256_mimc_sponge_single;
 #[near_bindgen]
 impl Contract {
   pub fn view_account_hash(&self, account_id: AccountId) -> U256 {
-    account_hash(&account_id)
+    account_hash(&account_id, self.verifier.q)
   }
 
   pub fn view_nullifier_hash(&self, nullifier: U256) -> U256 {
@@ -22,7 +22,7 @@ impl Contract {
   }
 
   pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
-    self.allowlist.is_in_allowlist(&account_hash(&account_id))
+    self.allowlist.is_in_allowlist(&account_hash(&account_id, self.verifier.q))
   }
 
   pub fn view_was_nullifier_spent(&self, nullifier: U256) -> bool {
