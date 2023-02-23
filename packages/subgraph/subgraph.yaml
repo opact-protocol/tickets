@@ -6,8 +6,8 @@ dataSources:
     name: hyc
     network: near-testnet
     source:
-      account: "c28a0b8ab1211fa0bec1hyctest.testnet"
-      startBlock: 115371973
+      account: "9a7cfe75c3255047c24ehyctest.testnet"
+      startBlock: 118015041
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
