@@ -7,7 +7,6 @@ use crate::U256;
 #[PrimeFieldReprEndianness = "little"]
 pub struct Fp([u64; 4]);
 
-
 impl Fp {
     pub const fn dangerous_new(limbs: [u64; 4]) -> Self {
         Self(limbs)

@@ -23,10 +23,10 @@ impl Contract {
     assert!(!self.kill_switch, "kill_switch was triggered");
 
     let account_id = env::predecessor_account_id();
-    let account_hash = account_hash(&account_id);
+    let account_hash = account_hash(&account_id, self.verifier.q);
     assert!(self.allowlist.is_in_allowlist(&account_hash));
 
-    let commitment = serial_hash(secrets_hash, account_hash);
+    let commitment = serial_hash(secrets_hash, account_hash, self.verifier.q);
     let index = self.commitments.current_insertion_index;
     self.commitments.insert(commitment);
 
@@ -153,13 +153,13 @@ impl Contract {
       "allowlist tree root is invalid"
     );
 
-    let recipient_hash = account_hash(&recipient);
+    let recipient_hash = account_hash(&recipient, self.verifier.q);
 
     let relayer_hash;
 
     match relayer.clone() {
       Some(relayer_account) => {
-        relayer_hash = account_hash(&relayer_account);
+        relayer_hash = account_hash(&relayer_account, self.verifier.q);
       }
       None => {
         relayer_hash = U256::zero();

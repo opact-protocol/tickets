@@ -9,6 +9,11 @@ At the time of writing this document, The Graph Network was still not available 
 
 To deploy a new version of this subgraph to the hosted-service follow the [instructions from The Graph's documentation](https://thegraph.com/docs/en/deploying/deploying-a-subgraph-to-hosted/)
 
+yarn command:
+```sh
+yarn deploy:hosted <subgraph name>
+```
+
 ## Graphql specs
 
 The specs for all entities available in the subgraph can be found in the `schema.graphql` file.
