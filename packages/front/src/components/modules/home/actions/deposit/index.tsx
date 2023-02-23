@@ -45,9 +45,8 @@ export function Deposit() {
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<SelectedTokenProps>(
-    {} as SelectedTokenProps
-  );
+  const [selectedToken, setSelectedToken] =
+    useState<SelectedTokenProps | null>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
 
@@ -187,7 +186,7 @@ export function Deposit() {
             </Listbox>
           </div>
 
-          {selectedToken.id ? (
+          {selectedToken?.id ? (
             <div className="mt-8">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
