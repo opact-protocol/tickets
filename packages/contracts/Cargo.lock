@@ -1250,8 +1250,10 @@ dependencies = [
 name = "registry"
 version = "0.1.0"
 dependencies = [
+ "hapi-near-connector",
  "near-bigint",
  "near-sdk",
+ "near_mimc",
  "rstest",
 ]
 
