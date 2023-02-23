@@ -1,6 +1,7 @@
 import { useApplication } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useState } from "react";
 
 export default function Modal({
   isOpen,
@@ -10,10 +11,13 @@ export default function Modal({
   onClose: () => void;
 }) {
   const { sendWithdraw } = useApplication();
+  const [loading, setLoading] = useState(false);
 
-  const withdraw = () => {
+  const withdraw = async () => {
+    setLoading(true);
+    await sendWithdraw();
+    setLoading(false);
     onClose();
-    sendWithdraw();
   };
 
   return (
@@ -59,10 +63,11 @@ export default function Modal({
 
                 <div>
                   <button
-                    onClick={() => withdraw()}
+                    onClick={async () => await withdraw()}
+                    disabled={loading}
                     className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
                   >
-                    Confirm
+                    {loading ? "Confirming..." : "Confirm"}
                   </button>
                 </div>
               </Dialog.Panel>
