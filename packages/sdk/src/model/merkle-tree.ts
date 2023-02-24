@@ -22,7 +22,7 @@ export class MerkleTreeService {
     this.lastBranchesQuery = lastBranchesQuery;
   }
 
-  async initMerkleTree (cache: MerkleTreeCacheInterface) {
+  async initMerkleTree (cache?: MerkleTreeCacheInterface) {
     const items: MerkleTreeStorageInterface[] = await this.getBranches(cache);
 
     const tree = new FixedMerkleTree(20, [], merkleTreeOptions);
