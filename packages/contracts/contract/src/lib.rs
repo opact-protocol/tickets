@@ -11,7 +11,6 @@ use near_plonk_verifier::{self, Verifier, G1Point, G2Point};
 use near_bigint::U256;
 use near_mimc::{account_hash, serial_hash, u256_mimc_sponge_single};
 use hyc_events::*;
-use hapi_near_connector::aml::*;
 
 use currency::*;
 use ext_interface::*;
@@ -34,10 +33,6 @@ pub struct Contract {
   pub registry: AccountId,
   // kill_switch toggle
   pub kill_switch: bool,
-  // hapi.one contract's account
-  pub authorizer: AML,
-  // max risk accepted from hapi.one's evaluation
-  pub max_risk: u8,
   // merkle tree structures acting as cryptographic accumulators
   pub commitments: MerkleTree,
   // token type that is accepted by this instance of the contract
@@ -71,8 +66,6 @@ impl Contract {
   pub fn new(
     owner: AccountId,
     registry: AccountId,
-    authorizer: AccountId,
-    max_risk: u8,
     // merkle tree params
     height: u64,
     last_roots_len: u8,
@@ -112,8 +105,6 @@ impl Contract {
       owner,
       registry,
       kill_switch: false,
-      authorizer: AML::new(authorizer, max_risk),
-      max_risk,
       commitments: MerkleTree::new(
         height,
         last_roots_len,
