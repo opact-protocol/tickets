@@ -144,6 +144,7 @@ impl Contract {
       wxi,
       wxi_w,
     );
+    
 
     ext_registry::ext(self.registry.clone())
       .with_static_gas(ALLOWLIST_GAS)
