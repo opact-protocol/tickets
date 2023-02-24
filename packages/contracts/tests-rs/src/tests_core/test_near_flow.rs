@@ -7,7 +7,7 @@ mod tests {
 
   /// Integration tests
   /// aims to test full aplication flow
-  /// 0. initialize contract
+  /// 0. initialize contracts
   /// 1. commit deposits
   /// 2. attempt to withdraw with wrong proofs - assert fail
   /// 3. withdraw with correct proofs
@@ -24,7 +24,8 @@ mod tests {
     let user2 = create_user_account(&root, &worker, "user2").await;
     let user3 = create_user_account(&root, &worker, "user3").await;
     let user4 = create_user_account(&root, &worker, "user4").await;
-
+    let non_registered_user = create_user_account(&root, &worker, "non_registered_user").await;
+    
     // SPOON HAPI.ONE FROM MAINNET
     let hapi_one_account: &str = "proxy.hapiprotocol.near";
 
@@ -40,7 +41,11 @@ mod tests {
       .await?;
 
     // 1. Initialize contract
-    // DEPLOY CONTRACT
+    // DEPLOY REGISTRY CONTRACT
+    let registry_wasm = get_wasm("registry.wasm")?;
+    let registry = deploy_contract(&root, &worker, "registry_contract", &registry_wasm).await;
+
+    // DEPLOY INSTANCE CONTRACT
     let contract_wasm = get_wasm("contract.wasm")?;
     let contract = deploy_contract(&root, &worker, "core_contract", &contract_wasm).await;
 
@@ -61,12 +66,15 @@ mod tests {
     let commitment3 = get_json("commitment3.json").unwrap();
     let commitment4 = get_json("commitment4.json").unwrap();
 
+    // INITIALIZE REGISTRY
+    initialize_registry(&worker, &registry, &owner, hapi_one.as_account(), vec![]).await?;
+
     // INITIALIZE CONTRACT
     initialize_hyc(
       &worker,
       &contract,
       &owner,
-      hapi_one.as_account(),
+      registry.as_account(),
       None,
       DEPOSIT_VALUE,
       OWNER_FEE,
@@ -75,25 +83,74 @@ mod tests {
     .await?;
 
     // 0. add to allowlist
-    allowlist(&worker, &contract, &owner, &user).await?;
-    allowlist(&worker, &contract, &owner, &user2).await?;
-    allowlist(&worker, &contract, &owner, &user3).await?;
-    allowlist(&worker, &contract, &owner, &user4).await?;
+    allowlist(&worker, &registry, &owner, &user).await?;
+    allowlist(&worker, &registry, &owner, &user2).await?;
+    allowlist(&worker, &registry, &owner, &user3).await?;
+    allowlist(&worker, &registry, &owner, &user4).await?;
 
     // 1. commit deposits
+    
+    // assert deposit without registration fails
+    let should_fail = deposit_near(
+      &worker,
+      &contract,
+      &non_registered_user,
+      commitment1["secret_hash"].clone(),
+      DEPOSIT_VALUE,
+    )
+    .await;
+    match should_fail {
+      Ok(_) => panic!("should fail"),
+      Err(_) => (),
+    }
 
     // assert wrong deposit fails
-    let should_fail = deposit_near(&worker, &contract, &user, commitment1["secret_hash"].clone(), DEPOSIT_VALUE - 1).await;
+    let should_fail = deposit_near(
+      &worker,
+      &contract,
+      &user,
+      commitment1["secret_hash"].clone(),
+      DEPOSIT_VALUE - 1,
+    )
+    .await;
     match should_fail {
       Ok(_) => panic!("should fail"),
       Err(_) => (),
     }
 
     // make correct deposits
-    deposit_near(&worker, &contract, &user, commitment1["secret_hash"].clone(), DEPOSIT_VALUE).await?;
-    deposit_near(&worker, &contract, &user2, commitment2["secret_hash"].clone(), DEPOSIT_VALUE).await?;
-    deposit_near(&worker, &contract, &user3, commitment3["secret_hash"].clone(), DEPOSIT_VALUE).await?;
-    deposit_near(&worker, &contract, &user3, commitment4["secret_hash"].clone(), DEPOSIT_VALUE).await?;
+    deposit_near(
+      &worker,
+      &contract,
+      &user,
+      commitment1["secret_hash"].clone(),
+      DEPOSIT_VALUE,
+    )
+    .await?;
+    deposit_near(
+      &worker,
+      &contract,
+      &user2,
+      commitment2["secret_hash"].clone(),
+      DEPOSIT_VALUE,
+    )
+    .await?;
+    deposit_near(
+      &worker,
+      &contract,
+      &user3,
+      commitment3["secret_hash"].clone(),
+      DEPOSIT_VALUE,
+    )
+    .await?;
+    deposit_near(
+      &worker,
+      &contract,
+      &user3,
+      commitment4["secret_hash"].clone(),
+      DEPOSIT_VALUE,
+    )
+    .await?;
 
     // assert correct proofs
 

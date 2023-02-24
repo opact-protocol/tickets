@@ -4,7 +4,7 @@ use crate::*;
 pub trait SelfContract {
   fn allowlist_callback(account_id: AccountId);
   fn denylist_callback(account_id: AccountId);
-  fn withdraw_callback(
+  fn withdraw_transfer_callback(
     nullifier_hash: U256,
     recipient: AccountId,
     relayer: Option<AccountId>,

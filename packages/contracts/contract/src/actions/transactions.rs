@@ -27,7 +27,7 @@ impl Contract {
       .view_is_in_allowlist(user_account.clone())
       .then(
         ext_self::ext(env::current_account_id())
-          .with_unused_gas_weight(1)
+          .with_unused_gas_weight(u64::MAX)
           .inner_deposit(secrets_hash, env::attached_deposit(), user_account),
       )
   }
@@ -52,7 +52,7 @@ impl Contract {
       .view_is_in_allowlist(sender_id.clone())
       .then(
         ext_self::ext(env::current_account_id())
-          .with_unused_gas_weight(1)
+          .with_unused_gas_weight(u64::MAX)
           .inner_deposit(msg, amount.0, sender_id),
       )
   }
@@ -144,14 +144,15 @@ impl Contract {
       wxi,
       wxi_w,
     );
+    
 
     ext_registry::ext(self.registry.clone())
       .with_static_gas(ALLOWLIST_GAS)
       .view_is_allowlist_root_valid(allowlist_root)
       .then(
         ext_self::ext(env::current_account_id())
-          .with_unused_gas_weight(1)
-          .withdraw_check_callback(nullifier_hash, recipient, relayer, fee, refund),
+          .with_unused_gas_weight(u64::MAX)
+          .withdraw_check_callback(nullifier_hash, recipient, relayer, fee, refund)
       )
   }
 
@@ -185,8 +186,8 @@ impl Contract {
       )
       .then(
         ext_self::ext(env::current_account_id())
-          .with_unused_gas_weight(1)
-          .withdraw_callback(nullifier_hash, recipient, relayer, fee, refund),
+          .with_unused_gas_weight(u64::MAX)
+          .withdraw_transfer_callback(nullifier_hash, recipient, relayer, fee, refund),
       )
   }
 
