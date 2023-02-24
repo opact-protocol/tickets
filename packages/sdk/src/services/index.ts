@@ -1,2 +1,2 @@
 export * from './mimc';
-export * from './build-tree';
+export * from './deposit-tree';

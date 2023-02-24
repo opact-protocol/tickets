@@ -7,3 +7,8 @@ export interface MerkleTreeStorageInterface {
   value: string;
   counter: string;
 }
+
+export interface MerkleTreeCacheInterface {
+  lastIndex: number;
+  branches: MerkleTreeStorageInterface[];
+}
