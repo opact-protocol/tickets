@@ -1,8 +1,100 @@
 import { plonk } from "snarkjs";
+import { mimc } from "@/services";
 import { parseNote } from "@/helpers";
 import { viewAccountHash } from "@/views";
-import { mimc, buildTree } from "@/services";
-import { PublicArgsInterface } from "@/interfaces/snark-proof";
+import { PublicArgsInterface, WithdrawInputInterface } from "@/interfaces/snark-proof";
+import MerkleTree from "fixed-merkle-tree";
+
+export const createSnarkProof = async (
+  payload: any,
+): Promise<{ proof: any, publicSignals: any }> => {
+  /**
+   * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
+   */
+  try {
+    const { proof, publicSignals } = await plonk.fullProve(
+      payload,
+      "./verifier.wasm",
+      "./circuit.zkey"
+    );
+
+    return { proof, publicSignals };
+  } catch (e) {
+    console.warn(e);
+
+    const { proof, publicSignals } = await plonk.fullProve(
+      payload,
+      "./verifier.wasm",
+      "./circuit.zkey"
+    );
+
+    return { proof, publicSignals };
+  }
+}
+
+export const prepareWithdraw = async (
+  note: string,
+  relayer: any,
+  recipient: string,
+  whitelistTree: MerkleTree,
+  commitmentsTree: MerkleTree,
+): Promise<{ publicArgs: PublicArgsInterface }> => {
+  const recipientHash = viewAccountHash('', '', recipient);
+
+  const parsedNote = parseNote(note);
+
+  const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
+  const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
+
+  const commitmentProof = commitmentsTree.proof(commitment);
+  const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
+
+  const input = getWithdrawInput(
+    relayer,
+    parsedNote,
+    recipientHash,
+    whitelistProof,
+    commitmentProof,
+  );
+
+  const { proof, publicSignals } = await createSnarkProof(input);
+
+  const publicArgs = getPublicArgs(
+    proof,
+    relayer,
+    publicSignals,
+    recipient,
+  );
+
+  return {
+    publicArgs,
+  }
+}
+
+export const getWithdrawInput = (
+  relayer: any,
+  parsedNote: any,
+  recipientHash: any,
+  whitelistProof: any,
+  commitmentProof: any,
+): WithdrawInputInterface => {
+  return {
+    refund: "0",
+    relayer: relayer.hash,
+    fee: relayer.feePercent,
+    recipient: recipientHash,
+    secret: parsedNote.secret,
+    root: commitmentProof.pathRoot,
+    nullifier: parsedNote.nullifier,
+    whitelistRoot: whitelistProof.pathRoot,
+    pathIndices: commitmentProof.pathIndices,
+    originDepositor: parsedNote.account_hash,
+    pathElements: commitmentProof.pathElements,
+    whitelistPathIndices: whitelistProof.pathIndices,
+    whitelistPathElements: whitelistProof.pathElements,
+    nullifierHash: mimc.singleHash!(parsedNote.nullifier),
+  }
+}
 
 export const getPublicArgs = (
   proof: any,
@@ -63,79 +155,3 @@ export const getPublicArgs = (
     },
   }
 };
-
-export const createSnarkProof = async (
-  payload: any,
-): Promise<{ proof: any, publicSignals: any }> => {
-  /**
-   * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
-   */
-  try {
-    const { proof, publicSignals } = await plonk.fullProve(
-      payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
-    );
-
-    return { proof, publicSignals };
-  } catch (e) {
-    console.warn(e);
-
-    const { proof, publicSignals } = await plonk.fullProve(
-      payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
-    );
-
-    return { proof, publicSignals };
-  }
-}
-
-export const prepareWithdraw = async (
-  note: string,
-  relayer: any,
-  recipient: string,
-  relayerHash: string,
-): Promise<{ publicArgs: PublicArgsInterface }> => {
-  const recipientHash = viewAccountHash('', '', recipient);
-
-  const parsedNote = parseNote(note);
-
-  const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
-  const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
-
-  const { commitmentsTree, whitelistTree } = await buildTree.initMerkleTree();
-
-  const commitmentProof = commitmentsTree.proof(commitment);
-  const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
-
-  const input = {
-    refund: "0",
-    relayer: relayerHash,
-    recipient: recipientHash,
-    secret: parsedNote.secret,
-    fee: relayer.feePercent,
-    root: commitmentProof.pathRoot,
-    nullifier: parsedNote.nullifier,
-    whitelistRoot: whitelistProof.pathRoot,
-    pathIndices: commitmentProof.pathIndices,
-    originDepositor: parsedNote.account_hash,
-    pathElements: commitmentProof.pathElements,
-    whitelistPathIndices: whitelistProof.pathIndices,
-    whitelistPathElements: whitelistProof.pathElements,
-    nullifierHash: mimc.singleHash!(parsedNote.nullifier),
-  };
-
-  const { proof, publicSignals } = await createSnarkProof(input);
-
-  const publicArgs = getPublicArgs(
-    proof,
-    relayer,
-    publicSignals,
-    recipient,
-  );
-
-  return {
-    publicArgs,
-  }
-}

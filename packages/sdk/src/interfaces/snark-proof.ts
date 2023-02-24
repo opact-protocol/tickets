@@ -24,3 +24,26 @@ export interface PublicArgsInterface {
   wxi: any;
   wxi_w: any;
 }
+
+export interface WithdrawInputInterface {
+  fee: string;
+  root: string;
+  refund: string;
+  secret: string;
+  relayer: string;
+  nullifier: string;
+  recipient: string;
+  pathIndices: string;
+  pathElements: string;
+  whitelistRoot: string;
+  nullifierHash: string;
+  originDepositor: string;
+  whitelistPathIndices: string;
+  whitelistPathElements: string;
+}
+
+export interface ParseNoteInterface {
+  secret: string;
+  nullifier: string;
+  account_hash: string;
+}

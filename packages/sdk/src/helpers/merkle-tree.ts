@@ -1,8 +1,6 @@
-export const parseNote = (note: string): {
-  secret: string;
-  nullifier: string;
-  account_hash: string;
-} => {
+import { ParseNoteInterface } from "@/interfaces";
+
+export const parseNote = (note: string): ParseNoteInterface => {
   const splitString = note.split("-");
 
   return {
