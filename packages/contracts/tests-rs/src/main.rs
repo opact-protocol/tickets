@@ -6,6 +6,8 @@ use std::io::Error;
 use serde_json::json;
 use near_units::parse_near;
 use futures::future::{try_join_all};
+use serde::{Serialize, Deserialize};
+use std::collections::HashMap;
 
 mod methods;
 mod tests_core;
