@@ -2,7 +2,7 @@ import type BN from "bn.js";
 // @ts-ignore
 import { buildMimcSponge } from "circomlibjs";
 
-type IntoBigInt = string | number | bigint | boolean | BN;
+const mimc = new MimcSponge();
 
 export class MimcSponge {
   sponge: any;
