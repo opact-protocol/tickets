@@ -9,6 +9,8 @@ env:
   VITE_NEAR_NODE_URL: https://rpc.testnet.near.org
   VITE_RELAYER_URL: https://miniflare-typescript-esbuild-jest.relayer.workers.dev
   VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+  VITE_TRACES_SAMPLE_RATE: 0
+  VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }} 
 on: pull_request
 
 concurrency:
