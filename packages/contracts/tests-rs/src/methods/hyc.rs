@@ -193,7 +193,6 @@ pub async fn deposit_near(
     final_result.push(value.clone());
   }
   anyhow::Ok(result)
-
 }
 
 pub async fn allowlist(
