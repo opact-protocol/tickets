@@ -20,6 +20,8 @@ env:
   ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
   PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
 
+  VITE_TRACES_SAMPLE_RATE: 1
+  VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }} 
 on:
   push:
     branches:
