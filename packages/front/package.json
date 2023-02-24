@@ -33,6 +33,8 @@
     "@near-wallet-selector/xdefi": "^7.8.2",
     "@near/contracts": "*",
     "@rollup/plugin-inject": "^4.0.4",
+    "@sentry/react": "^7.38.0",
+    "@sentry/tracing": "^7.38.0",
     "@types/react-gtm-module": "^2.0.1",
     "D": "^1.0.0",
     "aos": "^3.0.0-beta.6",
