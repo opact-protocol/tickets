@@ -24,6 +24,7 @@ mod tests {
     let user2 = create_user_account(&root, &worker, "user2").await;
     let user3 = create_user_account(&root, &worker, "user3").await;
     let user4 = create_user_account(&root, &worker, "user4").await;
+    let non_registered_user = create_user_account(&root, &worker, "non_registered_user").await;
 
     // SPOON HAPI.ONE FROM MAINNET
     let hapi_one_account: &str = "proxy.hapiprotocol.near";
@@ -46,7 +47,11 @@ mod tests {
     initialize_ft_contract(&worker, &token, &owner).await;
 
     // 1. Initialize contract
-    // DEPLOY CONTRACT
+    // DEPLOY REGISTRY CONTRACT
+    let registry_wasm = get_wasm("registry.wasm")?;
+    let registry = deploy_contract(&root, &worker, "registry_contract", &registry_wasm).await;
+
+    // DEPLOY INSTANCE CONTRACT
     let contract_wasm = get_wasm("contract.wasm")?;
     let contract = deploy_contract(&root, &worker, "core_contract", &contract_wasm).await;
 
@@ -67,12 +72,15 @@ mod tests {
     let commitment3 = get_json("commitment3.json").unwrap();
     let commitment4 = get_json("commitment4.json").unwrap();
 
+    // INITIALIZE REGISTRY
+    initialize_registry(&worker, &registry, &owner, hapi_one.as_account(), vec![]).await?;
+
     // INITIALIZE CONTRACT
     initialize_hyc(
       &worker,
       &contract,
       &owner,
-      hapi_one.as_account(),
+      registry.as_account(),
       Some(token.as_account()),
       DEPOSIT_VALUE,
       OWNER_FEE,
@@ -83,19 +91,20 @@ mod tests {
     // INITIALIZE STORAGE AND GET INITIAL BALANCE TO USERS
     bulk_register_storage(
       &worker,
-      vec![&user, &user2, &user3, contract.as_account()],
+      vec![&user, &user2, &user3, &non_registered_user, contract.as_account()],
       vec![&token],
     )
     .await?;
     ft_transfer(&worker, &owner, &token, &user, DEPOSIT_VALUE * 10).await?;
     ft_transfer(&worker, &owner, &token, &user2, DEPOSIT_VALUE * 10).await?;
     ft_transfer(&worker, &owner, &token, &user3, DEPOSIT_VALUE * 10).await?;
+    ft_transfer(&worker, &owner, &token, &non_registered_user, DEPOSIT_VALUE * 10).await?;
 
     // 0. add to allowlist
-    allowlist(&worker, &contract, &owner, &user).await?;
-    allowlist(&worker, &contract, &owner, &user2).await?;
-    allowlist(&worker, &contract, &owner, &user3).await?;
-    allowlist(&worker, &contract, &owner, &user4).await?;
+    allowlist(&worker, &registry, &owner, &user).await?;
+    allowlist(&worker, &registry, &owner, &user2).await?;
+    allowlist(&worker, &registry, &owner, &user3).await?;
+    allowlist(&worker, &registry, &owner, &user4).await?;
 
     // 1. commit deposits
     // assert wrong deposit fails (depositing NEAR instead of token)
@@ -112,6 +121,22 @@ mod tests {
       &token,
       contract.as_account(),
       DEPOSIT_VALUE - 1,
+      commitment1["secret_hash"].as_str().unwrap().to_string(),
+    )
+    .await?;
+
+    assert!(
+      !is_cross_contract_full_success(should_fail),
+      "call should have failed"
+    );
+
+    // assert deposit from non registered users fail
+    let should_fail = ft_transfer_call(
+      &worker,
+      &non_registered_user,
+      &token,
+      contract.as_account(),
+      DEPOSIT_VALUE,
       commitment1["secret_hash"].as_str().unwrap().to_string(),
     )
     .await?;
@@ -207,6 +232,7 @@ mod tests {
     let initial_balance4 = ft_balance_of(&worker, &token, &user4).await?;
     let initial_balance_owner = ft_balance_of(&worker, &token, &owner).await?;
 
+    println!("A");
     withdraw(
       &worker,
       &contract,
@@ -239,6 +265,7 @@ mod tests {
     let initial_balance = ft_balance_of(&worker, &token, &user4).await?;
     let initial_balance_owner = ft_balance_of(&worker, &token, &owner).await?;
 
+    println!("B");
     withdraw(
       &worker,
       &contract,
@@ -261,6 +288,7 @@ mod tests {
     assert_eq!(initial_balance + WITHDRAW_VALUE, final_balance);
     assert_eq!(initial_balance_owner + FEE_VALUE, final_balance_owner);
 
+    println!("C");
     // assert proof cannot be used again
     let should_panic = withdraw(
       &worker,
@@ -276,7 +304,7 @@ mod tests {
       Ok(_) => panic!("should panic!"),
       _ => (),
     }
-
+    println!("D");
     anyhow::Ok(())
   }
 }
