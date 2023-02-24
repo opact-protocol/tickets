@@ -1,103 +1,95 @@
-import { graphqlUrl, merkleTreeBaseRequest, merkleTreeOptions } from "@/constants";
-import { MerkleTreeStorageInterface } from "@/interfaces";
 import { MerkleTree as FixedMerkleTree } from "fixed-merkle-tree";
-import { allowListUpdatesQuery, depositUpdatesQuery, lastAllowListQuery, lastDepositQuery } from '@/graphql';
+import { merkleTreeBaseRequest, merkleTreeOptions } from "@/constants";
+import { MerkleTreeCacheInterface, MerkleTreeStorageInterface } from "@/interfaces";
 
-export class MerkleTree {
-  whitelistTree: any | undefined;
-  commitmentsTree: any | undefined;
+export class MerkleTreeService {
+  readonly name: string;
+  readonly graphqlUrl: string;
+  readonly branchesQuery: any;
+  readonly lastBranchesQuery: any;
 
-  async initMerkleTree () {
-    const deposits: MerkleTreeStorageInterface[] = await this.getDeposits();
+  tree: any | undefined;
 
-    const allowlists: MerkleTreeStorageInterface[] = await this.getAllowList();
+  constructor (
+    name: string,
+    graphqlUrl: string,
+    branchesQuery: any,
+    lastBranchesQuery: any,
+  ) {
+    this.name = name;
+    this.graphqlUrl = graphqlUrl;
+    this.branchesQuery = branchesQuery;
+    this.lastBranchesQuery = lastBranchesQuery;
+  }
 
-    const commitmentsTree = new FixedMerkleTree(20, [], merkleTreeOptions);
+  async initMerkleTree (cache: MerkleTreeCacheInterface) {
+    const items: MerkleTreeStorageInterface[] = await this.getBranches(cache);
 
-    if (deposits) {
-      deposits.forEach(({ index, value }) => {
+    const tree = new FixedMerkleTree(20, [], merkleTreeOptions);
+
+    if (items) {
+      items.forEach(({ index, value }) => {
         try {
-          commitmentsTree.update(+index, value);
+          tree.update(+index, value);
         } catch (e) {
           console.warn(e);
         }
       });
     }
 
-    const whitelistTree = new FixedMerkleTree(20, [], merkleTreeOptions);
+    this.tree = tree;
 
-    if (allowlists) {
-      allowlists.forEach(({ index, value }) => {
-        try {
-          whitelistTree.update(+index, value);
-        } catch (e) {
-          console.warn(e);
-        }
-      });
+    return { tree }
+  }
+
+  async getBranches (cache?: MerkleTreeCacheInterface) {
+    const {
+      lastIndex = 0,
+      branches: defaultBranches = [],
+    } = cache || {};
+
+    const lastBranchIndex = await this.getLastBranchIndex();
+
+    if (!lastIndex || +lastIndex < +lastBranchIndex) {
+      const qtyToQuer = +lastBranchIndex - lastIndex;
+
+      const branches =  await this.getMerkleTreeBranchesWithQuery(
+        'lastMerkleTreeUpdates',
+        this.branchesQuery,
+        {
+          startId: lastBranchIndex || "0",
+          first: qtyToQuer.toString(),
+        },
+      );
+
+      return [...defaultBranches, ...branches];
     }
 
-    this.whitelistTree = whitelistTree;
-
-    this.commitmentsTree = commitmentsTree;
-
-    return { commitmentsTree, whitelistTree }
+    return [...defaultBranches];
   }
 
-  async getDeposits () {
-    const lastDeposit = await this.getLastDeposit();
-
-    const qtyToQuer = +lastDeposit;
-
-    return await this.getMerkleTreeDataForQuery(
-      depositUpdatesQuery,
-      {
-        startId: "0",
-        first: qtyToQuer.toString(),
-      },
-    );
-  }
-
-  async getAllowList () {
-    const lastAllowlist = await this.getLastAllowlist();
-
-    const qtyToQuer = +lastAllowlist;
-
-    return await this.getMerkleTreeDataForQuery(
-      allowListUpdatesQuery,
-      {
-        startId: "0",
-        first: qtyToQuer.toString(),
-      },
-    );
-  }
-
-  async getLastDeposit () {
-    const { data } = await this.getMerkleTreeDataForQuery(
-      lastDepositQuery,
+  async getLastBranchIndex (): Promise<number> {
+    const { data } = await this.getMerkleTreeBranchesWithQuery(
+      'depositMerkleTreeUpdates',
+      this.lastBranchesQuery,
     )
 
     return data.depositMerkleTreeUpdates[0].counter;
   }
 
-  async getLastAllowlist () {
-    const { data } = await this.getMerkleTreeDataForQuery(
-      lastAllowListQuery,
-    )
-
-    return data.allowlistMerkleTreeUpdates[0].counter;
-  }
-
-  async getMerkleTreeDataForQuery (
+  async getMerkleTreeBranchesWithQuery (
+    name: string,
     query: any,
     variables: any = {},
   ): Promise<any> {
     const graphqlQuery = {
       query,
       variables,
+      name: name,
     };
 
     const res = await fetch(
-      graphqlUrl,
+      this.graphqlUrl,
       {
         ...merkleTreeBaseRequest,
         body: JSON.stringify(graphqlQuery),
