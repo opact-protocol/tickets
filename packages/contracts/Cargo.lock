@@ -260,7 +260,6 @@ dependencies = [
 name = "contract"
 version = "0.1.0"
 dependencies = [
- "hapi-near-connector",
  "hyc-events",
  "near-bigint",
  "near-sdk",
@@ -577,17 +576,6 @@ dependencies = [
  "cfg-if 1.0.0",
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
-]
-
-[[package]]
-name = "hapi-near-connector"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35bdfbefeae79d18fbaf0f54c80407ad411e6b2a010f135b24dc84edff0bb775"
-dependencies = [
- "near-contract-standards",
- "near-sdk",
- "serde",
 ]
 
 [[package]]
