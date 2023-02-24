@@ -1,6 +1,5 @@
 import { AttachedGas } from '@/constants';
 import { utils, providers } from 'near-api-js';
-import type { CodeResult } from 'near-api-js/lib/providers/provider';
 
 export interface Transaction {
   signerId: string;

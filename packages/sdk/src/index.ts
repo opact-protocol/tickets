@@ -1,5 +1,9 @@
-const a = 'aaa';
+import * as views from '@/views';
+import * as actions from '@/actions';
+import * as interfaces from '@/interfaces';
 
 export {
-  a,
+  views,
+  actions,
+  interfaces,
 };

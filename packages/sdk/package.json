@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build"
+    "build": "vite build"
   },
   "devDependencies": {
     "typescript": "^4.9.3",
@@ -13,6 +13,11 @@
   "dependencies": {
     "big.js": "^6.2.1",
     "circomlibjs": "^0.1.7",
-    "near-api-js": "^1.1.0"
+    "fixed-merkle-tree": "^0.7.3",
+    "graphql-tag": "^2.12.6",
+    "near-api-js": "^1.1.0",
+    "node-stdlib-browser": "^1.2.0",
+    "snarkjs": "^0.6.4",
+    "vite-plugin-simple-gql": "^0.5.0"
   }
 }

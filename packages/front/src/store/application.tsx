@@ -126,6 +126,7 @@ export const useApplication = create<{
         account_id: recipient,
       }
     );
+
     const relayerData = get().relayerData;
 
     try {
@@ -163,9 +164,10 @@ export const useApplication = create<{
         whitelistPathIndices: whitelistProof.pathIndices,
       };
 
-      // const { tree, root } = await buildTree(parseNote);
-
       const { proof, publicSignals } = await createSnarkProof(input);
+
+      console.log('proof', JSON.stringify(proof));
+      console.log('publicSignals', JSON.stringify(proof));
 
       const publicArgs = {
         root: publicSignals[0],

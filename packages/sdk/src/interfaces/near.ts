@@ -1,4 +1,4 @@
-export interface FungibleTokenMetadata {
+export interface FungibleTokenMetadataInterface {
   spec: string;
   name: string;
   symbol: string;
@@ -8,7 +8,7 @@ export interface FungibleTokenMetadata {
   decimals: number;
 }
 
-export type NFTContractMetadata = {
+export type NFTContractMetadataInterface = {
   spec: string;
   name: string;
   symbol: string;
@@ -18,7 +18,7 @@ export type NFTContractMetadata = {
   reference_hash: string | null;
 };
 
-export type TokenMetadata = {
+export type TokenMetadataInterface = {
   title: string | null;
   description: string | null;
   media: string | null;
@@ -36,5 +36,5 @@ export type TokenMetadata = {
 export type Token = {
   token_id: string,
   owner_id: string,
-  metadata: TokenMetadata,
+  metadata: TokenMetadataInterface,
 };

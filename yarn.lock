@@ -3954,6 +3954,13 @@ circom_runtime@0.1.20:
   dependencies:
     ffjavascript "0.2.55"
 
+circom_runtime@0.1.22:
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/circom_runtime/-/circom_runtime-0.1.22.tgz#f957c47662cdd03cd3fb76979c434c719a366373"
+  integrity sha512-V/XYZWBhbZY8SotkaGH4FbiDYAZ8a1Md++MBiKPDOuWS/NIJB+Q+XIiTC8zKMgoDaa9cd2OiTvsC9J6te7twNg==
+  dependencies:
+    ffjavascript "0.2.57"
+
 circomlib@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/circomlib/-/circomlib-2.0.5.tgz#183c703e53ed7d011811842dbeeeb9819f4cc1d6"
@@ -5666,7 +5673,7 @@ ffjavascript@0.2.55:
     wasmcurves "0.1.0"
     web-worker "^1.2.0"
 
-ffjavascript@^0.2.45, ffjavascript@^0.2.48, ffjavascript@^0.2.56:
+ffjavascript@0.2.57, ffjavascript@^0.2.45, ffjavascript@^0.2.48, ffjavascript@^0.2.56:
   version "0.2.57"
   resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.57.tgz#ba1be96015b2688192e49f2f4de2cc5150fd8594"
   integrity sha512-V+vxZ/zPNcthrWmqfe/1YGgqdkTamJeXiED0tsk7B84g40DKlrTdx47IqZuiygqAVG6zMw4qYuvXftIJWsmfKQ==
@@ -10024,6 +10031,16 @@ r1csfile@0.0.40:
     fastfile "0.0.20"
     ffjavascript "0.2.55"
 
+r1csfile@0.0.45:
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/r1csfile/-/r1csfile-0.0.45.tgz#59d59a33f8b5280017fc00ee691d003a3d705fe0"
+  integrity sha512-YKIp4D441aZ6OoI9y+bfAyb2j4Cl+OFq/iiX6pPWDrL4ZO968h0dq0w07i65edvrTt7/G43mTnl0qEuLXyp/Yw==
+  dependencies:
+    "@iden3/bigarray" "0.0.2"
+    "@iden3/binfileutils" "0.0.11"
+    fastfile "0.0.20"
+    ffjavascript "0.2.57"
+
 ramda@^0.24.1:
   version "0.24.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
@@ -10833,6 +10850,22 @@ snarkjs@^0.4.27:
     js-sha3 "^0.8.0"
     logplease "^1.2.15"
     r1csfile "0.0.40"
+
+snarkjs@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.6.4.tgz#6d8f3e169a418a588cba03214dc6adbba594c44b"
+  integrity sha512-n3G5cKfJEf/YzfQYt7Fh8KIMlQAPHvEz8pKbIPANC443SA3mKBQwhl3WmtURMSVSJg/+1sezx6Vaucn/myOj/g==
+  dependencies:
+    "@iden3/binfileutils" "0.0.11"
+    bfj "^7.0.2"
+    blake2b-wasm "^2.4.0"
+    circom_runtime "0.1.22"
+    ejs "^3.1.6"
+    fastfile "0.0.20"
+    ffjavascript "0.2.57"
+    js-sha3 "^0.8.0"
+    logplease "^1.2.15"
+    r1csfile "0.0.45"
 
 source-map-js@^1.0.2:
   version "1.0.2"
@@ -11926,6 +11959,11 @@ vite-plugin-pages@^0.25.0:
     local-pkg "^0.4.1"
     picocolors "^1.0.0"
     yaml "^2.1.1"
+
+vite-plugin-simple-gql@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-simple-gql/-/vite-plugin-simple-gql-0.5.0.tgz#7767d6e97331c77ddff833d4f22b298ecfb9bf85"
+  integrity sha512-zQUVhlkqwP07NcccLkw+sd6Z7LN7NXfyfxdFJRVUo3m7sdu797FXnsW9Q6LihpsYGgI/uClKZzAF5oyor+VqRQ==
 
 vite@^2.9.7:
   version "2.9.15"
