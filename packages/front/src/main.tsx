@@ -8,6 +8,21 @@ import { ApolloProvider } from "@apollo/client";
 import Buffer from "node:buffer";
 import { client } from "./services/graphqlClient";
 import "react-toastify/dist/ReactToastify.css";
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+import { useEnv } from "@/hooks/useEnv";
+
+const TRACE_SAMPLE_RATE = useEnv("VITE_TRACES_SAMPLE_RATE");
+const SENTRY_DSN = useEnv("VITE_SENTRY_DSN");
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+  integrations: [new BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  tracesSampleRate: TRACE_SAMPLE_RATE,
+});
 
 // TODO: Find a better way to handle this buffer error
 window.Buffer = window.Buffer || Buffer;
