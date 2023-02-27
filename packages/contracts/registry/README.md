@@ -30,8 +30,13 @@ To keep maximum security, owner's private keys should be stored in a hardware wa
 ### Initialize
 1. `new`
 params:
-currency: Currency, amount: U256, contract: AccountId
   - owner: AccountId -> account that will be able to edit the registry
+  - authorizer: AccountId -> Account of hapi.one protocol contract
+  - risk_params: Vec<CategoryRisk> -> Risk parameters for contract allowlist
+  - height: u64 -> height of allowlist merkle tree
+  - last_roots_len: u8 -> quantity of previous allowlist roots to be stored in contract
+  - q: U256 -> Field size for ZK calculations
+  - zero_value: U256 -> Zero value for ZK calculations
 
 Method to initialize the contract with a specified owner. The owner is going to be the only account able to alter the registry. Current implementation does not allow future changes in owner.
 
@@ -60,6 +65,23 @@ params:
 
 This method removes one entry from the allowlist. 
 
+### Allowlist methods
+
+1. `allowlist`
+params:
+  - account_id: AccountId -> account that you want to add to allowlist
+
+Panics if risk is too high,
+Panics if account is already registered,
+Adds account to allowlist otherwise
+
+2. `denylist`
+params:
+  - account_id: AccountId -> account that you want to add to denylist
+
+Panics if account risk is acceptable
+Adds account to denylist otherwise
+
 ### View methods
 1. `view_all_currencies` -> `Vec<Currency>`
 
@@ -71,13 +93,23 @@ params:
 
 Returns a HashMap mapping each available deposit amount in the currency to the corresponding HYC contract address 
 
-3. `view_is_in_allowlist` -> `bool`
+3. `view_is_contract_allowed` -> `bool`
 params:
   - account_id: AccountId -> Address of the contract whose allowlist membership you want to check
 
 Returns `true` if contract is in allowlist, `false` otherwise.
 
-4. `view_allowlist` -> `Vec<AccountId>`
+4. `view_contract_allowlist` -> `Vec<AccountId>`
 
 Returns a Vec containing all contract addresses in the allowlist.
 There is a know limitation to retrive large lists, however allowlist is not expected to ever exceed 100 elements
+
+5. `view_allowlist_root` -> `U256`
+
+returns last know allowlist merkle tree root in the cotnract. Necessary to build proofs
+
+6. `view_is_in_allowlist` -> `bool`
+params:
+  - account_id: AccountId -> account you want to checks
+
+true if account is in allowlist, false otherwise
