@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import packageJson from "./package.json";
+import stdLibBrowser from "node-stdlib-browser";
 
 const getPackageName = () => {
   return packageJson.name;
@@ -21,14 +22,12 @@ const fileName = {
 
 const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
 
-module.exports = defineConfig(async () => {
-  const { default: stdLibBrowser } = await import("node-stdlib-browser");
-
+module.exports = defineConfig(() => {
   return {
     base: "./",
     build: {
-      polyfillModulePreload: true,
       outDir: 'lib',
+      target: 'esnext',
       lib: {
         formats,
         entry: resolve(__dirname, "src/index.ts"),
@@ -37,12 +36,13 @@ module.exports = defineConfig(async () => {
       },
     },
     optimizeDeps: {
-      include: ["buffer", "process"]
+      include: ["buffer", "process"],
     },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
-        ...stdLibBrowser
+        ...stdLibBrowser,
+        fs: require.resolve('browserify-fs'),
       }
     }
   }
