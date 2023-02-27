@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { toBN } from "web3-utils";
-import randomBytes from "randombytes";
+import randomBytes from 'randombytes';
 
 export function leInt2Buff(value: string) {
   return new BN(value, 16, "le");

@@ -11,6 +11,7 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
+    "@types/randombytes": "^2.0.0",
     "big.js": "^6.2.1",
     "circomlibjs": "^0.1.7",
     "fixed-merkle-tree": "^0.7.3",
