@@ -9,7 +9,7 @@ const config = {
   entries: [
     {
       filePath: "./src/index.ts",
-      outFile: `./dist/${getPackageName()}.d.ts`,
+      outFile: `./lib/${getPackageName()}.d.ts`,
       noCheck: false,
     },
   ],

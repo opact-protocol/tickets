@@ -1,7 +1,6 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import packageJson from "./package.json";
-import stdLibBrowser from 'node-stdlib-browser';
 
 const getPackageName = () => {
   return packageJson.name;
@@ -18,29 +17,33 @@ const getPackageNameCamelCase = () => {
 const fileName = {
   es: `${getPackageName()}.mjs`,
   cjs: `${getPackageName()}.cjs`,
-  iife: `${getPackageName()}.iife.js`,
 };
 
 const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
 
-module.exports = defineConfig({
-  base: "./",
-  build: {
-    target: 'esnext',
-    lib: {
-      entry: resolve(__dirname, "src/index.ts"),
-      name: getPackageNameCamelCase(),
-      formats,
-      fileName: (format) => fileName[format],
+module.exports = defineConfig(async () => {
+  const { default: stdLibBrowser } = await import("node-stdlib-browser");
+
+  return {
+    base: "./",
+    build: {
+      polyfillModulePreload: true,
+      outDir: 'lib',
+      lib: {
+        formats,
+        entry: resolve(__dirname, "src/index.ts"),
+        name: getPackageNameCamelCase(),
+        fileName: (format) => fileName[format],
+      },
     },
-  },
-  optimizeDeps: {
-    include: ["buffer", "process"]
-  },
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-      ...stdLibBrowser
+    optimizeDeps: {
+      include: ["buffer", "process"]
+    },
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
+        ...stdLibBrowser
+      }
     }
   }
 });
