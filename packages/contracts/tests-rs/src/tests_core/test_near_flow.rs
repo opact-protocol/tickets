@@ -46,7 +46,7 @@ mod tests {
     let registry = deploy_contract(&root, &worker, "registry_contract", &registry_wasm).await;
 
     // DEPLOY INSTANCE CONTRACT
-    let contract_wasm = get_wasm("contract.wasm")?;
+    let contract_wasm = get_wasm("instance.wasm")?;
     let contract = deploy_contract(&root, &worker, "core_contract", &contract_wasm).await;
 
     const DEPOSIT_VALUE: u128 = 10_000_000_000_000_000_000_000_000;

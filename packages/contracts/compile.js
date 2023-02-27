@@ -42,7 +42,7 @@ const contracts = cargoFile.workspace.members;
 // Assuming this is compiled from the root project directory, link the compiled
 // contract to the `out` folder –
 // When running commands like `near deploy`, near-cli looks for a contract at
-// <CURRENT_DIRECTORY>/out/contract.wasm
+// <CURRENT_DIRECTORY>/out/instance.wasm
 if (code === 0) {
   const linkDir = `${calledFromDir}/out`;
   sh.mkdir("-p", linkDir);
