@@ -11,6 +11,7 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
+    "@near-wallet-selector/core": "^7.8.2",
     "@types/randombytes": "^2.0.0",
     "big.js": "^6.2.1",
     "circomlibjs": "^0.1.7",
