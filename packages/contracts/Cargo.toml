@@ -1,7 +1,7 @@
 [workspace]
 # Add location of contracts here
 members = [
-    "./contract",
+    "./instance",
     "./registry",
     "./test_contracts/fungible_token"
 ]
