@@ -136,7 +136,7 @@ async function testnetSetup() {
   );
 
   // deploy and initialize contract
-  const contractWasm = fs.readFileSync("../out/contract.wasm");
+  const contractWasm = fs.readFileSync("../out/instance.wasm");
   await contractAccount.deployContract(contractWasm);
 
   const verifyKey = JSON.parse(
