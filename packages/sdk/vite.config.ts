@@ -27,7 +27,10 @@ module.exports = defineConfig(() => {
     base: "./",
     build: {
       outDir: 'lib',
-      target: 'esnext',
+      target: 'es2020',
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
       lib: {
         formats,
         entry: resolve(__dirname, "src/index.ts"),
@@ -36,13 +39,16 @@ module.exports = defineConfig(() => {
       },
     },
     optimizeDeps: {
-      include: ["buffer", "process"],
+      esbuildOptions: {
+        target: "es2020",
+      }
     },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
         ...stdLibBrowser,
         fs: require.resolve('browserify-fs'),
+        'near-api-js': 'near-api-js/dist/near-api-js.js',
       }
     }
   }
