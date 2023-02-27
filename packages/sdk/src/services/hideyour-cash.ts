@@ -1,4 +1,4 @@
-import { MerkleTreeCacheInterface } from "@/interfaces";
+import { MerkleTreeCacheInterface, PublicArgsInterface } from "@/interfaces";
 import { MerkleTreeService } from "./merkle-tree";
 import {
   lastDepositQuery,
@@ -9,7 +9,14 @@ import {
 import { prepareWithdraw as prepareWithdrawAction } from "@/actions";
 import { viewAccountHash } from "@/views";
 import { mimc } from "@/services";
-import { randomBN } from "@/helpers";
+import { getTransaction, randomBN } from "@/helpers";
+import { RelayerBaseRequest } from "@/constants/relayer";
+import { WalletSelector } from "@near-wallet-selector/core";
+
+const baseRelayers = {
+  test: 'https://prod-relayer.hideyourcash.workers.dev/',
+  prod: 'https://dev-relayer.hideyourcash.workers.dev/',
+}
 
 export class HideyourCash {
   readonly network: string;
@@ -29,20 +36,77 @@ export class HideyourCash {
     this.graphqlUrl = graphqlUrl;
   }
 
-  async sendWhitelist () {
-    //
+  async sendWhitelist (
+    connection: WalletSelector,
+    accountId: string,
+  ) {
+    const wallet = await connection.wallet();
+
+    const transactions: any[] = [];
+
+    transactions.push(
+      getTransaction(
+        accountId,
+        this.contract,
+        "allowlist",
+        {
+          account_id: accountId,
+          auth_code: "nearcon",
+        },
+        ""
+      )
+    );
+
+    wallet.signAndSendTransactions({
+      transactions,
+    });
   }
 
-  async sendWithdraw () {
-    //
+  async sendDeposit (
+    hash: string,
+    amount: string,
+    contract: string,
+    accountId: string,
+    connection: WalletSelector,
+  ) {
+    const wallet = await connection.wallet();
+
+    const transactions: any[] = [];
+
+    transactions.push(
+      getTransaction(
+        accountId,
+        contract,
+        "deposit",
+        {
+          secrets_hash: hash,
+        },
+        amount
+      )
+    );
+
+    wallet.signAndSendTransactions({
+      transactions,
+    });
   }
 
-  async getRelayers () {
-    //
+  async getRelayers (network: 'test' | 'prod' = 'test') {
+    return await fetch(baseRelayers[network], {
+      ...RelayerBaseRequest
+    });
   }
 
-  async sendDeposit () {
-    //
+  async sendWithdraw (
+    relayerUrl: string,
+    publicArgs: PublicArgsInterface
+  ) {
+    return await fetch(
+      relayerUrl,
+      {
+        ...RelayerBaseRequest,
+        body: JSON.stringify(publicArgs)
+      }
+    )
   }
 
   async prepareDeposit (
