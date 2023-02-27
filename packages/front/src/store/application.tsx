@@ -11,6 +11,7 @@ import { buildTree, relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 function parseNote(note: string): {
   secret: string;
@@ -250,6 +251,18 @@ export const useApplication = create<{
         }
       );
     } catch (error) {
+      if (error instanceof AxiosError) {
+        toast(
+          <ToastCustom
+            icon="/error-circle-icon.svg"
+            title="Withdraw error"
+            message={error.response?.data.error}
+          />,
+          {
+            toastId: "withdraw-toast",
+          }
+        );
+      }
       console.log(error);
     }
   },
