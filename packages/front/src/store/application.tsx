@@ -11,6 +11,7 @@ import { buildTree, relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
+import { HideyourCash } from 'hideyourcash-sdk';
 
 function parseNote(note: string): {
   secret: string;
