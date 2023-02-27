@@ -1,3 +1,4 @@
+//@ts-ignore
 import { plonk } from "snarkjs";
 import { mimc } from "@/services";
 import { parseNote } from "@/helpers";

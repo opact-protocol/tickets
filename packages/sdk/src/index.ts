@@ -1,9 +1,4 @@
-import * as views from '@/views';
-import * as actions from '@/actions';
-import * as interfaces from '@/interfaces';
-
-export {
-  views,
-  actions,
-  interfaces,
-};
+export * from '@/views';
+export * from '@/actions';
+export * from '@/services';
+export * from '@/interfaces';

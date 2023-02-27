@@ -37,8 +37,8 @@ export class HideyourCash {
   }
 
   async sendWhitelist (
-    connection: WalletSelector,
     accountId: string,
+    connection: WalletSelector,
   ) {
     const wallet = await connection.wallet();
 
