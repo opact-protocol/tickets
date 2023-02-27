@@ -152,10 +152,6 @@ export function Withdraw() {
   }
 
   const preWithdraw = async (data: WithDrawProps) => {
-    if (!accountId) {
-      toggleModal();
-      return;
-    }
     try {
       buttonText.current = "Preparing your withdraw...";
       clearTimeout(toRef);
@@ -427,14 +423,6 @@ export function Withdraw() {
       {generatingProof && (
         <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
       )}
-      <TotalDepositsModal
-        isOpen={showModalDeposits}
-        onClose={() => setShowModalDeposits(false)}
-      />
-      <TotalWithdrawsModal
-        isOpen={showModalWithdrawals}
-        onClose={() => setShowModalWithdrawals(false)}
-      />
     </>
   );
 }

@@ -9,7 +9,6 @@ import {
   RelayerDataInterface,
 } from "hideyourcash-sdk";
 import { AxiosError } from "axios";
-import { reloadPage } from "@/utils/reloadPage";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
@@ -154,6 +153,18 @@ export const useApplication = create<{
         }
       );
     } catch (error) {
+      if (error instanceof AxiosError) {
+        toast(
+          <ToastCustom
+            icon="/error-circle-icon.svg"
+            title="Withdraw error"
+            message={error.response?.data.error}
+          />,
+          {
+            toastId: "withdraw-toast",
+          }
+        );
+      }
       console.log(error);
       if (error instanceof AxiosError) {
         toast(
@@ -170,8 +181,7 @@ export const useApplication = create<{
     }
   },
   sendWhitelist: async (connection, accountId) => {
-    await appService.sendAllowlist(accountId, connection);
-    window.location.reload();
+    appService.sendAllowlist(accountId, connection);
   },
   getRelayerFee: async (
     accountId: string,
