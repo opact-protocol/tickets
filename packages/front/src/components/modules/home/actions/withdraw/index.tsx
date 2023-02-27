@@ -107,10 +107,6 @@ export function Withdraw() {
   }
 
   const preWithdraw = async (data: WithDrawProps) => {
-    if (!accountId) {
-      toggleModal();
-      return;
-    }
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
@@ -298,11 +294,7 @@ export function Withdraw() {
                 className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
               >
                 {" "}
-                {!accountId
-                  ? "Connect Wallet"
-                  : !showModal
-                  ? "Withdraw"
-                  : buttonText.current}{" "}
+                {!showModal ? "Withdraw" : buttonText.current}{" "}
               </button>
             </div>
           )}
