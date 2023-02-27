@@ -51,9 +51,7 @@ export class HideyourCash {
         "allowlist",
         {
           account_id: accountId,
-          auth_code: "nearcon",
         },
-        ""
       )
     );
 
@@ -91,7 +89,7 @@ export class HideyourCash {
   }
 
   async getRelayers (network: 'test' | 'prod' = 'test') {
-    return await fetch(baseRelayers[network], {
+    return await fetch(baseRelayers[network] + '/data', {
       ...RelayerBaseRequest
     });
   }
@@ -123,6 +121,7 @@ export class HideyourCash {
       accountId,
     )
 
+    //contract-secret-nullifier-account
     const note =
       secret.toString() +
       "-" +
