@@ -3,33 +3,33 @@ import { ChevronUpIcon } from "@heroicons/react/24/outline";
 
 const protections = {
   "account balance display": {
-    message: "Don’t let people know how much money you have!"
+    message: "Don’t let people know how much money you have!",
   },
   "transactions tracking": {
-    message: "No one needs to know what you have been doing on chain!"
+    message: "No one needs to know what you have been doing on chain!",
   },
   "profile analysis": {
     message:
-      "Not a good idea to have people analyzing your profile based on on-chain activity!"
+      "Not a good idea to have people analyzing your profile based on on-chain activity!",
   },
-  "wallet connections tracking": {
+  doxing: {
     message:
-      "You don’t want everybody to know who you have been transacting lately!"
+      "Avoid the link between your blockchain account and your real world information",
   },
 
   "portfolio tracking": {
     message:
-      "Especially for institutions, you don’t want to have your portfolio tracked by other players!"
+      "Especially for institutions, you don’t want to have your portfolio tracked by other players!",
   },
   "front run": {
     message:
-      "If you’re a big investor, it’s better to be hidden to prevent front-run attacks."
-  }
+      "If you’re a big investor, it’s better to be hidden to prevent front-run attacks.",
+  },
 };
 
 const MiniCard = ({
   title,
-  protection
+  protection,
 }: {
   title: string;
   protection: string;
