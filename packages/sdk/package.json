@@ -27,16 +27,14 @@
   },
   "dependencies": {
     "@near-wallet-selector/core": "^7.8.2",
-    "@rollup/plugin-inject": "^5.0.3",
     "@types/randombytes": "^2.0.0",
     "big.js": "^6.2.1",
+    "browserify-fs": "^1.0.0",
     "circomlibjs": "^0.1.7",
     "fixed-merkle-tree": "^0.7.3",
-    "graphql-tag": "^2.12.6",
     "near-api-js": "^1.1.0",
     "node-stdlib-browser": "^1.2.0",
     "randombytes": "^2.1.0",
-    "snarkjs": "^0.6.4",
-    "vite-plugin-fs": "^1.0.0-beta.5"
+    "snarkjs": "^0.6.4"
   }
 }
