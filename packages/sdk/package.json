@@ -2,12 +2,12 @@
   "name": "hideyourcash-sdk",
   "private": true,
   "version": "0.0.2",
-  "main": "./dist/vite-ts-lib-starter.cjs",
-  "module": "./dist/vite-ts-lib-starter.mjs",
+  "main": "./dist/hideyourcash-sdk.cjs",
+  "module": "./dist/hideyourcash-sdk.mjs",
   "exports": {
     ".": {
-      "require": "./dist/vite-ts-lib-starter.cjs",
-      "import": "./dist/vite-ts-lib-starter.mjs"
+      "require": "./dist/hideyourcash-sdk.cjs",
+      "import": "./dist/hideyourcash-sdk.mjs"
     }
   },
   "scripts": {
