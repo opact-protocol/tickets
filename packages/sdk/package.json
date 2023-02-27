@@ -2,12 +2,12 @@
   "name": "hideyourcash-sdk",
   "private": true,
   "version": "0.0.2",
-  "main": "./dist/hideyourcash-sdk.cjs",
-  "module": "./dist/hideyourcash-sdk.mjs",
+  "main": "./lib/hideyourcash-sdk.cjs",
+  "module": "./lib/hideyourcash-sdk.mjs",
   "exports": {
     ".": {
-      "require": "./dist/hideyourcash-sdk.cjs",
-      "import": "./dist/hideyourcash-sdk.mjs"
+      "require": "./lib/hideyourcash-sdk.cjs",
+      "import": "./lib/hideyourcash-sdk.mjs"
     }
   },
   "scripts": {
@@ -19,14 +19,15 @@
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.18",
     "dts-bundle-generator": "^7.1.0",
-    "vite": "^4.1.0",
     "jest": "^29.3.1",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vite": "^4.1.0"
   },
   "dependencies": {
     "@near-wallet-selector/core": "^7.8.2",
+    "@rollup/plugin-inject": "^5.0.3",
     "@types/randombytes": "^2.0.0",
     "big.js": "^6.2.1",
     "circomlibjs": "^0.1.7",
@@ -35,6 +36,7 @@
     "near-api-js": "^1.1.0",
     "node-stdlib-browser": "^1.2.0",
     "randombytes": "^2.1.0",
-    "snarkjs": "^0.6.4"
+    "snarkjs": "^0.6.4",
+    "vite-plugin-fs": "^1.0.0-beta.5"
   }
 }
