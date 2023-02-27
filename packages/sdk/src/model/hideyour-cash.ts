@@ -1,5 +1,4 @@
 import { MerkleTreeCacheInterface } from "@/interfaces";
-import { MerkleTree } from "fixed-merkle-tree";
 import { MerkleTreeService } from "./merkle-tree";
 import {
   lastDepositQuery,
@@ -8,17 +7,69 @@ import {
   lastAllowListQuery,
 } from "@/graphql";
 import { prepareWithdraw as prepareWithdrawAction } from "@/actions";
+import { viewAccountHash } from "@/views";
+import { mimc } from "@/services";
+import { randomBN } from "@/helpers";
 
 export class HideyourCash {
-  graphqlUrl: string;
-
-  whitelistTree?: MerkleTree;
-  commitmentsTree?: MerkleTree;
+  readonly network: string;
+  readonly nodeUrl: string;
+  readonly contract: string;
+  readonly graphqlUrl: string;
 
   constructor (
-    graphqlUrl: string
+    network: string,
+    nodeUrl: string,
+    contract: string,
+    graphqlUrl: string,
   ) {
+    this.network = network
+    this.nodeUrl = nodeUrl;
+    this.contract = contract;
     this.graphqlUrl = graphqlUrl;
+  }
+
+  async sendWhitelist () {
+    //
+  }
+
+  async sendWithdraw () {
+    //
+  }
+
+  async getRelayers () {
+    //
+  }
+
+  async sendDeposit () {
+    //
+  }
+
+  async prepareDeposit (
+    accountId: string
+  ) {
+    const secret = randomBN();
+    const nullifier = randomBN();
+
+    const secrets_hash = mimc.hash!(secret, nullifier);
+
+    const accountHash = await viewAccountHash(
+      this.nodeUrl,
+      this.contract,
+      accountId,
+    )
+
+    const note =
+      secret.toString() +
+      "-" +
+      nullifier.toString() +
+      "-" +
+      accountHash.toString();
+
+    return {
+      note,
+      hash: secrets_hash,
+    };
   }
 
   async prepareWithdraw (

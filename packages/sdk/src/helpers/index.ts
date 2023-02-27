@@ -1,5 +1,6 @@
 export * from './date';
 export * from './near';
+export * from './web3';
 export * from './number';
 export * from './merkle-tree';
 
