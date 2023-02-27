@@ -82,6 +82,23 @@ params:
 Panics if account risk is acceptable
 Adds account to denylist otherwise
 
+### Allowlist methods
+
+1. `allowlist`
+params:
+  - account_id: AccountId -> account that you want to add to allowlist
+
+Panics if risk is too high,
+Panics if account is already registered,
+Adds account to allowlist otherwise
+
+2. `denylist`
+params:
+  - account_id: AccountId -> account that you want to add to denylist
+
+Panics if account risk is acceptable
+Adds account to denylist otherwise
+
 ### View methods
 1. `view_all_currencies` -> `Vec<Currency>`
 
