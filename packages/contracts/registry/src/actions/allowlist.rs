@@ -89,11 +89,7 @@ impl Contract {
           self.authorizer.get_category(&category)
         );
 
-<<<<<<< HEAD
-        let account_hash = account_hash(&account_id, self.verifier.q);
-=======
         let account_hash = account_hash(&account_id, self.allowlist.field_size);
->>>>>>> 817204c (refact(contracts): move events into separate lib)
 
         let event_counter = self.allowlist.event_count;
         let index = self.allowlist.add_to_denylist(account_hash);

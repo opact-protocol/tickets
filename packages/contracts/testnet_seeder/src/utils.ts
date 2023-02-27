@@ -124,7 +124,7 @@ export async function deployInstance(
   const verifyKey = JSON.parse(
     fs.readFileSync("../../circuits/out/verification_key.json").toString()
   );
-  const contractWasm = fs.readFileSync("../out/contract.wasm");
+  const contractWasm = fs.readFileSync("../out/instance.wasm");
   await account.deployContract(contractWasm);
   await account.functionCall({
     contractId: account.accountId,
