@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "main": "./lib/hideyourcash-sdk.cjs",
   "module": "./lib/hideyourcash-sdk.mjs",
+  "types": "./lib/hideyourcash-sdk.d.ts",
   "exports": {
     ".": {
       "require": "./lib/hideyourcash-sdk.cjs",
