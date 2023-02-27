@@ -7,5 +7,6 @@ export function leInt2Buff(value: any) {
 }
 
 export function randomBN(nbytes = 31) {
+  //@ts-ignore
   return toBN(leInt2Buff(randomBytes(nbytes)).toString());
 }
