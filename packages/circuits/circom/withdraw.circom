@@ -50,12 +50,12 @@ template Withdraw(levels, levelsWhitelist) {
     signal input pathElements[levels];
     signal input pathIndices[levels];
 
-    // reference to current whitelist Merkle Tree
-    signal input whitelistRoot;
-    // reference to original depositor to enforce whitelist
+    // reference to current allowlist Merkle Tree
+    signal input allowlistRoot;
+    // reference to original depositor to enforce allowlist
     signal input originDepositor; 
-    signal input whitelistPathElements[levelsWhitelist];
-    signal input whitelistPathIndices[levelsWhitelist];
+    signal input allowlistPathElements[levelsWhitelist];
+    signal input allowlistPathIndices[levelsWhitelist];
 
 
     component hasher = CommitmentHasher();
@@ -73,12 +73,12 @@ template Withdraw(levels, levelsWhitelist) {
         tree.pathIndices[i] <== pathIndices[i];
     }
 
-    component whitelistTree = MerkleTreeChecker(levelsWhitelist);
-    whitelistTree.leaf <== originDepositor;
-    whitelistTree.root <== whitelistRoot;
+    component allowlistTree = MerkleTreeChecker(levelsWhitelist);
+    allowlistTree.leaf <== originDepositor;
+    allowlistTree.root <== allowlistRoot;
     for (var i = 0; i < levelsWhitelist; i++) {
-        whitelistTree.pathElements[i] <== whitelistPathElements[i];
-        whitelistTree.pathIndices[i] <== whitelistPathIndices[i];
+        allowlistTree.pathElements[i] <== allowlistPathElements[i];
+        allowlistTree.pathIndices[i] <== allowlistPathIndices[i];
     }
 
     // Add hidden signals to make sure that tampering with recipient or fee will invalidate the snark proof
@@ -95,5 +95,5 @@ template Withdraw(levels, levelsWhitelist) {
 }
 
 component main {public
- [root, nullifierHash, recipient, relayer, fee, refund, whitelistRoot]
+ [root, nullifierHash, recipient, relayer, fee, refund, allowlistRoot]
 } = Withdraw(20, 20);
