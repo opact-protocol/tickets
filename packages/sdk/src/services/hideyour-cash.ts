@@ -94,7 +94,8 @@ export class HideyourCash extends Views {
 
   async getRelayers (network: 'test' | 'prod' = 'test') {
     const res = await fetch(baseRelayers[network] + '/data', {
-      ...RelayerBaseRequest
+      ...RelayerBaseRequest,
+      method: 'GET'
     });
 
     return [await res.json()];
