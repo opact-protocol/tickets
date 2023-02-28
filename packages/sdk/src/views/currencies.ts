@@ -61,3 +61,4 @@ export const viewIsAllowlistRootValid = async (
     root,
   });
 };
+
