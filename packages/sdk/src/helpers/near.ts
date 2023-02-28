@@ -150,3 +150,22 @@ export const trimLeadingZeroes = (value: string) => {
 
   return replacedValue;
 };
+
+export const sendJsonRpc = (
+  nodeUrl: string,
+  method: string,
+  params: object,
+) => {
+  const body = JSON.stringify({
+    method,
+    params,
+    id: (_nextId++),
+    jsonrpc: '2.0'
+  });
+
+  return fetch(nodeUrl, {
+    body,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
