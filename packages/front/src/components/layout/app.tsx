@@ -10,6 +10,7 @@ export const App = () => {
   const tagManagerArgs = {
     gtmId: import.meta.env.VITE_GTM_ID as string,
   };
+  //   gtmId: import.meta.env.VITE_GTM_ID as string,
 
   TagManager.initialize(tagManagerArgs);
 

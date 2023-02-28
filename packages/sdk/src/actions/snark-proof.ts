@@ -37,7 +37,7 @@ export const prepareWithdraw = async (
   note: string,
   relayer: any,
   recipient: string,
-  whitelistTree: MerkleTree,
+  allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
   const recipientHash = viewAccountHash('', '', recipient);
@@ -48,13 +48,13 @@ export const prepareWithdraw = async (
   const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
 
   const commitmentProof = commitmentsTree.proof(commitment);
-  const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
+  const allowlistProof = allowlistTree.proof(parsedNote.account_hash);
 
   const input = getWithdrawInput(
     relayer,
     parsedNote,
     recipientHash,
-    whitelistProof,
+    allowlistProof,
     commitmentProof,
   );
 
@@ -76,7 +76,7 @@ export const getWithdrawInput = (
   relayer: any,
   parsedNote: any,
   recipientHash: any,
-  whitelistProof: any,
+  allowlistProof: any,
   commitmentProof: any,
 ): WithdrawInputInterface => {
   return {
@@ -87,12 +87,12 @@ export const getWithdrawInput = (
     secret: parsedNote.secret,
     root: commitmentProof.pathRoot,
     nullifier: parsedNote.nullifier,
-    whitelistRoot: whitelistProof.pathRoot,
+    whitelistRoot: allowlistProof.pathRoot,
     pathIndices: commitmentProof.pathIndices,
     originDepositor: parsedNote.account_hash,
     pathElements: commitmentProof.pathElements,
-    whitelistPathIndices: whitelistProof.pathIndices,
-    whitelistPathElements: whitelistProof.pathElements,
+    whitelistPathIndices: allowlistProof.pathIndices,
+    whitelistPathElements: allowlistProof.pathElements,
     nullifierHash: mimc.singleHash!(parsedNote.nullifier),
   }
 }

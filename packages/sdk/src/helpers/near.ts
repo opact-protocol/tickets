@@ -27,6 +27,8 @@ export const getTransaction = (
   args: any,
   amount?: string,
 ): Transaction => {
+  console.log(amount);
+
   return {
     signerId,
     receiverId,

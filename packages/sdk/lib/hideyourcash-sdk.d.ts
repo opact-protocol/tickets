@@ -15,70 +15,11 @@ export declare const viewCurrencyContracts: (rpcUrl: string, contract: string) =
 export declare const viewIsContractAllowed: (rpcUrl: string, contract: string, accountId: string) => Promise<any>;
 export declare const viewIsAllowlistRootValid: (rpcUrl: string, contract: string, root: string) => Promise<any>;
 export declare const viewIsWithdrawValid: (rpcUrl: string, contract: string, payload: any) => Promise<boolean>;
-export interface PublicArgsInterface {
-	root: string;
-	nullifier_hash: string;
-	recipient: string;
-	relayer: string;
-	fee: string;
-	refund: string;
-	allowlist_root: string;
-	a: any;
-	b: any;
-	c: any;
-	z: any;
-	t_1: any;
-	t_2: any;
-	t_3: any;
-	eval_a: string;
-	eval_b: string;
-	eval_c: string;
-	eval_s1: string;
-	eval_s2: string;
-	eval_zw: string;
-	eval_r: string;
-	wxi: any;
-	wxi_w: any;
-}
-export interface WithdrawInputInterface {
-	fee: string;
-	root: string;
-	refund: string;
-	secret: string;
-	relayer: string;
-	nullifier: string;
-	recipient: string;
-	pathIndices: string;
-	pathElements: string;
-	whitelistRoot: string;
-	nullifierHash: string;
-	originDepositor: string;
-	whitelistPathIndices: string;
-	whitelistPathElements: string;
-}
-export interface ParseNoteInterface {
-	secret: string;
-	nullifier: string;
-	account_hash: string;
-}
-export declare const createSnarkProof: (payload: any) => Promise<{
-	proof: any;
-	publicSignals: any;
+export declare const createTicket: (nodeRpcUrl: string, contract: string, accountId: string, currencieContract: string) => Promise<{
+	note: string;
+	hash: string;
 }>;
-export declare const prepareWithdraw: (note: string, relayer: any, recipient: string, whitelistTree: MerkleTree, commitmentsTree: MerkleTree) => Promise<{
-	publicArgs: PublicArgsInterface;
-}>;
-export declare const getWithdrawInput: (relayer: any, parsedNote: any, recipientHash: any, whitelistProof: any, commitmentProof: any) => WithdrawInputInterface;
-export declare const getPublicArgs: (proof: any, relayer: any, publicSignals: any, recipient: string) => PublicArgsInterface;
-export type IntoBigInt = string | number | bigint | boolean | BN;
-export declare class MimcSponge {
-	sponge: any;
-	constructor();
-	initMimc(): Promise<void>;
-	hash(left: IntoBigInt, right: IntoBigInt): string;
-	singleHash(single: IntoBigInt): string;
-}
-export declare const mimc: MimcSponge;
+export declare const sendDeposit: (hash: string, amount: string, contract: string, accountId: string, connection: WalletSelector) => Promise<void>;
 export interface FungibleTokenMetadataInterface {
 	spec: string;
 	name: string;
@@ -130,6 +71,73 @@ export interface MerkleTreeCacheInterface {
 	lastIndex: number;
 	branches: MerkleTreeStorageInterface[];
 }
+export interface PublicArgsInterface {
+	root: string;
+	nullifier_hash: string;
+	recipient: string;
+	relayer: string;
+	fee: string;
+	refund: string;
+	allowlist_root: string;
+	a: any;
+	b: any;
+	c: any;
+	z: any;
+	t_1: any;
+	t_2: any;
+	t_3: any;
+	eval_a: string;
+	eval_b: string;
+	eval_c: string;
+	eval_s1: string;
+	eval_s2: string;
+	eval_zw: string;
+	eval_r: string;
+	wxi: any;
+	wxi_w: any;
+}
+export interface WithdrawInputInterface {
+	fee: string;
+	root: string;
+	refund: string;
+	secret: string;
+	relayer: string;
+	nullifier: string;
+	recipient: string;
+	pathIndices: string;
+	pathElements: string;
+	whitelistRoot: string;
+	nullifierHash: string;
+	originDepositor: string;
+	whitelistPathIndices: string;
+	whitelistPathElements: string;
+}
+export interface ParseNoteInterface {
+	secret: string;
+	nullifier: string;
+	account_hash: string;
+}
+export declare const sendWithdraw: (relayerUrl: string, publicArgs: PublicArgsInterface) => Promise<Response>;
+export declare const sendAllowlist: (contract: string, accountId: string, connection: WalletSelector) => Promise<void>;
+export declare const createSnarkProof: (payload: any) => Promise<{
+	proof: any;
+	publicSignals: any;
+}>;
+export declare const prepareWithdraw: (note: string, relayer: any, recipient: string, allowlistTree: MerkleTree, commitmentsTree: MerkleTree) => Promise<{
+	publicArgs: PublicArgsInterface;
+}>;
+export declare const getWithdrawInput: (relayer: any, parsedNote: any, recipientHash: any, allowlistProof: any, commitmentProof: any) => WithdrawInputInterface;
+export declare const getPublicArgs: (proof: any, relayer: any, publicSignals: any, recipient: string) => PublicArgsInterface;
+export declare const prepareMerkleTree: (name: string, branchesQuery: any, lastBranchesQuery: any, graphqlUrl: string, cache?: MerkleTreeCacheInterface) => Promise<import("fixed-merkle-tree").MerkleTree>;
+export type IntoBigInt = string | number | bigint | boolean | BN;
+export declare class MimcSponge {
+	sponge: any;
+	constructor();
+	initMimc(): Promise<void>;
+	hash(left: IntoBigInt, right: IntoBigInt): string;
+	singleHash(single: IntoBigInt): string;
+}
+export declare const mimc: MimcSponge;
 export declare class MerkleTreeService {
 	readonly name: string;
 	readonly graphqlUrl: string;
@@ -159,22 +167,27 @@ declare class Views {
 	viewWasNullifierSpent(nullifier: string): Promise<any>;
 	viewRelayers(network?: "test" | "prod"): Promise<any[]>;
 }
+declare class Actions extends Views {
+	readonly nodeUrl: string;
+	readonly contract: string;
+	readonly graphqlUrl: string;
+	constructor(nodeUrl: string, contract: string, graphqlUrl: string);
+	sendAllowlist(accountId: string, connection: WalletSelector): Promise<void>;
+	createTicket(accountId: string, currencieContract: string): Promise<{
+		note: string;
+		hash: string;
+	}>;
+	sendDeposit(hash: string, amount: string, contract: string, accountId: string, connection: WalletSelector): Promise<void>;
+	sendWithdraw(relayerUrl: string, publicArgs: PublicArgsInterface): Promise<Response>;
+	prepareWithdraw(note: string, relayer: string, recipient: string, allowlistTreeCache?: MerkleTreeCacheInterface, commitmentsTreeCache?: MerkleTreeCacheInterface): Promise<PublicArgsInterface>;
+}
 export type fn = () => Promise<any>;
-export declare class HideyourCash extends Views {
+export declare class HideyourCash extends Actions {
 	readonly network: string;
 	readonly nodeUrl: string;
 	readonly contract: string;
 	readonly graphqlUrl: string;
 	constructor(network: string, nodeUrl: string, contract: string, graphqlUrl: string);
-	sendWhitelist(accountId: string, connection: WalletSelector): Promise<void>;
-	sendDeposit(hash: string, amount: string, contract: string, accountId: string, connection: WalletSelector): Promise<void>;
-	sendWithdraw(relayerUrl: string, publicArgs: PublicArgsInterface): Promise<Response>;
-	prepareDeposit(accountId: string): Promise<{
-		note: string;
-		hash: string;
-	}>;
-	prepareWithdraw(note: string, relayer: string, recipient: string, whitelistTreeCache?: MerkleTreeCacheInterface, commitmentsTreeCache?: MerkleTreeCacheInterface): Promise<PublicArgsInterface>;
-	prepareMerkleTree(name: string, branchesQuery: any, lastBranchesQuery: any, cache?: MerkleTreeCacheInterface): Promise<import("fixed-merkle-tree").MerkleTree>;
 }
 
 export {};

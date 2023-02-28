@@ -87,15 +87,15 @@ export class Actions extends Views {
     note: string,
     relayer: string,
     recipient: string,
-    whitelistTreeCache?: MerkleTreeCacheInterface,
+    allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface,
   ) {
-    const whitelistTree = await prepareMerkleTree(
-      'whitelistTree',
+    const allowlistTree = await prepareMerkleTree(
+      'allowlistTree',
       allowListUpdatesQuery,
       lastAllowListQuery,
       this.graphqlUrl,
-      whitelistTreeCache,
+      allowlistTreeCache,
     );
 
     const commitmentsTree = await prepareMerkleTree(
@@ -110,7 +110,7 @@ export class Actions extends Views {
       note,
       relayer,
       recipient,
-      whitelistTree,
+      allowlistTree,
       commitmentsTree,
     );
 
