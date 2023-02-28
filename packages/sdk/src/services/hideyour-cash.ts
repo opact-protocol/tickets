@@ -13,11 +13,6 @@ import { RelayerBaseRequest } from "@/constants/relayer";
 import { WalletSelector } from "@near-wallet-selector/core";
 import { Views } from "./views";
 
-const baseRelayers = {
-  test: 'https://dev-relayer.hideyourcash.workers.dev',
-  prod: 'https://prod-relayer.hideyourcash.workers.dev',
-}
-
 export type fn = () => Promise<any>;
 
 export class HideyourCash extends Views {
@@ -90,15 +85,6 @@ export class HideyourCash extends Views {
     wallet.signAndSendTransactions({
       transactions,
     });
-  }
-
-  async getRelayers (network: 'test' | 'prod' = 'test') {
-    const res = await fetch(baseRelayers[network] + '/data', {
-      ...RelayerBaseRequest,
-      method: 'GET'
-    });
-
-    return [await res.json()];
   }
 
   async sendWithdraw (
