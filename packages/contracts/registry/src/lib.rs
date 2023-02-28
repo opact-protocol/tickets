@@ -7,7 +7,7 @@ use near_sdk::{env, near_bindgen, ext_contract, Gas, Promise, PromiseResult, Pan
 use near_sdk::collections::{UnorderedMap, UnorderedSet};
 
 use allowlist_tree::AllowlistMerkleTree;
-use near_mimc::account_hash;
+use near_mimc::{account_hash, u256_mimc_sponge_single};
 
 use hapi_connector::*;
 use hyc_events::*;
