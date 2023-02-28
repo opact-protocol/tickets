@@ -1,0 +1,22 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: near
+    name: hyc
+    network: near-testnet
+    source:
+      accounts: 
+        prefixes:
+          - c06637a45e2fbfc96724
+      startBlock: 118625553
+    mapping:
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - DepositMerkleTreeUpdate
+        - AllowlistMerkleTreeUpdate
+        - Withdrawal
+      receiptHandlers:
+        - handler: handleReceipt
+      file: ./assembly/mappings.ts
