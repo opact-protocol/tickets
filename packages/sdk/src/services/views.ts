@@ -10,6 +10,12 @@ import {
   viewIsAllowlistRootValid,
 } from '@/views';
 import { PublicArgsInterface } from '@/interfaces';
+import { RelayerBaseRequest } from '@/constants/relayer';
+
+const baseRelayers = {
+  test: 'https://dev-relayer.hideyourcash.workers.dev',
+  prod: 'https://prod-relayer.hideyourcash.workers.dev',
+}
 
 export class Views {
   readonly contract: string;
@@ -91,5 +97,14 @@ export class Views {
       this.contract,
       nullifier,
     );
+  }
+
+  async viewRelayers (network: 'test' | 'prod' = 'test') {
+    const res = await fetch(baseRelayers[network] + '/data', {
+      ...RelayerBaseRequest,
+      method: 'GET'
+    });
+
+    return [await res.json()];
   }
 }
