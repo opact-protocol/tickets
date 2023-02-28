@@ -16,6 +16,7 @@ export const merkleTreeMethods = {
 export const merkleTreeBaseRequest = {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
   },
 }
