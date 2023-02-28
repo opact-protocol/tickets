@@ -1,4 +1,4 @@
-export const RelayerBaseRequest = {
+export const relayerBaseRequest = {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
