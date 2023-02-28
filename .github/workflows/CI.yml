@@ -76,10 +76,6 @@ jobs:
       - name: Lib Tests
         run: yarn contracts test:lib
 
-<<<<<<< HEAD
-      - name: Front build
-        run: yarn front build
-=======
       - name: Building Relayer
         run: yarn relayer build
 
@@ -163,7 +159,6 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v3
->>>>>>> dc095fe (feat(ci): add vercel sample deployment to ci on pull requests)
 
   dev_deploy:
     runs-on: ubuntu-latest
