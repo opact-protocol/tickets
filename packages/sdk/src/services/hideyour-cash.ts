@@ -7,18 +7,20 @@ import {
   lastAllowListQuery,
 } from "@/graphql";
 import { prepareWithdraw as prepareWithdrawAction } from "@/actions";
-import { viewAccountHash } from "@/views";
 import { mimc } from "@/services";
 import { getTransaction, randomBN } from "@/helpers";
 import { RelayerBaseRequest } from "@/constants/relayer";
 import { WalletSelector } from "@near-wallet-selector/core";
+import { Views } from "./views";
 
 const baseRelayers = {
-  test: 'https://prod-relayer.hideyourcash.workers.dev/',
-  prod: 'https://dev-relayer.hideyourcash.workers.dev/',
+  test: 'https://dev-relayer.hideyourcash.workers.dev',
+  prod: 'https://prod-relayer.hideyourcash.workers.dev',
 }
 
-export class HideyourCash {
+export type fn = () => Promise<any>;
+
+export class HideyourCash extends Views {
   readonly network: string;
   readonly nodeUrl: string;
   readonly contract: string;
@@ -30,6 +32,8 @@ export class HideyourCash {
     contract: string,
     graphqlUrl: string,
   ) {
+    super(nodeUrl, network);
+
     this.network = network
     this.nodeUrl = nodeUrl;
     this.contract = contract;
@@ -89,9 +93,11 @@ export class HideyourCash {
   }
 
   async getRelayers (network: 'test' | 'prod' = 'test') {
-    return await fetch(baseRelayers[network] + '/data', {
+    const res = await fetch(baseRelayers[network] + '/data', {
       ...RelayerBaseRequest
     });
+
+    return [await res.json()];
   }
 
   async sendWithdraw (
@@ -115,9 +121,7 @@ export class HideyourCash {
 
     const secrets_hash = mimc.hash!(secret, nullifier);
 
-    const accountHash = await viewAccountHash(
-      this.nodeUrl,
-      this.contract,
+    const accountHash = await this.viewAccountHash(
       accountId,
     )
 
@@ -183,4 +187,3 @@ export class HideyourCash {
     return (await merkleTree.initMerkleTree(cache)).tree;
   }
 }
-
