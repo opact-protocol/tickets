@@ -157,6 +157,7 @@ declare class Views {
 	viewRelayerHash(relayer: any): Promise<any>;
 	viewIsWithdrawValid(payload: PublicArgsInterface): Promise<boolean>;
 	viewWasNullifierSpent(nullifier: string): Promise<any>;
+	viewRelayers(network?: "test" | "prod"): Promise<any[]>;
 }
 export type fn = () => Promise<any>;
 export declare class HideyourCash extends Views {
@@ -167,7 +168,6 @@ export declare class HideyourCash extends Views {
 	constructor(network: string, nodeUrl: string, contract: string, graphqlUrl: string);
 	sendWhitelist(accountId: string, connection: WalletSelector): Promise<void>;
 	sendDeposit(hash: string, amount: string, contract: string, accountId: string, connection: WalletSelector): Promise<void>;
-	getRelayers(network?: "test" | "prod"): Promise<any[]>;
 	sendWithdraw(relayerUrl: string, publicArgs: PublicArgsInterface): Promise<Response>;
 	prepareDeposit(accountId: string): Promise<{
 		note: string;
