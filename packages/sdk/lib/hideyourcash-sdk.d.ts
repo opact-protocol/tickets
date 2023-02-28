@@ -12,6 +12,8 @@ export declare const viewRelayerData: (relayerUrl: string) => Promise<any>;
 export declare const viewRelayerHash: (rpcUrl: string, contract: string, relayer: any) => Promise<any>;
 export declare const viewAllCurrencies: (rpcUrl: string, contract: string) => Promise<any>;
 export declare const viewCurrencyContracts: (rpcUrl: string, contract: string) => Promise<any>;
+export declare const viewIsContractAllowed: (rpcUrl: string, contract: string, accountId: string) => Promise<any>;
+export declare const viewIsAllowlistRootValid: (rpcUrl: string, contract: string, root: string) => Promise<any>;
 export declare const viewIsWithdrawValid: (rpcUrl: string, contract: string, payload: any) => Promise<boolean>;
 export interface PublicArgsInterface {
 	root: string;
@@ -142,7 +144,22 @@ export declare class MerkleTreeService {
 	getLastBranchIndex(): Promise<number>;
 	getMerkleTreeBranchesWithQuery(name: string, query: any, variables?: any): Promise<any>;
 }
-export declare class HideyourCash {
+declare class Views {
+	readonly contract: string;
+	readonly nodeUrl: string;
+	constructor(nodeUrl: string, contract: string);
+	viewIsInAllowlist(accountId: string): Promise<any>;
+	viewAccountHash(accountId: string): Promise<any>;
+	viewAllCurrencies(): Promise<any>;
+	viewCurrencyContracts(): Promise<any>;
+	viewIsContractAllowed(contract: string): Promise<any>;
+	viewIsAllowlistRootValid(root: string): Promise<any>;
+	viewRelayerHash(relayer: any): Promise<any>;
+	viewIsWithdrawValid(payload: PublicArgsInterface): Promise<boolean>;
+	viewWasNullifierSpent(nullifier: string): Promise<any>;
+}
+export type fn = () => Promise<any>;
+export declare class HideyourCash extends Views {
 	readonly network: string;
 	readonly nodeUrl: string;
 	readonly contract: string;
@@ -150,7 +167,7 @@ export declare class HideyourCash {
 	constructor(network: string, nodeUrl: string, contract: string, graphqlUrl: string);
 	sendWhitelist(accountId: string, connection: WalletSelector): Promise<void>;
 	sendDeposit(hash: string, amount: string, contract: string, accountId: string, connection: WalletSelector): Promise<void>;
-	getRelayers(network?: "test" | "prod"): Promise<Response>;
+	getRelayers(network?: "test" | "prod"): Promise<any[]>;
 	sendWithdraw(relayerUrl: string, publicArgs: PublicArgsInterface): Promise<Response>;
 	prepareDeposit(accountId: string): Promise<{
 		note: string;
