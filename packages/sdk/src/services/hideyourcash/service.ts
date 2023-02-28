@@ -19,6 +19,7 @@ export class HideyourCash extends Actions {
     this.network = network;
     this.nodeUrl = nodeUrl;
     this.contract = contract;
+    this.connection = connection;
     this.graphqlUrl = graphqlUrl;
   }
 }
