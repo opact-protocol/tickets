@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "circom_tester": "^0.0.15",
-    "circomlibjs": "file:./circomlibjs"
+    "circomlibjs": "^0.1.7"
   }
 }
