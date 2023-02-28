@@ -50,4 +50,16 @@ impl Contract {
   pub fn view_is_allowlist_root_valid(&self, root: U256) -> bool {
     self.allowlist.is_known_valid_root(root)
   }
+
+  /// Returns the MiMC hash of the account
+  /// Will be deprecated in favor of off chain computation
+  pub fn view_account_hash(&self, account_id: AccountId) -> U256 {
+    account_hash(&account_id, self.allowlist.field_size)
+  }
+
+  /// Returns the MiMC hash of the nullifier sent
+  /// Will be deprecated in favour of off chain computation
+  pub fn view_nullifier_hash(&self, nullifier: U256) -> U256 {
+    u256_mimc_sponge_single(U256::zero(), [nullifier])[0]
+  }
 }
