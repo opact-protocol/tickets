@@ -12,7 +12,7 @@ router.get("/data", ({ env, res }) => {
   res.body = {
     data: {
       url: env.RELAYER_URL,
-      account_id: env.ACCOUNT_ID,
+      account: env.ACCOUNT_ID,
       feePercent: env.RELAYER_FEE,
     },
   };
