@@ -21,6 +21,7 @@ import type {
   RelayerDataInterface,
 } from "../../interfaces";
 import { Views } from "./views";
+// import { Account } from "near-api-js";
 
 export class Actions extends Views {
   readonly nodeUrl: string;
