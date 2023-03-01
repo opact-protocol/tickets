@@ -39552,9 +39552,10 @@ function BP(a) {
 const CP = (a, e) => new uu(a).div(e).toFixed(2), aB = (a) => {
   const e = a.split("-");
   return {
-    secret: e[0],
-    nullifier: e[1],
-    account_hash: e[2]
+    contract: e[0],
+    secret: e[1],
+    nullifier: e[2],
+    account_hash: e[3]
   };
 }, TP = (a, e = 8) => a ? `${a.slice(0, e)}...${a.slice(-e)}` : "", fB = async (a, e, f, c) => {
   const i = Di(), b = Di(), h = Cd.hash(i, b), g = await $2(

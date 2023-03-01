@@ -118,6 +118,7 @@ export interface WithdrawInputInterface {
 }
 export interface ParseNoteInterface {
 	secret: string;
+	contract: string;
 	nullifier: string;
 	account_hash: string;
 }
