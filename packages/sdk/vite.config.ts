@@ -16,8 +16,8 @@ const getPackageNameCamelCase = () => {
 };
 
 const fileName = {
-  es: `${getPackageName()}.mjs`,
-  cjs: `${getPackageName()}.cjs`,
+  es: `mjs/index.js`,
+  cjs: `cjs/index.js`,
 };
 
 const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
@@ -27,7 +27,7 @@ module.exports = defineConfig(() => {
     base: "./",
     build: {
       outDir: 'lib',
-      target: 'es2020',
+      target: 'esnext',
       commonjsOptions: {
         transformMixedEsModules: true,
       },
@@ -48,7 +48,6 @@ module.exports = defineConfig(() => {
         "@": resolve(__dirname, "./src"),
         ...stdLibBrowser,
         fs: require.resolve('browserify-fs'),
-        'near-api-js': 'near-api-js/dist/near-api-js.js',
       }
     }
   }
