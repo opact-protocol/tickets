@@ -28,7 +28,6 @@ export const createTicket = async (
     currencieContract,
   );
 
-  //contract-secret-nullifier-account
   const note = `
     ${contractHash.toString()}-
     ${secret.toString()}-

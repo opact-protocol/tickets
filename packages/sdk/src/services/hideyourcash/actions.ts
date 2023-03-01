@@ -17,7 +17,6 @@ import {
 import { Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
 import { WalletSelector } from "@near-wallet-selector/core";
 import { Views } from "./views";
-// import { Account } from "near-api-js";
 
 export class Actions extends Views {
   readonly nodeUrl: string;

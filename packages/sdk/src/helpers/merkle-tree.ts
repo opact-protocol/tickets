@@ -4,8 +4,9 @@ export const parseNote = (note: string): ParseNoteInterface => {
   const splitString = note.split("-");
 
   return {
-    secret: splitString[0],
-    nullifier: splitString[1],
-    account_hash: splitString[2],
+    contract: splitString[0],
+    secret: splitString[1],
+    nullifier: splitString[2],
+    account_hash: splitString[3],
   };
 }
