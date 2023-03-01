@@ -1,4 +1,5 @@
 import { viewFunction } from "@/helpers";
+import { RelayerDataInterface } from "@/interfaces";
 
 export const viewRelayerData = async (
   relayerUrl: string,
@@ -11,14 +12,14 @@ export const viewRelayerData = async (
 export const viewRelayerHash = (
   rpcUrl: string,
   contract: string,
-  relayer: any,
+  relayer: RelayerDataInterface,
 ) => {
   return viewFunction(
     rpcUrl,
     contract,
     "view_account_hash",
     {
-      account_id: relayer.accountId,
+      account_id: relayer.account,
     },
   );
 }

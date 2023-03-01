@@ -13,9 +13,10 @@ import {
   allowListUpdatesQuery,
   lastAllowListQuery,
 } from "@/graphql";
-import { MerkleTreeCacheInterface, PublicArgsInterface } from "@/interfaces";
+import { MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
 import { WalletSelector } from "@near-wallet-selector/core";
 import { Views } from "./views";
+// import { Account } from "near-api-js";
 
 export class Actions extends Views {
   readonly nodeUrl: string;
@@ -42,7 +43,7 @@ export class Actions extends Views {
       this.contract,
       accountId,
       connection,
-    )
+    );
   }
 
   async createTicket (
@@ -70,7 +71,7 @@ export class Actions extends Views {
       contract,
       accountId,
       connection,
-    )
+    );
   }
 
   async sendWithdraw (
@@ -85,7 +86,7 @@ export class Actions extends Views {
 
   async prepareWithdraw (
     note: string,
-    relayer: string,
+    relayer: RelayerDataInterface,
     recipient: string,
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface,
@@ -107,6 +108,8 @@ export class Actions extends Views {
     );
 
     const { publicArgs } = await prepareWithdrawAction(
+      this.nodeUrl,
+      this.contract,
       note,
       relayer,
       recipient,

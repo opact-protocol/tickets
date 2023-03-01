@@ -1,5 +1,6 @@
 import { getTransaction } from "@/helpers";
 import { WalletSelector } from "@near-wallet-selector/core";
+// import { Account } from "near-api-js";
 
 export const sendAllowlist = async (
   contract: string,

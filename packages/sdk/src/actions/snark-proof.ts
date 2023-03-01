@@ -2,12 +2,13 @@
 import { plonk } from "snarkjs";
 import { mimc } from "@/services";
 import { parseNote } from "@/helpers";
-import { viewAccountHash } from "@/views";
+import { viewAccountHash, viewRelayerHash } from "@/views";
 import { PublicArgsInterface, WithdrawInputInterface } from "@/interfaces/snark-proof";
 import MerkleTree from "fixed-merkle-tree";
+import { RelayerDataInterface } from "@/interfaces";
 
 export const createSnarkProof = async (
-  payload: any,
+  payload: WithdrawInputInterface,
 ): Promise<{ proof: any, publicSignals: any }> => {
   /**
    * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
@@ -34,13 +35,16 @@ export const createSnarkProof = async (
 }
 
 export const prepareWithdraw = async (
+  nodeUrl: string,
+  contract: string,
   note: string,
-  relayer: any,
+  relayer: RelayerDataInterface,
   recipient: string,
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
-  const recipientHash = viewAccountHash('', '', recipient);
+  const recipientHash = await viewAccountHash(nodeUrl, contract, recipient);
+  const relayerHash = await viewRelayerHash(nodeUrl, contract, relayer);
 
   const parsedNote = parseNote(note);
 
@@ -50,8 +54,8 @@ export const prepareWithdraw = async (
   const commitmentProof = commitmentsTree.proof(commitment);
   const allowlistProof = allowlistTree.proof(parsedNote.account_hash);
 
-  const input = getWithdrawInput(
-    relayer,
+  const input = await getWithdrawInput(
+    {...relayer, hash: relayerHash },
     parsedNote,
     recipientHash,
     allowlistProof,
@@ -72,13 +76,13 @@ export const prepareWithdraw = async (
   }
 }
 
-export const getWithdrawInput = (
-  relayer: any,
+export const getWithdrawInput = async (
+  relayer: RelayerDataInterface & { hash: string },
   parsedNote: any,
-  recipientHash: any,
+  recipientHash: string,
   allowlistProof: any,
   commitmentProof: any,
-): WithdrawInputInterface => {
+): Promise<WithdrawInputInterface> => {
   return {
     refund: "0",
     relayer: relayer.hash,
@@ -99,7 +103,7 @@ export const getWithdrawInput = (
 
 export const getPublicArgs = (
   proof: any,
-  relayer: any,
+  relayer: RelayerDataInterface,
   publicSignals: any,
   recipient: string,
 ): PublicArgsInterface => {
@@ -107,7 +111,7 @@ export const getPublicArgs = (
     recipient,
     root: publicSignals[0],
     nullifier_hash: publicSignals[1],
-    relayer: relayer.accountId,
+    relayer: relayer.account,
     fee: publicSignals[4],
     refund: publicSignals[5],
     allowlist_root: publicSignals[6],

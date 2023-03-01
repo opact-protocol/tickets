@@ -9,7 +9,7 @@ import {
   viewWasNullifierSpent,
   viewIsAllowlistRootValid,
 } from '@/views';
-import { PublicArgsInterface } from '@/interfaces';
+import { PublicArgsInterface, RelayerDataInterface } from '@/interfaces';
 import { relayerBaseRequest } from '@/constants/relayer';
 
 const baseRelayers = {
@@ -75,7 +75,7 @@ export class Views {
     );
   }
 
-  async viewRelayerHash (relayer: any) {
+  async viewRelayerHash (relayer: RelayerDataInterface) {
     return viewRelayerHash(
       this.nodeUrl,
       this.contract,
