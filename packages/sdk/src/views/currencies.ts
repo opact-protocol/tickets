@@ -29,6 +29,22 @@ export const viewAllCurrencies = async (
       };
     })
   );
+
+  return Promise.all(currencies.map(async (currency: Currency) => {
+    if (currency.type === 'Near') {
+      return {
+        ...currency,
+      }
+    }
+
+    return {
+      ...currency,
+      metadata: await viewFungibleTokenMetadata(
+        rpcUrl,
+        currency.account_id,
+      ),
+    }
+  }));
 };
 
 export const viewCurrencyContracts = async (
