@@ -39578,7 +39578,7 @@ const CP = (a, e) => new uu(a).div(e).toFixed(2), aB = (a) => {
 }, cB = async (a, e, f, c, i, b, h) => {
   const g = await h.wallet(), y = [];
   if (b.type === "Nep141") {
-    const w = b.account_id, m = await U6(
+    const w = b.account_id || "", m = await U6(
       w,
       c,
       a
