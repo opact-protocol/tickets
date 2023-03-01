@@ -1,11 +1,11 @@
 import { viewFunction } from "@/helpers";
-import { Currency } from "..";
+import { Currency, ViewCurrenciesResponseInterface } from "..";
 import { viewFungibleTokenMetadata } from "./fungible-token";
 
 export const viewAllCurrencies = async (
   rpcUrl: string,
   contract: string,
-): Promise<Currency[]> => {
+): Promise<ViewCurrenciesResponseInterface[]> => {
   const currencies = await viewFunction(
     rpcUrl,
     contract,

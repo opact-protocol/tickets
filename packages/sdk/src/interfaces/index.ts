@@ -1,3 +1,4 @@
+export * from './currencies';
 export * from './near';
 export * from './relayer';
 export * from './merkle-tree';
