@@ -56,7 +56,7 @@ export const sendDeposit = async(
   const transactions: any[] = [];
 
   if (currency.type === 'Nep141') {
-    const tokenContract = currency.account_id;
+    const tokenContract = currency.account_id || '';
 
     const storage = await getTokenStorage(
       tokenContract,

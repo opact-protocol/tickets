@@ -23,7 +23,7 @@ export const viewAllCurrencies = async (
       ...currency,
       metadata: await viewFungibleTokenMetadata(
         rpcUrl,
-        currency.account_id,
+        currency.account_id!,
       ),
       contracts: await viewCurrencyContracts(
         rpcUrl,
