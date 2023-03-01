@@ -47,7 +47,7 @@ export const viewAllCurrencies = async (
         rpcUrl,
         contract,
         currency,
-      )
+      ),
     }
   }));
 };
