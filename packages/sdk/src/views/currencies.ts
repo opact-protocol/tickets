@@ -43,6 +43,11 @@ export const viewAllCurrencies = async (
         rpcUrl,
         currency.account_id,
       ),
+      contracts: await viewCurrencyContracts(
+        rpcUrl,
+        contract,
+        currency,
+      )
     }
   }));
 };
