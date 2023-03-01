@@ -5,7 +5,8 @@ import {
   prepareWithdraw as prepareWithdrawAction,
   sendAllowlist,
   sendDeposit,
-  sendWithdraw
+  sendWithdraw,
+  sendContractWithdraw
 } from "@/actions";
 import {
   lastDepositQuery,
@@ -13,7 +14,7 @@ import {
   allowListUpdatesQuery,
   lastAllowListQuery,
 } from "@/graphql";
-import { MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
+import { Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
 import { WalletSelector } from "@near-wallet-selector/core";
 import { Views } from "./views";
 // import { Account } from "near-api-js";
@@ -63,23 +64,43 @@ export class Actions extends Views {
     amount: string,
     contract: string,
     accountId: string,
+    currency: Currency,
     connection: WalletSelector,
   ) {
     return sendDeposit(
+      this.nodeUrl,
       hash,
       amount,
       contract,
       accountId,
+      currency,
+      connection,
+    );
+  }
+
+  async sendContractWithdraw (
+    contract: string,
+    signerId: string,
+    receiverId: string,
+    publicArgs: PublicArgsInterface,
+    connection: WalletSelector,
+  ) {
+    return sendContractWithdraw(
+      this.nodeUrl,
+      contract,
+      signerId,
+      receiverId,
+      publicArgs,
       connection,
     );
   }
 
   async sendWithdraw (
-    relayerUrl: string,
+    relayer: RelayerDataInterface,
     publicArgs: PublicArgsInterface,
   ) {
     return sendWithdraw(
-      relayerUrl,
+      relayer,
       publicArgs,
     );
   }

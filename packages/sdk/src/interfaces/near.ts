@@ -38,3 +38,12 @@ export type Token = {
   owner_id: string,
   metadata: TokenMetadataInterface,
 };
+
+export type Currency =
+  | {
+      type: "Near";
+    }
+  | {
+      type: "Nep141";
+      account_id: string;
+    };

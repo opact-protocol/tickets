@@ -1,9 +1,10 @@
 import { viewFunction } from "@/helpers";
+import { Currency } from "..";
 
 export const viewAllCurrencies = (
   rpcUrl: string,
   contract: string,
-): Promise<any> => {
+): Promise<Currency[]> => {
   return viewFunction(
     rpcUrl,
     contract,
@@ -14,11 +15,16 @@ export const viewAllCurrencies = (
 export const viewCurrencyContracts = (
   rpcUrl: string,
   contract: string,
+  currency: Currency,
 ): Promise<any> => {
   return viewFunction(
     rpcUrl,
     contract,
     'view_currency_contracts',
+    {
+      type: currency.type,
+      currency,
+    },
   );
 };
 

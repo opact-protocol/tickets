@@ -9,7 +9,7 @@ import {
   viewWasNullifierSpent,
   viewIsAllowlistRootValid,
 } from '@/views';
-import { PublicArgsInterface, RelayerDataInterface } from '@/interfaces';
+import { Currency, PublicArgsInterface, RelayerDataInterface } from '@/interfaces';
 import { relayerBaseRequest } from '@/constants/relayer';
 
 const baseRelayers = {
@@ -52,10 +52,11 @@ export class Views {
     );
   }
 
-  viewCurrencyContracts () {
+  viewCurrencyContracts (currency: Currency) {
     return viewCurrencyContracts(
       this.nodeUrl,
       this.contract,
+      currency,
     );
   }
 

@@ -1,8 +1,9 @@
 
 import { mimc } from "@/services";
 import { viewAccountHash } from "@/views";
-import { getTransaction, randomBN } from "@/helpers";
+import { getTransaction, randomBN, viewFunction } from "@/helpers";
 import { WalletSelector } from "@near-wallet-selector/core";
+import { Currency } from "..";
 
 export const createTicket = async (
   nodeRpcUrl: string,
@@ -42,29 +43,90 @@ export const createTicket = async (
 }
 
 export const sendDeposit = async(
+  nodeUrl: string,
   hash: string,
   amount: string,
   contract: string,
   accountId: string,
+  currency: Currency,
   connection: WalletSelector,
 ) => {
   const wallet = await connection.wallet();
 
   const transactions: any[] = [];
 
-  transactions.push(
-    getTransaction(
-      accountId,
+  if (currency.type === 'Nep141') {
+    const tokenContract = currency.account_id;
+
+    const storage = await getTokenStorage(
+      tokenContract,
       contract,
-      "deposit",
-      {
-        secrets_hash: hash,
-      },
-      amount
+      nodeUrl,
+    );
+
+		if (!storage || storage.total < '0.10') {
+			transactions.push(
+				getTransaction(
+					accountId,
+					tokenContract,
+					'storage_deposit',
+					{
+						account_id: contract,
+						registration_only: true,
+					},
+				),
+			);
+		}
+
+    transactions.push(
+      getTransaction(
+        accountId,
+        tokenContract,
+        'ft_transfer_call',
+        {
+          amount,
+          msg: hash,
+          memo: null,
+          receiver_id: contract,
+        }
+      )
     )
-  );
+  }
+
+  if (currency.type === 'Near') {
+    transactions.push(
+      getTransaction(
+        accountId,
+        contract,
+        "deposit",
+        {
+          secrets_hash: hash,
+        },
+        amount,
+      )
+    );
+  }
 
   wallet.signAndSendTransactions({
     transactions,
   });
 }
+
+export const getTokenStorage = async (
+  token: string,
+  contract: string,
+  nodeRpcUrl: string,
+) => {
+  try {
+    return await viewFunction(
+      nodeRpcUrl,
+      token,
+      'storage_balance_of',
+      {
+        account_id: contract,
+      }
+    );
+  } catch (e) {
+    return;
+  }
+};

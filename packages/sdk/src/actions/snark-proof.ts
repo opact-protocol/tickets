@@ -9,7 +9,7 @@ import { RelayerDataInterface } from "@/interfaces";
 
 export const createSnarkProof = async (
   payload: WithdrawInputInterface,
-): Promise<{ proof: any, publicSignals: any }> => {
+): Promise<{ proof: any, publicSignals: string[] }> => {
   /**
    * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
    */
@@ -64,6 +64,8 @@ export const prepareWithdraw = async (
 
   const { proof, publicSignals } = await createSnarkProof(input);
 
+  console.log(proof, 'proof');
+
   const publicArgs = getPublicArgs(
     proof,
     relayer,
@@ -104,7 +106,7 @@ export const getWithdrawInput = async (
 export const getPublicArgs = (
   proof: any,
   relayer: RelayerDataInterface,
-  publicSignals: any,
+  publicSignals: string[],
   recipient: string,
 ): PublicArgsInterface => {
   return {
