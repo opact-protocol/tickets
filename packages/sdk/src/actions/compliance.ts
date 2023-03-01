@@ -1,12 +1,12 @@
 import { getTransaction } from "@/helpers";
-import { WalletSelector } from "@near-wallet-selector/core";
+import { ConnectionType } from "@/interfaces";
+import { sendTransactionsCallback } from "./connection";
 
 export const sendAllowlist = async (
   contract: string,
   accountId: string,
-  connection: WalletSelector,
-) => {
-  const wallet = await connection.wallet();
+  connection: ConnectionType,
+): Promise<any> => {
 
   const transactions: any[] = [];
 
@@ -21,7 +21,8 @@ export const sendAllowlist = async (
     )
   );
 
-  wallet.signAndSendTransactions({
+  return sendTransactionsCallback(
+    connection,
     transactions,
-  });
+  );
 }

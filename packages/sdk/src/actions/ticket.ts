@@ -1,9 +1,9 @@
 
 import { mimc } from "@/services";
-import { Currency } from "@/interfaces";
+import { ConnectionType, Currency } from "@/interfaces";
 import { viewAccountHash } from "@/views";
 import { getTransaction, randomBN, viewFunction } from "@/helpers";
-import { WalletSelector } from "@near-wallet-selector/core";
+import { sendTransactionsCallback } from "./connection";
 
 export const createTicket = async (
   nodeRpcUrl: string,
@@ -48,10 +48,8 @@ export const sendDeposit = async(
   contract: string,
   accountId: string,
   currency: Currency,
-  connection: WalletSelector,
+  connection: ConnectionType,
 ) => {
-  const wallet = await connection.wallet();
-
   const transactions: any[] = [];
 
   if (currency.type === 'Nep141') {
@@ -106,9 +104,10 @@ export const sendDeposit = async(
     );
   }
 
-  wallet.signAndSendTransactions({
+  return sendTransactionsCallback(
+    connection,
     transactions,
-  });
+  );
 }
 
 export const getTokenStorage = async (

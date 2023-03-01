@@ -1,25 +1,8 @@
 {
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
-    "strict": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node", "jest"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-    },
-  },
-  "include": ["src"]
+    "module": "esnext",
+    "outDir": "dist/mjs",
+    "target": "esnext"
+  }
 }

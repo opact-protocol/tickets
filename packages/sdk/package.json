@@ -2,18 +2,20 @@
   "name": "hideyourcash-sdk",
   "private": true,
   "version": "0.0.2",
-  "main": "./lib/hideyourcash-sdk.cjs",
-  "module": "./lib/hideyourcash-sdk.mjs",
-  "types": "./lib/hideyourcash-sdk.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/hideyourcash-sdk.cjs",
-      "import": "./lib/hideyourcash-sdk.mjs"
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts"
+    "build": "tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts",
+    "test": "jest",
+    "test:coverage": "jest --runInBand --coverage"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",

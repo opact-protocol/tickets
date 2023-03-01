@@ -1,8 +1,8 @@
 import { getTransaction } from "@/helpers";
-import { PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
+import { ConnectionType, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
 import { relayerBaseRequest } from "@/constants/relayer"
-import { WalletSelector } from "@near-wallet-selector/core";
 import { getTokenStorage } from "./ticket";
+import { sendTransactionsCallback } from "./connection";
 
 export const sendWithdraw = async (
   relayer: RelayerDataInterface,
@@ -23,10 +23,8 @@ export const sendContractWithdraw = async (
   signerId: string,
   receiverId: string,
   publicArgs: PublicArgsInterface,
-  connection: WalletSelector,
+  connection: ConnectionType,
 ) => {
-  const wallet = await connection.wallet();
-
   const storages = await checkWithdrawStorages(
     nodeUrl,
     signerId,
@@ -46,7 +44,10 @@ export const sendContractWithdraw = async (
     ),
   );
 
-  return wallet.signAndSendTransactions({ transactions });
+  return sendTransactionsCallback(
+    connection,
+    transactions,
+  );
 }
 
 export const checkWithdrawStorages = async (

@@ -1,3 +1,6 @@
+import { Account } from "near-api-js";
+import { WalletSelector } from "@near-wallet-selector/core";
+
 export interface FungibleTokenMetadataInterface {
   spec: string;
   name: string;
@@ -38,3 +41,5 @@ export type Token = {
   owner_id: string,
   metadata: TokenMetadataInterface,
 };
+
+export type ConnectionType = WalletSelector | Account;

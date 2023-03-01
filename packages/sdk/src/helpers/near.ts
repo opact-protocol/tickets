@@ -1,4 +1,4 @@
-import { AttachedGas } from '@/constants';
+import { AttachedGas } from "@/constants";
 
 let _nextId = 123;
 

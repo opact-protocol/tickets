@@ -14,8 +14,7 @@ import {
   allowListUpdatesQuery,
   lastAllowListQuery,
 } from "@/graphql";
-import { Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
-import { WalletSelector } from "@near-wallet-selector/core";
+import { ConnectionType, Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
 import { Views } from "./views";
 
 export class Actions extends Views {
@@ -37,7 +36,7 @@ export class Actions extends Views {
 
   async sendAllowlist (
     accountId: string,
-    connection: WalletSelector,
+    connection: ConnectionType,
   ) {
     return sendAllowlist(
       this.contract,
@@ -64,7 +63,7 @@ export class Actions extends Views {
     contract: string,
     accountId: string,
     currency: Currency,
-    connection: WalletSelector,
+    connection: ConnectionType,
   ) {
     return sendDeposit(
       this.nodeUrl,
@@ -82,7 +81,7 @@ export class Actions extends Views {
     signerId: string,
     receiverId: string,
     publicArgs: PublicArgsInterface,
-    connection: WalletSelector,
+    connection: ConnectionType,
   ) {
     return sendContractWithdraw(
       this.nodeUrl,
