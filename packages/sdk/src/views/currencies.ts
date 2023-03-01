@@ -53,6 +53,11 @@ export const viewAllCurrencies = async (
         contract,
         currency,
       ),
+      contracts: await viewCurrencyContracts(
+        rpcUrl,
+        contract,
+        currency,
+      )
     }
   }));
 };
