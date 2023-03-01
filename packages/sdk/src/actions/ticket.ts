@@ -1,9 +1,9 @@
 
 import { mimc } from "@/services";
+import { Currency } from "@/interfaces";
 import { viewAccountHash } from "@/views";
 import { getTransaction, randomBN, viewFunction } from "@/helpers";
 import { WalletSelector } from "@near-wallet-selector/core";
-import { Currency } from "..";
 
 export const createTicket = async (
   nodeRpcUrl: string,
