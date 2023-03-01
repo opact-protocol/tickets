@@ -16,10 +16,12 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import "swiper/css";
+import { useAllCurrencies } from "@/hooks/useAllCurrencies";
+import { useCurrencyContracts } from "@/hooks/useCurrencyContracts";
 
 interface SelectedTokenProps {
-  id: number;
-  name: string;
+  type: string;
+  account_id: string;
 }
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
@@ -27,15 +29,6 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 );
 
 const hycTransaction = "hyc-transaction";
-
-const amounts = [0.1, 1, 10, 20, 50];
-
-const tokens = [
-  { id: 1, name: "NEAR" },
-  { id: 2, name: "AVAX" },
-  { id: 3, name: "BTC" },
-  { id: 4, name: "CARDANO" },
-];
 
 const customId = "deposit-toast";
 
@@ -55,6 +48,11 @@ export function Deposit() {
   const { selector, accountId, toggleModal } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
+  const { allCurrencies } = useAllCurrencies();
+  const { currencyContracts } = useCurrencyContracts(selector!, {
+    type: "Nep141",
+    account_id: "c06637a45e2fbfc96724tokenaccount.testnet",
+  });
 
   if (!action && transactionHashes && !approved) {
     toast(
@@ -84,7 +82,7 @@ export function Deposit() {
     });
   }
 
-  const { allowList } = useAllowlist(accountId!, selector);
+  const { allowList } = useAllowlist(accountId!);
 
   const preDeposit = async () => {
     if (!accountId) {
@@ -130,8 +128,8 @@ export function Deposit() {
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="block truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.name
-                      ? selectedToken.name
+                    {selectedToken && selectedToken.type
+                      ? selectedToken.type
                       : "Select token"}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -148,14 +146,11 @@ export function Deposit() {
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="absolute mt-1 max-h-60 w-[240px] overflow-auto rounded-[20px] bg-white py-1 text-base shadow-[0_4px_15px_rgba(0,0,0,0.2)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[10]">
-                    {tokens.map((token, i) => (
+                    {allCurrencies?.map((token) => (
                       <Listbox.Option
-                        key={token.id}
-                        disabled={token.id !== 1}
+                        key={token.account_id}
                         className={({ active }) =>
-                          `relative ${
-                            i === 0 ? "cursor-pointer" : "cursor-not-allowed"
-                          } select-none p-[10px] mx-auto w-[220px] ${
+                          `relative cursor-pointer select-none p-[10px] mx-auto w-[220px] ${
                             active
                               ? "bg-soft-blue-normal rounded-[10px] text-dark-grafiti"
                               : "text-dark-grafiti"
@@ -173,9 +168,7 @@ export function Deposit() {
                                   selected ? "bg-success" : "bg-gray-300"
                                 }`}
                               />{" "}
-                              {i === 0
-                                ? token.name
-                                : `${token.name}, coming soon`}
+                              {token.type}
                             </span>
                           </>
                         )}
@@ -187,7 +180,7 @@ export function Deposit() {
             </Listbox>
           </div>
 
-          {selectedToken.id ? (
+          {selectedToken.type ? (
             <div className="mt-8">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
@@ -221,24 +214,24 @@ export function Deposit() {
                     },
                   }}
                 >
-                  {amounts.map((size) => (
-                    <SwiperSlide key={size}>
+                  {currencyContracts?.map((token) => (
+                    <SwiperSlide key={token.accountId}>
                       <RadioGroup.Option
-                        key={size}
-                        value={size}
+                        key={token.accountId}
+                        value={token}
                         as="div"
                         className={({ checked }) => `
                               bg-transparent rounded-full p-1 w-[132px] mb-2 ${
-                                size === 10 ? "bg-soft-blue-from-deep-blue" : ""
+                                checked ? "bg-soft-blue-from-deep-blue" : ""
                               }
                             `}
                       >
-                        <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-not-allowed">
+                        <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-pointer">
                           <RadioGroup.Label
                             as="span"
                             className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
                           >
-                            {size} NEAR
+                            {token.value} {selectedToken.type}
                           </RadioGroup.Label>
                         </div>
                       </RadioGroup.Option>
