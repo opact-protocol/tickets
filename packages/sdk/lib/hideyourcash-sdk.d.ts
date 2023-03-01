@@ -52,6 +52,15 @@ export type Currency = {
 	type: "Nep141";
 	account_id: string;
 };
+export type CurrencyContract = {
+	[key: string]: string;
+};
+export interface ViewCurrenciesResponseInterface {
+	type: string;
+	accountId?: string;
+	metadata: FungibleTokenMetadataInterface;
+	contracts: CurrencyContract;
+}
 export interface RelayerDataInterface {
 	url: string;
 	account: string;
@@ -118,7 +127,7 @@ export interface ParseNoteInterface {
 }
 export declare const viewRelayerData: (relayerUrl: string) => Promise<any>;
 export declare const viewRelayerHash: (rpcUrl: string, contract: string, relayer: RelayerDataInterface) => Promise<any>;
-export declare const viewAllCurrencies: (rpcUrl: string, contract: string) => Promise<Currency[]>;
+export declare const viewAllCurrencies: (rpcUrl: string, contract: string) => Promise<ViewCurrenciesResponseInterface[]>;
 export declare const viewCurrencyContracts: (rpcUrl: string, contract: string, currency: Currency) => Promise<any>;
 export declare const viewIsContractAllowed: (rpcUrl: string, contract: string, accountId: string) => Promise<any>;
 export declare const viewIsAllowlistRootValid: (rpcUrl: string, contract: string, root: string) => Promise<any>;
@@ -199,7 +208,7 @@ declare class Views {
 	constructor(nodeUrl: string, contract: string);
 	viewIsInAllowlist(accountId: string): Promise<any>;
 	viewAccountHash(accountId: string): Promise<any>;
-	viewAllCurrencies(): Promise<Currency[]>;
+	viewAllCurrencies(): Promise<ViewCurrenciesResponseInterface[]>;
 	viewCurrencyContracts(currency: Currency): Promise<any>;
 	viewIsContractAllowed(contract: string): Promise<any>;
 	viewIsAllowlistRootValid(root: string): Promise<any>;
