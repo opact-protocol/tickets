@@ -105,31 +105,31 @@ export const useApplication = create<{
     amount: string,
     currency: Currency
   ) => {
-    // appService.sendDeposit(
-    //   get().hash,
-    //   amount,
-    //   CONTRACT,
-    //   account,
-    //   currency,
-    //   connection
-    // );
-    const wallet = await connection.wallet();
-
-    const transactions: any[] = [];
-
-    transactions.push(
-      getTransaction(
-        account,
-        CONTRACT,
-        "deposit",
-        {
-          secrets_hash: get().hash,
-        },
-        amount
-      )
+    appService.sendDeposit(
+      get().hash,
+      amount,
+      CONTRACT,
+      account,
+      currency,
+      connection
     );
+    // const wallet = await connection.wallet();
 
-    executeMultipleTransactions(transactions, wallet);
+    // const transactions: any[] = [];
+
+    // transactions.push(
+    //   getTransaction(
+    //     account,
+    //     CONTRACT,
+    //     "deposit",
+    //     {
+    //       secrets_hash: get().hash,
+    //     },
+    //     amount
+    //   )
+    // );
+
+    // executeMultipleTransactions(transactions, wallet);
   },
 
   fetchRelayerData: async () => {

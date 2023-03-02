@@ -5,16 +5,23 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import { formatInteger } from "@/utils/formatInteger";
 import { useWallet } from "@/store/wallet";
-import { Currency } from "hideyourcash-sdk";
+import {
+  Currency,
+  formatBigNumberWithDecimals,
+  getDecimals,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
 
 export default function Modal({
   isOpen,
   onClose,
   amount,
   currency,
+  token,
 }: {
   isOpen: boolean;
-  amount?: string;
+  amount: string;
+  token: ViewCurrenciesResponseInterface;
   currency: Currency;
   onClose: () => void;
 }) {
@@ -179,7 +186,14 @@ export default function Modal({
                   onClick={() => deposit()}
                   className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[118px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
-                  {buttonText ? buttonText : `Deposit ${amount} Near`}
+                  {buttonText
+                    ? buttonText
+                    : `Deposit ${formatBigNumberWithDecimals(
+                        amount,
+                        getDecimals(
+                          token.type === "Near" ? 24 : token.metadata.decimals
+                        )
+                      )} ${token.type}`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>

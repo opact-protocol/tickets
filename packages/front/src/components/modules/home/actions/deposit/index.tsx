@@ -311,10 +311,8 @@ export function Deposit() {
             <HashModal
               isOpen={showModal}
               currency={selectedToken}
-              amount={formatBigNumberWithDecimals(
-                selectedAmount.value,
-                getDecimals(selectedToken.metadata.decimals)
-              )}
+              amount={selectedAmount.value}
+              token={selectedToken}
               onClose={() => {
                 setDepositing(false);
                 setShowModal(!showModal);
