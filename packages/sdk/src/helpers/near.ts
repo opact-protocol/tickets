@@ -111,6 +111,7 @@ export const getAmount = (amount: string | undefined, skip = false) => {
   return parseNearAmount(amount)!;
 };
 
+
 /**
  * Convert human readable NEAR amount to internal indivisible units.
  * Effectively this multiplies given amount.
