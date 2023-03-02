@@ -1,15 +1,14 @@
 use std::convert::TryInto;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedMap, Vector, LookupSet};
+use near_sdk::collections::{LookupMap, UnorderedMap, Vector};
 use near_sdk::IntoStorageKey;
 
 use near_bigint::{U256};
 use near_mimc::{u256_mimc_sponge};
 
 /// Solidity uses big endian for byte values and little endian for uint256,
-/// so we must make sure to always for bytes and little endian for U256
-/// to make sure we can copy tornado's hasher and circuit
+/// so we must make sure to always use big endian for bytes and little endian for U256
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct MerkleTree {
   pub height: u64,
@@ -20,8 +19,6 @@ pub struct MerkleTree {
   pub current_root_index: u8,
   pub field_size: U256,
   pub zero_values: Vector<U256>,
-
-  previous_commitments: LookupSet<U256>,
 }
 
 impl MerkleTree {
@@ -31,7 +28,6 @@ impl MerkleTree {
     filled_subtrees_prefix: S,
     last_roots_prefix: S,
     zero_values_prefix: S,
-    previous_commitments_prefix: S,
     field_size: U256,
     zero_value: U256,
   ) -> Self
@@ -53,7 +49,6 @@ impl MerkleTree {
       current_root_index: 0,
       field_size,
       zero_values,
-      previous_commitments: LookupSet::new(previous_commitments_prefix),
     }
   }
 
@@ -76,7 +71,6 @@ impl MerkleTree {
 
   /// deposit
   pub fn insert(&mut self, account_hash: U256) -> u64 {
-    assert!(!self.previous_commitments.contains(&account_hash));
 
     let index = self.current_insertion_index;
     assert!(
@@ -102,8 +96,6 @@ impl MerkleTree {
       level_index /= 2;
     }
     self.update_root(current_hash);
-
-    self.previous_commitments.insert(&account_hash);
 
     self.current_insertion_index += 1;
     self.current_insertion_index
