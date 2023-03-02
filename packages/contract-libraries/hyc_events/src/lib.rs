@@ -1,7 +1,6 @@
 use near_bigint::U256;
 use near_sdk::{json_types::U64, serde_json::json, log, AccountId};
 use near_sdk::serde_json::Value;
-use near_sdk::serde::Serialize;
 
 const STANDARD_NAME: &str = "hide_your_cash";
 const STANDARD_VERSION: &str = "1.0.0";

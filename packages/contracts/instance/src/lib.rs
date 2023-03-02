@@ -57,7 +57,6 @@ pub enum StorageKey {
   FilledSubtreesPrefix,
   LastRootsPrefix,
   ZeroValuesPrefix,
-  PreviousCommitmentsPrefix,
 }
 
 #[near_bindgen]
@@ -111,7 +110,6 @@ impl Contract {
         StorageKey::FilledSubtreesPrefix,
         StorageKey::LastRootsPrefix,
         StorageKey::ZeroValuesPrefix,
-        StorageKey::PreviousCommitmentsPrefix,
         q,
         zero_value,
       ),
