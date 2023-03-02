@@ -97,8 +97,6 @@ export const sendDeposit = async (
       );
     }
 
-    console.log('fucking token contract', tokenContract);
-
     transactions.push(
       getTransaction(accountId, tokenContract, "ft_transfer_call", {
         amount,
