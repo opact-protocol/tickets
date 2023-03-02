@@ -15,15 +15,14 @@ class MimcSponge {
     }
 
     hash = (left: IntoBigInt, right: IntoBigInt): string => {
-        return this.sponge.F.toString(
-            this.sponge.multiHash([BigInt(left as any), BigInt(right as any)])
-        );
+      return this.sponge.F.toString(
+        this.sponge.multiHash([BigInt(left as any), BigInt(right as any)])
+      );
     }
 
     singleHash = (single: IntoBigInt): string => {
-        return this.sponge.F.toString(this.sponge.multiHash([BigInt(single as any)]));
+      return this.sponge.F.toString(this.sponge.multiHash([BigInt(single as any)]));
     }
 }
 
 export const mimc = new MimcSponge();
-await mimc.initMimc();
