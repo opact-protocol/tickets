@@ -1,14 +1,5 @@
-import fetch from 'node-fetch';
 import { viewFunction } from '../helpers';
 import type { RelayerDataInterface } from "../interfaces";
-
-export const viewRelayerData = async (
-  relayerUrl: string,
-) => {
-  const res = await fetch(relayerUrl);
-
-  return res.json();
-}
 
 export const viewRelayerHash = (
   rpcUrl: string,

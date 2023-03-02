@@ -10,5 +10,3 @@ export const formatBigNumberWithDecimals = (
 ) => {
   return new Big(value).div(decimals).toFixed(2);
 };
-
-

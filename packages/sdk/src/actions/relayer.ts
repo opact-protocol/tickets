@@ -3,6 +3,7 @@ import { getTokenStorage } from './ticket';
 import { getTransaction } from '../helpers';
 import { sendTransactionsCallback } from './connection';
 import type { ConnectionType, PublicArgsInterface, RelayerDataInterface } from '../interfaces';
+import { OneYOctoNear } from 'src/constants';
 
 export const sendWithdraw = async (
   relayer: RelayerDataInterface,
@@ -77,6 +78,7 @@ export const checkWithdrawStorages = async (
           account_id: contract,
           registration_only: true,
         },
+        OneYOctoNear,
       ),
     );
   }
@@ -101,6 +103,7 @@ export const checkWithdrawStorages = async (
           account_id: contract,
           registration_only: true,
         },
+        OneYOctoNear,
       ),
     );
   }

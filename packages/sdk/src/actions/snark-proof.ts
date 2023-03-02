@@ -43,6 +43,8 @@ export const prepareWithdraw = async (
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
+  await mimc.initMimc();
+
   const recipientHash = await viewAccountHash(nodeUrl, contract, recipient);
   const relayerHash = await viewRelayerHash(nodeUrl, contract, relayer);
 
@@ -63,8 +65,6 @@ export const prepareWithdraw = async (
   );
 
   const { proof, publicSignals } = await createSnarkProof(input);
-
-  console.log(proof, 'proof');
 
   const publicArgs = getPublicArgs(
     proof,

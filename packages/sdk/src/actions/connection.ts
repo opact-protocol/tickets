@@ -1,4 +1,4 @@
-import { AttachedGas } from '../constants';
+import { AttachedGas, OneYOctoNear } from '../constants';
 import type { Transaction } from '../helpers';
 import type { ConnectionType } from '../interfaces';
 
@@ -14,15 +14,19 @@ export const sendTransactionsCallback = async (
       const {
         params: {
           methodName = '',
+          deposit = '',
           args = {},
         } = {}
       } = actions[0] || {};
+
+      console.log('deposit', deposit);
 
       return await connection.functionCall({
         args,
         contractId: receiverId,
         methodName: methodName,
         gas: AttachedGas as any,
+        attachedDeposit: deposit,
       });
     }));
   }

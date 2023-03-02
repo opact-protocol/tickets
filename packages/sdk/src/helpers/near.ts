@@ -1,5 +1,5 @@
-import { AttachedGas, OneYOctoNear } from '../constants';
 import axios from 'axios';
+import { AttachedGas, nearNominationExp } from '../constants';
 
 let _nextId = 123;
 
@@ -26,7 +26,7 @@ export const getTransaction = (
   receiverId: string,
   method: string,
   args: any,
-  amount: string = OneYOctoNear,
+  amount?: string
 ): Transaction => {
   return {
     signerId,
@@ -38,7 +38,7 @@ export const getTransaction = (
           methodName: method,
           args,
           gas: AttachedGas,
-          deposit: amount,
+          deposit: amount ? parseNearAmount(amount)! : "1",
         },
       },
     ],
@@ -94,4 +94,50 @@ export const sendJsonRpc = (
   });
 
   return rpcService.post('/', body);
+}
+
+/**
+ * Convert human readable NEAR amount to internal indivisible units.
+ * Effectively this multiplies given amount.
+ *
+ * @param rawAmount decimal string (potentially fractional) denominated in NEAR.
+ * @returns The parsed yoctoⓃ amount or null if no amount was passed in
+ */
+export const parseNearAmount = (rawAmount?: string) => {
+  if (!rawAmount) {
+    return null;
+  }
+
+  if (rawAmount === '1') {
+    return '1';
+  }
+
+  const amount = cleanupRawAmount(rawAmount);
+
+  const split = amount.split('.');
+
+  const wholePart = split[0];
+
+  const fracPart = split[1] || '';
+
+  if (split.length > 2 || fracPart.length > nearNominationExp) {
+      throw new Error(`Cannot parse '${amount}' as NEAR amount`);
+  }
+  return trimLeadingZeroes(
+    wholePart + fracPart.padEnd(nearNominationExp, '0')
+  );
+}
+
+export const cleanupRawAmount = (amount: string) => {
+  return amount.replace(/,/g, '').trim();
+}
+
+export const trimLeadingZeroes = (value: string) => {
+  const replacedValue = value.replace(/^0+/, '');
+
+  if (replacedValue === '') {
+    return '0';
+  }
+
+  return replacedValue;
 }

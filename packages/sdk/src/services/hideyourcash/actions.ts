@@ -110,8 +110,6 @@ export class Actions extends Views {
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface,
   ) {
-    console.log('building: allowlist tree');
-
     const allowlistTree = await prepareMerkleTree(
       'allowlistTree',
       allowListUpdatesQuery,
@@ -120,8 +118,6 @@ export class Actions extends Views {
       allowlistTreeCache,
     );
 
-    console.log('building: commitments tree');
-
     const commitmentsTree = await prepareMerkleTree(
       'commitmentsTree',
       depositUpdatesQuery,
@@ -129,8 +125,6 @@ export class Actions extends Views {
       this.graphqlUrl,
       commitmentsTreeCache,
     );
-
-    console.log('generating withdraw inputs');
 
     const { publicArgs } = await prepareWithdrawAction(
       this.nodeUrl,

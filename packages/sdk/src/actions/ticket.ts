@@ -22,11 +22,17 @@ export const createTicket = async (
     accountId,
   );
 
-  const currencyHash = await viewAccountHash(
-    nodeRpcUrl,
-    contract,
-    currencyId,
-  );
+  console.log(currencyId);
+
+  let currencyHash = 'Near';
+
+  if (currencyId !== 'Near') {
+    currencyHash = await viewAccountHash(
+      nodeRpcUrl,
+      contract,
+      currencyId,
+    );
+  }
 
   const note =
     currencyHash.toString() +
@@ -47,7 +53,7 @@ export const sendDeposit = async(
   nodeUrl: string,
   hash: string,
   amount: string,
-  contract: string,
+  depositContract: string,
   accountId: string,
   currency: Currency,
   connection: ConnectionType,
@@ -59,7 +65,7 @@ export const sendDeposit = async(
 
     const storage = await getTokenStorage(
       tokenContract,
-      contract,
+      depositContract,
       nodeUrl,
     );
 
@@ -70,12 +76,15 @@ export const sendDeposit = async(
 					tokenContract,
 					'storage_deposit',
 					{
-						account_id: contract,
+						account_id: depositContract,
 						registration_only: true,
 					},
+          '0.50',
 				),
 			);
 		}
+
+    console.log('fucking token contract', tokenContract);
 
     transactions.push(
       getTransaction(
@@ -86,8 +95,8 @@ export const sendDeposit = async(
           amount,
           msg: hash,
           memo: null,
-          receiver_id: contract,
-        }
+          receiver_id: depositContract,
+        },
       )
     )
   }
@@ -96,7 +105,7 @@ export const sendDeposit = async(
     transactions.push(
       getTransaction(
         accountId,
-        contract,
+        depositContract,
         "deposit",
         {
           secrets_hash: hash,

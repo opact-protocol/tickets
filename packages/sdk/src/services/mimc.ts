@@ -16,12 +16,20 @@ export class MimcSponge {
   }
 
   hash (left: IntoBigInt, right: IntoBigInt): string {
+    if (!this.sponge?.f) {
+      return '';
+    }
+
     return this.sponge.F.toString(
       this.sponge.multiHash([BigInt(left as any), BigInt(right as any)])
     );
   }
 
   singleHash (single: IntoBigInt): string {
+    if (!this.sponge?.f) {
+      return '';
+    }
+
     return this.sponge.F.toString(this.sponge.multiHash([BigInt(single as any)]));
   }
 }
