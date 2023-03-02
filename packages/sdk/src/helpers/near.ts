@@ -74,7 +74,7 @@ export const viewFunction = async (
   return JSON.parse(Buffer.from(result.result).toString());
 };
 
-export const sendJsonRpc = (
+export const sendJsonRpc = async (
   nodeUrl: string,
   method: string,
   params: object,
@@ -93,7 +93,7 @@ export const sendJsonRpc = (
     },
   });
 
-  return rpcService.post('/', body);
+  return await rpcService.post('/', body);
 }
 
 /**

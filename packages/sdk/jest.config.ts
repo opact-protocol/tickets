@@ -5,6 +5,7 @@
 
 export default {
   preset: 'ts-jest',
+  forceExit: true,
   detectOpenHandles: true,
   transform: {
     '^.+\\.(ts|tsx)?$': 'ts-jest',

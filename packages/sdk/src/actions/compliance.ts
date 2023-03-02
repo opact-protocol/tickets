@@ -1,4 +1,3 @@
-import { OneYOctoNear } from 'src/constants';
 import { getTransaction } from '../helpers';
 import type { ConnectionType } from '../interfaces';
 import { sendTransactionsCallback } from './connection';

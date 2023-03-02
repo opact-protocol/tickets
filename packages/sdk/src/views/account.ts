@@ -1,11 +1,11 @@
 import { viewFunction } from '../helpers'
 
-export const viewIsInAllowlist = (
+export const viewIsInAllowlist = async (
   rpcUrl: string,
   contract: string,
   accountId: string,
 ): Promise<any> => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'view_is_in_allowlist',
@@ -15,12 +15,12 @@ export const viewIsInAllowlist = (
   );
 }
 
-export const viewAccountHash = (
+export const viewAccountHash = async (
   rpcUrl: string,
   contract: string,
   accountId: string,
 ) => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'view_account_hash',

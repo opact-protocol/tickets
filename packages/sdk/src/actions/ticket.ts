@@ -84,8 +84,6 @@ export const sendDeposit = async(
 			);
 		}
 
-    console.log('fucking token contract', tokenContract);
-
     transactions.push(
       getTransaction(
         accountId,
@@ -115,7 +113,7 @@ export const sendDeposit = async(
     );
   }
 
-  return sendTransactionsCallback(
+  return await sendTransactionsCallback(
     connection,
     transactions,
   );

@@ -39,12 +39,12 @@ export const viewAllCurrencies = async (
   }));
 };
 
-export const viewCurrencyContracts = (
+export const viewCurrencyContracts = async (
   rpcUrl: string,
   contract: string,
   currency: Currency,
 ): Promise<any> => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'view_currency_contracts',
@@ -55,12 +55,12 @@ export const viewCurrencyContracts = (
   );
 };
 
-export const viewIsContractAllowed = (
+export const viewIsContractAllowed = async (
   rpcUrl: string,
   contract: string,
   accountId: string,
 ) => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'view_is_contract_allowed',
@@ -70,12 +70,12 @@ export const viewIsContractAllowed = (
   );
 }
 
-export const viewIsAllowlistRootValid = (
+export const viewIsAllowlistRootValid = async (
   rpcUrl: string,
   contract: string,
   root: string,
 ) => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'view_is_allowlist_root_valid',

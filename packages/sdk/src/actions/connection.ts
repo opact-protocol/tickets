@@ -1,4 +1,4 @@
-import { AttachedGas, OneYOctoNear } from '../constants';
+import { AttachedGas } from '../constants';
 import type { Transaction } from '../helpers';
 import type { ConnectionType } from '../interfaces';
 
@@ -33,5 +33,5 @@ export const sendTransactionsCallback = async (
 
   const wallet = await connection.wallet();
 
-  return wallet.signAndSendTransactions({ transactions: transactions as any });
+  return await wallet.signAndSendTransactions({ transactions: transactions as any });
 }

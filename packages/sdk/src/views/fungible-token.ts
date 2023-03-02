@@ -1,10 +1,10 @@
 import { viewFunction } from "../helpers";
 
-export const viewFungibleTokenMetadata = (
+export const viewFungibleTokenMetadata = async (
   rpcUrl: string,
   contract: string,
 ): Promise<any> => {
-  return viewFunction(
+  return await viewFunction(
     rpcUrl,
     contract,
     'ft_metadata',

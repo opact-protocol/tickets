@@ -1,12 +1,12 @@
 import { mimc } from '../services';
 import { viewFunction } from "../helpers";
 
-export const viewWasNullifierSpent = (
+export const viewWasNullifierSpent = async (
   nodeUrl: string,
   contract: string,
   nullifier: string,
 ) => {
-  return viewFunction(
+  return await viewFunction(
     nodeUrl,
     contract,
     "view_was_nullifier_spent",
