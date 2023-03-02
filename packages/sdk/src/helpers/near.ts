@@ -26,8 +26,11 @@ export const getTransaction = (
   receiverId: string,
   method: string,
   args: any,
-  amount?: string
+  amount?: string | undefined,
+  skipParser = false,
 ): Transaction => {
+  const deposit = getAmount(amount, skipParser);
+
   return {
     signerId,
     receiverId,
@@ -38,7 +41,7 @@ export const getTransaction = (
           methodName: method,
           args,
           gas: AttachedGas,
-          deposit: amount ? parseNearAmount(amount)! : "1",
+          deposit,
         },
       },
     ],
@@ -94,6 +97,21 @@ export const sendJsonRpc = async (
   });
 
   return await rpcService.post('/', body);
+}
+
+export const getAmount = (
+  amount: string | undefined,
+  skip = false,
+) => {
+  if (!amount) {
+    return '1';
+  }
+
+  if (skip) {
+    return amount;
+  }
+
+  return parseNearAmount(amount)!;
 }
 
 /**

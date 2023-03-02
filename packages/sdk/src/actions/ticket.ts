@@ -109,6 +109,7 @@ export const sendDeposit = async(
           secrets_hash: hash,
         },
         amount,
+        true,
       )
     );
   }
