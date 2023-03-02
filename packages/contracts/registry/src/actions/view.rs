@@ -2,7 +2,6 @@ use crate::*;
 
 #[near_bindgen]
 impl Contract {
-
   /// Returns a Vec containing all currencies (token types) supported
   /// by HYC at the moment
   /// There is a known limitation to deserealizing large amounts of that
@@ -21,7 +20,7 @@ impl Contract {
   }
 
   /// Method to check if a contract is registered in the registry as a known HYC instance
-  /// This method will be called by relayers before publishing transactions to check whether 
+  /// This method will be called by relayers before publishing transactions to check whether
   /// the contract address informed by the user is a real HYC address that they can trust
   pub fn view_is_contract_allowed(&self, account_id: AccountId) -> bool {
     self.contracts_allowlist.contains(&account_id)
@@ -41,7 +40,9 @@ impl Contract {
   /// Method to evaluate if a given account is found in the allowlist
   /// Returns true if the account is in allowlist, false otherwise
   pub fn view_is_in_allowlist(&self, account_id: AccountId) -> bool {
-    self.allowlist.is_in_allowlist(&account_hash(&account_id, self.allowlist.field_size))
+    self
+      .allowlist
+      .is_in_allowlist(&account_hash(&account_id, self.allowlist.field_size))
   }
 
   /// Method to evaluate if an allowlist root used to build a ZK proof is valid

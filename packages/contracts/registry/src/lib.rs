@@ -3,8 +3,9 @@ use std::collections::HashMap;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Serialize, Deserialize};
 use near_bigint::U256;
-use near_sdk::{env, near_bindgen, ext_contract, Gas, Promise, PromiseResult, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
+use near_sdk::{env, near_bindgen, ext_contract, Gas, Promise, PromiseOrValue, PanicOnDefault, AccountId, BorshStorageKey, assert_one_yocto};
 use near_sdk::collections::{UnorderedMap, UnorderedSet};
+use near_sdk::serde_json::json;
 
 use allowlist_tree::AllowlistMerkleTree;
 use near_mimc::{account_hash, u256_mimc_sponge_single};
