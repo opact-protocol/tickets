@@ -122,6 +122,8 @@ export class Actions extends Views {
       allowlistTreeCache
     );
 
+    console.log('building: commitments tree');
+
     const commitmentsTree = await prepareMerkleTree(
       currencyContract,
       "commitmentsTree",

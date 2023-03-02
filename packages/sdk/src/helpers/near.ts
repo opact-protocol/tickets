@@ -70,6 +70,10 @@ export const viewFunction = async (
     throw new Error(result.error as string);
   }
 
+  if (result.error) {
+    throw new Error(result.error as string);
+  }
+
   return JSON.parse(Buffer.from(result.result).toString());
 };
 
