@@ -1,7 +1,6 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { getTokenStorage } from './ticket';
 import { getTransaction } from '../helpers';
-import { relayerBaseRequest } from '../constants/relayer'
 import { sendTransactionsCallback } from './connection';
 import type { ConnectionType, PublicArgsInterface, RelayerDataInterface } from '../interfaces';
 
@@ -9,13 +8,15 @@ export const sendWithdraw = async (
   relayer: RelayerDataInterface,
   publicArgs: PublicArgsInterface,
 ) => {
-  return await fetch(
-    relayer.url,
-    {
-      ...relayerBaseRequest,
-      body: JSON.stringify(publicArgs)
-    }
-  )
+  const relayerService = axios.create({
+    baseURL: relayer.url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+
+  return relayerService.post('/relay', JSON.stringify(publicArgs));
 }
 
 export const sendContractWithdraw = async (

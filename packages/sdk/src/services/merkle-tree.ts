@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
+import { request } from 'graphql-request'
+import { merkleTreeOptions } from '../constants';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
-import { merkleTreeBaseRequest, merkleTreeOptions } from '../constants';
 import type { MerkleTreeCacheInterface, MerkleTreeStorageInterface } from '../interfaces';
 
 export class MerkleTreeService {
@@ -54,8 +54,9 @@ export class MerkleTreeService {
     if (!lastIndex || +lastIndex < +lastBranchIndex) {
       const qtyToQuer = +lastBranchIndex - lastIndex;
 
-      const branches =  await this.getMerkleTreeBranchesWithQuery(
-        'lastMerkleTreeUpdates',
+      const {
+        [this.branchesQuery.name]: branches
+      } =  await this.getMerkleTreeBranchesWithQuery(
         this.branchesQuery,
         {
           startId: lastBranchIndex || "0",
@@ -70,33 +71,17 @@ export class MerkleTreeService {
   }
 
   async getLastBranchIndex (): Promise<number> {
-    const { data } = await this.getMerkleTreeBranchesWithQuery(
-      'depositMerkleTreeUpdates',
+    const data = await this.getMerkleTreeBranchesWithQuery(
       this.lastBranchesQuery,
     )
 
-    return data.depositMerkleTreeUpdates[0].counter;
+    return data[this.lastBranchesQuery.name][0].counter;
   }
 
   async getMerkleTreeBranchesWithQuery (
-    name: string,
-    query: any,
+    { query }: any,
     variables: any = {},
   ): Promise<any> {
-    const graphqlQuery = {
-      query,
-      variables,
-      name: name,
-    };
-
-    const res = await fetch(
-      this.graphqlUrl,
-      {
-        ...merkleTreeBaseRequest,
-        body: JSON.stringify(graphqlQuery),
-      },
-    );
-
-    return res.json();
+    return request(this.graphqlUrl, query, variables as any) as any;
   }
 }

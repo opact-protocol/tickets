@@ -1,5 +1,5 @@
-import { AttachedGas } from '../constants';
-import axios from 'axios-esm';
+import { AttachedGas, OneYOctoNear } from '../constants';
+import axios from 'axios';
 
 let _nextId = 123;
 
@@ -26,10 +26,8 @@ export const getTransaction = (
   receiverId: string,
   method: string,
   args: any,
-  amount?: string,
+  amount: string = OneYOctoNear,
 ): Transaction => {
-  console.log(amount);
-
   return {
     signerId,
     receiverId,
@@ -40,7 +38,7 @@ export const getTransaction = (
           methodName: method,
           args,
           gas: AttachedGas,
-          deposit: '1',
+          deposit: amount,
         },
       },
     ],
@@ -68,6 +66,10 @@ export const viewFunction = async (
       result,
     } = {},
   } = await sendJsonRpc(nodeUrl, 'query', params);
+
+  if (result.error) {
+    throw new Error(result.error as string);
+  }
 
   return JSON.parse(Buffer.from(result.result).toString());
 };

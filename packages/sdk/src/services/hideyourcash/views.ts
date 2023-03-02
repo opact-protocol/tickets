@@ -9,9 +9,8 @@ import {
   viewWasNullifierSpent,
   viewIsAllowlistRootValid,
 } from '../../views';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import type { Currency, PublicArgsInterface, RelayerDataInterface } from '../../interfaces';
-import { relayerBaseRequest } from '../../constants/relayer';
 
 const baseRelayers = {
   test: 'https://dev-relayer.hideyourcash.workers.dev',
@@ -101,12 +100,19 @@ export class Views {
     );
   }
 
-  async viewRelayers (network: 'test' | 'prod' = 'test') {
-    const res = await fetch(baseRelayers[network] + '/data', {
-      ...relayerBaseRequest,
-      method: 'GET'
+  async viewRelayers (network: 'test' | 'prod' = 'test'): Promise<RelayerDataInterface[]> {
+    const relayerService = axios.create({
+      baseURL: baseRelayers[network],
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
     });
 
-    return [await res.json()];
+    const {
+      data
+    } = await relayerService.get('/data');
+
+    return [data.data];
   }
 }

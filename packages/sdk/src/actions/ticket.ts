@@ -9,7 +9,7 @@ export const createTicket = async (
   nodeRpcUrl: string,
   contract: string,
   accountId: string,
-  currencieContract: string,
+  currencyId: string,
 ) => {
   const secret = randomBN();
   const nullifier = randomBN();
@@ -22,18 +22,20 @@ export const createTicket = async (
     accountId,
   );
 
-  const contractHash = await viewAccountHash(
+  const currencyHash = await viewAccountHash(
     nodeRpcUrl,
     contract,
-    currencieContract,
+    currencyId,
   );
 
-  const note = `
-    ${contractHash.toString()}-
-    ${secret!.toString()}-
-    ${nullifier!.toString()}-
-    ${accountHash.toString()}
-  `;
+  const note =
+    currencyHash.toString() +
+    "-" +
+    secret!.toString() +
+    "-" +
+    nullifier!.toString() +
+    "-" +
+    accountHash!.toString();
 
   return {
     note,

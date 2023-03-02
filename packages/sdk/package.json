@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsup",
     "watch": "tsup src/index.ts --watch",
-    "test": "jest",
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:coverage": "jest --runInBand --coverage"
   },
   "devDependencies": {
@@ -28,18 +28,23 @@
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.18",
     "@types/randombytes": "^2.0.0",
+    "babel-jest": "^29.4.3",
     "jest": "^29.3.1",
+    "jest-browser": "^0.1.0",
+    "jest-environment-jsdom": "^29.4.3",
+    "jsdom": "^21.1.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4",
     "yarn": "^1.22.19"
   },
   "dependencies": {
-    "axios-esm": "^1.0.0",
+    "axios": "^1.3.4",
     "big.js": "^6.2.1",
     "browserify-fs": "^1.0.0",
     "circomlibjs": "^0.1.7",
     "fixed-merkle-tree": "^0.7.3",
+    "graphql-request": "^5.2.0",
     "randombytes": "^2.1.0",
     "snarkjs": "^0.6.4",
     "tsup": "^6.6.3"
