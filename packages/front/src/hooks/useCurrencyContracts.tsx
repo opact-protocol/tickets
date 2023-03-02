@@ -14,7 +14,8 @@ export const useCurrencyContracts = (selector: any, currency: any) => {
   const amounts: CurrencyContracts[] = [];
 
   useEffect(() => {
-    if (!selector) return;
+    if (!selector || currency.type !== "Near") return;
+
     (async () => {
       const res = await viewFunction(
         selector,
@@ -27,7 +28,7 @@ export const useCurrencyContracts = (selector: any, currency: any) => {
       }
       setCurrencyContracts(amounts);
     })();
-  }, [selector]);
+  }, [selector, currency]);
 
   return { currencyContracts };
 };

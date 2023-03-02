@@ -7,7 +7,6 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
@@ -15,14 +14,18 @@ import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
-import "swiper/css";
 import { useAllCurrencies } from "@/hooks/useAllCurrencies";
+import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
+import {
+  formatBigNumberWithDecimals,
+  getDecimals,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { settings } from "@/utils/sliderSettings";
 import { useCurrencyContracts } from "@/hooks/useCurrencyContracts";
-
-interface SelectedTokenProps {
-  type: string;
-  account_id: string;
-}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -35,12 +38,15 @@ const customId = "deposit-toast";
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState<number>(10);
+  const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
+    {} as AmountsProps
+  );
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<SelectedTokenProps>(
-    {} as SelectedTokenProps
-  );
+  const [selectedToken, setSelectedToken] =
+    useState<ViewCurrenciesResponseInterface>(
+      {} as ViewCurrenciesResponseInterface
+    );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
 
@@ -49,10 +55,8 @@ export function Deposit() {
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
   const { allCurrencies } = useAllCurrencies();
-  const { currencyContracts } = useCurrencyContracts(selector!, {
-    type: "Nep141",
-    account_id: "c06637a45e2fbfc96724tokenaccount.testnet",
-  });
+  const { currencyContracts } = useCurrencyContracts(selector, selectedToken);
+  const amounts = objetctToArray(selectedToken.contracts);
 
   if (!action && transactionHashes && !approved) {
     toast(
@@ -91,8 +95,13 @@ export function Deposit() {
       return;
     }
 
-    if (!selectedToken) {
+    if (!selectedToken.type) {
       setErrorMessage("Select token to deposit");
+      return;
+    }
+
+    if (!selectedAmount.value) {
+      setErrorMessage("Select amount to deposit");
       return;
     }
 
@@ -185,7 +194,7 @@ export function Deposit() {
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
                   Amount{" "}
-                  {/*<span className="text-error">{errorMessage && "*"}</span> */}
+                  <span className="text-error">{errorMessage && "*"}</span>
                 </span>
               </div>
 
@@ -193,51 +202,69 @@ export function Deposit() {
                 value={selectedAmount}
                 onChange={setSelectedAmount}
                 className="mt-2 max-w-[371px]"
+                as="ul"
               >
-                <Swiper
-                  spaceBetween={40}
-                  slidesPerView={3}
-                  breakpoints={{
-                    320: {
-                      slidesPerView: 2,
-                      spaceBetween: 20,
-                    },
-                    // when window width is >= 480px
-                    480: {
-                      slidesPerView: 3,
-                      spaceBetween: 30,
-                    },
-                    // when window width is >= 640px
-                    640: {
-                      slidesPerView: 3,
-                      spaceBetween: 40,
-                    },
-                  }}
-                >
-                  {currencyContracts?.map((token) => (
-                    <SwiperSlide key={token.accountId}>
+                {selectedToken.type === "Near" ? (
+                  <Slider {...settings}>
+                    {currencyContracts?.map((token) => (
                       <RadioGroup.Option
                         key={token.accountId}
                         value={token}
-                        as="div"
-                        className={({ checked }) => `
-                              bg-transparent rounded-full p-1 w-[132px] mb-2 ${
-                                checked ? "bg-soft-blue-from-deep-blue" : ""
+                        as="li"
+                        className={({ active }) => `
+                              bg-transparent rounded-full p-1 w-min mb-2 ${
+                                active ? "bg-soft-blue-from-deep-blue" : ""
                               }
                             `}
                       >
-                        <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-pointer">
+                        <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
                           <RadioGroup.Label
                             as="span"
-                            className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
+                            className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
                           >
-                            {token.value} {selectedToken.type}
+                            {Number(
+                              formatBigNumberWithDecimals(
+                                token.value,
+                                getDecimals(24)
+                              )
+                            ).toFixed(0)}{" "}
+                            {selectedToken.type}
                           </RadioGroup.Label>
                         </div>
                       </RadioGroup.Option>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                    ))}
+                  </Slider>
+                ) : (
+                  <Slider {...settings}>
+                    {amounts?.map((token) => (
+                      <RadioGroup.Option
+                        key={token.accountId}
+                        value={token}
+                        as="li"
+                        className={({ active }) => `
+                              bg-transparent rounded-full p-1 w-min mb-2 ${
+                                active ? "bg-soft-blue-from-deep-blue" : ""
+                              }
+                            `}
+                      >
+                        <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
+                          <RadioGroup.Label
+                            as="span"
+                            className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
+                          >
+                            {Number(
+                              formatBigNumberWithDecimals(
+                                token.value,
+                                getDecimals(selectedToken.metadata.decimals)
+                              )
+                            ).toFixed(0)}{" "}
+                            {selectedToken.type}
+                          </RadioGroup.Label>
+                        </div>
+                      </RadioGroup.Option>
+                    ))}
+                  </Slider>
+                )}
               </RadioGroup>
               <p
                 className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
@@ -280,15 +307,21 @@ export function Deposit() {
             {!accountId ? "Connect Wallet" : buttonText}
           </button>
 
-          <HashModal
-            isOpen={showModal}
-            amount={selectedAmount.toString()}
-            onClose={() => {
-              setDepositing(false);
-              setShowModal(!showModal);
-              setButtonText("Deposit");
-            }}
-          />
+          {showModal && (
+            <HashModal
+              isOpen={showModal}
+              currency={selectedToken}
+              amount={formatBigNumberWithDecimals(
+                selectedAmount.value,
+                getDecimals(selectedToken.metadata.decimals)
+              )}
+              onClose={() => {
+                setDepositing(false);
+                setShowModal(!showModal);
+                setButtonText("Deposit");
+              }}
+            />
+          )}
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>

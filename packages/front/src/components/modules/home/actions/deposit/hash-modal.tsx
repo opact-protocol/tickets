@@ -5,14 +5,17 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import { formatInteger } from "@/utils/formatInteger";
 import { useWallet } from "@/store/wallet";
+import { Currency } from "hideyourcash-sdk";
 
 export default function Modal({
   isOpen,
   onClose,
-  amount
+  amount,
+  currency,
 }: {
   isOpen: boolean;
-  amount: string;
+  amount?: string;
+  currency: Currency;
   onClose: () => void;
 }) {
   const [sending, setSending] = useState(false);
@@ -44,7 +47,8 @@ export default function Modal({
       await sendDeposit(
         selector,
         accountId!,
-        formatInteger(amount, 24).toFixed(0)
+        formatInteger(amount, 24).toFixed(0),
+        currency
       );
 
       closeModal();
