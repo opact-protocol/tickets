@@ -40,7 +40,6 @@
     "axios": "^1.2.0",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
-    "hideyourcash-sdk": "*",
     "circomlibjs": "^0.1.7",
     "clsx": "^1.2.1",
     "ethers": "^5.7.0",
