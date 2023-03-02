@@ -25,9 +25,9 @@ function handleAction(
   const signer = receiptWithOutcome.receipt.signerId;
   const timestamp: u64 = receiptWithOutcome.block.header.timestampNanosec;
 
-  if (methodName == "withdraw") {
+  if (methodName == "withdraw_transfer_callback") {
     handleWithdrawal(contractAddress, signer, timestamp, logs);
-  } else if (methodName == "deposit") {
+  } else if (methodName == "inner_deposit") {
     handleDeposit(contractAddress, signer, timestamp, logs);
   } else if (
     methodName == "allowlist_callback" ||
