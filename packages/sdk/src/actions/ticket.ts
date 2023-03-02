@@ -1,9 +1,9 @@
 
-import { mimc } from "@/services";
-import { ConnectionType, Currency } from "@/interfaces";
-import { viewAccountHash } from "@/views";
-import { getTransaction, randomBN, viewFunction } from "@/helpers";
-import { sendTransactionsCallback } from "./connection";
+import { mimc } from '../services';
+import { viewAccountHash } from '../views';
+import { sendTransactionsCallback } from './connection';
+import type { ConnectionType, Currency } from '../interfaces';
+import { getTransaction, randomBN, viewFunction } from '../helpers';
 
 export const createTicket = async (
   nodeRpcUrl: string,
@@ -14,7 +14,7 @@ export const createTicket = async (
   const secret = randomBN();
   const nullifier = randomBN();
 
-  const secrets_hash = mimc.hash!(secret, nullifier);
+  const secrets_hash = mimc.hash!(secret!, nullifier!);
 
   const accountHash = await viewAccountHash(
     nodeRpcUrl,
@@ -30,8 +30,8 @@ export const createTicket = async (
 
   const note = `
     ${contractHash.toString()}-
-    ${secret.toString()}-
-    ${nullifier.toString()}-
+    ${secret!.toString()}-
+    ${nullifier!.toString()}-
     ${accountHash.toString()}
   `;
 

@@ -1,6 +1,6 @@
-import { viewFunction } from "@/helpers";
-import { Currency, ViewCurrenciesResponseInterface } from "..";
-import { viewFungibleTokenMetadata } from "./fungible-token";
+import { viewFunction } from '../helpers';
+import { viewFungibleTokenMetadata } from './fungible-token';
+import type { Currency, ViewCurrenciesResponseInterface } from '../interfaces';
 
 export const viewAllCurrencies = async (
   rpcUrl: string,

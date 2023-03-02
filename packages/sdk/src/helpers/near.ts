@@ -1,4 +1,5 @@
-import { AttachedGas } from "@/constants";
+import { AttachedGas } from '../constants';
+import axios from 'axios-esm';
 
 let _nextId = 123;
 
@@ -62,15 +63,11 @@ export const viewFunction = async (
     finality: "optimistic",
   };
 
-  const res = await sendJsonRpc(nodeUrl, 'query', params);
-
   const {
-    result,
-  } = await res.json();
-
-  if (result.error) {
-    throw new Error(result.error);
-  }
+    data: {
+      result,
+    } = {},
+  } = await sendJsonRpc(nodeUrl, 'query', params);
 
   return JSON.parse(Buffer.from(result.result).toString());
 };
@@ -87,9 +84,12 @@ export const sendJsonRpc = (
     jsonrpc: '2.0'
   });
 
-  return fetch(nodeUrl, {
-    body,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' }
+  const rpcService = axios.create({
+    baseURL: nodeUrl,
+    headers: {
+      'Content-Type': 'application/json'
+    },
   });
+
+  return rpcService.post('/', body);
 }

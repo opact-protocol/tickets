@@ -8,9 +8,10 @@ import {
   viewIsWithdrawValid,
   viewWasNullifierSpent,
   viewIsAllowlistRootValid,
-} from '@/views';
-import { Currency, PublicArgsInterface, RelayerDataInterface } from '@/interfaces';
-import { relayerBaseRequest } from '@/constants/relayer';
+} from '../../views';
+import fetch from 'node-fetch';
+import type { Currency, PublicArgsInterface, RelayerDataInterface } from '../../interfaces';
+import { relayerBaseRequest } from '../../constants/relayer';
 
 const baseRelayers = {
   test: 'https://dev-relayer.hideyourcash.workers.dev',

@@ -1,4 +1,4 @@
-import { ParseNoteInterface } from "@/interfaces";
+import type { ParseNoteInterface } from '../interfaces';
 
 export const parseNote = (note: string): ParseNoteInterface => {
   const splitString = note.split("-");

@@ -1,4 +1,4 @@
-import { mimc } from "@/services";
+import { mimc } from '../services';
 
 export const merkleTreeOptions = {
   zeroElement:

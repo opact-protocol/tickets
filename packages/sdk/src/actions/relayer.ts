@@ -1,8 +1,9 @@
-import { getTransaction } from "@/helpers";
-import { ConnectionType, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
-import { relayerBaseRequest } from "@/constants/relayer"
-import { getTokenStorage } from "./ticket";
-import { sendTransactionsCallback } from "./connection";
+import fetch from 'node-fetch';
+import { getTokenStorage } from './ticket';
+import { getTransaction } from '../helpers';
+import { relayerBaseRequest } from '../constants/relayer'
+import { sendTransactionsCallback } from './connection';
+import type { ConnectionType, PublicArgsInterface, RelayerDataInterface } from '../interfaces';
 
 export const sendWithdraw = async (
   relayer: RelayerDataInterface,

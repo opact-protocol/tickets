@@ -1,4 +1,4 @@
-import { viewFunction } from "@/helpers"
+import { viewFunction } from '../helpers'
 
 export const viewIsInAllowlist = (
   rpcUrl: string,
@@ -23,7 +23,7 @@ export const viewAccountHash = (
   return viewFunction(
     rpcUrl,
     contract,
-    "view_account_hash",
+    'view_account_hash',
     {
       account_id: accountId,
     },

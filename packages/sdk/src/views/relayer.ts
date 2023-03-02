@@ -1,5 +1,6 @@
-import { viewFunction } from "@/helpers";
-import { RelayerDataInterface } from "@/interfaces";
+import fetch from 'node-fetch';
+import { viewFunction } from '../helpers';
+import type { RelayerDataInterface } from "../interfaces";
 
 export const viewRelayerData = async (
   relayerUrl: string,

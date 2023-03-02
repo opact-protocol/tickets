@@ -1,4 +1,4 @@
-import BN from "bn.js";
+import type BN from 'bn.js';
 // @ts-ignore
 import { buildMimcSponge } from 'circomlibjs';
 

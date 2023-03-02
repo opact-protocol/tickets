@@ -1,11 +1,11 @@
 //@ts-ignore
-import { plonk } from "snarkjs";
-import { mimc } from "@/services";
-import { parseNote } from "@/helpers";
-import { viewAccountHash, viewRelayerHash } from "@/views";
-import { PublicArgsInterface, WithdrawInputInterface } from "@/interfaces/snark-proof";
-import MerkleTree from "fixed-merkle-tree";
-import { RelayerDataInterface } from "@/interfaces";
+import { plonk } from 'snarkjs';
+import { mimc } from '../services';
+import { parseNote } from '../helpers';
+import type MerkleTree from 'fixed-merkle-tree';
+import type { RelayerDataInterface } from '../interfaces';
+import { viewAccountHash, viewRelayerHash } from '../views';
+import type { PublicArgsInterface, WithdrawInputInterface } from '../interfaces/snark-proof';
 
 export const createSnarkProof = async (
   payload: WithdrawInputInterface,

@@ -1,4 +1,4 @@
-import { viewFunction } from "@/helpers";
+import { viewFunction } from '../helpers';
 
 export const viewIsWithdrawValid = async (
   rpcUrl: string,

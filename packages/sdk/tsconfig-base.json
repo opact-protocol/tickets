@@ -18,9 +18,6 @@
     "traceResolution": false,
     "types": ["node", "jest"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-    },
   },
   "compileOnSave": false,
   "exclude": ["node_modules", "dist"],

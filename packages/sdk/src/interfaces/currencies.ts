@@ -1,4 +1,4 @@
-import { FungibleTokenMetadataInterface } from "./near";
+import type { FungibleTokenMetadataInterface } from './near';
 
 export type CurrencyContract = {[key: string] : string};
 

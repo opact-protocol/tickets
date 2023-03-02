@@ -1,13 +1,12 @@
-import { AttachedGas } from "@/constants";
-import { Transaction } from "@/helpers";
-import { Account } from "near-api-js";
-import { ConnectionType } from "..";
+import { AttachedGas } from '../constants';
+import type { Transaction } from '../helpers';
+import type { ConnectionType } from '../interfaces';
 
 export const sendTransactionsCallback = async (
   connection: ConnectionType,
   transactions: Transaction[],
 ): Promise<any> => {
-  if (connection instanceof Account) {
+  if (connection.functionCall) {
     return await Promise.all(transactions.map(async ({
       receiverId,
       actions,

@@ -1,6 +1,7 @@
-import { MerkleTree as FixedMerkleTree } from "fixed-merkle-tree";
-import { merkleTreeBaseRequest, merkleTreeOptions } from "@/constants";
-import { MerkleTreeCacheInterface, MerkleTreeStorageInterface } from "@/interfaces";
+import fetch from 'node-fetch';
+import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
+import { merkleTreeBaseRequest, merkleTreeOptions } from '../constants';
+import type { MerkleTreeCacheInterface, MerkleTreeStorageInterface } from '../interfaces';
 
 export class MerkleTreeService {
   readonly name: string;

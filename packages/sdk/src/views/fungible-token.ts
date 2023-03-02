@@ -1,4 +1,4 @@
-import { viewFunction } from "@/helpers";
+import { viewFunction } from "../helpers";
 
 export const viewFungibleTokenMetadata = (
   rpcUrl: string,
@@ -7,6 +7,6 @@ export const viewFungibleTokenMetadata = (
   return viewFunction(
     rpcUrl,
     contract,
-    "ft_metadata",
+    'ft_metadata',
   );
 };

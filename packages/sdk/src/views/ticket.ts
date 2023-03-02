@@ -1,5 +1,5 @@
-import { mimc } from "@/services";
-import { viewFunction } from "@/helpers";
+import { mimc } from '../services';
+import { viewFunction } from "../helpers";
 
 export const viewWasNullifierSpent = (
   nodeUrl: string,

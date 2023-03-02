@@ -7,15 +7,15 @@ import {
   sendDeposit,
   sendWithdraw,
   sendContractWithdraw
-} from "@/actions";
+} from '../../actions';
 import {
   lastDepositQuery,
   depositUpdatesQuery,
   allowListUpdatesQuery,
   lastAllowListQuery,
-} from "@/graphql";
-import { ConnectionType, Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from "@/interfaces";
-import { Views } from "./views";
+} from '../../graphql';
+import type { ConnectionType, Currency, MerkleTreeCacheInterface, PublicArgsInterface, RelayerDataInterface } from '../../interfaces';
+import { Views } from './views';
 
 export class Actions extends Views {
   readonly nodeUrl: string;

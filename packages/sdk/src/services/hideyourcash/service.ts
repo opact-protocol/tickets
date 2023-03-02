@@ -1,4 +1,4 @@
-import { Actions } from "./actions";
+import { Actions } from './actions';
 
 export class HideyourCash extends Actions {
   readonly network: string;
