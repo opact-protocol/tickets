@@ -1,5 +1,7 @@
 use near_bigint::U256;
 use near_sdk::{json_types::U64, serde_json::json, log, AccountId};
+use near_sdk::serde_json::Value;
+use near_sdk::serde::Serialize;
 
 const STANDARD_NAME: &str = "hide_your_cash";
 const STANDARD_VERSION: &str = "1.0.0";
@@ -8,7 +10,7 @@ fn log_basic_event_format(
   standard: &str,
   version: &str,
   event_type: &str,
-  data_vec: Vec<near_sdk::serde_json::Value>,
+  data_vec: Vec<Value>,
 ) {
   log!(
     "EVENT_JSON:{}",
@@ -37,6 +39,30 @@ pub fn event_allowlist_update(
     "value": value,
     "account": account,
     "allowed": allowed
+  });
+
+  log_basic_event_format(
+    STANDARD_NAME,
+    STANDARD_VERSION,
+    event_type,
+    vec![event_data],
+  );
+}
+
+/// New account tried to add to allowlist
+/// but was denied because of risk score
+pub fn event_allowlist_denied(
+  account: AccountId,
+  category: Value,
+  account_risk: u8,
+  risk_threshold: u8,
+) {
+  let event_type = "denied_allowlist";
+  let event_data = json!({
+    "account": account,
+    "category": category,
+    "account_risk": account_risk,
+    "risk_threshold": risk_threshold,
   });
 
   log_basic_event_format(
