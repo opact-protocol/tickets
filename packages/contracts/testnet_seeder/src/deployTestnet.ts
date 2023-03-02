@@ -10,6 +10,7 @@ import {
   FT_DECIMALS,
   addEntry,
 } from "./utils";
+import { BN } from "near-workspaces";
 
 const { UrlAccountCreator } = accountCreator;
 
@@ -187,6 +188,16 @@ export async function testnetSetup(): Promise<void> {
     "1000" + FT_DECIMALS,
     tokenInstanceAccount1000
   );
+
+  await tokenInstanceAccount10.functionCall({
+    contractId: registryAccount.accountId,
+    methodName: "allowlist",
+    args: {
+      account_id: tokenInstanceAccount10.accountId,
+    },
+    gas: new BN("300000000000000"),
+    attachedDeposit: new BN("400000000000000000000"),
+  });
 
   console.log("block of creation:", last_block_height);
   console.log("registry id:", registryAccount.accountId);

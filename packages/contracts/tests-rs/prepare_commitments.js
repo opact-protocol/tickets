@@ -104,7 +104,7 @@ async function buildCommitments() {
     "12677563699590868888937111923812643304058329385394770637468274086770847851520",
   ];
 
-  let whitelistTree = new MerkleTree(20, accountsHashes, {
+  let allowlistTree = new MerkleTree(20, accountsHashes, {
     zeroElement:
       "21663839004416932945382355908790599225266501822907911457504978515578255421292",
     hashFunction: mimc.hash,
@@ -167,16 +167,16 @@ async function buildCommitments() {
 
   // create proofs
   const path1 = commitmentTree.proof(commitmentLeaves[0]);
-  const pathWL1 = whitelistTree.proof(accountsHashes[0]);
+  const pathWL1 = allowlistTree.proof(accountsHashes[0]);
 
   const path2 = commitmentTree.proof(commitmentLeaves[1]);
-  const pathWL2 = whitelistTree.proof(accountsHashes[1]);
+  const pathWL2 = allowlistTree.proof(accountsHashes[1]);
 
   const path3 = commitmentTree.proof(commitmentLeaves[2]);
-  const pathWL3 = whitelistTree.proof(accountsHashes[2]);
+  const pathWL3 = allowlistTree.proof(accountsHashes[2]);
 
   const path4 = commitmentTree.proof(commitmentLeaves[3]);
-  const pathWL4 = whitelistTree.proof(accountsHashes[3]);
+  const pathWL4 = allowlistTree.proof(accountsHashes[3]);
 
   // commitment 1 will be withdrawn by user 4
   let commitment1Input = {
@@ -191,12 +191,12 @@ async function buildCommitments() {
     pathElements: path1.pathElements,
     pathIndices: path1.pathIndices,
 
-    // reference to current whitelist Merkle Tree
-    whitelistRoot: pathWL1.pathRoot,
-    // reference to original depositor to enforce whitelist
+    // reference to current allowlist Merkle Tree
+    allowlistRoot: pathWL1.pathRoot,
+    // reference to original depositor to enforce allowlist
     originDepositor: accountsHashes[0],
-    whitelistPathElements: pathWL1.pathElements,
-    whitelistPathIndices: pathWL1.pathIndices,
+    allowlistPathElements: pathWL1.pathElements,
+    allowlistPathIndices: pathWL1.pathIndices,
   };
 
   // commitment 1 will be withdrawn by user 4
@@ -212,12 +212,12 @@ async function buildCommitments() {
     pathElements: path2.pathElements,
     pathIndices: path2.pathIndices,
 
-    // reference to current whitelist Merkle Tree
-    whitelistRoot: pathWL2.pathRoot,
-    // reference to original depositor to enforce whitelist
+    // reference to current allowlist Merkle Tree
+    allowlistRoot: pathWL2.pathRoot,
+    // reference to original depositor to enforce allowlist
     originDepositor: accountsHashes[1],
-    whitelistPathElements: pathWL2.pathElements,
-    whitelistPathIndices: pathWL2.pathIndices,
+    allowlistPathElements: pathWL2.pathElements,
+    allowlistPathIndices: pathWL2.pathIndices,
   };
 
   // generate witness
