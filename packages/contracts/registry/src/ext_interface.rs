@@ -4,6 +4,7 @@ use crate::*;
 pub trait SelfContract {
     fn allowlist_callback(account_id: AccountId);
     fn denylist_callback(account_id: AccountId);
+    fn panic_callback(message: Option<String>);
 }
 
 #[ext_contract(ext_aml)]
