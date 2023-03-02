@@ -1,14 +1,14 @@
-import { viewAllCurrencies } from "hideyourcash-sdk";
+import {
+  viewAllCurrencies,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
 import { useEffect, useState } from "react";
 import { useEnv } from "./useEnv";
 
-interface AllCurrencieProps {
-  type: string;
-  account_id: string;
-}
-
 export const useAllCurrencies = () => {
-  const [allCurrencies, setAllCurrencies] = useState<AllCurrencieProps[]>();
+  const [allCurrencies, setAllCurrencies] = useState<
+    ViewCurrenciesResponseInterface[]
+  >([]);
 
   useEffect(() => {
     (async () => {

@@ -11,7 +11,7 @@ import { buildTree, relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
-import { HideyourCash } from 'hideyourcash-sdk';
+import { Currency, HideyourCash } from "hideyourcash-sdk";
 
 function parseNote(note: string): {
   secret: string;
@@ -28,6 +28,13 @@ function parseNote(note: string): {
 
 const CONTRACT = useEnv("VITE_CONTRACT");
 
+const appService = new HideyourCash(
+  useEnv("VITE_NEAR_NETWORK"),
+  useEnv("VITE_NEAR_NODE_URL"),
+  CONTRACT,
+  useEnv("VITE_API_GRAPHQL_URL")
+);
+
 export const useApplication = create<{
   proof: any;
   publicArgs: any;
@@ -37,7 +44,8 @@ export const useApplication = create<{
   sendDeposit: (
     connection: any,
     account: string,
-    amount: string
+    amount: string,
+    currency: Currency
   ) => Promise<void>;
   fetchRelayerData: () => Promise<void>;
   sendWithdraw: () => Promise<void>;
@@ -91,7 +99,20 @@ export const useApplication = create<{
     return secrets_hash;
   },
 
-  sendDeposit: async (connection: any, account: string, amount: string) => {
+  sendDeposit: async (
+    connection: any,
+    account: string,
+    amount: string,
+    currency: Currency
+  ) => {
+    // appService.sendDeposit(
+    //   get().hash,
+    //   amount,
+    //   CONTRACT,
+    //   account,
+    //   currency,
+    //   connection
+    // );
     const wallet = await connection.wallet();
 
     const transactions: any[] = [];
@@ -167,8 +188,8 @@ export const useApplication = create<{
 
       const { proof, publicSignals } = await createSnarkProof(input);
 
-      console.log('proof', JSON.stringify(proof));
-      console.log('publicSignals', JSON.stringify(proof));
+      console.log("proof", JSON.stringify(proof));
+      console.log("publicSignals", JSON.stringify(proof));
 
       const publicArgs = {
         root: publicSignals[0],
@@ -283,23 +304,24 @@ export const useApplication = create<{
   },
 
   sendWhitelist: async (connection, accountId) => {
-    const wallet = await connection.wallet();
+    appService.sendAllowlist(accountId, connection);
+    // const wallet = await connection.wallet();
 
-    const transactions: any[] = [];
+    // const transactions: any[] = [];
 
-    transactions.push(
-      getTransaction(
-        accountId,
-        CONTRACT,
-        "allowlist",
-        {
-          account_id: accountId,
-          auth_code: "nearcon",
-        },
-        ""
-      )
-    );
+    // transactions.push(
+    //   getTransaction(
+    //     accountId,
+    //     CONTRACT,
+    //     "allowlist",
+    //     {
+    //       account_id: accountId,
+    //       auth_code: "nearcon",
+    //     },
+    //     ""
+    //   )
+    // );
 
-    executeMultipleTransactions(transactions, wallet);
+    // executeMultipleTransactions(transactions, wallet);
   },
 }));
