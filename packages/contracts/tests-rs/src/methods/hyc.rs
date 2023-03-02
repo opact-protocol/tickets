@@ -2,6 +2,8 @@ use workspaces::result::CallExecutionDetails;
 
 use crate::*;
 
+const ALLOWLIST_STORAGE_COST: u128 = 400_000_000_000_000_000_000;
+
 const ZERO_VALUE: &str =
   "21663839004416932945382355908790599225266501822907911457504978515578255421292";
 
@@ -206,6 +208,7 @@ pub async fn allowlist(
         "account_id": account.id()
     }))?
     .gas(300000000000000)
+    .deposit(ALLOWLIST_STORAGE_COST)
     .transact()
     .await?;
   anyhow::Ok(())
