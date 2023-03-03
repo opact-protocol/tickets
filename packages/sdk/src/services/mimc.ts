@@ -6,17 +6,18 @@ type IntoBigInt = string | number | bigint | boolean | BN;
 
 export class MimcSponge {
   sponge: any;
-
-  constructor() {
-    this.initMimc();
-  }
+  initialized = false;
 
   async initMimc() {
     this.sponge = await buildMimcSponge();
+
+    this.initialized = true;
+
+    return this;
   }
 
   hash (left: IntoBigInt, right: IntoBigInt): string {
-    if (!this.sponge?.f) {
+    if (!this.initialized) {
       return '';
     }
 
@@ -26,7 +27,7 @@ export class MimcSponge {
   }
 
   singleHash (single: IntoBigInt): string {
-    if (!this.sponge?.f) {
+    if (!this.initialized) {
       return '';
     }
 

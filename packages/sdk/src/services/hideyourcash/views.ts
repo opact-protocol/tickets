@@ -113,6 +113,6 @@ export class Views {
       data
     } = await relayerService.get('/data');
 
-    return [data.data];
+    return [ { url: baseRelayers[network], account: data.data.relayerAccount, feePercent: data.data.feePercent } ];
   }
 }

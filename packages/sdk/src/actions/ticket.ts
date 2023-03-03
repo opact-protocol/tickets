@@ -1,5 +1,5 @@
 
-import { mimc } from '../services';
+import { mimc as mimcService } from '../services';
 import { viewAccountHash } from '../views';
 import { sendTransactionsCallback } from './connection';
 import type { ConnectionType, Currency } from '../interfaces';
@@ -11,6 +11,8 @@ export const createTicket = async (
   accountId: string,
   currencyId: string,
 ) => {
+  const mimc = await mimcService.initMimc();
+
   const secret = randomBN();
   const nullifier = randomBN();
 
@@ -21,8 +23,6 @@ export const createTicket = async (
     contract,
     accountId,
   );
-
-  console.log(currencyId);
 
   let currencyHash = 'Near';
 
@@ -113,6 +113,8 @@ export const sendDeposit = async(
       )
     );
   }
+
+  console.log('send deposit for transactions', transactions);
 
   return await sendTransactionsCallback(
     connection,

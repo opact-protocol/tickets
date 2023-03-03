@@ -19,7 +19,7 @@ export const sendTransactionsCallback = async (
         } = {}
       } = actions[0] || {};
 
-      console.log('deposit', deposit);
+      console.log('near account transaction:', methodName, receiverId);
 
       return await connection.functionCall({
         args,

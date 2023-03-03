@@ -1,12 +1,13 @@
 import { gql } from 'graphql-request';
 
+// hyc registry
 export const allowListUpdatesQuery = {
   name: 'allowlistMerkleTreeUpdates',
   query: gql`
-    query manyTokens($startId: String, $len: String) {
+    query manyTokens($startId: String, $len: String, $contract: String) {
       allowlistMerkleTreeUpdates(
         first: $len
-        where: { counter_gte: $startId }
+        where: { contract: $contract, counter_gte: $startId }
         orderBy: counter
         orderDirection: asc
       ) {
@@ -21,13 +22,14 @@ export const allowListUpdatesQuery = {
   `,
 };
 
+// hyc10.testnet
 export const depositUpdatesQuery = {
   name: 'depositMerkleTreeUpdates',
   query: gql`
-    query manyTokens($startId: String, $len: String) {
+    query manyTokens($startId: String, $len: String, $contract: String) {
       depositMerkleTreeUpdates(
         first: $len
-        where: { counter_gte: $startId }
+        where: { contract: $contract, counter_gte: $startId }
         orderBy: counter
         orderDirection: asc
       ) {
@@ -42,12 +44,14 @@ export const depositUpdatesQuery = {
   `,
 };
 
+// hyc registry
 export const lastAllowListQuery = {
   name: 'allowlistMerkleTreeUpdates',
   query: gql`
-    query lastAllowList {
+    query lastAllowList($contract: String) {
       allowlistMerkleTreeUpdates(
         first: 1
+        where: { contract: $contract }
         orderBy: timestamp
         orderDirection: desc
       ) {
@@ -60,9 +64,10 @@ export const lastAllowListQuery = {
 export const lastDepositQuery = {
   name: 'depositMerkleTreeUpdates',
   query: gql`
-    query lastDeposit {
+    query lastDeposit($contract: String) {
       depositMerkleTreeUpdates(
         first: 1
+        where: { contract: $contract }
         orderBy: timestamp
         orderDirection: desc
       ) {

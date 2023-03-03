@@ -107,10 +107,12 @@ export class Actions extends Views {
     note: string,
     relayer: RelayerDataInterface,
     recipient: string,
+    currencyContract: string,
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface,
   ) {
     const allowlistTree = await prepareMerkleTree(
+      this.contract,
       'allowlistTree',
       allowListUpdatesQuery,
       lastAllowListQuery,
@@ -119,6 +121,7 @@ export class Actions extends Views {
     );
 
     const commitmentsTree = await prepareMerkleTree(
+      currencyContract,
       'commitmentsTree',
       depositUpdatesQuery,
       lastDepositQuery,

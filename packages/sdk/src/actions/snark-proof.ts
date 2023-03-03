@@ -1,8 +1,8 @@
 //@ts-ignore
 import { plonk } from 'snarkjs';
-import { mimc } from '../services';
 import { parseNote } from '../helpers';
 import type MerkleTree from 'fixed-merkle-tree';
+import { mimc as mimcService } from '../services';
 import type { RelayerDataInterface } from '../interfaces';
 import { viewAccountHash, viewRelayerHash } from '../views';
 import type { PublicArgsInterface, WithdrawInputInterface } from '../interfaces/snark-proof';
@@ -43,18 +43,33 @@ export const prepareWithdraw = async (
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
-  await mimc.initMimc();
+  const mimc = await mimcService.initMimc();
 
   const recipientHash = await viewAccountHash(nodeUrl, contract, recipient);
   const relayerHash = await viewRelayerHash(nodeUrl, contract, relayer);
 
   const parsedNote = parseNote(note);
 
+  console.log(' ');
+  console.log('parsedNote', parsedNote);
+  console.log(' ');
+
   const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
   const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
 
+  console.log('secrethash', secretsHash);
+  console.log('commitment', commitment);
+  console.log(' ');
+
   const commitmentProof = commitmentsTree.proof(commitment);
   const allowlistProof = allowlistTree.proof(parsedNote.account_hash);
+
+  console.log('commitmentProof');
+  console.log(commitmentProof);
+  console.log(' ')
+  console.log('allowlistProof');
+  console.log(allowlistProof);
+  console.log(' ');
 
   const input = await getWithdrawInput(
     {...relayer, hash: relayerHash },
@@ -62,7 +77,10 @@ export const prepareWithdraw = async (
     recipientHash,
     allowlistProof,
     commitmentProof,
+    mimc,
   );
+
+  console.log('input',input);
 
   const { proof, publicSignals } = await createSnarkProof(input);
 
@@ -84,6 +102,7 @@ export const getWithdrawInput = async (
   recipientHash: string,
   allowlistProof: any,
   commitmentProof: any,
+  mimc: any,
 ): Promise<WithdrawInputInterface> => {
   return {
     refund: "0",
