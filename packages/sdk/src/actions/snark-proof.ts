@@ -112,12 +112,12 @@ export const getWithdrawInput = async (
     secret: parsedNote.secret,
     root: commitmentProof.pathRoot,
     nullifier: parsedNote.nullifier,
-    whitelistRoot: allowlistProof.pathRoot,
+    allowlistRoot: allowlistProof.pathRoot,
     pathIndices: commitmentProof.pathIndices,
     originDepositor: parsedNote.account_hash,
     pathElements: commitmentProof.pathElements,
-    whitelistPathIndices: allowlistProof.pathIndices,
-    whitelistPathElements: allowlistProof.pathElements,
+    allowlistPathIndices: allowlistProof.pathIndices,
+    allowlistPathElements: allowlistProof.pathElements,
     nullifierHash: mimc.singleHash!(parsedNote.nullifier),
   }
 }

@@ -1,5 +1,5 @@
 export interface PublicArgsInterface {
-  // quantity: string;
+  quantity?: string
   root: string;
   nullifier_hash: string;
   recipient: string;
@@ -35,11 +35,11 @@ export interface WithdrawInputInterface {
   recipient: string;
   pathIndices: string;
   pathElements: string;
-  whitelistRoot: string;
+  allowlistRoot: string;
   nullifierHash: string;
   originDepositor: string;
-  whitelistPathIndices: string;
-  whitelistPathElements: string;
+  allowlistPathIndices: string;
+  allowlistPathElements: string;
 }
 
 export interface ParseNoteInterface {

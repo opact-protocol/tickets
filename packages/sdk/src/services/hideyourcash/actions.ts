@@ -20,12 +20,12 @@ import { Views } from './views';
 export class Actions extends Views {
   readonly nodeUrl: string;
   readonly contract: string;
-  readonly graphqlUrl: string;
+  readonly graphqlUrl?: string;
 
   constructor (
     nodeUrl: string,
     contract: string,
-    graphqlUrl: string,
+    graphqlUrl?: string,
   ) {
     super(nodeUrl, contract);
 
@@ -111,6 +111,10 @@ export class Actions extends Views {
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface,
   ) {
+    if (!this.graphqlUrl) {
+      throw new Error('Graphql URL not configured.');
+    }
+
     const allowlistTree = await prepareMerkleTree(
       this.contract,
       'allowlistTree',

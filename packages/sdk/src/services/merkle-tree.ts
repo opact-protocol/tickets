@@ -32,24 +32,26 @@ export class MerkleTreeService {
 
     const items: MerkleTreeStorageInterface[] = await this.getBranches(cache);
 
+    console.log(`Merkletree ${this.name} items: `, items);
+
     const tree = new FixedMerkleTree(20, [], {
       ...merkleTreeOptions,
       hashFunction: mimic.hash
     });
 
     if (items) {
-      items.forEach(({ index, value }) => {
+      items.forEach(({ counter, value }) => {
         try {
-          tree.update(+index, value);
+          tree.update(+counter, value);
         } catch (e) {
           console.warn(e);
+
+          throw new Error('Error when update Merkle Tree');
         }
       });
     }
 
     this.tree = tree;
-
-    console.log('MERKLETREE ITEMS', items);
 
     return { tree }
   }
@@ -65,12 +67,16 @@ export class MerkleTreeService {
     if (!lastIndex || +lastIndex < +lastBranchIndex) {
       const qtyToQuer = +lastBranchIndex - lastIndex;
 
+      console.log(`Merkletree ${this.name} - lastBranchIndex:`, lastBranchIndex);
+      console.log(`Merkletree ${this.name} - startId:`, lastIndex);
+      console.log(`Merkletree ${this.name} - first:`, qtyToQuer);
+
       const {
         [this.branchesQuery.name]: branches
       } =  await this.getMerkleTreeBranchesWithQuery(
         this.branchesQuery,
         {
-          startId: String(lastIndex) || '0',
+          startId: String(lastIndex),
           first: qtyToQuer.toString(),
           contract: this.contract
         },

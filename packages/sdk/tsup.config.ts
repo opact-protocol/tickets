@@ -4,9 +4,8 @@ import { commonjs } from "@hyrious/esbuild-plugin-commonjs";
 export default defineConfig({
   dts: true,
   clean: true,
-  // shims: true,
   esbuildPlugins: [
-    commonjs() as any,
+    commonjs(),
   ],
   format: ['cjs', 'esm'],
   entry: ['src/index.ts'],

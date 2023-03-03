@@ -1,7 +1,7 @@
-import { connect, keyStores, KeyPair, providers } from "near-api-js";
-import { Buffer } from "buffer";
 import Process from "process";
+import { Buffer } from "buffer";
 import { Env } from "@/interfaces/env";
+import { connect, keyStores, KeyPair } from "near-api-js";
 
 /* tslint:disable */
 globalThis.Buffer = Buffer;
@@ -26,27 +26,4 @@ export const setupNear = async ({
   };
 
   return connect({ ...connectionConfig, keyStore: myKeyStore });
-};
-
-export const viewFunction = async (
-  nodeUrl: string,
-  contractId: string,
-  methodName: string,
-  args: any
-) => {
-  console.log("contract id: ", contractId);
-
-  const provider = new providers.JsonRpcProvider({ url: nodeUrl });
-
-  const serializedArgs = Buffer.from(JSON.stringify(args)).toString("base64");
-
-  const res = (await provider.query({
-    request_type: "call_function",
-    account_id: contractId,
-    method_name: methodName,
-    args_base64: serializedArgs,
-    finality: "optimistic",
-  })) as any;
-
-  return JSON.parse(Buffer.from(res.result).toString());
 };

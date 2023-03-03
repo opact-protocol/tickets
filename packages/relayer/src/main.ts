@@ -1,9 +1,9 @@
 import Big from "big.js";
 import { Env } from "./interfaces";
-import { AttachedGas } from "./constants";
-import { setupNear, viewFunction } from "./services/near";
-import { RelayerPayload } from "./interfaces/relayer";
+import { setupNear } from "./services/near";
 import { RouterRequest } from "@tsndr/cloudflare-worker-router";
+import { viewIsWithdrawValid, sendContractWithdraw } from 'hideyourcash-sdk';
+import type { PublicArgsInterface } from 'hideyourcash-sdk';
 
 const errorStatus = 500;
 const successStatus = 200;
@@ -12,7 +12,7 @@ export const relayer = async (
   request: RouterRequest,
   env: Env
 ): Promise<{ status: number; body: any }> => {
-  const payload: RelayerPayload = request.body;
+  const payload: PublicArgsInterface = request.body;
 
   if (!payload) {
     return {
@@ -24,7 +24,12 @@ export const relayer = async (
     };
   }
 
-  const { RPC_URL, ACCOUNT_ID, RELAYER_FEE, HYC_CONTRACT } = env;
+  const {
+    RPC_URL,
+    ACCOUNT_ID,
+    RELAYER_FEE,
+    HYC_CONTRACT,
+  } = env;
 
   // setup NEAR config
   const connection = await setupNear(env);
@@ -44,7 +49,7 @@ export const relayer = async (
 
   try {
     // check if payload uses correct fee
-    const minimumFee = new Big(payload.quantity || 0).mul(new Big(RELAYER_FEE));
+    const minimumFee = new Big(payload.quantity! || 0).mul(new Big(RELAYER_FEE));
 
     const payloadFee = new Big(payload.fee || 0);
 
@@ -71,12 +76,13 @@ export const relayer = async (
 
   // check if withdraw payload is valid
   try {
-    await viewFunction(
+    const check = await viewIsWithdrawValid(
       RPC_URL,
       HYC_CONTRACT,
-      "view_is_withdraw_valid",
-      payload
+      payload,
     );
+
+    console.log(check);
   } catch (error) {
     return {
       status: errorStatus,
@@ -89,12 +95,14 @@ export const relayer = async (
 
   // since payload is valid, submit transaction and return hash
   try {
-    const transaction = await account.functionCall({
-      contractId: HYC_CONTRACT,
-      methodName: "withdraw",
-      args: { ...payload },
-      gas: AttachedGas as any,
-    });
+    const transaction = await sendContractWithdraw(
+      RPC_URL,
+      HYC_CONTRACT,
+      env.ACCOUNT_ID,
+      '',
+      payload,
+      account,
+    );
 
     return {
       status: successStatus,

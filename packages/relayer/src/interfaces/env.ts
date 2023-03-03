@@ -10,4 +10,5 @@ export interface Env {
   HYC_CONTRACT: string;
   // Fee charged for relaying (0.25 == 25%)
   RELAYER_FEE: string;
+  RELAYER_URL: string;
 }

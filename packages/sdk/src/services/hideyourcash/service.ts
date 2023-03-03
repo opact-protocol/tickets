@@ -4,13 +4,13 @@ export class HideyourCash extends Actions {
   readonly network: string;
   readonly nodeUrl: string;
   readonly contract: string;
-  readonly graphqlUrl: string;
+  readonly graphqlUrl?: string;
 
   constructor (
     network: string,
     nodeUrl: string,
     contract: string,
-    graphqlUrl: string,
+    graphqlUrl?: string,
   ) {
     super(
       nodeUrl,
