@@ -111,7 +111,7 @@ export function Deposit() {
     setDepositing(true);
     setButtonText("Preparing your deposit...");
 
-    await prepareDeposit(selector, accountId!);
+    await prepareDeposit(accountId!, selectedAmount.accountId);
 
     setShowModal(!showModal);
   };
