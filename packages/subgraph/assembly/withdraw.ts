@@ -45,7 +45,9 @@ export function handleWithdrawal(
         relayerValue = null;
       }
 
-      const withdrawalEvent = new Withdrawal(counter.toU64().toString());
+      const withdrawalEvent = new Withdrawal(
+        counter.toU64().toString() + "-" + contract
+      );
       withdrawalEvent.counter = BigInt.fromU64(counter.toU64());
       withdrawalEvent.contract = contract;
       withdrawalEvent.signer = signer;
