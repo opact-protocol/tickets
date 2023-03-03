@@ -25,7 +25,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
-import { useCurrencyContracts } from "@/hooks/useCurrencyContracts";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -55,7 +54,6 @@ export function Deposit() {
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
   const { allCurrencies } = useAllCurrencies();
-  const { currencyContracts } = useCurrencyContracts(selector, selectedToken);
   const amounts = objetctToArray(selectedToken.contracts);
 
   if (!action && transactionHashes && !approved) {
@@ -157,7 +155,7 @@ export function Deposit() {
                   <Listbox.Options className="absolute mt-1 max-h-60 w-[240px] overflow-auto rounded-[20px] bg-white py-1 text-base shadow-[0_4px_15px_rgba(0,0,0,0.2)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[10]">
                     {allCurrencies?.map((token) => (
                       <Listbox.Option
-                        key={token.account_id}
+                        key={token.type}
                         className={({ active }) =>
                           `relative cursor-pointer select-none p-[10px] mx-auto w-[220px] ${
                             active
@@ -204,67 +202,39 @@ export function Deposit() {
                 className="mt-2 max-w-[371px]"
                 as="ul"
               >
-                {selectedToken.type === "Near" ? (
-                  <Slider {...settings}>
-                    {currencyContracts?.map((token) => (
-                      <RadioGroup.Option
-                        key={token.accountId}
-                        value={token}
-                        as="li"
-                        className={({ active }) => `
+                <Slider {...settings}>
+                  {amounts?.map((token) => (
+                    <RadioGroup.Option
+                      key={token.accountId}
+                      value={token}
+                      as="li"
+                      className={({ active }) => `
                               bg-transparent rounded-full p-1 w-min mb-2 ${
                                 active ? "bg-soft-blue-from-deep-blue" : ""
                               }
                             `}
-                      >
-                        <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
-                          <RadioGroup.Label
-                            as="span"
-                            className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
-                          >
-                            {Number(
-                              formatBigNumberWithDecimals(
-                                token.value,
-                                getDecimals(24)
+                    >
+                      <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
+                        <RadioGroup.Label
+                          as="span"
+                          className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
+                        >
+                          {Number(
+                            formatBigNumberWithDecimals(
+                              token.value,
+                              getDecimals(
+                                selectedToken.type === "Near"
+                                  ? 24
+                                  : selectedToken.metadata.decimals
                               )
-                            ).toFixed(0)}{" "}
-                            {selectedToken.type}
-                          </RadioGroup.Label>
-                        </div>
-                      </RadioGroup.Option>
-                    ))}
-                  </Slider>
-                ) : (
-                  <Slider {...settings}>
-                    {amounts?.map((token) => (
-                      <RadioGroup.Option
-                        key={token.accountId}
-                        value={token}
-                        as="li"
-                        className={({ active }) => `
-                              bg-transparent rounded-full p-1 w-min mb-2 ${
-                                active ? "bg-soft-blue-from-deep-blue" : ""
-                              }
-                            `}
-                      >
-                        <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
-                          <RadioGroup.Label
-                            as="span"
-                            className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
-                          >
-                            {Number(
-                              formatBigNumberWithDecimals(
-                                token.value,
-                                getDecimals(selectedToken.metadata.decimals)
-                              )
-                            ).toFixed(0)}{" "}
-                            {selectedToken.type}
-                          </RadioGroup.Label>
-                        </div>
-                      </RadioGroup.Option>
-                    ))}
-                  </Slider>
-                )}
+                            )
+                          ).toFixed(0)}{" "}
+                          {selectedToken.type}
+                        </RadioGroup.Label>
+                      </div>
+                    </RadioGroup.Option>
+                  ))}
+                </Slider>
               </RadioGroup>
               <p
                 className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
@@ -311,6 +281,7 @@ export function Deposit() {
             <HashModal
               isOpen={showModal}
               currency={selectedToken}
+              contract={selectedAmount.accountId}
               amount={selectedAmount.value}
               token={selectedToken}
               onClose={() => {

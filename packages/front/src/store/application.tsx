@@ -42,10 +42,11 @@ export const useApplication = create<{
   note: any;
   relayerData: any;
   sendDeposit: (
-    connection: any,
-    account: string,
     amount: string,
-    currency: Currency
+    contract: string,
+    accountId: string,
+    currency: Currency,
+    connection: any
   ) => Promise<void>;
   fetchRelayerData: () => Promise<void>;
   sendWithdraw: () => Promise<void>;
@@ -100,16 +101,17 @@ export const useApplication = create<{
   },
 
   sendDeposit: async (
-    connection: any,
-    account: string,
     amount: string,
-    currency: Currency
+    depositContract: string,
+    accountId: string,
+    currency: Currency,
+    connection: any
   ) => {
     appService.sendDeposit(
       get().hash,
       amount,
-      CONTRACT,
-      account,
+      depositContract,
+      accountId,
       currency,
       connection
     );
@@ -305,23 +307,5 @@ export const useApplication = create<{
 
   sendWhitelist: async (connection, accountId) => {
     appService.sendAllowlist(accountId, connection);
-    // const wallet = await connection.wallet();
-
-    // const transactions: any[] = [];
-
-    // transactions.push(
-    //   getTransaction(
-    //     accountId,
-    //     CONTRACT,
-    //     "allowlist",
-    //     {
-    //       account_id: accountId,
-    //       auth_code: "nearcon",
-    //     },
-    //     ""
-    //   )
-    // );
-
-    // executeMultipleTransactions(transactions, wallet);
   },
 }));
