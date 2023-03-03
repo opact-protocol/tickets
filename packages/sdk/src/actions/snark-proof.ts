@@ -16,8 +16,8 @@ export const createSnarkProof = async (
   try {
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
+      "https://hideyour.cash/verifier.wasm",
+      "https://hideyour.cash/circuit.zkey"
     );
 
     return { proof, publicSignals };
@@ -26,8 +26,8 @@ export const createSnarkProof = async (
 
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
+      "https://hideyour.cash/verifier.wasm",
+      "https://hideyour.cash/circuit.zkey"
     );
 
     return { proof, publicSignals };

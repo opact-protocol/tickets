@@ -1,18 +1,12 @@
 import { setupNear } from "./utils";
 import { HideyourCash } from "../dist";
+import env from '../temp/env.json';
 
-const env = {
-  NEAR_NETWORK: 'testnet',
-  RPC_URL: 'https://archival-rpc.testnet.near.org',
-  ACCOUNT_ID: '1mateus.testnet',
-  PRIVATE_KEY: 'ed25519:439whkyD3Awbf98X9FJBKrDTJJj7vafVoN1g5JkQQ46HCKZrzP79SSBexwJVzi1QDt5gayQhUSVyFZzLZU9yTVxp',
-  HYC_CONTRACT: '40b0c58afb404faebbb6registryhyctest.testnet',
-  GRAPHQL_URL: 'https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc_registry',
-}
-
-let service: HideyourCash | null = null;
-let connection: any = null;
 let account: any = null;
+let connection: any = null;
+let service: HideyourCash | null = null;
+
+const successStatus = 200;
 
 describe("Test all service actions", () => {
   jest.useFakeTimers();
@@ -34,7 +28,7 @@ describe("Test all service actions", () => {
     );
   });
 
-  it ('1. Test all service', async () => {
+  it ('1. Test service flow', async () => {
     let checkInAllowlist = await service?.viewIsInAllowlist(
       env.ACCOUNT_ID
     );
@@ -67,12 +61,18 @@ describe("Test all service actions", () => {
       note = '',
     } = await service?.createTicket(
       env.ACCOUNT_ID,
-      currency.account_id || 'Near',
+      currency.account_id || 'near',
     ) || {};
 
     const amount = '10000000';
 
     const currencyId = currency.contracts[amount];
+
+    const contractIsAllowed = await service?.viewIsContractAllowed(
+      currencyId,
+    );
+
+    expect(contractIsAllowed).toBe(true);
 
     await service?.sendDeposit(
       hash,
@@ -83,13 +83,26 @@ describe("Test all service actions", () => {
       account,
     );
 
-    const [ relayer ] = await service?.viewRelayers('prod') || [];
+    const [ relayer ] = await service?.viewRelayers('test') || [];
 
-    await service?.prepareWithdraw(
+    const publicArgs = await service?.prepareWithdraw(
       note,
       relayer,
       env.ACCOUNT_ID,
       currencyId,
     );
+
+    const withdrawIsValid = await service?.viewIsWithdrawValid(
+      publicArgs!,
+    );
+
+    expect(withdrawIsValid).toBe(true);
+
+    const res = await service?.sendWithdraw(
+      relayer,
+      publicArgs!,
+    );
+
+    expect(res?.data).toBe(successStatus);
   });
 });
