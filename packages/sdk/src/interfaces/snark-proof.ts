@@ -35,11 +35,11 @@ export interface WithdrawInputInterface {
   recipient: string;
   pathIndices: string;
   pathElements: string;
-  allowlistRoot: string;
+  whitelistRoot: string;
   nullifierHash: string;
   originDepositor: string;
-  allowlistPathIndices: string;
-  allowlistPathElements: string;
+  whitelistPathIndices: string;
+  whitelistPathElements: string;
 }
 
 export interface ParseNoteInterface {

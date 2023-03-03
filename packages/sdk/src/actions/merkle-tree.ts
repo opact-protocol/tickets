@@ -1,5 +1,6 @@
 import { MerkleTreeService } from '../services';
 import type { MerkleTreeCacheInterface } from '../interfaces';
+import MerkleTree from 'fixed-merkle-tree';
 
 export const prepareMerkleTree = async (
   contract: string,
@@ -8,7 +9,7 @@ export const prepareMerkleTree = async (
   lastBranchesQuery: any,
   graphqlUrl: string,
   cache?: MerkleTreeCacheInterface,
-) => {
+): Promise<MerkleTree> => {
   const merkleTree = new MerkleTreeService(
     contract,
     name,
@@ -17,5 +18,5 @@ export const prepareMerkleTree = async (
     lastBranchesQuery,
   );
 
-  return (await merkleTree.initMerkleTree(cache)).tree;
+  return await merkleTree.initMerkleTree(cache);
 }

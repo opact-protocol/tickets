@@ -65,27 +65,23 @@ export const App = () => {
 
     const currency = currencies[1];
 
-    // const {
-    //   hash = '',
-    //   note = '',
-    // } = await service?.createTicket(
-    //   env.ACCOUNT_ID,
-    //   currency.account_id || 'Near',
-    // ) || {};
+    const {
+      hash = '',
+      note = '',
+    } = await service?.createTicket(
+      env.ACCOUNT_ID,
+      currency.account_id || 'Near',
+    ) || {};
 
-    // console.log('-- hash - note --');
-    // console.log(hash);
-    // console.log('-- hash - note --');
-    // console.log(note);
-    // console.log(' ');
+    console.log('    - Note -   ');
+    console.log(note);
+    console.log('    - Note -   ');
 
     const amount = '10000000';
 
     const currencyId = currency.contracts[amount];
 
-    // console.log(hash);
-
-    // const deposit = await service?.sendDeposit(
+    // await service?.sendDeposit(
     //   hash,
     //   amount,
     //   currencyId,
@@ -94,16 +90,26 @@ export const App = () => {
     //   account,
     // );
 
-    // console.log('despoit', deposit);
+    console.log(' ');
+    console.log('prepare withdraw');
+    console.log(' ');
 
     const [ relayer ] = await service?.viewRelayers('prod') || [];
 
-    await service?.prepareWithdraw(
-      '13231883832982618644925804743528651542494859873959944679932064694939244383666-41107413380383935955065417369115956407273520916777520364465903677391648857-187192272639035181799285191615716773332647746359236176530775295135382973267-17881597763896769714078483407050197146887670059963737309885706338952105582421',
+    console.log(' - Relayer - ');
+    console.log(relayer);
+    console.log(' - Relayer - ');
+
+    const payload = await service?.prepareWithdraw(
+      '13231883832982618644925804743528651542494859873959944679932064694939244383666-396626910828091498068215575266838563065947885186837395803932852839315631049-95748281794829902184394697191363679884713990385346690990731142149751695243-17881597763896769714078483407050197146887670059963737309885706338952105582421',
       relayer,
       env.ACCOUNT_ID,
       currencyId,
     );
+
+    console.log('withdrawpayload');
+    console.log(payload);
+    console.log('withdrawpayload');
   })();
 
   return (

@@ -6,12 +6,16 @@ export const viewWasNullifierSpent = async (
   contract: string,
   nullifier: string,
 ) => {
+  const {
+    singleHash
+  } = await mimc.initMimc();
+
   return await viewFunction(
     nodeUrl,
     contract,
     "view_was_nullifier_spent",
     {
-      nullifier: mimc.singleHash!(nullifier.split("-")[1]),
+      nullifier: singleHash(nullifier.split("-")[1]),
     }
   )
 }

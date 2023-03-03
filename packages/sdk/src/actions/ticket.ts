@@ -11,12 +11,22 @@ export const createTicket = async (
   accountId: string,
   currencyId: string,
 ) => {
-  const mimc = await mimcService.initMimc();
+  const {
+    hash,
+  } = await mimcService.initMimc();
 
   const secret = randomBN();
   const nullifier = randomBN();
 
-  const secrets_hash = mimc.hash!(secret!, nullifier!);
+  console.log('  - Near proof -  ');
+  console.log(secret?.toString(), nullifier?.toString());
+  console.log('  - Near proof -  ');
+
+  const secretsHash = hash!(secret!, nullifier!);
+
+  console.log('    - Secret_hash -    ');
+  console.log(secretsHash);
+  console.log('    - Secret_hash -    ');
 
   const accountHash = await viewAccountHash(
     nodeRpcUrl,
@@ -24,15 +34,19 @@ export const createTicket = async (
     accountId,
   );
 
-  let currencyHash = 'Near';
+  console.log('    - accountHash -    ');
+  console.log(accountHash);
+  console.log('    - accountHash -    ');
 
-  if (currencyId !== 'Near') {
-    currencyHash = await viewAccountHash(
-      nodeRpcUrl,
-      contract,
-      currencyId,
-    );
-  }
+  const currencyHash = await viewAccountHash(
+    nodeRpcUrl,
+    contract,
+    currencyId,
+  );
+
+  console.log('    - currencyHash -    ');
+  console.log(accountHash);
+  console.log('    - currencyHash -    ');
 
   const note =
     currencyHash.toString() +
@@ -45,7 +59,7 @@ export const createTicket = async (
 
   return {
     note,
-    hash: secrets_hash,
+    hash: secretsHash,
   };
 }
 

@@ -9,34 +9,23 @@ export class MimcSponge {
   initialized = false;
 
   async initMimc() {
-    this.sponge = await buildMimcSponge();
+    const sponge = await buildMimcSponge();
 
-    this.initialized = true;
-
-    return this;
-  }
-
-  hash (left: IntoBigInt, right: IntoBigInt): string {
-    if (!this.initialized) {
-      return '';
+    return {
+      hash: (left: IntoBigInt, right: IntoBigInt): string => {
+        return sponge.F.toString(
+          sponge.multiHash([BigInt(left as any), BigInt(right as any)])
+        );
+      },
+      singleHash: (single: IntoBigInt): string => {
+        return sponge.F.toString(sponge.multiHash([BigInt(single as any)]));
+      }
     }
-
-    return this.sponge.F.toString(
-      this.sponge.multiHash([BigInt(left as any), BigInt(right as any)])
-    );
-  }
-
-  singleHash (single: IntoBigInt): string {
-    if (!this.initialized) {
-      return '';
-    }
-
-    return this.sponge.F.toString(this.sponge.multiHash([BigInt(single as any)]));
   }
 }
 
 const mimc = new MimcSponge();
 
 export {
-  mimc,
+  mimc
 }

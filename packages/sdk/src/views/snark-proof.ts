@@ -1,5 +1,5 @@
-import { PublicArgsInterface } from 'dist';
 import { viewFunction } from '../helpers';
+import type { PublicArgsInterface } from '../interfaces';
 
 export const viewIsWithdrawValid = async (
   rpcUrl: string,

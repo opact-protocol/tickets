@@ -1,8 +1,7 @@
 import { request } from 'graphql-request'
-import { merkleTreeOptions } from '../constants';
-import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
+import MerkleTree, { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import type { MerkleTreeCacheInterface, MerkleTreeStorageInterface } from '../interfaces';
-import { mimc } from './mimc';
+import { mimc as mimcService } from './mimc';
 
 export class MerkleTreeService {
   readonly name: string;
@@ -27,22 +26,24 @@ export class MerkleTreeService {
     this.lastBranchesQuery = lastBranchesQuery;
   }
 
-  async initMerkleTree (cache?: MerkleTreeCacheInterface) {
-    const mimic = await mimc.initMimc();
+  async initMerkleTree (cache?: MerkleTreeCacheInterface): Promise<MerkleTree> {
+    const {
+      hash,
+    } = await mimcService.initMimc();
 
     const items: MerkleTreeStorageInterface[] = await this.getBranches(cache);
 
     console.log(`Merkletree ${this.name} items: `, items);
 
     const tree = new FixedMerkleTree(20, [], {
-      ...merkleTreeOptions,
-      hashFunction: mimic.hash
+      zeroElement: "21663839004416932945382355908790599225266501822907911457504978515578255421292",
+      hashFunction: hash
     });
 
     if (items) {
       items.forEach(({ counter, value }) => {
         try {
-          tree.update(+counter, value);
+          tree.update(Number(counter), value);
         } catch (e) {
           console.warn(e);
 
@@ -53,7 +54,7 @@ export class MerkleTreeService {
 
     this.tree = tree;
 
-    return { tree }
+    return tree
   }
 
   async getBranches (cache?: MerkleTreeCacheInterface) {

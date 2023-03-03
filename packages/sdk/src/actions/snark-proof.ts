@@ -16,8 +16,8 @@ export const createSnarkProof = async (
   try {
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "https://hideyour.cash/verifier.wasm",
-      "https://hideyour.cash/circuit.zkey"
+      "./verifier.wasm",
+      "./circuit.zkey"
     );
 
     return { proof, publicSignals };
@@ -26,8 +26,8 @@ export const createSnarkProof = async (
 
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "https://hideyour.cash/verifier.wasm",
-      "https://hideyour.cash/circuit.zkey"
+      "./verifier.wasm",
+      "./circuit.zkey"
     );
 
     return { proof, publicSignals };
@@ -43,33 +43,30 @@ export const prepareWithdraw = async (
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
-  const mimc = await mimcService.initMimc();
+  const {
+    hash,
+    singleHash,
+  } = await mimcService.initMimc();
 
   const recipientHash = await viewAccountHash(nodeUrl, contract, recipient);
   const relayerHash = await viewRelayerHash(nodeUrl, contract, relayer);
 
   const parsedNote = parseNote(note);
 
-  console.log(' ');
-  console.log('parsedNote', parsedNote);
-  console.log(' ');
+  const secretsHash = hash(parsedNote.secret, parsedNote.nullifier);
 
-  const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
-  const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
+  const commitment = hash(secretsHash, parsedNote.account_hash);
 
-  console.log('secrethash', secretsHash);
-  console.log('commitment', commitment);
-  console.log(' ');
+  console.log('- commitmentstree -');
+  console.log(commitmentsTree);
+  console.log('- commitmentstree -');
 
   const commitmentProof = commitmentsTree.proof(commitment);
   const allowlistProof = allowlistTree.proof(parsedNote.account_hash);
 
-  console.log('commitmentProof');
-  console.log(commitmentProof);
-  console.log(' ')
-  console.log('allowlistProof');
-  console.log(allowlistProof);
-  console.log(' ');
+  console.log('- Root -');
+  console.log(commitmentProof.pathRoot);
+  console.log('- Root -');
 
   const input = await getWithdrawInput(
     {...relayer, hash: relayerHash },
@@ -77,7 +74,7 @@ export const prepareWithdraw = async (
     recipientHash,
     allowlistProof,
     commitmentProof,
-    mimc,
+    singleHash,
   );
 
   console.log('input',input);
@@ -102,23 +99,23 @@ export const getWithdrawInput = async (
   recipientHash: string,
   allowlistProof: any,
   commitmentProof: any,
-  mimc: any,
+  singleHash: any,
 ): Promise<WithdrawInputInterface> => {
   return {
     refund: "0",
     relayer: relayer.hash,
-    fee: relayer.feePercent,
+    fee: '1',
     recipient: recipientHash,
     secret: parsedNote.secret,
     root: commitmentProof.pathRoot,
     nullifier: parsedNote.nullifier,
-    allowlistRoot: allowlistProof.pathRoot,
+    whitelistRoot: allowlistProof.pathRoot,
     pathIndices: commitmentProof.pathIndices,
     originDepositor: parsedNote.account_hash,
     pathElements: commitmentProof.pathElements,
-    allowlistPathIndices: allowlistProof.pathIndices,
-    allowlistPathElements: allowlistProof.pathElements,
-    nullifierHash: mimc.singleHash!(parsedNote.nullifier),
+    whitelistPathIndices: allowlistProof.pathIndices,
+    whitelistPathElements: allowlistProof.pathElements,
+    nullifierHash: singleHash(parsedNote.nullifier),
   }
 }
 

@@ -165,6 +165,9 @@ async function buildCommitments() {
     hashFunction: mimc.hash,
   });
 
+  console.log('commitmentTree', commitmentTree);
+  console.log('commitmentTree', commitmentTree);
+
   // create proofs
   const path1 = commitmentTree.proof(commitmentLeaves[0]);
   const pathWL1 = allowlistTree.proof(accountsHashes[0]);

@@ -16,6 +16,7 @@ export const viewAllCurrencies = async (
     if (currency.type === 'Near') {
       return {
         ...currency,
+        contract: 'Near',
         contracts: await viewCurrencyContracts(
           rpcUrl,
           contract,
