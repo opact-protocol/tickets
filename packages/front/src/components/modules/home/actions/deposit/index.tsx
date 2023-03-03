@@ -39,6 +39,7 @@ const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
+  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
     {} as AmountsProps
@@ -392,6 +393,10 @@ export function Deposit() {
             />
           )}
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <WhatIsThisModal
+            isOpen={showModalPoolAnonymity}
+            onClose={() => setShowModalPoolAnonymity(false)}
+          />
         </div>
       </div>
       <WhitelistModal
