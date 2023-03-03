@@ -34,7 +34,7 @@ export function handleDeposit(
       if (!index || !value || !counter) continue;
 
       const depositEvent = new DepositMerkleTreeUpdate(
-        counter.toU64().toString()
+        counter.toU64().toString() + "-" + contract
       );
       depositEvent.counter = BigInt.fromU64(counter.toU64());
       depositEvent.contract = contract;
