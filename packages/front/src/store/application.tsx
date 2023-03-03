@@ -51,7 +51,10 @@ export const useApplication = create<{
   fetchRelayerData: () => Promise<void>;
   sendWithdraw: () => Promise<void>;
   prepareWithdraw: (connection, payload: any) => Promise<void>;
-  prepareDeposit: (connection: any, account: string) => Promise<string>;
+  prepareDeposit: (
+    account: string,
+    currencieContract: string
+  ) => Promise<string>;
   createSnarkProof: (payload: any) => Promise<any>;
   sendWhitelist: (connection: any, account: string) => Promise<any>;
 }>((set, get) => ({
@@ -61,43 +64,18 @@ export const useApplication = create<{
   note: null,
   relayerData: null,
 
-  prepareDeposit: async (connection, account) => {
-    const secret = randomBN();
-    const nullifier = randomBN();
-
-    const secrets_hash = mimc.hash!(secret, nullifier);
-
-    const account_hash = await viewFunction(
-      connection,
-      CONTRACT,
-      "view_account_hash",
-      {
-        account_id: account,
-      }
+  prepareDeposit: async (account: string, currencieContract: string) => {
+    const { hash, note } = await appService.createTicket(
+      account,
+      currencieContract
     );
 
-    const commitment = mimc.hash(secrets_hash, account_hash);
-    console.log({
-      secret,
-      nullifier,
-      secrets_hash,
-      account_hash,
-      commitment,
-    });
-
-    const note =
-      secret.toString() +
-      "-" +
-      nullifier.toString() +
-      "-" +
-      account_hash.toString();
-
     set({
-      hash: secrets_hash,
+      hash,
       note,
     });
 
-    return secrets_hash;
+    return hash;
   },
 
   sendDeposit: async (
