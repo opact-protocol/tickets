@@ -22,6 +22,7 @@ export const allowListUpdatesQuery = {
   `,
 };
 
+// hyc10.testnet
 export const depositUpdatesQuery = {
   name: "depositMerkleTreeUpdates",
   query: gql`
