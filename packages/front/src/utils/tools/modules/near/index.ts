@@ -84,7 +84,7 @@ export const getTransactionsStatus = (receiptsOutcome: ReceiptOutcome[]) =>
 
 export const getTransactionsAction = (
   transactions: Partial<TransactionPayload>[]
-) => {
+  ) => {
   return transactions
     .map((payload) => {
       const action = actions.find(({ check }) =>

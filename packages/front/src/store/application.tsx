@@ -25,7 +25,7 @@ function parseNote(note: string): {
     account_hash: splitString[2],
   };
 }
-
+const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
 
 const appService = new HideyourCash(
@@ -115,6 +115,7 @@ export const useApplication = create<{
       currency,
       connection
     );
+    localStorage.removeItem(hycTransaction);
     // const wallet = await connection.wallet();
 
     // const transactions: any[] = [];
