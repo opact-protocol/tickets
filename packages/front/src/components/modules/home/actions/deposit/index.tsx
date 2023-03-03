@@ -16,6 +16,7 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import "swiper/css";
+import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 
 interface SelectedTokenProps {
   id: number;
@@ -41,6 +42,7 @@ const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
+  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [buttonText, setButtonText] = useState("Deposit");
@@ -270,8 +272,8 @@ export function Deposit() {
               ))}
             </div>
             <p
-              className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
-              title="Coming soon"
+              className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
+              onClick={() => setShowModalPoolAnonymity(true)}
             >
               What is this <QuestionMarkCircleIcon className="w-4 h-4" />
             </p>
@@ -296,6 +298,10 @@ export function Deposit() {
             }}
           />
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <WhatIsThisModal
+            isOpen={showModalPoolAnonymity}
+            onClose={() => setShowModalPoolAnonymity(false)}
+          />
         </div>
       </div>
       <WhitelistModal
