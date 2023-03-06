@@ -2,3 +2,4 @@ node_modules
 dist
 .mf
 .env
+testnet_setup.json

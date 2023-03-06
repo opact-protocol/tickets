@@ -65,12 +65,14 @@ export class MerkleTreeService {
     if (!lastIndex || +lastIndex < +lastBranchIndex) {
       const qtyToQuer = +lastBranchIndex - lastIndex;
 
-      const { [this.branchesQuery.name]: branches } =
-        await this.getMerkleTreeBranchesWithQuery(this.branchesQuery, {
+      const branches = await this.getMerkleTreeBranchesWithPaginatedQuery(
+        this.branchesQuery,
+        {
           startId: String(lastIndex),
           first: qtyToQuer.toString(),
           contract: this.contract,
-        });
+        }
+      );
 
       return [...defaultBranches, ...branches];
     }
@@ -96,5 +98,33 @@ export class MerkleTreeService {
     variables: any = {}
   ): Promise<any> {
     return request(this.graphqlUrl, query, variables as any) as any;
+  }
+
+  async getMerkleTreeBranchesWithPaginatedQuery(
+    { query }: any,
+    variables: any = {}
+  ) {
+    const rawPage = (Number(variables.first) + 100 - 1) / 100;
+
+    const totalPage = Number(
+      (rawPage % 1 === 0 ? rawPage : rawPage + 1).toFixed(0)
+    );
+
+    const branches: any[] = [];
+
+    for (let i = 0; i < totalPage; i++) {
+      const { [this.branchesQuery.name]: data } = (await request(
+        this.graphqlUrl,
+        query,
+        {
+          ...variables,
+          startId: String(Number(variables.startId) + 100 * i),
+        } as any
+      )) as any;
+
+      branches.push(...data);
+    }
+
+    return branches;
   }
 }
