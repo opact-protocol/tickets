@@ -4,21 +4,28 @@ import type { PublicArgsInterface } from "../interfaces";
 export const viewIsWithdrawValid = async (
   rpcUrl: string,
   contract: string,
+  currencyContract: string,
   payload: PublicArgsInterface
 ): Promise<boolean> => {
   const withdrawIsValid = await viewFunction(
     rpcUrl,
-    contract,
+    currencyContract,
     "view_is_withdraw_valid",
     payload
   );
 
+  console.log("res: withdrawIsValid: ", withdrawIsValid);
+
   const rootAllowlistIsValid = await viewFunction(
     rpcUrl,
-    "registry",
+    contract,
     "view_is_allowlist_root_valid",
-    payload.allowlist_root
+    {
+      root: payload.allowlist_root,
+    }
   );
+
+  console.log("res: rootAllowlistIsValid: ", rootAllowlistIsValid);
 
   return withdrawIsValid && rootAllowlistIsValid;
 };

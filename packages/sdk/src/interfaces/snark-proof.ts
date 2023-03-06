@@ -1,5 +1,4 @@
 export interface PublicArgsInterface {
-  quantity?: string;
   root: string;
   nullifier_hash: string;
   recipient: string;
