@@ -9,6 +9,4 @@ export interface Env {
   // Fee charged for relaying (0.25 == 25%)
   RELAYER_FEE: string;
   RELAYER_URL: string;
-  HYC_CONTRACT: string;
-  BASE_STORAGE_FEE: string;
 }
