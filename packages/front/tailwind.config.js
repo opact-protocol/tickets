@@ -56,6 +56,7 @@ module.exports = {
           "linear-gradient(90deg, #47C6E2 29.37%, #63DC94 127.97%)",
         "green-gradient":
           "linear-gradient(90deg, #000000 26.73%, #63DC94 96.17%)",
+        "warning-gradient": " linear-gradient(0deg, #fff 17%, #F0E7D1 35%)",
       },
       animation: {
         "fade-in": "fade-in 0.5s linear forwards",
