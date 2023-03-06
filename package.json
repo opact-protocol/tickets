@@ -9,6 +9,7 @@
     "contracts": "yarn workspace @near/contracts",
     "circuits": "yarn workspace circuits",
     "contract_libraries": "yarn workspace @near/contract_libraries",
+    "sdk": "yarn workspace hideyourcash-sdk",
     "relayer": "yarn workspace relayer"
   },
   "engines": {
