@@ -29,3 +29,5 @@ yarn-error.log*
 
 temp
 .near-credentials
+test_setup.json
+withdraw_payload.json

@@ -64,7 +64,7 @@ jobs:
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
-      - name: Relayer Tests
+      - name: Run test-ts setup and test SDK and Relayer
         run: |
           yarn relayer test
           echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_OUTPUT
@@ -82,39 +82,6 @@ jobs:
 
       - name: Lib Tests
         run: yarn contracts test:lib
-
-      - name: Building Relayer
-        run: yarn relayer build
-
-      - name: Log Envs
-        run: |
-          echo "Relayer Account Id"
-          echo ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
-          echo "Relayer Private key"
-          echo ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
-          echo "Relayer HYC Contract"
-          echo ${{ env.TESTNET_HYC_CONTRACT }}
-
-      - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name dev-relayer
-          workingDirectory: 'packages/relayer'
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
-        env:
-          RELAYER_FEE: "0"
-          NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
-          PRIVATE_KEY: ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
-          HYC_CONTRACT: ${{ env.TESTNET_HYC_CONTRACT }}
-          RPC_URL: "https://rpc.testnet.near.org"
 
   cypress-run:
     runs-on: ubuntu-latest
@@ -160,12 +127,6 @@ jobs:
           install-command: yarn
           build: yarn front build
           start: yarn front dev
-  
-  full_deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
 
   dev_deploy:
     runs-on: ubuntu-latest
@@ -226,6 +187,7 @@ jobs:
               PRIVATE_KEY
               HYC_CONTRACT
               RPC_URL
+              RELAYER_URL
         env:
           RELAYER_FEE: "0.10"
           NEAR_NETWORK: "testnet"
@@ -233,6 +195,7 @@ jobs:
           PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
           HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
           RPC_URL: "https://rpc.testnet.near.org"
+          RELAYER_URL: "https://prod-relayer.hideyourcash.workers.dev"
 
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk

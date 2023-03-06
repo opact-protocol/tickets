@@ -61,6 +61,15 @@ jobs:
               PRIVATE_KEY
               HYC_CONTRACT
               RPC_URL
+              RELAYER_URL
+        env:
+          RELAYER_FEE: ${{ env.RELAYER_FEE }}
+          NEAR_NETWORK: ${{ env.NEAR_NETWORK }}
+          ACCOUNT_ID: ${{ env.ACCOUNT_ID }}
+          PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
+          HYC_CONTRACT: ${{ env.HYC_CONTRACT }}
+          RPC_URL: ${{ env.RPC_URL }}
+          RELAYER_URL: "https://prod-relayer.hideyourcash.workers.dev"
 
   vercel_deploy:
     runs-on: ubuntu-latest

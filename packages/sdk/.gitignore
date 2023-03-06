@@ -23,3 +23,6 @@ temp
 *.njsproj
 *.sln
 *.sw?
+verifier.wasm
+circuit.zkey
+env.json

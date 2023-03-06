@@ -11,7 +11,9 @@ import type {
 } from "../interfaces/snark-proof";
 
 export const createSnarkProof = async (
-  payload: WithdrawInputInterface
+  payload: WithdrawInputInterface,
+  verifierUrl = "./verifier.wasm",
+  circuitUrl = "./circuit.zkey"
 ): Promise<{ proof: any; publicSignals: string[] }> => {
   /**
    * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
@@ -19,8 +21,8 @@ export const createSnarkProof = async (
   try {
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
+      verifierUrl,
+      circuitUrl
     );
 
     return { proof, publicSignals };
@@ -29,8 +31,8 @@ export const createSnarkProof = async (
 
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
-      "./verifier.wasm",
-      "./circuit.zkey"
+      verifierUrl,
+      circuitUrl
     );
 
     return { proof, publicSignals };
@@ -44,7 +46,9 @@ export const prepareWithdraw = async (
   relayer: RelayerDataInterface,
   recipient: string,
   allowlistTree: MerkleTree,
-  commitmentsTree: MerkleTree
+  commitmentsTree: MerkleTree,
+  verifierUrl = "./verifier.wasm",
+  circuitUrl = "./circuit.zkey"
 ): Promise<{ publicArgs: PublicArgsInterface }> => {
   const { hash, singleHash } = await mimcService.initMimc();
 
@@ -61,7 +65,10 @@ export const prepareWithdraw = async (
   const pathWL = allowlistTree.proof(commitment.account_hash);
 
   const input = await getWithdrawInput(
-    relayerHash,
+    {
+      ...relayer,
+      hash: relayerHash,
+    },
     recipientHash,
     path,
     pathWL,
@@ -69,7 +76,11 @@ export const prepareWithdraw = async (
     singleHash
   );
 
-  const { proof, publicSignals } = await createSnarkProof(input);
+  const { proof, publicSignals } = await createSnarkProof(
+    input,
+    verifierUrl,
+    circuitUrl
+  );
 
   const publicArgs = getPublicArgs(proof, relayer, publicSignals, recipient);
 
@@ -91,7 +102,7 @@ export const getWithdrawInput = async (
     nullifierHash: single_hash(commitment.nullifier),
     recipient: recipientHash,
     relayer: hash,
-    fee: feePercent,
+    fee: "1000000",
     refund: "0",
     nullifier: commitment.nullifier,
     secret: commitment.secret,
