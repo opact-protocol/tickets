@@ -40,7 +40,8 @@ export const NeedHelp = () => {
                   }`
                 }
                 as="a"
-                href="/#faq"
+                target="_blank"
+                href="https://www.youtube.com/watch?v=82ICG4BEtNk"
               >
                 Tutorials
               </Listbox.Option>

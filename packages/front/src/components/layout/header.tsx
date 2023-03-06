@@ -13,7 +13,7 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-white/80">
+      <header className="bg-white/80 relative z-50">
         <WhitelistModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}

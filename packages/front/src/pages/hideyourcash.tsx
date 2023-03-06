@@ -1,11 +1,11 @@
 import { Container, Actions } from "@/components";
-import { Feedback } from "@/components/layout/feedback";
 import { Header } from "@/components/layout/header";
 import { NeedHelp } from "@/components/layout/needHelp";
 import { AboutUsModal } from "@/components/modals";
 import { useWallet } from "@/store/wallet";
 import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect, useState } from "react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 const methods = {
   deposit: "hyc-deposits",
@@ -67,6 +67,12 @@ export function Index() {
   });
   return (
     <>
+      <div className="w-full h-7 bg-error flex gap-2 items-center justify-center animate-pulse">
+        <ExclamationTriangleIcon className="w-7 text-white" />
+        <p className="text-bold text-white text-center">
+          This app is in beta version
+        </p>
+      </div>
       <Header />
       <div className="overflow-hidden relative py-20 sm:py-32 lg:pb-32 xl:pb-36">
         <BackgroundIllustration />
