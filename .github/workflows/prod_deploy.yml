@@ -20,6 +20,7 @@ env:
   ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
   PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
 
+  on: pull_request
 # on:
 #   push:
 #     branches:
