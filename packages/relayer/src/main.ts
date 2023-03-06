@@ -12,9 +12,12 @@ export const relayer = async (
   request: RouterRequest,
   env: Env
 ): Promise<{ status: number; body: any }> => {
-  const payload: RelayerPayload = request.body;
+  const {
+    publicArgs,
+    currencyContractId,
+  }: { publicArgs: RelayerPayload; currencyContractId: string } = request.body;
 
-  if (!payload) {
+  if (!publicArgs || !currencyContractId) {
     return {
       status: errorStatus,
       body: {
@@ -24,7 +27,7 @@ export const relayer = async (
     };
   }
 
-  const { RPC_URL, ACCOUNT_ID, RELAYER_FEE, HYC_CONTRACT } = env;
+  const { RPC_URL, ACCOUNT_ID, RELAYER_FEE } = env;
 
   // setup NEAR config
   const connection = await setupNear(env);
@@ -32,7 +35,7 @@ export const relayer = async (
   const account = await connection.account(ACCOUNT_ID);
 
   // check if payload uses correct relayer
-  if (payload.relayer !== ACCOUNT_ID) {
+  if (publicArgs.relayer !== ACCOUNT_ID) {
     return {
       status: errorStatus,
       body: {
@@ -44,9 +47,11 @@ export const relayer = async (
 
   try {
     // check if payload uses correct fee
-    const minimumFee = new Big(payload.quantity || 0).mul(new Big(RELAYER_FEE));
+    const minimumFee = new Big(publicArgs.quantity || 0).mul(
+      new Big(RELAYER_FEE)
+    );
 
-    const payloadFee = new Big(payload.fee || 0);
+    const payloadFee = new Big(publicArgs.fee || 0);
 
     if (payloadFee.lt(minimumFee)) {
       return {
@@ -73,9 +78,9 @@ export const relayer = async (
   try {
     await viewFunction(
       RPC_URL,
-      HYC_CONTRACT,
+      currencyContractId,
       "view_is_withdraw_valid",
-      payload
+      publicArgs
     );
   } catch (error) {
     return {
@@ -90,9 +95,9 @@ export const relayer = async (
   // since payload is valid, submit transaction and return hash
   try {
     const transaction = await account.functionCall({
-      contractId: HYC_CONTRACT,
+      contractId: currencyContractId,
       methodName: "withdraw",
-      args: { ...payload },
+      args: { ...publicArgs },
       gas: AttachedGas as any,
     });
 
@@ -103,6 +108,8 @@ export const relayer = async (
       },
     };
   } catch (e) {
+    console.warn(e);
+
     return {
       status: errorStatus,
       body: {
