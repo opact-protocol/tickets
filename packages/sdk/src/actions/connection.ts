@@ -7,20 +7,26 @@ export const sendTransactionsCallback = async (
   transactions: Transaction[]
 ): Promise<any> => {
   if (connection.functionCall) {
-    return await Promise.all(
-      transactions.map(async ({ receiverId, actions }) => {
-        const { params: { methodName = "", deposit = "", args = {} } = {} } =
-          actions[0] || {};
+    const outcomes: any[] = [];
 
-        return await connection.functionCall({
-          args,
-          contractId: receiverId,
-          methodName: methodName,
-          gas: AttachedGas as any,
-          attachedDeposit: deposit,
-        });
-      })
-    );
+    for (let i = 0; i < transactions.length; i++) {
+      const { receiverId, actions } = transactions[i];
+
+      const { params: { methodName = "", deposit = "", args = {} } = {} } =
+        actions[0] || {};
+
+      const res = await connection.functionCall({
+        args,
+        contractId: receiverId,
+        methodName: methodName,
+        gas: AttachedGas as any,
+        attachedDeposit: deposit,
+      });
+
+      outcomes.push(res);
+    }
+
+    return outcomes;
   }
 
   const wallet = await connection.wallet();

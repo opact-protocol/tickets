@@ -64,12 +64,18 @@ jobs:
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
-      - name: Relayer Tests
+      - name: Setup tests
         run: |
-          yarn relayer test
+          yarn contracts tests:ts
           echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_OUTPUT
           echo "TESTNET_RELAYER_PRIVATE_KEY=$TESTNET_RELAYER_PRIVATE_KEY" >> $GITHUB_OUTPUT
           echo "TESTNET_HYC_CONTRACT=$TESTNET_HYC_CONTRACT" >> $GITHUB_OUTPUT
+
+      - name: Run SDK Tests
+        run: yarn sdk test
+
+      - name: Relayer Tests
+        run: yarn relayer test
 
       - id: setup
         run: |
@@ -160,7 +166,7 @@ jobs:
           install-command: yarn
           build: yarn front build
           start: yarn front dev
-  
+
   full_deploy:
       runs-on: ubuntu-latest
       steps:

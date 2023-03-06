@@ -27,3 +27,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .near-credentials
+verifier.wasm
+circuit.zkey
+commitment1.json
+commitment2.json
+commitment3.json
+commitment4.json
+public1.json
+public2.json
+proof1.json
+proof2.json
+*.wtns
