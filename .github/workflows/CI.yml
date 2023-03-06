@@ -155,12 +155,6 @@ jobs:
           install-command: yarn
           build: yarn front build
           start: yarn front dev
-  
-  full_deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
 
   dev_deploy:
     runs-on: ubuntu-latest
