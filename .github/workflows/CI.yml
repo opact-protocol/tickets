@@ -18,6 +18,11 @@ concurrency:
 jobs:
   check_build_and_tests:
     runs-on: ubuntu-latest
+    outputs:
+      ACCOUNT_ID: ${{ steps.setup.outputs.account_id }}
+      PRIVATE_KEY: ${{ steps.setup.outputs.private_key }}
+      HYC_CONTRACT: ${{ steps.setup.outputs.hyc_contract }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -87,31 +92,6 @@ jobs:
           echo "Relayer HYC Contract"
           echo ${{ env.TESTNET_HYC_CONTRACT }}
 
-      - name: Building Relayer
-        run: yarn relayer build
-
-      - name: Publish Relayer
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name dev-relayer
-          workingDirectory: 'packages/relayer'
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
-        env:
-          RELAYER_FEE: "0.10"
-          NEAR_NETWORK: "testnet"
-          ACCOUNT_ID: ${{ env.TESTNET_RELAYER_ACCOUNT_ID }}
-          PRIVATE_KEY: ${{ env.TESTNET_RELAYER_PRIVATE_KEY }}
-          HYC_CONTRACT: ${{ env.TESTNET_HYC_CONTRACT }}
-          RPC_URL: "https://rpc.testnet.near.org"
-          RELAYER_URL: "https://dev-relayer.hideyourcash.workers.dev"
-
   cypress-run:
     runs-on: ubuntu-latest
     steps:
@@ -162,8 +142,8 @@ jobs:
     needs: check_build_and_tests
     steps:
       - env:
-          HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
-          RELAYER_ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
+          HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
+          RELAYER_ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
           RELAYER_PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
         run: echo "$HYC_CONTRACT $RELAYER_ACCOUNT_ID $RELAYER_PRIVATE_KEY"
 
@@ -199,6 +179,30 @@ jobs:
 
       - name: Installing Dependencies
         run: yarn
+
+      - name: Building Relayer
+        run: yarn relayer build
+
+      - name: Publish Relayer
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          command: publish --name dev-relayer
+          workingDirectory: 'packages/relayer'
+          secrets: |
+              RELAYER_FEE
+              NEAR_NETWORK
+              ACCOUNT_ID
+              PRIVATE_KEY
+              HYC_CONTRACT
+              RPC_URL
+        env:
+          RELAYER_FEE: "0.10"
+          NEAR_NETWORK: "testnet"
+          ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
+          PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
+          HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
+          RPC_URL: "https://rpc.testnet.near.org"
 
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
