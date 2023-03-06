@@ -20,10 +20,10 @@ env:
   ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
   PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
 concurrency:
   group: ci-${{ github.ref }}
