@@ -7,7 +7,7 @@
     "add_verifier_wasm": "cp ../circuits/out/withdraw_js/withdraw.wasm ./public/verifier.wasm",
     "add_circuit": "cp ../circuits/out/withdraw_0000.zkey ./public/circuit.zkey",
     "check_is_circuit_compiled": "test -f ../circuits/out/withdraw_js/withdraw.wasm || 'Failure: need to compile circuit first. Go to packages/circuits and run yarn circuit:setup:plonk'",
-    "dev": "yarn check_is_circuit_compiled && vite",
+    "dev": "yarn check_is_circuit_compiled && yarn add_zk_assets && vite",
     "build": "yarn add_zk_assets && tsc && vite build",
     "preview": "vite preview"
   },
