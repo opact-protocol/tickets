@@ -1,4 +1,4 @@
-import { BN, KeyPair } from "near-workspaces";
+import { BN, KeyPair, NearAccount } from "near-workspaces";
 import fs from "fs";
 import crypto from "crypto";
 import type { UrlAccountCreator } from "near-api-js/lib/account_creator";
@@ -70,7 +70,7 @@ export async function deployToken(
   account: Account,
   owner: Account
 ): Promise<void> {
-  const contractWasm = fs.readFileSync("../out/fungible_token.wasm");
+  const contractWasm = fs.readFileSync("../../out/fungible_token.wasm");
   await account.deployContract(contractWasm);
   await account.functionCall({
     contractId: account.accountId,
@@ -312,6 +312,40 @@ async function withdraw(
     gas: new BN("300000000000000"),
   });
 }
+
+export const addStorage = async (
+  owner: Account,
+  contract: Account,
+  receiver: Account
+) => {
+  await owner.functionCall({
+    contractId: contract.accountId,
+    methodName: "storage_deposit",
+    args: {
+      account_id: receiver.accountId,
+      registration_only: true,
+    },
+    attachedDeposit: new BN("10000000000000000000000"),
+    gas: new BN(300000000000000),
+  });
+};
+
+export const addMoney = async (
+  owner: Account,
+  tokenContractAccount: Account,
+  sdkAccount: Account
+) => {
+  await owner.functionCall({
+    contractId: tokenContractAccount.accountId,
+    methodName: "ft_transfer",
+    args: {
+      receiver_id: sdkAccount.accountId,
+      amount: "10000000000",
+      memo: null,
+    },
+    attachedDeposit: "1" as any,
+  });
+};
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

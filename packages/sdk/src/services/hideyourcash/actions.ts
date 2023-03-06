@@ -26,17 +26,27 @@ export class Actions extends Views {
   readonly nodeUrl: string;
   readonly contract: string;
   readonly graphqlUrl?: string;
+  readonly verifierUrl?: string;
+  readonly circuitUrl?: string;
 
-  constructor(nodeUrl: string, contract: string, graphqlUrl?: string) {
+  constructor(
+    nodeUrl: string,
+    contract: string,
+    graphqlUrl?: string,
+    verifierUrl = "./verifier.wasm",
+    circuitUrl = "./circuit.zkey"
+  ) {
     super(nodeUrl, contract);
 
     this.nodeUrl = nodeUrl;
     this.contract = contract;
     this.graphqlUrl = graphqlUrl;
+    this.verifierUrl = verifierUrl;
+    this.circuitUrl = circuitUrl;
   }
 
   async sendAllowlist(accountId: string, connection: ConnectionType) {
-    return sendAllowlist(this.contract, accountId, connection);
+    return sendAllowlist(this.nodeUrl, this.contract, accountId, connection);
   }
 
   async createTicket(accountId: string, currencieContract: string) {
@@ -128,7 +138,9 @@ export class Actions extends Views {
       relayer,
       recipient,
       allowlistTree,
-      commitmentsTree
+      commitmentsTree,
+      this.verifierUrl,
+      this.circuitUrl
     );
 
     return publicArgs;
