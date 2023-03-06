@@ -131,6 +131,9 @@ export class Actions extends Views {
       commitmentsTreeCache
     );
 
+    console.log(allowlistTree);
+    console.log(commitmentsTree);
+
     const { publicArgs } = await prepareWithdrawAction(
       this.nodeUrl,
       currencyContract,

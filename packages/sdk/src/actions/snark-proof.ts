@@ -61,6 +61,8 @@ export const prepareWithdraw = async (
 
   const commitmentLeaves = hash(secretsHash, commitment.account_hash);
 
+  console.log(commitmentLeaves);
+
   const path = commitmentsTree.proof(commitmentLeaves);
   const pathWL = allowlistTree.proof(commitment.account_hash);
 
