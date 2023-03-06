@@ -34,8 +34,6 @@ export const viewFunction = async (
   methodName: string,
   args: any
 ) => {
-  console.log("contract id: ", contractId);
-
   const provider = new providers.JsonRpcProvider({ url: nodeUrl });
 
   const serializedArgs = Buffer.from(JSON.stringify(args)).toString("base64");

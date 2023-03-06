@@ -14,7 +14,8 @@ router.cors({
 router.get("/data", ({ env, res }) => {
   res.body = {
     data: {
-      relayerAccount: env.ACCOUNT_ID,
+      url: env.RELAYER_URL,
+      account_id: env.ACCOUNT_ID,
       feePercent: env.RELAYER_FEE,
     },
   };

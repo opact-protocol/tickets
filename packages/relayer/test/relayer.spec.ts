@@ -14,7 +14,6 @@ const baseEnvs = {
   RPC_URL: "https://rpc.testnet.near.org",
   ACCOUNT_ID: testnetSetup.relayer.account_id,
   PRIVATE_KEY: testnetSetup.relayer.private_key,
-  HYC_CONTRACT: testnetSetup.hyc_contract,
 };
 
 test("should return error - should specify correct relayer address", async () => {
@@ -23,8 +22,11 @@ test("should return error - should specify correct relayer address", async () =>
     method: "POST",
     headers: HEADERS,
     body: {
-      ...testnetSetup.user_withdraw_payload,
-      relayer: "foo.ba",
+      publicArgs: {
+        ...testnetSetup.user_withdraw_payload,
+        relayer: "foo.ba",
+      },
+      currencyContractId: testnetSetup.currencyContractId,
     },
   };
 
@@ -42,9 +44,12 @@ test("should return error - should at least minimum relayer fee", async () => {
     method: "POST",
     headers: HEADERS,
     body: {
-      ...testnetSetup.user_withdraw_payload,
-      fee: 0,
-      quantity: 10,
+      publicArgs: {
+        ...testnetSetup.user_withdraw_payload,
+        fee: 0,
+        quantity: 10,
+      },
+      currencyContractId: testnetSetup.currencyContractId,
     },
   };
 
@@ -60,9 +65,12 @@ test("should return error - Your withdraw payload is not valid", async () => {
     method: "POST",
     headers: HEADERS,
     body: {
-      ...testnetSetup.user_withdraw_payload,
-      nullifier_hash: "1234",
-      fee: "3",
+      publicArgs: {
+        ...testnetSetup.user_withdraw_payload,
+        nullifier_hash: "1234",
+        fee: "3",
+      },
+      currencyContractId: testnetSetup.currencyContractId,
     },
   };
 
@@ -78,7 +86,10 @@ test("should return sucess - withdraw", async () => {
     method: "POST",
     headers: HEADERS,
     body: {
-      ...testnetSetup.user_withdraw_payload,
+      publicArgs: {
+        ...testnetSetup.user_withdraw_payload,
+      },
+      currencyContractId: testnetSetup.currencyContractId,
     },
   };
 
