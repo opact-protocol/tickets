@@ -160,7 +160,7 @@ jobs:
           install-command: yarn
           build: yarn front build
           start: yarn front dev
-  
+
   full_deploy:
       runs-on: ubuntu-latest
       steps:
@@ -233,6 +233,7 @@ jobs:
           PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
           HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
           RPC_URL: "https://rpc.testnet.near.org"
+          RELAYER_URL: "https://dev-relayer.hideyourcash.workers.dev"
 
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
