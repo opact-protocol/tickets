@@ -58,8 +58,8 @@ export class Views {
     return viewRelayerHash(this.nodeUrl, this.contract, relayer);
   }
 
-  async viewIsWithdrawValid(payload: PublicArgsInterface) {
-    return viewIsWithdrawValid(this.nodeUrl, this.contract, payload);
+  async viewIsWithdrawValid(payload: PublicArgsInterface, contract: string) {
+    return viewIsWithdrawValid(this.nodeUrl, this.contract, contract, payload);
   }
 
   async viewWasNullifierSpent(nullifier: string) {
