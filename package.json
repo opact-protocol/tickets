@@ -9,8 +9,9 @@
     "contracts": "yarn workspace @near/contracts",
     "circuits": "yarn workspace circuits",
     "contract_libraries": "yarn workspace @near/contract_libraries",
-    "relayer": "yarn workspace relayer",
-    "subgraph": "yarn workspace @near/subgraph"
+    "subgraph": "yarn workspace @near/subgraph",
+    "sdk": "yarn workspace hideyourcash-sdk",
+    "relayer": "yarn workspace relayer"
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
