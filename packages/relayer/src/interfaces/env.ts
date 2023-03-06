@@ -6,8 +6,7 @@ export interface Env {
   // Data for relayer account
   PRIVATE_KEY: string;
   ACCOUNT_ID: string;
-  // Data for HYC contracts
-  HYC_CONTRACT: string;
   // Fee charged for relaying (0.25 == 25%)
   RELAYER_FEE: string;
+  RELAYER_URL: string;
 }

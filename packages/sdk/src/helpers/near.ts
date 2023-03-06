@@ -25,7 +25,7 @@ export const getTransaction = (
   signerId: string,
   receiverId: string,
   method: string,
-  args: any,
+  args: object,
   amount?: string | undefined,
   skipParser = false
 ): Transaction => {
