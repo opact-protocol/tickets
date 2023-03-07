@@ -67,19 +67,24 @@ export function Index() {
   });
   return (
     <>
-      <div className="w-full bg-error flex gap-2 flex-wrap items-center justify-center relative animate-pulse">
-        <ExclamationTriangleIcon className="w-7 text-white" />
-        <p className="text-bold text-white text-center">
-          This app is in beta version with limited features. It has not been
-          audited yet, use it at your own risk.
-        </p>
-        <a
-          href="https://docs.hideyour.cash/general-information/alpha-version"
-          target={`_blank`}
-          className="text-bold text-white text-center underline cursor-pointer"
-        >
-          Learn more
-        </a>
+      <div className="w-full bg-error relative animate-pulse">
+        <div className="flex gap-2 flex-wrap items-center justify-center py-1">
+          <ExclamationTriangleIcon className="w-7 text-white" />
+          <p className="hidden lg:block text-bold text-white text-center">
+            This app is in beta version with limited features. It has not been
+            audited yet, use it at your own risk.
+          </p>
+          <p className="lg:hidden text-bold text-white text-center">
+            App in beta version. Audit in progress.
+          </p>
+          <a
+            href="https://docs.hideyour.cash/general-information/alpha-version"
+            target={`_blank`}
+            className="text-bold text-white text-center underline cursor-pointer"
+          >
+            Learn more
+          </a>
+        </div>
       </div>
       <Header />
       <div className="overflow-hidden relative py-20 sm:py-32 lg:pb-32 xl:pb-36">
