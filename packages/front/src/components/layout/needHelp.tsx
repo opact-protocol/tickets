@@ -9,7 +9,7 @@ export const NeedHelp = () => {
   return (
     <>
       <Listbox>
-        <div className="absolute top-28 right-7 xl:right-16 mt-1 z-50">
+        <div className="absolute top-56 right-7 xl:right-16 md:top-36 mt-1 z-50">
           <Listbox.Button className="flex items-center justify-center gap-2 px-2 rounded-[20px] text-soft-blue text-sm font-normal bg-white border-[2px] border-soft-blue p-1">
             Need help <QuestionMarkCircleIcon className="w-4 h-4" />
           </Listbox.Button>
