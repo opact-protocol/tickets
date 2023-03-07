@@ -45,7 +45,7 @@ function BackgroundIllustration() {
       <img
         src="/right.svg"
         alt=""
-        className="fixed top-[-10px] w-full h-[1000px] -right-[47rem] selection:none"
+        className="fixed top-[26px] w-full h-[1000px] -right-[47rem] selection:none"
       />
     </>
   );
@@ -67,11 +67,19 @@ export function Index() {
   });
   return (
     <>
-      <div className="w-full h-7 bg-error flex gap-2 items-center justify-center animate-pulse">
+      <div className="w-full bg-error flex gap-2 flex-wrap items-center justify-center relative animate-pulse">
         <ExclamationTriangleIcon className="w-7 text-white" />
         <p className="text-bold text-white text-center">
-          This app is in beta version
+          This app is in beta version with limited features. It has not been
+          audited yet, use it at your own risk.
         </p>
+        <a
+          href="https://docs.hideyour.cash/general-information/alpha-version"
+          target={`_blank`}
+          className="text-bold text-white text-center underline cursor-pointer"
+        >
+          Learn more
+        </a>
       </div>
       <Header />
       <div className="overflow-hidden relative py-20 sm:py-32 lg:pb-32 xl:pb-36">
