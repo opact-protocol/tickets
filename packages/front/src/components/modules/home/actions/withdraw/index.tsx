@@ -4,18 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import {
-  getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
-  GET_MOST_RECENT_DEPOSIT,
-  GET_MOST_RECENT_WITHDRAW,
 } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import { useQuery } from "@apollo/client";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { nullifierCheck } from "@/utils/nullifierCheck";
 import { useWallet } from "@/store/wallet";
 import { viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
@@ -32,19 +27,13 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 const hycTransaction = "hyc-transaction";
 
 export function Withdraw() {
-  const { data: mostRecentDeposit } = useQuery(GET_MOST_RECENT_DEPOSIT);
-  const { data: mostRecentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
   const [ticket, setTicket] = useState<any>();
 
   const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
-  const { selector, accountId, toggleModal } = useWallet();
-  const [statistics, setStatistics] = useState<{
-    totalDeposits?: number;
-    totalWithdraws?: number;
-  }>();
+  const { accountId, toggleModal } = useWallet();
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()
@@ -172,27 +161,6 @@ export function Withdraw() {
                 {errors.ticket?.message && errors.ticket.message.toString()}
               </p>
             </div>
-            {statistics && !errors.ticket?.message && (
-              <div className={`flex flex-col gap-3`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-black text-sm font-normal">
-                    Total deposits to date
-                  </p>
-                  <p className="text-black font-bold text-sm">
-                    {statistics?.totalDeposits}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-black text-sm font-normal">
-                    Total withdraws to date
-                  </p>
-                  <p className="text-black font-bold text-sm">
-                    {statistics?.totalWithdraws}
-                  </p>
-                </div>
-              </div>
-            )}
-
             <div className={`mt-8 ${relayerData ? "mb-6" : "mb-44"}`}>
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold">
@@ -230,7 +198,7 @@ export function Withdraw() {
               </p>
             </div>
           </div>
-          {relayerData && statistics && !errors.ticket?.message && (
+          {relayerData && !errors.ticket?.message && (
             <div className="mt-[24px]">
               <div>
                 <span className="text-black font-bold">Total</span>
