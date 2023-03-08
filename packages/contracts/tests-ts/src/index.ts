@@ -29,13 +29,6 @@ export async function setup(): Promise<void> {
     accountId: `${random_prefix}registryhyctest.testnet`,
   });
 
-  const nearInstanceAccount10 = await createAccount({
-    creator,
-    config,
-    near,
-    accountId: `${random_prefix}nearhyctest10.testnet`,
-  });
-
   const tokenInstanceAccount10 = await createAccount({
     creator,
     config,
@@ -57,39 +50,11 @@ export async function setup(): Promise<void> {
     accountId: `${random_prefix}owner.testnet`,
   });
 
-  const user1 = await createAccount({
+  const user = await createAccount({
     creator,
     config,
     near,
-    accountId: `${random_prefix}user1.testnet`,
-  });
-
-  const user2 = await createAccount({
-    creator,
-    config,
-    near,
-    accountId: `${random_prefix}user2.testnet`,
-  });
-
-  const user3 = await createAccount({
-    creator,
-    config,
-    near,
-    accountId: `${random_prefix}user3.testnet`,
-  });
-
-  const user4 = await createAccount({
-    creator,
-    config,
-    near,
-    accountId: `${random_prefix}user4.testnet`,
-  });
-
-  const receiver = await createAccount({
-    creator,
-    config,
-    near,
-    accountId: `${random_prefix}receiver.testnet`,
+    accountId: `${random_prefix}user.testnet`,
   });
 
   const relayerAccount = await createAccount({
@@ -120,26 +85,10 @@ export async function setup(): Promise<void> {
 
   await deployInstance({
     owner,
-    account: nearInstanceAccount10,
-    registry: registryAccount,
-    currency: { type: "Near" },
-    depositValue: `10${NEAR_DECIMALS}`,
-  });
-
-  await deployInstance({
-    owner,
     registry: registryAccount,
     account: tokenInstanceAccount10,
     currency: { type: "Nep141", account_id: tokenContractAccount.accountId },
     depositValue: `10${FT_DECIMALS}`,
-  });
-
-  await addEntry({
-    owner,
-    registry: registryAccount,
-    currency: { type: "Near" },
-    amount: `10${NEAR_DECIMALS}`,
-    instance: nearInstanceAccount10,
   });
 
   await addEntry({
@@ -163,12 +112,7 @@ export async function setup(): Promise<void> {
   console.log("building commitments");
 
   const output = await buildCommitments(
-    [
-      `${random_prefix}user1.testnet`,
-      `${random_prefix}user2.testnet`,
-      `${random_prefix}user3.testnet`,
-      `${random_prefix}user4.testnet`,
-    ],
+    random_prefix,
     registryAccount.accountId
   );
 
@@ -183,25 +127,7 @@ export async function setup(): Promise<void> {
   await addStorage({
     owner,
     contract: tokenContractAccount,
-    receiver: user1,
-  });
-
-  await addStorage({
-    owner,
-    contract: tokenContractAccount,
-    receiver: user2,
-  });
-
-  await addStorage({
-    owner,
-    contract: tokenContractAccount,
-    receiver: user3,
-  });
-
-  await addStorage({
-    owner,
-    contract: tokenContractAccount,
-    receiver: user4,
+    receiver: user,
   });
 
   await addStorage({
@@ -213,34 +139,13 @@ export async function setup(): Promise<void> {
   console.log("Register users");
 
   await registerUser({
-    account: user1,
-    contractAccount: registryAccount,
-  });
-
-  await registerUser({
-    account: user2,
-    contractAccount: registryAccount,
-  });
-
-  await registerUser({
-    account: user3,
-    contractAccount: registryAccount,
-  });
-
-  await registerUser({
-    account: user4,
+    account: user,
     contractAccount: registryAccount,
   });
 
   console.log("add token balance for users");
 
-  await addBalances(owner, tokenContractAccount, user1);
-
-  await addBalances(owner, tokenContractAccount, user2);
-
-  await addBalances(owner, tokenContractAccount, user3);
-
-  await addBalances(owner, tokenContractAccount, user4);
+  await addBalances(owner, tokenContractAccount, user);
 
   await addBalances(owner, tokenContractAccount, sdkAccount);
 
@@ -250,35 +155,35 @@ export async function setup(): Promise<void> {
     hash: proofInputs.commitment1.secret_hash,
     contract: tokenInstanceAccount10,
     token: tokenContractAccount,
-    signer: user1,
+    signer: user,
   });
 
   await sendDeposit({
     hash: proofInputs.commitment2.secret_hash,
     contract: tokenInstanceAccount10,
     token: tokenContractAccount,
-    signer: user2,
+    signer: user,
   });
 
   await sendDeposit({
     hash: proofInputs.commitment3.secret_hash,
     contract: tokenInstanceAccount10,
     token: tokenContractAccount,
-    signer: user3,
+    signer: user,
   });
 
   await sendDeposit({
     hash: proofInputs.commitment4.secret_hash,
     contract: tokenInstanceAccount10,
     token: tokenContractAccount,
-    signer: user4,
+    signer: user,
   });
 
   const user_withdraw_payload = await getPublicArgs({
     proof: proofInputs.proof1,
     publicSignals: proofInputs.public1,
     relayer: relayerAccount.accountId,
-    receiver: receiver.accountId,
+    receiver: "1mateus.testnet",
   });
 
   const relayerTestSetup = JSON.stringify({

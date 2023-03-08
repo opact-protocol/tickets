@@ -29,7 +29,7 @@ const Logger = require("logplease");
 const logger = Logger.create("snarkJS", { showTimestamp: false });
 Logger.setLogLevel("DEBUG");
 
-export async function buildCommitments(accounts: any[], contract: string) {
+export async function buildCommitments(prefix: string, contract: string) {
   class Mimc {
     constructor() {
       this.sponge = null;
@@ -92,6 +92,13 @@ export async function buildCommitments(accounts: any[], contract: string) {
     });
   }
 
+  const accounts = [
+    `${prefix}user.testnet`,
+    `${prefix}user.testnet`,
+    `${prefix}user.testnet`,
+    `${prefix}user.testnet`,
+  ];
+
   const accountsHashes = [
     await hashAccount(contract, accounts[0]),
     await hashAccount(contract, accounts[1]),
@@ -151,7 +158,7 @@ export async function buildCommitments(accounts: any[], contract: string) {
     mimc.hash(commitment1.secret_hash, accountsHashes[0]),
     mimc.hash(commitment2.secret_hash, accountsHashes[1]),
     mimc.hash(commitment3.secret_hash, accountsHashes[2]),
-    mimc.hash(commitment4.secret_hash, accountsHashes[2]),
+    mimc.hash(commitment4.secret_hash, accountsHashes[3]),
   ];
 
   const commitmentTree = new MerkleTree(20, commitmentLeaves, {
@@ -261,7 +268,7 @@ export async function buildCommitments(accounts: any[], contract: string) {
   await generate_witness(commitment1Input, "./witness1.wtns");
   await generate_witness(commitment2Input, "./witness2.wtns");
   await generate_witness(commitment3Input, "./witness3.wtns");
-  await generate_witness(commitment3Input, "./witness4.wtns");
+  await generate_witness(commitment4Input, "./witness4.wtns");
 
   // generate proofs
   await generate_proof(1);

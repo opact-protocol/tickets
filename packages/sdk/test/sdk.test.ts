@@ -61,7 +61,7 @@ describe("Test all service actions", () => {
       expect(keys).toContain("type");
     });
 
-    const currency = currencies[1];
+    const currency = currencies[0];
 
     console.log("Create ticket");
 
