@@ -28,6 +28,8 @@ import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
 import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
+import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
+import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -44,6 +46,7 @@ export function Deposit() {
   const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
     {} as AmountsProps
   );
+  const [showBlockedLocationModal, setBlockedLocationModal] = useState(false);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
   const [selectedToken, setSelectedToken] =
@@ -403,6 +406,12 @@ export function Deposit() {
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}
       />
+      {showBlockedLocationModal && (
+        <BlockecLocationModal
+          isOpen={true}
+          onClose={() => setBlockedLocationModal(true)}
+        />
+      )}
     </>
   );
 }
