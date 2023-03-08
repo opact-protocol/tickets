@@ -115,6 +115,7 @@ export const getTicketInTheMerkleTree = async (commitment: string) => {
     query: gql`
       query ticketInTheMerkleTree($commitment: String) {
         depositMerkleTreeUpdates(where: { value: $commitment }) {
+          contract
           counter
           timestamp
         }

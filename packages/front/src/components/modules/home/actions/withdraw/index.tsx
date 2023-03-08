@@ -17,6 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { nullifierCheck } from "@/utils/nullifierCheck";
 import { useWallet } from "@/store/wallet";
+import { viewWasNullifierSpent } from "hideyourcash-sdk";
+import { useEnv } from "@/hooks/useEnv";
 
 interface WithDrawProps {
   ticket: string;
@@ -35,6 +37,7 @@ export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const buttonText = useRef("Withdraw");
+  const [ticket, setTicket] = useState<any>();
 
   const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
   const { selector, accountId, toggleModal } = useWallet();
@@ -50,36 +53,28 @@ export function Withdraw() {
       .test(
         "isValidTicket",
         "This ticket is not valid anymore",
-        async (value) => !(await nullifierCheck(value, selector))
+        async (value) => {
+          const commitment = generateCommitment(value);
+          const ticketStored = await getTicketInTheMerkleTree(commitment!);
+          setTicket(ticketStored);
+          return !(await viewWasNullifierSpent(
+            useEnv("VITE_NEAR_NODE_URL"),
+            ticketStored.contract,
+            value
+          ));
+        }
       )
       .test(
         "isStored",
         "This ticket has not been deposited yet",
         async (value) => {
-          if (await nullifierCheck(value, selector)) return true;
           const commitment = generateCommitment(value);
 
           const ticketStored = await getTicketInTheMerkleTree(commitment!);
 
-          if (ticketStored) {
-            const lastWithdraw = await getLastWithdrawBeforeTheTicketWasCreated(
-              ticketStored.timestamp
-            );
+          if (!ticketStored) return false;
 
-            const totalDeposits =
-              (+mostRecentDeposit.depositMerkleTreeUpdates[0].counter || 0) -
-              +ticketStored.counter;
-
-            const totalWithdraws =
-              (mostRecentWithdraw.withdrawals[0]
-                ? +mostRecentWithdraw.withdrawals[0]["counter"]
-                : 0) - (+lastWithdraw.counter || 0);
-
-            setStatistics({ totalDeposits, totalWithdraws });
-
-            return true;
-          }
-          return false;
+          return true;
         }
       ),
     address: yup
@@ -109,7 +104,7 @@ export function Withdraw() {
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
-      await prepareWithdraw(selector, {
+      await prepareWithdraw(ticket.contract, {
         note: data.ticket,
         recipient: data.address,
       });
@@ -252,7 +247,7 @@ export function Withdraw() {
                   <span className="text-black text-[14px]">Relayer fee:</span>
 
                   <span className="text-black font-bold">{`${
-                    relayerData.feePercent * 10
+                    +relayerData.feePercent * 10
                   } NEAR`}</span>
                 </div>
                 {/* <div className="flex items-center justify-between pb-[12px]">
@@ -269,7 +264,7 @@ export function Withdraw() {
                   </span>
 
                   <span className="text-black font-bold">{`${
-                    10 * (1 - relayerData.feePercent)
+                    10 * (1 - +relayerData.feePercent)
                   } NEAR`}</span>
                 </div>
               </div>
