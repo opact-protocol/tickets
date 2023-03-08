@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
@@ -17,6 +17,8 @@ import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import "swiper/css";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
+import { locationBlock } from "@/utils/locationBlock";
+import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 
 interface SelectedTokenProps {
   id: number;
@@ -51,6 +53,7 @@ export function Deposit() {
     useState<SelectedTokenProps | null>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
+  const [showBlockedLocationModal, setBlockedLocationModal] = useState(false);
 
   const { prepareDeposit } = useApplication();
   const { selector, accountId, toggleModal } = useWallet();
@@ -111,6 +114,16 @@ export function Deposit() {
 
     setShowModal(!showModal);
   };
+
+  useEffect(() => {
+    (async () => {
+      const blockedLocation = await locationBlock();
+      if (blockedLocation) {
+        setBlockedLocationModal(true);
+        return;
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -308,6 +321,12 @@ export function Deposit() {
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}
       />
+      {showBlockedLocationModal && (
+        <BlockecLocationModal
+          isOpen={true}
+          onClose={() => setBlockedLocationModal(true)}
+        />
+      )}
     </>
   );
 }
