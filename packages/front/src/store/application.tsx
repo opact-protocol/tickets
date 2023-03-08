@@ -1,30 +1,11 @@
 import { create } from "zustand";
 import { plonk } from "snarkjs";
-import { randomBN } from "@/utils/crypto-utils";
-import {
-  getTransaction,
-  executeMultipleTransactions,
-  viewFunction,
-} from "@/utils/tools";
-import { mimc } from "@/services/mimc";
-import { buildTree, relayer } from "@/services";
+import { relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
 import { Currency, HideyourCash } from "hideyourcash-sdk";
 
-function parseNote(note: string): {
-  secret: string;
-  nullifier: string;
-  account_hash: string;
-} {
-  const splitString = note.split("-");
-  return {
-    secret: splitString[0],
-    nullifier: splitString[1],
-    account_hash: splitString[2],
-  };
-}
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
 
@@ -36,7 +17,6 @@ const appService = new HideyourCash(
 );
 
 export const useApplication = create<{
-  proof: any;
   publicArgs: any;
   hash: any;
   note: any;
@@ -50,7 +30,10 @@ export const useApplication = create<{
   ) => Promise<void>;
   fetchRelayerData: () => Promise<void>;
   sendWithdraw: () => Promise<void>;
-  prepareWithdraw: (connection, payload: any) => Promise<void>;
+  prepareWithdraw: (
+    currencyContract: string,
+    payload: { note: string; recipient: string }
+  ) => Promise<void>;
   prepareDeposit: (
     account: string,
     currencieContract: string
@@ -58,7 +41,6 @@ export const useApplication = create<{
   createSnarkProof: (payload: any) => Promise<any>;
   sendWhitelist: (connection: any, account: string) => Promise<any>;
 }>((set, get) => ({
-  proof: null,
   publicArgs: null,
   hash: null,
   note: null,
@@ -94,140 +76,25 @@ export const useApplication = create<{
       connection
     );
     localStorage.removeItem(hycTransaction);
-    // const wallet = await connection.wallet();
-
-    // const transactions: any[] = [];
-
-    // transactions.push(
-    //   getTransaction(
-    //     account,
-    //     CONTRACT,
-    //     "deposit",
-    //     {
-    //       secrets_hash: get().hash,
-    //     },
-    //     amount
-    //   )
-    // );
-
-    // executeMultipleTransactions(transactions, wallet);
   },
 
   fetchRelayerData: async () => {
-    const { data } = await relayer.get("/data");
-    set({ relayerData: data.data });
+    const data = await appService.viewRelayers("prod");
+    set({ relayerData: data[0] });
   },
 
-  prepareWithdraw: async (connection, { note, recipient }) => {
-    const { createSnarkProof } = get();
-
-    const recipientHash = await viewFunction(
-      connection,
-      CONTRACT,
-      "view_account_hash",
-      {
-        account_id: recipient,
-      }
-    );
-
-    const relayerData = get().relayerData;
+  prepareWithdraw: async (currencyContract: string, { note, recipient }) => {
+    const { relayerData } = get();
 
     try {
-      const parsedNote = parseNote(note);
+      const publicArgs = await appService.prepareWithdraw(
+        note,
+        relayerData,
+        recipient,
+        currencyContract
+      );
 
-      const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
-      const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
-
-      console.log({ secretsHash, commitment });
-
-      const { commitmentsTree, whitelistTree } = await buildTree();
-
-      const commitmentProof = commitmentsTree.proof(commitment);
-      const whitelistProof = whitelistTree.proof(parsedNote.account_hash);
-
-      const input = {
-        root: commitmentProof.pathRoot,
-        nullifierHash: mimc.singleHash!(parsedNote.nullifier),
-        recipient: recipientHash, // not taking part in any computations
-        relayer: await viewFunction(connection, CONTRACT, "view_account_hash", {
-          account_id: relayerData.relayerAccount,
-        }), // not taking part in any computations
-        fee: relayerData.feePercent, // not taking part in any computations
-        refund: "0", // not taking part in any computations
-        nullifier: parsedNote.nullifier,
-        secret: parsedNote.secret,
-        pathElements: commitmentProof.pathElements,
-        pathIndices: commitmentProof.pathIndices,
-
-        // reference to current whitelist Merkle Tree
-        whitelistRoot: whitelistProof.pathRoot,
-        // reference to original depositor to enforce whitelist
-        originDepositor: parsedNote.account_hash,
-        whitelistPathElements: whitelistProof.pathElements,
-        whitelistPathIndices: whitelistProof.pathIndices,
-      };
-
-      const { proof, publicSignals } = await createSnarkProof(input);
-
-      console.log("proof", JSON.stringify(proof));
-      console.log("publicSignals", JSON.stringify(proof));
-
-      const publicArgs = {
-        root: publicSignals[0],
-        nullifier_hash: publicSignals[1],
-        recipient: recipient,
-        relayer: relayerData.relayerAccount,
-        fee: publicSignals[4],
-        refund: publicSignals[5],
-        allowlist_root: publicSignals[6],
-        a: {
-          x: proof["A"][0],
-          y: proof["A"][1],
-        },
-        b: {
-          x: proof["B"][0],
-          y: proof["B"][1],
-        },
-        c: {
-          x: proof["C"][0],
-          y: proof["C"][1],
-        },
-        z: {
-          x: proof["Z"][0],
-          y: proof["Z"][1],
-        },
-        t_1: {
-          x: proof["T1"][0],
-          y: proof["T1"][1],
-        },
-        t_2: {
-          x: proof["T2"][0],
-          y: proof["T2"][1],
-        },
-        t_3: {
-          x: proof["T3"][0],
-          y: proof["T3"][1],
-        },
-        eval_a: proof["eval_a"],
-        eval_b: proof["eval_b"],
-        eval_c: proof["eval_c"],
-        eval_s1: proof["eval_s1"],
-        eval_s2: proof["eval_s2"],
-        eval_zw: proof["eval_zw"],
-        eval_r: proof["eval_r"],
-        wxi: {
-          x: proof["Wxi"][0],
-          y: proof["Wxi"][1],
-        },
-        wxi_w: {
-          x: proof["Wxiw"][0],
-          y: proof["Wxiw"][1],
-        },
-      };
-
-      console.timeEnd("SNARK proof time");
       set({
-        proof,
         publicArgs,
       });
     } catch (e) {
@@ -240,10 +107,10 @@ export const useApplication = create<{
   },
 
   sendWithdraw: async () => {
-    const publicArgs = get().publicArgs;
+    const { publicArgs, relayerData } = get();
 
-    try {
-      await relayer.post("/relay", publicArgs);
+      try {
+      await appService.sendWithdraw(relayerData, publicArgs);
       toast(
         <ToastCustom
           icon="/check-circle-icon.svg"
