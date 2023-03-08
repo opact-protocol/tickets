@@ -7,3 +7,7 @@ export const relayer = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const geoApi = axios.create({
+  baseURL: "https://get.geojs.io/v1/",
+});
