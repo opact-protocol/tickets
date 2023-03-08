@@ -5,6 +5,7 @@ import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
 import { Currency, HideyourCash } from "hideyourcash-sdk";
+import { AxiosError } from "axios";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
@@ -13,7 +14,9 @@ const appService = new HideyourCash(
   useEnv("VITE_NEAR_NETWORK"),
   useEnv("VITE_NEAR_NODE_URL"),
   CONTRACT,
-  useEnv("VITE_API_GRAPHQL_URL")
+  useEnv("VITE_API_GRAPHQL_URL"),
+  "./verifier.wasm",
+  "./circuit.zkey"
 );
 
 export const useApplication = create<{
@@ -109,7 +112,7 @@ export const useApplication = create<{
   sendWithdraw: async () => {
     const { publicArgs, relayerData } = get();
 
-      try {
+    try {
       await appService.sendWithdraw(relayerData, publicArgs);
       toast(
         <ToastCustom
@@ -123,6 +126,18 @@ export const useApplication = create<{
       );
     } catch (error) {
       console.log(error);
+      if (error instanceof AxiosError) {
+        toast(
+          <ToastCustom
+            icon="/error-circle-icon.svg"
+            title="Failure"
+            message={error.response?.data.error}
+          />,
+          {
+            toastId: "withdraw-toast",
+          }
+        );
+      }
     }
   },
 
