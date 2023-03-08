@@ -9,7 +9,7 @@
     "dev": "miniflare --live-reload --debug --modules dist/index.mjs --env .env",
     "dev:remote": "wrangler dev",
     "test:only": "yarn build && node --experimental-vm-modules --no-warnings node_modules/.bin/jest",
-    "test": "(cd ../contracts && yarn tests:ts) && (cd ../sdk && yarn test) && yarn test:only",
+    "test": "(cd ../contracts && yarn tests:ts) && (cd ../sdk && yarn test:only) && yarn test:only",
     "types:check": "tsc && tsc -p test/tsconfig.json",
     "deploy": "yarn build && wrangler publish"
   },

@@ -19,6 +19,7 @@
     "add_circuit": "cp ../circuits/out/withdraw_0000.zkey ./test/circuit.zkey",
     "watch": "tsup src/index.ts --watch",
     "test": "(cd ../contracts && yarn tests:ts) && yarn add_zk_assets && node --experimental-vm-modules ./node_modules/.bin/jest --forceExit --detectOpenHandles",
+    "test:only": "yarn add_zk_assets && node --experimental-vm-modules ./node_modules/.bin/jest --forceExit --detectOpenHandles",
     "test:coverage": "jest --runInBand --coverage"
   },
   "devDependencies": {
