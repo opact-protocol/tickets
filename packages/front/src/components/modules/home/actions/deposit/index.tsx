@@ -4,7 +4,7 @@ import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
-  ChevronDownIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
@@ -30,6 +30,7 @@ import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
+import axios from "axios";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -73,7 +74,7 @@ export function Deposit() {
         title="Processing"
       />,
       {
-        toastId: customId,
+        toastId: customId
       }
     );
   } else if (!approved && transactionHashes) {
@@ -89,7 +90,7 @@ export function Deposit() {
           title={title}
           message={message}
         />
-      ),
+      )
     });
   }
 
