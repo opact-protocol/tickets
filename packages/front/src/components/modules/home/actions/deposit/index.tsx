@@ -25,6 +25,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
+import { useDepositScore } from "@/hooks/useDepositScore";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -50,11 +51,12 @@ export function Deposit() {
   const [showAllowlist, setShowAllowlist] = useState(false);
 
   const { prepareDeposit } = useApplication();
-  const { selector, accountId, toggleModal } = useWallet();
+  const { accountId, toggleModal } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
   const { allCurrencies } = useAllCurrencies();
   const amounts = objetctToArray(selectedToken.contracts);
+  const { depositScore } = useDepositScore(selectedAmount.accountId);
 
   if (!action && transactionHashes && !approved) {
     toast(
@@ -246,33 +248,63 @@ export function Deposit() {
             </div>
           ) : null}
 
-          <div className="mt-16 mb-16">
-            <div className="flex items-center justify-between">
-              <span className="text-black text-[1.1rem] font-bold ">
-                Transaction Anonimity
-              </span>
+          {selectedAmount.value && (
+            <div className="mt-16 mb-16">
+              <div className="flex items-center justify-between">
+                <span className="text-black text-[1.1rem] font-bold ">
+                  Pool Anonimity
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                {depositScore < 500 ? (
+                  <>
+                    {[1, 2, 3].map((item) => (
+                      <div
+                        key={item}
+                        className={`w-[77px] h-[9px] ${
+                          item === 1 ? "bg-error" : "bg-gray-300"
+                        } rounded-full`}
+                      />
+                    ))}
+                  </>
+                ) : depositScore > 500 && depositScore < 1000 ? (
+                  <>
+                    {[1, 2, 3].map((item) => (
+                      <div
+                        key={item}
+                        className={`w-[77px] h-[9px] ${
+                          item !== 3 ? "bg-warning" : "bg-gray-300"
+                        } rounded-full`}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  depositScore > 1000 && (
+                    <>
+                      {[1, 2, 3].map((item) => (
+                        <div
+                          key={item}
+                          className={`w-[77px] h-[9px] bg-success rounded-full`}
+                        />
+                      ))}
+                    </>
+                  )
+                )}
+              </div>
+              <p
+                className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                title="Coming soon"
+              >
+                What is this <QuestionMarkCircleIcon className="w-4 h-4" />
+              </p>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="w-[77px] h-[9px] bg-gray-300 rounded-full"
-                />
-              ))}
-            </div>
-            <p
-              className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
-              title="Coming soon"
-            >
-              What is this <QuestionMarkCircleIcon className="w-4 h-4" />
-            </p>
-          </div>
+          )}
 
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button
             disabled={depositing}
             onClick={() => preDeposit()}
-            className="bg-soft-blue-from-deep-blue p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+            className="bg-soft-blue-from-deep-blue p-[12px] rounded-full mt-5 w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {!accountId ? "Connect Wallet" : buttonText}
           </button>

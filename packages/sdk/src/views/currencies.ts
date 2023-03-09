@@ -29,37 +29,6 @@ export const viewAllCurrencies = async (
       };
     })
   );
-
-  return Promise.all(currencies.map(async (currency: Currency) => {
-    if (currency.type === 'Near') {
-      return {
-        ...currency,
-        contracts: await viewCurrencyContracts(
-          rpcUrl,
-          contract,
-          currency,
-        ),
-      }
-    }
-
-    return {
-      ...currency,
-      metadata: await viewFungibleTokenMetadata(
-        rpcUrl,
-        currency.account_id!,
-      ),
-      contracts: await viewCurrencyContracts(
-        rpcUrl,
-        contract,
-        currency,
-      ),
-      contracts: await viewCurrencyContracts(
-        rpcUrl,
-        contract,
-        currency,
-      ),
-    }
-  }));
 };
 
 export const viewCurrencyContracts = async (
@@ -92,4 +61,3 @@ export const viewIsAllowlistRootValid = async (
     root,
   });
 };
-

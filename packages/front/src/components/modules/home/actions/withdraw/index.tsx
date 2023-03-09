@@ -3,9 +3,7 @@ import { useApplication } from "@/store";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
-import {
-  getTicketInTheMerkleTree,
-} from "@/utils/graphql-queries";
+import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import * as yup from "yup";
@@ -14,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { useWallet } from "@/store/wallet";
 import { viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
+import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 interface WithDrawProps {
   ticket: string;
@@ -45,12 +45,16 @@ export function Withdraw() {
         async (value) => {
           const commitment = generateCommitment(value);
           const ticketStored = await getTicketInTheMerkleTree(commitment!);
-          setTicket(ticketStored);
-          return !(await viewWasNullifierSpent(
-            useEnv("VITE_NEAR_NODE_URL"),
-            ticketStored.contract,
-            value
-          ));
+          try {
+            setTicket(ticketStored);
+            return !(await viewWasNullifierSpent(
+              useEnv("VITE_NEAR_NODE_URL"),
+              ticketStored.contract,
+              value
+            ));
+          } catch (error) {
+            return false;
+          }
         }
       )
       .test(
@@ -72,9 +76,12 @@ export function Withdraw() {
       .required("Invalid address"),
   });
 
+  const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
+
   const {
     register,
     handleSubmit,
+    getFieldState,
     formState: { errors },
   } = useForm<WithDrawProps>({
     resolver: yupResolver(withdrawSchema),
@@ -160,6 +167,57 @@ export function Withdraw() {
               <p className="text-error mt-2 text-sm font-normal">
                 {errors.ticket?.message && errors.ticket.message.toString()}
               </p>
+              {ticket && !getFieldState("ticket").invalid && (
+                <div className="my-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-black text-[1.1rem] font-bold ">
+                      Pool Anonimity
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    {withdrawalScore < 30 ? (
+                      <>
+                        {[1, 2, 3].map((item) => (
+                          <div
+                            key={item}
+                            className={`w-[77px] h-[9px] ${
+                              item === 1 ? "bg-error" : "bg-gray-300"
+                            } rounded-full`}
+                          />
+                        ))}
+                      </>
+                    ) : withdrawalScore > 30 && withdrawalScore < 60 ? (
+                      <>
+                        {[1, 2, 3].map((item) => (
+                          <div
+                            key={item}
+                            className={`w-[77px] h-[9px] ${
+                              item !== 3 ? "bg-warning" : "bg-gray-300"
+                            } rounded-full`}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      withdrawalScore > 60 && (
+                        <>
+                          {[1, 2, 3].map((item) => (
+                            <div
+                              key={item}
+                              className={`w-[77px] h-[9px] bg-success rounded-full`}
+                            />
+                          ))}
+                        </>
+                      )
+                    )}
+                  </div>
+                  <p
+                    className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                    title="Coming soon"
+                  >
+                    What is this <QuestionMarkCircleIcon className="w-4 h-4" />
+                  </p>
+                </div>
+              )}
             </div>
             <div className={`mt-8 ${relayerData ? "mb-6" : "mb-44"}`}>
               <div className="flex items-center justify-between">
@@ -198,7 +256,7 @@ export function Withdraw() {
               </p>
             </div>
           </div>
-          {relayerData && !errors.ticket?.message && (
+          {relayerData && ticket && !getFieldState("ticket").invalid && (
             <div className="mt-[24px]">
               <div>
                 <span className="text-black font-bold">Total</span>

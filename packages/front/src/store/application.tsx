@@ -41,7 +41,6 @@ export const useApplication = create<{
     account: string,
     currencieContract: string
   ) => Promise<string>;
-  createSnarkProof: (payload: any) => Promise<any>;
   sendWhitelist: (connection: any, account: string) => Promise<any>;
 }>((set, get) => ({
   publicArgs: null,
@@ -140,32 +139,6 @@ export const useApplication = create<{
       }
     }
   },
-
-  createSnarkProof: async (input) => {
-    /**
-     * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
-     */
-    try {
-      const { proof, publicSignals } = await plonk.fullProve(
-        input,
-        "./verifier.wasm",
-        "./circuit.zkey"
-      );
-
-      return { proof, publicSignals };
-    } catch (e) {
-      console.warn(e);
-
-      const { proof, publicSignals } = await plonk.fullProve(
-        input,
-        "./verifier.wasm",
-        "./circuit.zkey"
-      );
-
-      return { proof, publicSignals };
-    }
-  },
-
   sendWhitelist: async (connection, accountId) => {
     appService.sendAllowlist(accountId, connection);
   },
