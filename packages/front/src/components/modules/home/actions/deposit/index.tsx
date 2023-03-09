@@ -17,7 +17,6 @@ import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import "swiper/css";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
-import { locationBlock } from "@/utils/locationBlock";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 import axios from "axios";
 
@@ -121,6 +120,7 @@ export function Deposit() {
   useEffect(() => {
     (async () => {
       const result = await axios.get("/api/geoloc");
+      console.log(result);
       if (result) {
         setBlockedLocationModal(true);
         return;
