@@ -47,12 +47,12 @@ export default defineConfig(async () => {
       include: ["buffer", "process"]
     },
     server: {
-      port: 3000,
+      port: 5000,
       proxy: {
         "/api": {
-          target: "http://localhost:8081",
+          target: "http://localhost:3000",
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, "")
+          secure: false
         }
       }
     },

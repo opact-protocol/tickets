@@ -4,7 +4,7 @@ import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
-  ChevronDownIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,6 +19,7 @@ import "swiper/css";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { locationBlock } from "@/utils/locationBlock";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
+import axios from "axios";
 
 interface SelectedTokenProps {
   id: number;
@@ -37,7 +38,7 @@ const tokens = [
   { id: 1, name: "NEAR" },
   { id: 2, name: "AVAX" },
   { id: 3, name: "BTC" },
-  { id: 4, name: "CARDANO" },
+  { id: 4, name: "CARDANO" }
 ];
 
 const customId = "deposit-toast";
@@ -49,8 +50,10 @@ export function Deposit() {
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
-  const [selectedToken, setSelectedToken] =
-    useState<SelectedTokenProps | null>();
+  const [
+    selectedToken,
+    setSelectedToken
+  ] = useState<SelectedTokenProps | null>();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
   const [showBlockedLocationModal, setBlockedLocationModal] = useState(false);
@@ -68,7 +71,7 @@ export function Deposit() {
         title="Processing"
       />,
       {
-        toastId: customId,
+        toastId: customId
       }
     );
   } else if (!approved && transactionHashes) {
@@ -84,7 +87,7 @@ export function Deposit() {
           title={title}
           message={message}
         />
-      ),
+      )
     });
   }
 
@@ -117,8 +120,8 @@ export function Deposit() {
 
   useEffect(() => {
     (async () => {
-      const blockedLocation = await locationBlock();
-      if (blockedLocation) {
+      const result = await axios.get("/api/geoloc");
+      if (result) {
         setBlockedLocationModal(true);
         return;
       }
@@ -221,21 +224,21 @@ export function Deposit() {
                   breakpoints={{
                     320: {
                       slidesPerView: 2,
-                      spaceBetween: 20,
+                      spaceBetween: 20
                     },
                     // when window width is >= 480px
                     480: {
                       slidesPerView: 3,
-                      spaceBetween: 30,
+                      spaceBetween: 30
                     },
                     // when window width is >= 640px
                     640: {
                       slidesPerView: 3,
-                      spaceBetween: 40,
-                    },
+                      spaceBetween: 40
+                    }
                   }}
                 >
-                  {amounts.map((size) => (
+                  {amounts.map(size => (
                     <SwiperSlide key={size}>
                       <RadioGroup.Option
                         key={size}
@@ -277,7 +280,7 @@ export function Deposit() {
               </span>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              {[1, 2, 3].map((item) => (
+              {[1, 2, 3].map(item => (
                 <div
                   key={item}
                   className="w-[77px] h-[9px] bg-gray-300 rounded-full"
