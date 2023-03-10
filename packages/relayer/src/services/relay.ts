@@ -1,8 +1,8 @@
-import Big from "big.js";
-import { Env } from "./interfaces";
-import { AttachedGas } from "./constants";
-import { setupNear, viewFunction } from "./services/near";
-import { RelayerPayload } from "./interfaces/relayer";
+import { Env } from "../interfaces";
+import { AttachedGas } from "../constants";
+import jwt from "@tsndr/cloudflare-worker-jwt";
+import { RelayerPayload } from "../interfaces/relayer";
+import { getTokenStorage, setupNear, viewFunction } from "../services/near";
 import { RouterRequest } from "@tsndr/cloudflare-worker-router";
 
 const errorStatus = 500;
@@ -12,12 +12,12 @@ export const relayer = async (
   request: RouterRequest,
   env: Env
 ): Promise<{ status: number; body: any }> => {
-  const {
-    publicArgs,
-    currencyContractId,
-  }: { publicArgs: RelayerPayload; currencyContractId: string } = request.body;
+  const { token, publicArgs }: { publicArgs: RelayerPayload; token: string } =
+    request.body;
 
-  if (!publicArgs || !currencyContractId) {
+  const isValidToken = await jwt.verify(token, env.PRIVATE_KEY);
+
+  if (!publicArgs || !isValidToken) {
     return {
       status: errorStatus,
       body: {
@@ -27,7 +27,7 @@ export const relayer = async (
     };
   }
 
-  const { RPC_URL, ACCOUNT_ID, RELAYER_FEE } = env;
+  const { RPC_URL, ACCOUNT_ID } = env;
 
   // setup NEAR config
   const connection = await setupNear(env);
@@ -45,26 +45,11 @@ export const relayer = async (
     };
   }
 
-  try {
-    // check if payload uses correct fee
-    const minimumFee = new Big(publicArgs.quantity || 0).mul(
-      new Big(RELAYER_FEE)
-    );
+  const {
+    payload: { tokenId, price_token_fee, reciver_storage, currencyContractId },
+  } = jwt.decode(token);
 
-    const payloadFee = new Big(publicArgs.fee || 0);
-
-    if (payloadFee.lt(minimumFee)) {
-      return {
-        status: errorStatus,
-        body: {
-          status: "failure",
-          error: `should at least minimum relayer fee: ${minimumFee.toFixed(
-            0
-          )}`,
-        },
-      };
-    }
-  } catch (e) {
+  if (publicArgs.fee !== price_token_fee) {
     return {
       status: errorStatus,
       body: {
@@ -90,6 +75,38 @@ export const relayer = async (
         error: "Your withdraw payload is not valid",
       },
     };
+  }
+
+  if (reciver_storage) {
+    await account.functionCall({
+      contractId: tokenId,
+      methodName: "storage_deposit",
+      args: {
+        account_id: reciver_storage,
+        registration_only: true,
+      },
+      gas: AttachedGas as any,
+      attachedDeposit: "2350000000000000000000" as any,
+    });
+  }
+
+  const relayerStorage = await getTokenStorage(
+    tokenId,
+    env.ACCOUNT_ID,
+    env.RPC_URL
+  );
+
+  if (!relayerStorage || relayerStorage.total < "0.10") {
+    await account.functionCall({
+      contractId: tokenId,
+      methodName: "storage_deposit",
+      args: {
+        account_id: env.ACCOUNT_ID,
+        registration_only: true,
+      },
+      gas: AttachedGas as any,
+      attachedDeposit: "2350000000000000000000" as any,
+    });
   }
 
   // since payload is valid, submit transaction and return hash
