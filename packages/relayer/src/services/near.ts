@@ -32,7 +32,7 @@ export const viewFunction = async (
   nodeUrl: string,
   contractId: string,
   methodName: string,
-  args: any
+  args: any = {}
 ) => {
   const provider = new providers.JsonRpcProvider({ url: nodeUrl });
 
@@ -47,4 +47,31 @@ export const viewFunction = async (
   })) as any;
 
   return JSON.parse(Buffer.from(res.result).toString());
+};
+
+export const viewState = async (nodeUrl: string, accountId: string) => {
+  const provider = new providers.JsonRpcProvider({ url: nodeUrl });
+
+  return (await provider.query({
+    finality: "final",
+    account_id: accountId,
+    request_type: "view_account",
+  })) as any;
+};
+
+export const viewFungibleTokenMetadata = async (
+  rpcUrl: string,
+  contract: string
+): Promise<any> => {
+  return await viewFunction(rpcUrl, contract, "ft_metadata");
+};
+
+export const getTokenStorage = async (
+  contract: string,
+  accountId: string,
+  nodeRpcUrl: string
+) => {
+  return await viewFunction(nodeRpcUrl, contract, "storage_balance_of", {
+    account_id: accountId,
+  });
 };
