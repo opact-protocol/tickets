@@ -28,7 +28,9 @@ export const NeedHelp = () => {
                   }`
                 }
                 as="a"
-                href="/#faq"
+                target="_blank"
+                rel="noreferrer"
+                href="https://docs.hideyour.cash/general-information/faq"
               >
                 FAQ
               </Listbox.Option>
@@ -41,7 +43,8 @@ export const NeedHelp = () => {
                 }
                 as="a"
                 target="_blank"
-                href="https://www.youtube.com/watch?v=82ICG4BEtNk"
+                rel="noreferrer"
+                href="https://docs.hideyour.cash/how-to-use-hyc/tutorial"
               >
                 Tutorials
               </Listbox.Option>
