@@ -1,7 +1,5 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
-
-export default async (req: VercelRequest, res: VercelResponse) => {
-  const countryCode = req.headers["x-vercel-ip-country"] as string;
+module.exports = async (req, res) => {
+  const countryCode = req.headers["x-vercel-ip-country"];
 
   console.log(countryCode);
 
