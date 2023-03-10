@@ -9,7 +9,9 @@
     "check_is_circuit_compiled": "test -f ../circuits/out/withdraw_js/withdraw.wasm || 'Failure: need to compile circuit first. Go to packages/circuits and run yarn circuit:setup:plonk'",
     "dev": "yarn check_is_circuit_compiled && vite",
     "build": "yarn add_zk_assets && tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel-dev-helper": "vite --port $PORT",
+    "vdev": "vercel dev --local-config ./vercel-dev.json"
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
