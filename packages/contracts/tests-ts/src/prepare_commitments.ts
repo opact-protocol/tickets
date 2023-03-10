@@ -188,7 +188,7 @@ export async function buildCommitments(prefix: string, contract: string) {
     nullifierHash: mimc.single_hash(commitment1.nullifier),
     recipient: accountsHashes[3], // not taking part in any computations
     relayer: relayerHash, // not taking part in any computations
-    fee: "0", // not taking part in any computations
+    fee: "1000000", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment1.nullifier,
     secret: commitment1.secret,
@@ -209,7 +209,7 @@ export async function buildCommitments(prefix: string, contract: string) {
     nullifierHash: mimc.single_hash(commitment2.nullifier),
     recipient: accountsHashes[3], // not taking part in any computations
     relayer: accountsHashes[0], // not taking part in any computations
-    fee: "1000", // not taking part in any computations
+    fee: "1000000", // not taking part in any computations
     refund: "0", // not taking part in any computations
     nullifier: commitment2.nullifier,
     secret: commitment2.secret,
