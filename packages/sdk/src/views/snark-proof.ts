@@ -14,8 +14,6 @@ export const viewIsWithdrawValid = async (
     payload
   );
 
-  console.log("res: withdrawIsValid: ", withdrawIsValid);
-
   const rootAllowlistIsValid = await viewFunction(
     rpcUrl,
     contract,
@@ -24,8 +22,6 @@ export const viewIsWithdrawValid = async (
       root: payload.allowlist_root,
     }
   );
-
-  console.log("res: rootAllowlistIsValid: ", rootAllowlistIsValid);
 
   return withdrawIsValid && rootAllowlistIsValid;
 };

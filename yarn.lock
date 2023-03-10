@@ -2598,6 +2598,11 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
+"@tsndr/cloudflare-worker-jwt@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@tsndr/cloudflare-worker-jwt/-/cloudflare-worker-jwt-2.2.1.tgz#d52bd14a4dc42254e8b117d8f781ea965cf2490e"
+  integrity sha512-yYxjmag5AXXs7FDCUlse8cCTQlug3fbrqUb4/s4kvdauOg5wq2V6BayHD/OUWOGmgohefFRqu4vA5phU3+Cyng==
+
 "@tsndr/cloudflare-worker-router@^2.3.2":
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@tsndr/cloudflare-worker-router/-/cloudflare-worker-router-2.3.2.tgz#7e8939923b97e249537bb6882fc25866ddf22c68"
