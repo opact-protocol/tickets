@@ -1,16 +1,13 @@
 import { Env } from "./interfaces";
 import { Router } from "@tsndr/cloudflare-worker-router";
-import { relayer } from "./main";
+import { relayer, calculateFee } from "./services";
 
-// Initialize router
 const router = new Router<Env>();
 
-// Enabling build in CORS support
 router.cors({
   allowMethods: "POST, GET",
 });
 
-// Simple get
 router.get("/data", ({ env, res }) => {
   res.body = {
     data: {
@@ -21,7 +18,15 @@ router.get("/data", ({ env, res }) => {
   };
 });
 
-// Post route with url parameter
+router.post("/fee", async ({ env, req, res, next }) => {
+  const resValue = await calculateFee(req, env);
+
+  res.status = resValue.status;
+  res.body = resValue.body;
+
+  await next();
+});
+
 router.post("/relay", async ({ env, req, res, next }) => {
   const resValue = await relayer(req, env);
 
@@ -31,7 +36,6 @@ router.post("/relay", async ({ env, req, res, next }) => {
   await next();
 });
 
-// Listen Cloudflare Workers Fetch Event
 export default {
   fetch: async (request: Request, env: Env): Promise<Response> => {
     return router.handle(env, request);
