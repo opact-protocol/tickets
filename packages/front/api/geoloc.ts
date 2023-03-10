@@ -3,6 +3,8 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 export default async (req: VercelRequest, res: VercelResponse) => {
   const countryCode = req.headers["x-vercel-ip-country"] as string;
 
+  console.log(countryCode);
+
   const blockedCountries = ["US"];
 
   if (blockedCountries.includes(countryCode)) {
