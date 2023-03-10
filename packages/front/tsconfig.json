@@ -19,12 +19,8 @@
     "noImplicitAny": false,
     "paths": {
       "@/*": ["src/*"],
-      "rxjs": [
-        "node_modules/rxjs"
-      ],
-      "rxjs/*": [
-        "node_modules/rxjs/*"
-      ]
+      "rxjs": ["node_modules/rxjs"],
+      "rxjs/*": ["node_modules/rxjs/*"]
     },
     "types": ["vite-plugin-pages/client-react", "vite/client"]
   },
