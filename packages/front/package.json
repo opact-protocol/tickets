@@ -11,7 +11,7 @@
     "build": "yarn add_zk_assets && tsc && vite build",
     "preview": "vite preview",
     "vercel-dev-helper": "vite --port $PORT",
-    "vdev": "vercel dev --local-config ./vercel-dev.json"
+    "vdev": "vercel dev --local-config ./vercel.json"
   },
   "engines": {
     "yarn": ">=1.22.0 <2.0.0",
