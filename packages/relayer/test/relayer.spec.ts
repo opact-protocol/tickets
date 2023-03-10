@@ -1,6 +1,7 @@
 import testnetSetup from "./test_setup.json";
+import { viewFunction } from "../src/services/near";
 import withdrawPayload from "./withdraw_payload.json";
-import { relayer } from "@/main";
+import { relayer, calculateFee } from "../src/services";
 
 const errorStatus = 500;
 const successStatus = 200;
@@ -10,14 +11,32 @@ const HEADERS = {
 };
 
 const baseEnv = {
-  RELAYER_FEE: "0.25",
+  RELAYER_FEE: "0.10",
   NEAR_NETWORK: "testnet",
+  RELAYER_URL: "foo.com.br",
+  BASE_STORAGE_FEE: "0.1",
+  HYC_CONTRACT: testnetSetup.hyc_contract,
   RPC_URL: "https://rpc.testnet.near.org",
   ACCOUNT_ID: testnetSetup.account.account_id,
   PRIVATE_KEY: testnetSetup.account.private_key,
 };
 
 test("should return error - should specify correct relayer address", async () => {
+  const {
+    body: { token },
+  } = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId: testnetSetup.tokenInstance,
+        receiverAccountId: testnetSetup.account.account_id,
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
   const baseRequest = {
     url: "http://localhost/relay",
     method: "POST",
@@ -27,7 +46,7 @@ test("should return error - should specify correct relayer address", async () =>
         ...withdrawPayload,
         relayer: "foo.ba",
       },
-      currencyContractId: testnetSetup.tokenInstance,
+      token,
     },
   };
 
@@ -40,6 +59,21 @@ test("should return error - should specify correct relayer address", async () =>
 });
 
 test("should return error - should at least minimum relayer fee", async () => {
+  const {
+    body: { token },
+  } = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId: testnetSetup.tokenInstance,
+        receiverAccountId: testnetSetup.account.account_id,
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
   const baseRequest = {
     url: "http://localhost/relay",
     method: "POST",
@@ -50,17 +84,32 @@ test("should return error - should at least minimum relayer fee", async () => {
         fee: 0,
         quantity: 10,
       },
-      currencyContractId: testnetSetup.tokenInstance,
+      token,
     },
   };
 
   const { body, status } = await relayer(baseRequest as any, baseEnv as any);
 
   expect(status).toBe(errorStatus);
-  expect(body.error).toContain("should at least minimum relayer fee: 3");
+  expect(body.error).toContain("should at least minimum relayer fee");
 });
 
 test("should return error - Your withdraw payload is not valid", async () => {
+  const {
+    body: { token },
+  } = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId: testnetSetup.tokenInstance,
+        receiverAccountId: testnetSetup.account.account_id,
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
   const baseRequest = {
     url: "http://localhost/relay",
     method: "POST",
@@ -69,9 +118,8 @@ test("should return error - Your withdraw payload is not valid", async () => {
       publicArgs: {
         ...withdrawPayload,
         nullifier_hash: "1234",
-        fee: "3",
       },
-      currencyContractId: testnetSetup.tokenInstance,
+      token,
     },
   };
 
@@ -82,6 +130,21 @@ test("should return error - Your withdraw payload is not valid", async () => {
 });
 
 test("should return sucess - withdraw", async () => {
+  const {
+    body: { token },
+  } = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId: testnetSetup.tokenInstance,
+        receiverAccountId: testnetSetup.account.account_id,
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
   const baseRequest = {
     url: "http://localhost/relay",
     method: "POST",
@@ -90,7 +153,7 @@ test("should return sucess - withdraw", async () => {
       publicArgs: {
         ...withdrawPayload,
       },
-      currencyContractId: testnetSetup.tokenInstance,
+      token,
     },
   };
 
@@ -98,3 +161,68 @@ test("should return sucess - withdraw", async () => {
 
   expect(status).toBe(successStatus);
 }, 50000);
+
+test("Relayer - Dynamic fee test", async () => {
+  const prefix = testnetSetup.hyc_contract.replace(
+    "registryhyctest.testnet",
+    ""
+  );
+
+  const instanceId = `${prefix}tokenhyctest10.testnet`;
+
+  let res = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId,
+        receiverAccountId: "mmc-game03.testnet",
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
+  expect(res.status).toBe(successStatus);
+
+  const { deposit_value } = await viewFunction(
+    baseEnv.RPC_URL,
+    instanceId,
+    "view_contract_params"
+  );
+
+  const proof = +deposit_value * +res.body.percentage_fee;
+
+  expect(res.body.price_token_fee.toString()).toBe(proof + "");
+
+  res = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId,
+        receiverAccountId:
+          "ed41d2e3421c531b38a7fbe1574a9ad4cb7679517e3172a1415998c80c9f4b65",
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
+  expect(res.status).toBe(successStatus);
+
+  res = (await calculateFee(
+    {
+      url: "http://localhost/fee",
+      method: "POST",
+      headers: HEADERS,
+      body: {
+        instanceId: "pedrapapeltesoura123405432.testnet",
+        receiverAccountId: "mmc-game03.testnet",
+      },
+    } as any,
+    baseEnv as any
+  )) as any;
+
+  expect(res.status).toBe(errorStatus);
+});
