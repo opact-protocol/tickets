@@ -1,8 +1,6 @@
 module.exports = async (req, res) => {
   const countryCode = req.headers["x-vercel-ip-country"];
 
-  console.log(countryCode);
-
   const blockedCountries = ["US"];
 
   if (blockedCountries.includes(countryCode)) {
