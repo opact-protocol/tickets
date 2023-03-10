@@ -77,7 +77,12 @@ const Index = () => {
                 >
                   Launch app
                 </button>
-                <button className="text-white p-3 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full hover:bg-dark-grafiti-medium hover:transition-all">
+                <button
+                  className="text-white p-3 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full hover:bg-dark-grafiti-medium hover:transition-all"
+                  onClick={() =>
+                    window.open("https://docs.hideyour.cash/", "_blank")
+                  }
+                >
                   Read documentation
                 </button>
               </div>
@@ -357,7 +362,12 @@ const Index = () => {
               </div>
             </div>
             <div className="mt-[112px]">
-              <button className="text-white p-3 px-12 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full  hover:bg-dark-grafiti-medium hover:transition-all">
+              <button
+                className="text-white p-3 px-12 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full  hover:bg-dark-grafiti-medium hover:transition-all"
+                onClick={() =>
+                  window.open("https://docs.hideyour.cash/", "_blank")
+                }
+              >
                 Read documentation
               </button>
             </div>
@@ -614,7 +624,7 @@ const Index = () => {
         <footer className="p-10 flex flex-col gap-5 justify-between relative z-[10]">
           <div className="w-full flex flex-col justify-between gap-5 md:flex-row">
             <a
-              href=""
+              href="https://docs.hideyour.cash/"
               target="_blank"
               rel="noreferrer"
               className="text-dark-grafiti font-semibold text-xl flex gap-5 items-center"
@@ -639,7 +649,7 @@ const Index = () => {
               <img src="/twitter.svg" alt="Twitter Icon" className="w-10" />{" "}
               Twitter
             </a>
-            <a
+            {/* <a
               href=""
               target="_blank"
               rel="noreferrer"
@@ -647,7 +657,7 @@ const Index = () => {
             >
               <img src="/discord.svg" alt="Discord Icon" className="w-10" />{" "}
               Discord
-            </a>
+            </a> */}
             <button
               className="ml-auto mt-[-50px] md:m-0 bg-aqua-gradient-medium w-10 h-10 rounded-full flex justify-center items-center cursor-pointer"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
