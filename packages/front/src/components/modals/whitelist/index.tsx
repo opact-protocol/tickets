@@ -15,7 +15,7 @@ export function WhitelistModal({
 
   const { sendWhitelist } = useApplication();
 
-  const { allowList } = useAllowlist(accountId!, selector);
+  const { allowList } = useAllowlist(accountId!);
 
   const apply = () => {
     if (!accountId) {
