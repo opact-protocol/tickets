@@ -4,7 +4,7 @@ import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
@@ -74,7 +74,7 @@ export function Deposit() {
         title="Processing"
       />,
       {
-        toastId: customId
+        toastId: customId,
       }
     );
   } else if (!approved && transactionHashes) {
@@ -90,7 +90,7 @@ export function Deposit() {
           title={title}
           message={message}
         />
-      )
+      ),
     });
   }
 
