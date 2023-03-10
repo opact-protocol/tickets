@@ -2,6 +2,7 @@ import testnetSetup from "./test_setup.json";
 import { viewFunction } from "../src/services/near";
 import withdrawPayload from "./withdraw_payload.json";
 import { relayer, calculateFee } from "../src/services";
+import Big from "big.js";
 
 const errorStatus = 500;
 const successStatus = 200;
@@ -191,9 +192,12 @@ test("Relayer - Dynamic fee test", async () => {
     "view_contract_params"
   );
 
-  const proof = +deposit_value * +res.body.percentage_fee;
+  const bigDepositValue = new Big(deposit_value);
+  const bigPercentage_fee = new Big(res.body.percentage_fee);
 
-  expect(res.body.price_token_fee.toString()).toBe(proof + "");
+  const proof = bigDepositValue.mul(bigPercentage_fee).toFixed(0);
+
+  expect(res.body.price_token_fee).toBe(proof);
 
   res = (await calculateFee(
     {
