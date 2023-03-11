@@ -1,10 +1,8 @@
 import { create } from "zustand";
-import { plonk } from "snarkjs";
-import { relayer } from "@/services";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
-import { Currency, HideyourCash } from "hideyourcash-sdk";
+import { Currency, HideyourCash, RelayerDataInterface } from "hideyourcash-sdk";
 import { AxiosError } from "axios";
 
 const hycTransaction = "hyc-transaction";
@@ -24,6 +22,13 @@ export const useApplication = create<{
   hash: any;
   note: any;
   relayerData: any;
+  relayerJWT: string;
+  setRelayerJWT: (token: string) => any;
+  getRelayerFee: (
+    accountId: string,
+    instanceId: string,
+    relayer: RelayerDataInterface
+  ) => Promise<any>;
   sendDeposit: (
     amount: string,
     contract: string,
@@ -35,6 +40,7 @@ export const useApplication = create<{
   sendWithdraw: () => Promise<void>;
   prepareWithdraw: (
     currencyContract: string,
+    fee: string,
     payload: { note: string; recipient: string }
   ) => Promise<void>;
   prepareDeposit: (
@@ -47,6 +53,7 @@ export const useApplication = create<{
   hash: null,
   note: null,
   relayerData: null,
+  relayerJWT: "",
 
   prepareDeposit: async (account: string, currencieContract: string) => {
     const { hash, note } = await appService.createTicket(
@@ -81,15 +88,21 @@ export const useApplication = create<{
   },
 
   fetchRelayerData: async () => {
-    const data = await appService.viewRelayers("prod");
+    const data = await appService.getRandomRelayer();
+
     set({ relayerData: data[0] });
   },
 
-  prepareWithdraw: async (currencyContract: string, { note, recipient }) => {
+  prepareWithdraw: async (
+    currencyContract: string,
+    fee: string,
+    { note, recipient }
+  ) => {
     const { relayerData } = get();
 
     try {
       const publicArgs = await appService.prepareWithdraw(
+        fee,
         note,
         relayerData,
         recipient,
@@ -108,11 +121,18 @@ export const useApplication = create<{
     }
   },
 
+  setRelayerJWT: (value) => {
+    set({ relayerJWT: value });
+  },
+
   sendWithdraw: async () => {
-    const { publicArgs, relayerData } = get();
+    const { publicArgs, relayerData, relayerJWT } = get();
 
     try {
-      await appService.sendWithdraw(relayerData, publicArgs);
+      await appService.sendWithdraw(relayerData, {
+        publicArgs,
+        token: relayerJWT,
+      });
       toast(
         <ToastCustom
           icon="/check-circle-icon.svg"
@@ -153,5 +173,12 @@ export const useApplication = create<{
   },
   sendWhitelist: async (connection, accountId) => {
     appService.sendAllowlist(accountId, connection);
+  },
+  getRelayerFee: async (
+    accountId: string,
+    instanceId: string,
+    relayer: RelayerDataInterface
+  ) => {
+    return appService.getRelayerFee(relayer, accountId, instanceId);
   },
 }));
