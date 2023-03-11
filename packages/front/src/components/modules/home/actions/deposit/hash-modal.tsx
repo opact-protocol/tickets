@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import { useWallet } from "@/store/wallet";
+import FileSaver from "file-saver";
 import {
   Currency,
   formatBigNumberWithDecimals,
@@ -200,7 +201,9 @@ export default function Modal({
                             token.type === "Near" ? 24 : token.metadata.decimals
                           )
                         )
-                      ).toFixed(0)} ${token.metadata.name}`}
+                      ).toFixed(0)} ${
+                        token.type === "Near" ? "Near" : token.metadata.name
+                      }`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>

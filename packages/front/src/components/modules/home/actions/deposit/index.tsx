@@ -30,7 +30,6 @@ import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
-import axios from "axios";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
