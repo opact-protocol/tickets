@@ -90,7 +90,7 @@ describe("Test all service actions", () => {
       account
     );
 
-    const [relayer] = (await service?.viewRelayers("prod")) || [];
+    const [relayer] = (await service?.getRandomRelayer("test")) || [];
 
     console.log("prepare withdraw");
 
@@ -119,6 +119,7 @@ describe("Test all service actions", () => {
     ];
 
     const publicArgs = await service?.prepareWithdraw(
+      "1000000",
       note,
       {
         ...relayer,
