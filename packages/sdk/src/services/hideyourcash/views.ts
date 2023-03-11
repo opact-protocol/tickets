@@ -17,8 +17,13 @@ import type {
 } from "../../interfaces";
 
 const baseRelayers = {
-  test: "https://dev-relayer.hideyourcash.workers.dev",
+  /**
+   * TODO: fix dev relayer with ENV
+   */
+  test: "https://prod-relayer.mateus4loading.workers.dev",
+
   prod: "https://prod-relayer.hideyourcash.workers.dev",
+  local: "http://127.0.0.1:8787",
 };
 
 export class Views {
@@ -66,8 +71,8 @@ export class Views {
     return viewWasNullifierSpent(this.nodeUrl, this.contract, nullifier);
   }
 
-  async viewRelayers(
-    network: "test" | "prod" = "test"
+  async getRandomRelayer(
+    network: "test" | "prod" | "local" = "test"
   ): Promise<RelayerDataInterface[]> {
     const relayerService = axios.create({
       baseURL: baseRelayers[network],
