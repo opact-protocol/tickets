@@ -1,17 +1,17 @@
 import { mimc } from "@/services";
 
-function parseNote(
-  note: string
-): {
+function parseNote(note: string): {
+  contract: string;
   secret: string;
   nullifier: string;
   account_hash: string;
 } {
   const splitString = note.split("-");
   return {
-    secret: splitString[0],
-    nullifier: splitString[1],
-    account_hash: splitString[2]
+    contract: splitString[0],
+    secret: splitString[1],
+    nullifier: splitString[2],
+    account_hash: splitString[3],
   };
 }
 
