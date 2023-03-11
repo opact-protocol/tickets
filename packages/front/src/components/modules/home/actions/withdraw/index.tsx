@@ -3,23 +3,19 @@ import { useApplication } from "@/store";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
-import {
-  getLastWithdrawBeforeTheTicketWasCreated,
-  getTicketInTheMerkleTree,
-  GET_MOST_RECENT_DEPOSIT,
-  GET_MOST_RECENT_WITHDRAW,
-} from "@/utils/graphql-queries";
+import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
 import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import { useQuery } from "@apollo/client";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { nullifierCheck } from "@/utils/nullifierCheck";
 import { useWallet } from "@/store/wallet";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
 import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
+import { viewWasNullifierSpent } from "hideyourcash-sdk";
+import { useEnv } from "@/hooks/useEnv";
+import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 interface WithDrawProps {
   ticket: string;
@@ -33,20 +29,15 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 const hycTransaction = "hyc-transaction";
 
 export function Withdraw() {
-  const { data: mostRecentDeposit } = useQuery(GET_MOST_RECENT_DEPOSIT);
-  const { data: mostRecentWithdraw } = useQuery(GET_MOST_RECENT_WITHDRAW);
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const [showModalDeposits, setShowModalDeposits] = useState(false);
   const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
+  const [ticket, setTicket] = useState<any>();
 
   const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
-  const { selector, accountId, toggleModal } = useWallet();
-  const [statistics, setStatistics] = useState<{
-    totalDeposits?: number;
-    totalWithdraws?: number;
-  }>();
+  const { accountId, toggleModal } = useWallet();
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()
@@ -55,36 +46,32 @@ export function Withdraw() {
       .test(
         "isValidTicket",
         "This ticket is not valid anymore",
-        async (value) => !(await nullifierCheck(value, selector))
+        async (value) => {
+          const commitment = generateCommitment(value);
+          const ticketStored = await getTicketInTheMerkleTree(commitment!);
+          try {
+            setTicket(ticketStored);
+            return !(await viewWasNullifierSpent(
+              useEnv("VITE_NEAR_NODE_URL"),
+              ticketStored.contract,
+              value
+            ));
+          } catch (error) {
+            return false;
+          }
+        }
       )
       .test(
         "isStored",
         "This ticket has not been deposited yet",
         async (value) => {
-          if (await nullifierCheck(value, selector)) return true;
           const commitment = generateCommitment(value);
 
           const ticketStored = await getTicketInTheMerkleTree(commitment!);
 
-          if (ticketStored) {
-            const lastWithdraw = await getLastWithdrawBeforeTheTicketWasCreated(
-              ticketStored.timestamp
-            );
+          if (!ticketStored) return false;
 
-            const totalDeposits =
-              (+mostRecentDeposit.depositMerkleTreeUpdates[0].counter || 0) -
-              +ticketStored.counter;
-
-            const totalWithdraws =
-              (mostRecentWithdraw.withdrawals[0]
-                ? +mostRecentWithdraw.withdrawals[0]["counter"]
-                : 0) - (+lastWithdraw.counter || 0);
-
-            setStatistics({ totalDeposits, totalWithdraws });
-
-            return true;
-          }
-          return false;
+          return true;
         }
       ),
     address: yup
@@ -93,9 +80,12 @@ export function Withdraw() {
       .required("Invalid address"),
   });
 
+  const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
+
   const {
     register,
     handleSubmit,
+    getFieldState,
     formState: { errors },
   } = useForm<WithDrawProps>({
     resolver: yupResolver(withdrawSchema),
@@ -110,7 +100,7 @@ export function Withdraw() {
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
-      await prepareWithdraw(selector, {
+      await prepareWithdraw(ticket.contract, {
         note: data.ticket,
         recipient: data.address,
       });
@@ -177,36 +167,58 @@ export function Withdraw() {
               <p className="text-error mt-2 text-sm font-normal">
                 {errors.ticket?.message && errors.ticket.message.toString()}
               </p>
+              {ticket && !getFieldState("ticket").invalid && (
+                <div className="my-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-black text-[1.1rem] font-bold ">
+                      Pool Anonimity
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    {withdrawalScore < 30 ? (
+                      <>
+                        {[1, 2, 3].map((item) => (
+                          <div
+                            key={item}
+                            className={`w-[77px] h-[9px] ${
+                              item === 1 ? "bg-error" : "bg-gray-300"
+                            } rounded-full`}
+                          />
+                        ))}
+                      </>
+                    ) : withdrawalScore > 30 && withdrawalScore < 60 ? (
+                      <>
+                        {[1, 2, 3].map((item) => (
+                          <div
+                            key={item}
+                            className={`w-[77px] h-[9px] ${
+                              item !== 3 ? "bg-warning" : "bg-gray-300"
+                            } rounded-full`}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      withdrawalScore > 60 && (
+                        <>
+                          {[1, 2, 3].map((item) => (
+                            <div
+                              key={item}
+                              className={`w-[77px] h-[9px] bg-success rounded-full`}
+                            />
+                          ))}
+                        </>
+                      )
+                    )}
+                  </div>
+                  <p
+                    className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                    title="Coming soon"
+                  >
+                    What is this <QuestionMarkCircleIcon className="w-4 h-4" />
+                  </p>
+                </div>
+              )}
             </div>
-            {statistics && !errors.ticket?.message && (
-              <div className={`flex flex-col gap-3`}>
-                <div className="flex items-center justify-between">
-                  <p
-                    className="text-black text-sm font-normal flex items-center gap-2 cursor-pointer"
-                    onClick={() => setShowModalDeposits(true)}
-                  >
-                    Total deposits to date{" "}
-                    <QuestionMarkCircleIcon className="w-4 h-4" />
-                  </p>
-                  <p className="text-black font-bold text-sm">
-                    {statistics?.totalDeposits}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p
-                    className="text-black text-sm font-normal flex items-center gap-2 cursor-pointer"
-                    onClick={() => setShowModalWithdrawals(true)}
-                  >
-                    Total withdrawals to date{" "}
-                    <QuestionMarkCircleIcon className="w-4 h-4" />
-                  </p>
-                  <p className="text-black font-bold text-sm">
-                    {statistics?.totalWithdraws}
-                  </p>
-                </div>
-              </div>
-            )}
-
             <div className={`mt-8 ${relayerData ? "mb-6" : "mb-44"}`}>
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold">
@@ -244,7 +256,7 @@ export function Withdraw() {
               </p>
             </div>
           </div>
-          {relayerData && statistics && !errors.ticket?.message && (
+          {relayerData && ticket && !getFieldState("ticket").invalid && (
             <div className="mt-[24px]">
               <div>
                 <span className="text-black font-bold">Total</span>
@@ -261,7 +273,7 @@ export function Withdraw() {
                   <span className="text-black text-[14px]">Relayer fee:</span>
 
                   <span className="text-black font-bold">{`${
-                    relayerData.feePercent * 10
+                    +relayerData.feePercent * 10
                   } NEAR`}</span>
                 </div>
                 {/* <div className="flex items-center justify-between pb-[12px]">
@@ -278,7 +290,7 @@ export function Withdraw() {
                   </span>
 
                   <span className="text-black font-bold">{`${
-                    10 * (1 - relayerData.feePercent)
+                    10 * (1 - +relayerData.feePercent)
                   } NEAR`}</span>
                 </div>
               </div>

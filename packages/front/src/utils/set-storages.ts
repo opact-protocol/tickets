@@ -4,6 +4,7 @@ import {
   getLastAllowlist,
   getLastDeposit,
 } from "./graphql-queries";
+
 import { verifyStorage } from "./verify-storage";
 
 interface Storage {
