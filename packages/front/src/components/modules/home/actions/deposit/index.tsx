@@ -7,7 +7,6 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { WhitelistModal } from "@/components/modals";
 import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
@@ -19,6 +18,18 @@ import "swiper/css";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 import axios from "axios";
+import { useAllCurrencies } from "@/hooks/useAllCurrencies";
+import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
+import {
+  formatBigNumberWithDecimals,
+  getDecimals,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { settings } from "@/utils/sliderSettings";
+import { useDepositScore } from "@/hooks/useDepositScore";
 
 interface SelectedTokenProps {
   id: number;
@@ -31,34 +42,32 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 
 const hycTransaction = "hyc-transaction";
 
-const amounts = [0.1, 1, 10, 20, 50];
-
-const tokens = [
-  { id: 1, name: "NEAR" },
-  { id: 2, name: "AVAX" },
-  { id: 3, name: "BTC" },
-  { id: 4, name: "CARDANO" },
-];
-
 const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState<number>(10);
+  const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
+    {} as AmountsProps
+  );
   const [buttonText, setButtonText] = useState("Deposit");
   const [depositing, setDepositing] = useState(false);
   const [selectedToken, setSelectedToken] =
-    useState<SelectedTokenProps | null>();
+    useState<ViewCurrenciesResponseInterface>(
+      {} as ViewCurrenciesResponseInterface
+    );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
   const [showBlockedLocationModal, setBlockedLocationModal] = useState(false);
 
   const { prepareDeposit } = useApplication();
-  const { selector, accountId, toggleModal } = useWallet();
+  const { accountId, toggleModal } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
+  const { allCurrencies } = useAllCurrencies();
+  const amounts = objetctToArray(selectedToken.contracts);
+  const { depositScore } = useDepositScore(selectedAmount.accountId);
 
   if (!action && transactionHashes && !approved) {
     toast(
@@ -88,7 +97,7 @@ export function Deposit() {
     });
   }
 
-  const { allowList } = useAllowlist(accountId!, selector);
+  const { allowList } = useAllowlist(accountId!);
 
   const preDeposit = async () => {
     if (!accountId) {
@@ -97,8 +106,13 @@ export function Deposit() {
       return;
     }
 
-    if (!selectedToken) {
+    if (!selectedToken.type) {
       setErrorMessage("Select token to deposit");
+      return;
+    }
+
+    if (!selectedAmount.value) {
+      setErrorMessage("Select amount to deposit");
       return;
     }
 
@@ -110,7 +124,7 @@ export function Deposit() {
     setDepositing(true);
     setButtonText("Preparing your deposit...");
 
-    await prepareDeposit(selector, accountId!);
+    await prepareDeposit(accountId!, selectedAmount.accountId);
 
     setShowModal(!showModal);
   };
@@ -144,8 +158,8 @@ export function Deposit() {
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="block truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.name
-                      ? selectedToken.name
+                    {selectedToken && selectedToken.type
+                      ? selectedToken.type
                       : "Select token"}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -162,14 +176,11 @@ export function Deposit() {
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="absolute mt-1 max-h-60 w-[240px] overflow-auto rounded-[20px] bg-white py-1 text-base shadow-[0_4px_15px_rgba(0,0,0,0.2)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[10]">
-                    {tokens.map((token, i) => (
+                    {allCurrencies?.map((token) => (
                       <Listbox.Option
-                        key={token.id}
-                        disabled={token.id !== 1}
+                        key={token.type}
                         className={({ active }) =>
-                          `relative ${
-                            i === 0 ? "cursor-pointer" : "cursor-not-allowed"
-                          } select-none p-[10px] mx-auto w-[220px] ${
+                          `relative cursor-pointer select-none p-[10px] mx-auto w-[220px] ${
                             active
                               ? "bg-soft-blue-normal rounded-[10px] text-dark-grafiti"
                               : "text-dark-grafiti"
@@ -187,9 +198,7 @@ export function Deposit() {
                                   selected ? "bg-success" : "bg-gray-300"
                                 }`}
                               />{" "}
-                              {i === 0
-                                ? token.name
-                                : `${token.name}, coming soon`}
+                              {token.type}
                             </span>
                           </>
                         )}
@@ -201,12 +210,12 @@ export function Deposit() {
             </Listbox>
           </div>
 
-          {selectedToken?.id ? (
+          {selectedToken.type ? (
             <div className="mt-8">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
                   Amount{" "}
-                  {/*<span className="text-error">{errorMessage && "*"}</span> */}
+                  <span className="text-error">{errorMessage && "*"}</span>
                 </span>
               </div>
 
@@ -214,51 +223,41 @@ export function Deposit() {
                 value={selectedAmount}
                 onChange={setSelectedAmount}
                 className="mt-2 max-w-[371px]"
+                as="ul"
               >
-                <Swiper
-                  spaceBetween={40}
-                  slidesPerView={3}
-                  breakpoints={{
-                    320: {
-                      slidesPerView: 2,
-                      spaceBetween: 20,
-                    },
-                    // when window width is >= 480px
-                    480: {
-                      slidesPerView: 3,
-                      spaceBetween: 30,
-                    },
-                    // when window width is >= 640px
-                    640: {
-                      slidesPerView: 3,
-                      spaceBetween: 40,
-                    },
-                  }}
-                >
-                  {amounts.map((size) => (
-                    <SwiperSlide key={size}>
-                      <RadioGroup.Option
-                        key={size}
-                        value={size}
-                        as="div"
-                        className={({ checked }) => `
-                              bg-transparent rounded-full p-1 w-[132px] mb-2 ${
-                                size === 10 ? "bg-soft-blue-from-deep-blue" : ""
+                <Slider {...settings}>
+                  {amounts?.map((token) => (
+                    <RadioGroup.Option
+                      key={token.accountId}
+                      value={token}
+                      as="li"
+                      className={({ active }) => `
+                              bg-transparent rounded-full p-1 w-min mb-2 ${
+                                active ? "bg-soft-blue-from-deep-blue" : ""
                               }
                             `}
-                      >
-                        <div className="bg-white p-2 shadow-sm rounded-full w-[125px] flex items-center justify-center cursor-not-allowed">
-                          <RadioGroup.Label
-                            as="span"
-                            className="whitespace-nowrap space-x-[4px] font-bold text-soft-blue"
-                          >
-                            {size} NEAR
-                          </RadioGroup.Label>
-                        </div>
-                      </RadioGroup.Option>
-                    </SwiperSlide>
+                    >
+                      <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
+                        <RadioGroup.Label
+                          as="span"
+                          className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
+                        >
+                          {Number(
+                            formatBigNumberWithDecimals(
+                              token.value,
+                              getDecimals(
+                                selectedToken.type === "Near"
+                                  ? 24
+                                  : selectedToken.metadata.decimals
+                              )
+                            )
+                          ).toFixed(0)}{" "}
+                          {selectedToken.type}
+                        </RadioGroup.Label>
+                      </div>
+                    </RadioGroup.Option>
                   ))}
-                </Swiper>
+                </Slider>
               </RadioGroup>
               <p
                 className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"
@@ -270,46 +269,81 @@ export function Deposit() {
             </div>
           ) : null}
 
-          <div className="mt-16 mb-16">
-            <div className="flex items-center justify-between">
-              <span className="text-black text-[1.1rem] font-bold ">
-                Transaction Anonimity
-              </span>
+          {selectedAmount.value && (
+            <div className="mt-16 mb-16">
+              <div className="flex items-center justify-between">
+                <span className="text-black text-[1.1rem] font-bold ">
+                  Pool Anonimity
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                {depositScore < 500 ? (
+                  <>
+                    {[1, 2, 3].map((item) => (
+                      <div
+                        key={item}
+                        className={`w-[77px] h-[9px] ${
+                          item === 1 ? "bg-error" : "bg-gray-300"
+                        } rounded-full`}
+                      />
+                    ))}
+                  </>
+                ) : depositScore > 500 && depositScore < 1000 ? (
+                  <>
+                    {[1, 2, 3].map((item) => (
+                      <div
+                        key={item}
+                        className={`w-[77px] h-[9px] ${
+                          item !== 3 ? "bg-warning" : "bg-gray-300"
+                        } rounded-full`}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  depositScore > 1000 && (
+                    <>
+                      {[1, 2, 3].map((item) => (
+                        <div
+                          key={item}
+                          className={`w-[77px] h-[9px] bg-success rounded-full`}
+                        />
+                      ))}
+                    </>
+                  )
+                )}
+              </div>
+              <p
+                className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                title="Coming soon"
+              >
+                What is this <QuestionMarkCircleIcon className="w-4 h-4" />
+              </p>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="w-[77px] h-[9px] bg-gray-300 rounded-full"
-                />
-              ))}
-            </div>
-            <p
-              className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
-              onClick={() => setShowModalPoolAnonymity(true)}
-            >
-              What is this <QuestionMarkCircleIcon className="w-4 h-4" />
-            </p>
-          </div>
+          )}
 
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button
             disabled={depositing}
             onClick={() => preDeposit()}
-            className="bg-soft-blue-from-deep-blue p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+            className="bg-soft-blue-from-deep-blue p-[12px] rounded-full mt-5 w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {!accountId ? "Connect Wallet" : buttonText}
           </button>
 
-          <HashModal
-            isOpen={showModal}
-            amount={selectedAmount.toString()}
-            onClose={() => {
-              setDepositing(false);
-              setShowModal(!showModal);
-              setButtonText("Deposit");
-            }}
-          />
+          {showModal && (
+            <HashModal
+              isOpen={showModal}
+              currency={selectedToken}
+              contract={selectedAmount.accountId}
+              amount={selectedAmount.value}
+              token={selectedToken}
+              onClose={() => {
+                setDepositing(false);
+                setShowModal(!showModal);
+                setButtonText("Deposit");
+              }}
+            />
+          )}
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
           <WhatIsThisModal
             isOpen={showModalPoolAnonymity}

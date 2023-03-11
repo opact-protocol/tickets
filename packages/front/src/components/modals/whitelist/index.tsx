@@ -6,7 +6,7 @@ import { useWallet } from "@/store/wallet";
 
 export function WhitelistModal({
   isOpen,
-  onClose
+  onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -15,7 +15,7 @@ export function WhitelistModal({
 
   const { sendWhitelist } = useApplication();
 
-  const { allowList } = useAllowlist(accountId!, selector);
+  const { allowList } = useAllowlist(accountId!);
 
   const apply = () => {
     if (!accountId) {
