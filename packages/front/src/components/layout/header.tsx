@@ -6,10 +6,10 @@ import { useAllowlist } from "@/hooks/useAllowlist";
 import { useWallet } from "@/store/wallet";
 
 export function Header() {
-  const { selector, accountId, toggleModal, signOut } = useWallet();
+  const { accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
 
-  const { allowList } = useAllowlist(accountId!, selector);
+  const { allowList } = useAllowlist(accountId!);
 
   return (
     <>

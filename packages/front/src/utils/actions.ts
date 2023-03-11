@@ -14,8 +14,11 @@ export const actions = [
     check: ({ transaction: { actions } }: TransactionPayload) => {
       const [action] = actions;
 
-      return action.FunctionCall.method_name === "deposit";
-    }
+      return (
+        action.FunctionCall.method_name === "deposit" ||
+        action.FunctionCall.method_name === "ft_transfer_call"
+      );
+    },
   },
   {
     error:
@@ -26,7 +29,7 @@ export const actions = [
       const [action] = actions;
 
       return action.FunctionCall.method_name === "withdraw";
-    }
+    },
   },
   {
     error: "An error occurred when applying the address in the allowlist",
@@ -36,8 +39,8 @@ export const actions = [
       const [action] = actions;
 
       return action.FunctionCall.method_name === "allowlist";
-    }
-  }
+    },
+  },
 ];
 
 export default actions;
