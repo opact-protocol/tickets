@@ -93,6 +93,50 @@ export const getLastDeposit = async (): Promise<string> => {
   return data.depositMerkleTreeUpdates[0].counter;
 };
 
+export const getLastDepositOfContract = async (contract: string) => {
+  const { data } = await client.query({
+    query: gql`
+      query currentGraetestCounter($contract: String) {
+        depositMerkleTreeUpdates(
+          first: 1
+          orderBy: counter
+          orderDirection: desc
+          where: { contract: $contract }
+        ) {
+          contract
+          counter
+          timestamp
+        }
+      }
+    `,
+    variables: {
+      contract,
+    },
+  });
+  return data.depositMerkleTreeUpdates;
+};
+
+export const getLastWithdrawalOfContract = async (contract: string) => {
+  const { data } = await client.query({
+    query: gql`
+      query mostRecentWithdraw {
+        withdrawals(
+          first: 1
+          orderBy: timestamp
+          orderDirection: desc
+          where: { contract: $contract }
+        ) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    variables: { contract },
+  });
+
+  return data.withdrawals;
+};
+
 export const getLastAllowlist = async (): Promise<string> => {
   const { data } = await client.query({
     query: gql`
@@ -115,8 +159,10 @@ export const getTicketInTheMerkleTree = async (commitment: string) => {
     query: gql`
       query ticketInTheMerkleTree($commitment: String) {
         depositMerkleTreeUpdates(where: { value: $commitment }) {
+          contract
           counter
           timestamp
+          value
         }
       }
     `,
@@ -151,6 +197,31 @@ export const getLastWithdrawBeforeTheTicketWasCreated = async (
   if (data.withdrawals[0]) return data.withdrawals[0];
   else return 0;
 };
+
+export const getLastDepositsBeforeTheTicketWasCreated = async (
+  timestamp: string
+) => {
+  const { data } = await client.query({
+    query: gql`
+      query lastDeposits($timestamp: String) {
+        depositMerkleTreeUpdates(
+          first: 1
+          where: { timestamp_lte: $timestamp }
+          orderBy: counter
+          orderDirection: desc
+        ) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    variables: { timestamp },
+  });
+
+  if (data.depositMerkleTreeUpdates[0]) return data.depositMerkleTreeUpdates[0];
+  else return 0;
+};
+
 export const GET_MOST_RECENT_DEPOSIT = gql`
   query currentGraetestCounter {
     depositMerkleTreeUpdates(first: 1, orderBy: counter, orderDirection: desc) {

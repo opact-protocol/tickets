@@ -1,8 +1,8 @@
-import { viewFunction } from "@/utils/tools";
+import { viewIsInAllowlist } from "hideyourcash-sdk";
 import { useEffect, useState } from "react";
 import { useEnv } from "./useEnv";
 
-export const useAllowlist = (accountId: string, selector: any) => {
+export const useAllowlist = (accountId: string) => {
   const [allowList, setAllowList] = useState<boolean>(false);
 
   useEffect(() => {
@@ -12,13 +12,10 @@ export const useAllowlist = (accountId: string, selector: any) => {
     }
 
     (async () => {
-      const result = await viewFunction(
-        selector,
+      const result = await viewIsInAllowlist(
+        useEnv("VITE_NEAR_NODE_URL"),
         useEnv("VITE_CONTRACT"),
-        "view_is_in_allowlist",
-        {
-          account_id: accountId,
-        }
+        accountId
       );
 
       setAllowList(result);
