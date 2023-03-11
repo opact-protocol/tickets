@@ -117,6 +117,8 @@ export const calculateFee = async (
 
   const tokenStoragePrice = swapTodo.estimate;
 
+  const tokenMetadata = await viewFungibleTokenMetadata(env.RPC_URL, tokenId);
+
   const rawTokenStoragePrice = await formatInteger(
     tokenStoragePrice,
     tokenOut.decimals
