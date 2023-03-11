@@ -42,6 +42,7 @@ export const createSnarkProof = async (
 export const prepareWithdraw = async (
   nodeUrl: string,
   contract: string,
+  fee: string,
   note: string,
   relayer: RelayerDataInterface,
   recipient: string,
@@ -69,6 +70,7 @@ export const prepareWithdraw = async (
       ...relayer,
       hash: relayerHash,
     },
+    fee,
     recipientHash,
     path,
     pathWL,
@@ -90,7 +92,8 @@ export const prepareWithdraw = async (
 };
 
 export const getWithdrawInput = async (
-  { hash, feePercent }: RelayerDataInterface & { hash: string },
+  { hash }: RelayerDataInterface & { hash: string },
+  fee: string,
   recipientHash: string,
   path: any,
   pathAL: any,
@@ -98,11 +101,11 @@ export const getWithdrawInput = async (
   single_hash: any
 ): Promise<WithdrawInputInterface> => {
   return {
+    fee,
     root: path.pathRoot,
     nullifierHash: single_hash(commitment.nullifier),
     recipient: recipientHash,
     relayer: hash,
-    fee: "1000000",
     refund: "0",
     nullifier: commitment.nullifier,
     secret: commitment.secret,
