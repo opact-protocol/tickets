@@ -1,6 +1,6 @@
 import { MerkleTreeService } from "../services";
 import type { MerkleTreeCacheInterface } from "../interfaces";
-import MerkleTree from "fixed-merkle-tree";
+import type MerkleTree from "fixed-merkle-tree";
 
 export const prepareMerkleTree = async (
   contract: string,

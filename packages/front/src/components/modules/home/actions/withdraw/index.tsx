@@ -1,6 +1,6 @@
 import ConfirmModal from "./confirm-modal";
 import { useApplication } from "@/store";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
@@ -16,6 +16,8 @@ import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 import { viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
+import _ from "lodash";
+import Countdown from "react-countdown";
 
 interface WithDrawProps {
   ticket: string;
@@ -26,6 +28,11 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
 );
 
+const getHumanFormat = (value: number | string): string =>
+  value < 10 ? `0${value}` : String(value);
+
+let toRef;
+
 const hycTransaction = "hyc-transaction";
 
 export function Withdraw() {
@@ -35,8 +42,18 @@ export function Withdraw() {
   const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
   const [ticket, setTicket] = useState<any>();
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [dynamicFee, setDynamicFee] = useState<any>();
+  const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
+  const [recipientAddressError, setRecipientAddressError] = useState(false);
 
-  const { prepareWithdraw, relayerData, fetchRelayerData } = useApplication();
+  const {
+    prepareWithdraw,
+    relayerData,
+    fetchRelayerData,
+    getRelayerFee,
+    setRelayerJWT,
+  } = useApplication();
   const { accountId, toggleModal } = useWallet();
   const withdrawSchema = yup.object().shape({
     ticket: yup
@@ -74,11 +91,49 @@ export function Withdraw() {
           return true;
         }
       ),
-    address: yup
-      .string()
-      .min(1, "This address is invalid")
-      .required("Invalid address"),
   });
+
+  const handleRecipientAddress = (value) => {
+    setRecipientAddress(value);
+    setDynamicFee(null);
+
+    if (!ticket?.contract || !value) {
+      return;
+    }
+
+    checkRelayerFee(value, ticket?.contract);
+  };
+
+  const checkRelayerFee = useCallback(
+    _.debounce(async (value, contract) => {
+      if (!value || !relayerData || !contract) {
+        return;
+      }
+
+      setLoadingDynamicFee(true);
+
+      try {
+        const { data } = await getRelayerFee(value, contract, relayerData);
+
+        console.log(data);
+        setDynamicFee(data);
+        setRelayerJWT(data.token);
+        setRecipientAddressError(false);
+        createTimeout(data.valid_fee_for_ms, value, contract);
+      } catch (e) {
+        console.warn(e);
+        setDynamicFee(null);
+        setRecipientAddressError(true);
+
+        if (toRef) {
+          clearTimeout(toRef);
+        }
+      } finally {
+        setLoadingDynamicFee(false);
+      }
+    }, 500),
+    [relayerData]
+  );
 
   const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
 
@@ -100,9 +155,9 @@ export function Withdraw() {
     try {
       buttonText.current = "Preparing your withdraw...";
       setGeneratinProof(true);
-      await prepareWithdraw(ticket.contract, {
+      await prepareWithdraw(ticket.contract, dynamicFee.price_token_fee, {
         note: data.ticket,
-        recipient: data.address,
+        recipient: recipientAddress,
       });
       setGeneratinProof(false);
       setShowModal(true);
@@ -122,11 +177,21 @@ export function Withdraw() {
     }
   };
 
+  const createTimeout = (ms: number, accountId: string, contract: string) => {
+    if (toRef) {
+      clearTimeout(toRef);
+    }
+
+    toRef = setTimeout(() => {
+      checkRelayerFee(accountId, contract);
+    }, ms);
+  };
+
   useEffect(() => {
     if (!relayerData) {
       fetchRelayerData();
     }
-  }, []);
+  }, [relayerData]);
 
   return (
     <>
@@ -219,7 +284,7 @@ export function Withdraw() {
                 </div>
               )}
             </div>
-            <div className={`mt-8 ${relayerData ? "mb-6" : "mb-44"}`}>
+            <div className="mt-8 mb-6">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold">
                   Recipient Address{" "}
@@ -242,56 +307,67 @@ export function Withdraw() {
                flex items-center justify-between
                border-[2px]
                focus:outline-none
-               ${
-                 errors.address?.message ? "border-error" : "border-transparent"
-               }
+               ${recipientAddressError ? "border-error" : "border-transparent"}
              `}
+                  disabled={!!!ticket?.contract}
                   placeholder="Wallet Address"
                   autoComplete="off"
-                  {...register("address")}
+                  value={recipientAddress}
+                  onChange={(e) => handleRecipientAddress(e.target.value)}
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
-                {errors.address?.message?.toString()}
+                {recipientAddressError && "Your recipient address is not valid"}
               </p>
             </div>
           </div>
-          {relayerData && ticket && !getFieldState("ticket").invalid && (
-            <div className="mt-[24px]">
-              <div>
-                <span className="text-black font-bold">Total</span>
+
+          {dynamicFee && !loadingDynamicFee && (
+            <div className="mt-[24px] mb-4">
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <span className="text-black font-bold">Total</span>
+                </div>
+
+                <div className="text-black text-sm">
+                  <Countdown
+                    date={Date.now() + dynamicFee.valid_fee_for_ms}
+                    key={dynamicFee.token}
+                    renderer={({ hours, minutes, seconds }) => (
+                      <span className="w-[65px] flex items-center">
+                        {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
+                        {getHumanFormat(seconds)}
+                      </span>
+                    )}
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col w-full mt-2">
-                {/* <div className="flex items-center justify-between pb-[12px]">
-                <span className="text-black text-[14px]">Network fee</span>
+                <div className="flex items-center justify-between pb-[12px]">
+                  <span className="text-black text-[14px]">Network fee:</span>
 
-                <span className="text-black font-bold">{`${10} NEAR`}</span>
-              </div> */}
+                  <span className="text-black font-bold">
+                    {dynamicFee.human_network_fee}
+                  </span>
+                </div>
 
                 <div className="flex items-center justify-between pb-[12px]">
                   <span className="text-black text-[14px]">Relayer fee:</span>
 
-                  <span className="text-black font-bold">{`${
-                    +relayerData.feePercent * 10
-                  } NEAR`}</span>
+                  <span className="text-black font-bold">
+                    {dynamicFee.formatted_token_fee}
+                  </span>
                 </div>
-                {/* <div className="flex items-center justify-between pb-[12px]">
-                <span className="text-black text-[14px]">Total fee:</span>
-
-                <span className="text-black font-bold">{`${
-                  relayerData.feePercent
-                } NEAR`}</span>
-              </div> */}
 
                 <div className="flex items-center justify-between mt-4">
                   <span className="text-black text-[14px]">
-                    Tokens to receive:
+                    Total to receive:
                   </span>
 
-                  <span className="text-black font-bold">{`${
-                    10 * (1 - +relayerData.feePercent)
-                  } NEAR`}</span>
+                  <span className="text-black font-bold">
+                    {dynamicFee.formatted_user_will_receive}
+                  </span>
                 </div>
               </div>
             </div>
@@ -303,10 +379,30 @@ export function Withdraw() {
             <div>
               <button
                 type="submit"
+                disabled={!dynamicFee || loadingDynamicFee}
                 className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
               >
-                {" "}
-                {!showModal ? "Withdraw" : buttonText.current}{" "}
+                {loadingDynamicFee && (
+                  <>
+                    <div className="flex items-center justify-center w-full my-auto text-black">
+                      <svg
+                        className="animate-spin h-6 w-6 border border-l-current rounded-full"
+                        viewBox="0 0 24 24"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {!loadingDynamicFee && (
+                  <>
+                    {" "}
+                    {!accountId
+                      ? "Connect Wallet"
+                      : !showModal
+                      ? "Withdraw"
+                      : buttonText.current}{" "}
+                  </>
+                )}
               </button>
             </div>
           )}
