@@ -1,9 +1,8 @@
-import { viewFunction } from "@/utils/tools";
 import { useEffect, useState } from "react";
-import { mimc } from "@/services/mimc";
 import { useEnv } from "./useEnv";
+import { viewWasNullifierSpent } from "hideyourcash-sdk";
 
-export const useNullfierCheck = (note: string, selector: any) => {
+export const useNullfierCheck = (note: string) => {
   const [nullfierInvalid, setNullfierInvalid] = useState<boolean>(false);
 
   useEffect(() => {
@@ -13,13 +12,10 @@ export const useNullfierCheck = (note: string, selector: any) => {
     }
 
     (async () => {
-      const result = await viewFunction(
-        selector,
+      const result = await viewWasNullifierSpent(
+        useEnv("VITE_NEAR_NODE_URL"),
         useEnv("VITE_CONTRACT"),
-        "view_was_nullifier_spent",
-        {
-          nullifier: mimc.singleHash!(note.split("-")[1])
-        }
+        note
       );
 
       setNullfierInvalid(result);
