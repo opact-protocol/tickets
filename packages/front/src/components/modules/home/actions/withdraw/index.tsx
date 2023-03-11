@@ -37,8 +37,6 @@ const hycTransaction = "hyc-transaction";
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
-  const [showModalDeposits, setShowModalDeposits] = useState(false);
-  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
   const [ticket, setTicket] = useState<any>();
   const [recipientAddress, setRecipientAddress] = useState("");
@@ -55,7 +53,7 @@ export function Withdraw() {
     getRelayerFee,
     setRelayerJWT,
   } = useApplication();
-  const { accountId, toggleModal } = useWallet();
+  const { accountId } = useWallet();
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()

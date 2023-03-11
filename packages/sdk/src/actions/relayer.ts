@@ -28,6 +28,25 @@ export const getRelayerFee = async (
   });
 };
 
+export const getRelayerFee = async (
+  relayer: RelayerDataInterface,
+  accountId: string,
+  instanceId: string
+) => {
+  return axios({
+    url: `${relayer.url}/fee`,
+    method: "post",
+    data: {
+      instanceId,
+      receiverAccountId: accountId,
+    },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+};
+
 export const sendWithdraw = async (
   relayer: RelayerDataInterface,
   payload: { publicArgs: PublicArgsInterface; token: string }
