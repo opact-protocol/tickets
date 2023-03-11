@@ -6,6 +6,7 @@ import {
   sendDeposit,
   sendWithdraw,
   sendContractWithdraw,
+  getRelayerFee,
 } from "../../actions";
 import {
   lastDepositQuery,
@@ -94,14 +95,23 @@ export class Actions extends Views {
     );
   }
 
+  async getRelayerFee(
+    relayer: RelayerDataInterface,
+    accountId: string,
+    instanceId: string
+  ) {
+    return getRelayerFee(relayer, accountId, instanceId);
+  }
+
   async sendWithdraw(
     relayer: RelayerDataInterface,
-    payload: { publicArgs: PublicArgsInterface; currencyAccountId: string }
+    payload: { publicArgs: PublicArgsInterface; token: string }
   ) {
     return sendWithdraw(relayer, payload);
   }
 
   async prepareWithdraw(
+    fee: string,
     note: string,
     relayer: RelayerDataInterface,
     recipient: string,
@@ -134,6 +144,7 @@ export class Actions extends Views {
     const { publicArgs } = await prepareWithdrawAction(
       this.nodeUrl,
       currencyContract,
+      fee,
       note,
       relayer,
       recipient,

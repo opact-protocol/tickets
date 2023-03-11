@@ -57,6 +57,7 @@
     "randombytes": "^2.1.0",
     "react": "^18.0.0",
     "react-copy-to-clipboard": "^5.1.0",
+    "react-countdown": "^2.3.5",
     "react-dom": "^18.0.0",
     "react-download-link": "^2.3.0",
     "react-gtm-module": "^2.0.11",

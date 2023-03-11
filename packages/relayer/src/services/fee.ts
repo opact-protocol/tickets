@@ -35,9 +35,14 @@ export type CalculateFeeBodyResponseType =
       token: string;
       status: "sucess";
       timestamp: number;
+      network_fee: string;
       percentage_fee: string;
-      valid_fee_for_ms: number;
       price_token_fee: string;
+      valid_fee_for_ms: number;
+      human_network_fee: string;
+      user_will_receive: string;
+      formatted_token_fee: string;
+      formatted_user_will_receive: string;
     };
 
 export interface RequestParamsInterface {
@@ -72,7 +77,7 @@ export const calculateFee = async (
     };
   }
 
-  const { tokenId, depositValue } = await getCurrencyOfInstance(
+  const { tokenId, networkFee, depositValue } = await getCurrencyOfInstance(
     params.instanceId,
     env
   );
@@ -97,28 +102,42 @@ export const calculateFee = async (
 
   const tokenStoragePrice = +usdTokenPrice * +usdStoragePrice;
 
+  const tokenMetadata = await viewFungibleTokenMetadata(env.RPC_URL, tokenId);
+
   const rawTokenStoragePrice = await formatInteger(
     tokenStoragePrice,
-    tokenId,
-    env
+    tokenMetadata.decimals
   );
 
   const baseFeeForDepositValue = await calculateBaseFee(depositValue, env);
 
   const rawTokenFee = new Big(rawTokenStoragePrice)
     .add(baseFeeForDepositValue)
-    .toFixed(0)
-    .toString();
+    .toFixed(0);
+
+  const formattedTokenFee = getHumanFormat(rawTokenFee, tokenMetadata);
 
   const humanFee = (
-    await getHumanFeePercentage(rawTokenFee, depositValue)
+    await getHumanFeePercentage(rawTokenFee.toString(), depositValue)
   ).toString();
+
+  const userWillReceive = new Big(depositValue)
+    .sub(rawTokenFee)
+    .sub(networkFee)
+    .toFixed(0);
+
+  const formattedUserWillReceive = getHumanFormat(
+    userWillReceive,
+    tokenMetadata
+  );
+
+  const humanNetworkFee = await getHumanFormat(networkFee, tokenMetadata);
 
   const token = await jwt.sign(
     {
       tokenId,
       percentage_fee: humanFee,
-      price_token_fee: rawTokenFee,
+      price_token_fee: rawTokenFee.toString(),
       currencyContractId: params.instanceId,
       exp: getExpirationTime(),
       reciver_storage:
@@ -135,7 +154,12 @@ export const calculateFee = async (
       timestamp: Date.now(),
       valid_fee_for_ms: 120000,
       percentage_fee: humanFee,
+      network_fee: networkFee,
+      human_network_fee: humanNetworkFee,
       price_token_fee: rawTokenFee,
+      user_will_receive: userWillReceive,
+      formatted_token_fee: formattedTokenFee,
+      formatted_user_will_receive: formattedUserWillReceive,
     },
   };
 };
@@ -167,6 +191,17 @@ export const validateFeeRequest = async (
   );
 
   return instanceIsAllowed && isValidReceiverAccountId;
+};
+
+export const getHumanFormat = (
+  value: string,
+  { symbol, decimals }: { symbol: string; decimals: number }
+): string => {
+  const bigDecimals = new Big(10).pow(decimals);
+
+  const bigValue = new Big(value);
+
+  return `${bigValue.div(bigDecimals).toFixed(2)} ${symbol}`;
 };
 
 /**
@@ -213,14 +248,15 @@ export const checkIsRegisteredAccountId = async (
 export const getCurrencyOfInstance = async (
   instanceId: string,
   { RPC_URL }: Env
-): Promise<{ depositValue: string; tokenId: string }> => {
-  const { currency, deposit_value } = await viewFunction(
+): Promise<{ depositValue: string; tokenId: string; networkFee: string }> => {
+  const { currency, deposit_value, protocol_fee } = await viewFunction(
     RPC_URL,
     instanceId,
     "view_contract_params"
   );
 
   return {
+    networkFee: protocol_fee,
     depositValue: deposit_value,
     tokenId: currency.account_id || "near",
   };
@@ -254,11 +290,8 @@ export const getNearStorageBoundsById = async (
 
 export const formatInteger = async (
   amount: string | number,
-  contract: string,
-  { RPC_URL }: Env
+  decimals: number
 ): Promise<string> => {
-  const { decimals } = await viewFungibleTokenMetadata(RPC_URL, contract);
-
   return Big(String(amount)).mul(Big(10).pow(decimals)).toFixed(0);
 };
 
