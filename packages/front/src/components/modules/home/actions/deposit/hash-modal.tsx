@@ -3,17 +3,28 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
-import { formatInteger } from "@/utils/formatInteger";
 import { useWallet } from "@/store/wallet";
 import FileSaver from "file-saver";
+import {
+  Currency,
+  formatBigNumberWithDecimals,
+  getDecimals,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
 
 export default function Modal({
   isOpen,
   onClose,
   amount,
+  contract,
+  currency,
+  token,
 }: {
   isOpen: boolean;
   amount: string;
+  contract: string;
+  token: ViewCurrenciesResponseInterface;
+  currency: Currency;
   onClose: () => void;
 }) {
   const [sending, setSending] = useState(false);
@@ -21,7 +32,6 @@ export default function Modal({
   const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { selector, accountId } = useWallet();
-
   const { note, sendDeposit } = useApplication();
 
   const closeModal = () => {
@@ -42,11 +52,7 @@ export default function Modal({
     setButtonText("Sending your Deposit...");
 
     try {
-      await sendDeposit(
-        selector,
-        accountId!,
-        formatInteger(amount, 24).toFixed(0)
-      );
+      await sendDeposit(amount, contract, accountId!, currency, selector!);
 
       closeModal();
       setSending(false);
@@ -186,7 +192,14 @@ export default function Modal({
                   onClick={() => deposit()}
                   className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[90px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
-                  {buttonText ? buttonText : `Deposit ${amount} Near`}
+                  {buttonText
+                    ? buttonText
+                    : `Deposit ${formatBigNumberWithDecimals(
+                        amount,
+                        getDecimals(
+                          token.type === "Near" ? 24 : token.metadata.decimals
+                        )
+                      )} ${token.type}`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>
