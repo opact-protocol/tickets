@@ -4035,7 +4035,7 @@ bfj@^7.0.2:
     hoopy "^0.1.4"
     tryer "^1.0.1"
 
-big-integer@^1.6.42, big-integer@^1.6.48:
+big-integer@^1.6.42:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
@@ -4807,13 +4807,6 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
-
-circom_runtime@0.1.20:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/circom_runtime/-/circom_runtime-0.1.20.tgz#14411846448b541bcb71548a23e6d982e7a051a6"
-  integrity sha512-61AnccA8Ozo5apyDf3hR1JMDDNx1DttKll2bdxVpNjUaTiawDuuYE0VNmRvuoKlcy/WAY+HtD3K994WGrOFhJQ==
-  dependencies:
-    ffjavascript "0.2.55"
 
 circom_runtime@0.1.22:
   version "0.1.22"
@@ -6928,16 +6921,6 @@ fd-slicer@~1.1.0:
   integrity sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==
   dependencies:
     pend "~1.2.0"
-
-ffjavascript@0.2.55:
-  version "0.2.55"
-  resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.55.tgz#fb4bc53265501526a2916d6a20bbbc06d113d7be"
-  integrity sha512-8X0FCIPOWiK6DTWh3pnE3O6D6nIQsirStAXpWMzRDnoDX7SEnDX4I28aVhwjL7L35XS1vy2AU7zc0UCGYxdLjw==
-  dependencies:
-    big-integer "^1.6.48"
-    wasmbuilder "^0.0.12"
-    wasmcurves "0.1.0"
-    web-worker "^1.2.0"
 
 ffjavascript@0.2.57, ffjavascript@^0.2.45, ffjavascript@^0.2.48, ffjavascript@^0.2.56:
   version "0.2.57"
@@ -13400,16 +13383,6 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-r1csfile@0.0.40:
-  version "0.0.40"
-  resolved "https://registry.yarnpkg.com/r1csfile/-/r1csfile-0.0.40.tgz#410e10e3cec8daf62ff87b022460cf180fd51d58"
-  integrity sha512-3tKaFLncf42ZTRpPMlgyiFBdk6kir4S4O3X+u4UQjgLYoDPHfizazNbK0Jzj++PVIXVUFAqugSbIo4W3UDuHcQ==
-  dependencies:
-    "@iden3/bigarray" "0.0.2"
-    "@iden3/binfileutils" "0.0.11"
-    fastfile "0.0.20"
-    ffjavascript "0.2.55"
-
 r1csfile@0.0.45:
   version "0.0.45"
   resolved "https://registry.yarnpkg.com/r1csfile/-/r1csfile-0.0.45.tgz#59d59a33f8b5280017fc00ee691d003a3d705fe0"
@@ -14496,6 +14469,22 @@ snarkjs@^0.6.4:
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.6.7.tgz#e417fece9cd35e92599abac53144209ecf5be655"
   integrity sha512-W/xzg+UXBsrC4Ttb3Lu1pG3DDFzS36R67OVzydwhDKFJ0mdQ4sSwOCvKLM9E2KdI+0mhEYhtWdljHsNUZo41kg==
+  dependencies:
+    "@iden3/binfileutils" "0.0.11"
+    bfj "^7.0.2"
+    blake2b-wasm "^2.4.0"
+    circom_runtime "0.1.22"
+    ejs "^3.1.6"
+    fastfile "0.0.20"
+    ffjavascript "0.2.57"
+    js-sha3 "^0.8.0"
+    logplease "^1.2.15"
+    r1csfile "0.0.45"
+
+snarkjs@^0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.6.8.tgz#bae41b6663a727515a16a4db909766d3b3e14249"
+  integrity sha512-86QmE/lNfgj9nHEwr+IlLpbSoqKB4azt6wbj9Z4hi/v/4rh/KNPkK6eUWMMQ2yj2p8Rh7xX1oVTFbYTHycHfBQ==
   dependencies:
     "@iden3/binfileutils" "0.0.11"
     bfj "^7.0.2"
@@ -16003,21 +15992,6 @@ wasmbuilder@0.0.16:
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/wasmbuilder/-/wasmbuilder-0.0.16.tgz#f34c1f2c047d2f6e1065cbfec5603988f16d8549"
   integrity sha512-Qx3lEFqaVvp1cEYW7Bfi+ebRJrOiwz2Ieu7ZG2l7YyeSJIok/reEQCQCuicj/Y32ITIJuGIM9xZQppGx5LrQdA==
-
-wasmbuilder@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/wasmbuilder/-/wasmbuilder-0.0.12.tgz#a60cb25d6d11f314fe5ab3f4ee041ccb493cb78a"
-  integrity sha512-dTMpBgrnLOXrN58i2zakn2ScynsBhq9LfyQIsPz4CyxRF9k1GAORniuqn3xmE9NnI1l7g3iiVCkoB2Cl0/oG8w==
-  dependencies:
-    big-integer "^1.6.48"
-
-wasmcurves@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/wasmcurves/-/wasmcurves-0.1.0.tgz#0bc3f9d465367fcd8243395cb0094a05577e5609"
-  integrity sha512-kIlcgbVUAv2uQ6lGsepGz/m5V40+Z6rvTBkqCYn3Y2+OcXst+UaP4filJYLh/xDxjJl62FFjZZeAnpeli1Y5/Q==
-  dependencies:
-    big-integer "^1.6.42"
-    blakejs "^1.1.0"
 
 wasmcurves@0.2.0:
   version "0.2.0"

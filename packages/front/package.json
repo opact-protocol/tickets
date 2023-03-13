@@ -73,7 +73,7 @@
     "rollup-plugin-polyfill-node": "^0.10.2",
     "rxjs": "^7.5.7",
     "slick-carousel": "^1.8.1",
-    "snarkjs": "^0.4.27",
+    "snarkjs": "^0.6.8",
     "swiper": "^9.0.1",
     "tailwindcss": "^3.0.24",
     "use-mediaquery": "^1.0.1",

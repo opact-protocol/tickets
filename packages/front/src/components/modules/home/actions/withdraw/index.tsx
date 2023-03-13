@@ -16,6 +16,7 @@ import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import _ from "lodash";
 import Countdown from "react-countdown";
+import { useProgressProof } from "@/hooks/useProgressProof";
 
 interface WithDrawProps {
   ticket: string;
@@ -42,6 +43,8 @@ export function Withdraw() {
   const [dynamicFee, setDynamicFee] = useState<any>();
   const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
   const [recipientAddressError, setRecipientAddressError] = useState(false);
+
+  const { logger, progress } = useProgressProof();
 
   const {
     prepareWithdraw,
@@ -156,10 +159,15 @@ export function Withdraw() {
       buttonText.current = "Preparing your withdraw...";
       clearTimeout(toRef);
       setGeneratinProof(true);
-      await prepareWithdraw(ticket.contract, dynamicFee.price_token_fee, {
-        note: data.ticket,
-        recipient: recipientAddress,
-      });
+      await prepareWithdraw(
+        ticket.contract,
+        dynamicFee.price_token_fee,
+        {
+          note: data.ticket,
+          recipient: recipientAddress,
+        },
+        logger
+      );
       setGeneratinProof(false);
       setShowModal(true);
     } catch (err) {
@@ -193,8 +201,6 @@ export function Withdraw() {
       fetchRelayerData();
     }
   }, [relayerData]);
-
-  console.log(relayerData)
 
   return (
     <>
@@ -333,20 +339,18 @@ export function Withdraw() {
                 </div>
 
                 <div className="text-black text-sm">
-                  {
-                    !generatingProof && (
-                      <Countdown
-                        date={Date.now() + dynamicFee.valid_fee_for_ms}
-                        key={dynamicFee.token}
-                        renderer={({ hours, minutes, seconds }) => (
-                          <span className="w-[65px] flex items-center">
-                            {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
-                            {getHumanFormat(seconds)}
-                          </span>
-                        )}
-                      />
-                    )
-                  }
+                  {!generatingProof && (
+                    <Countdown
+                      date={Date.now() + dynamicFee.valid_fee_for_ms}
+                      key={dynamicFee.token}
+                      renderer={({ hours, minutes, seconds }) => (
+                        <span className="w-[65px] flex items-center">
+                          {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
+                          {getHumanFormat(seconds)}
+                        </span>
+                      )}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -381,7 +385,7 @@ export function Withdraw() {
           )}
 
           {generatingProof ? (
-            <LoadingModal generatingProof={generatingProof} />
+            <LoadingModal progress={progress} />
           ) : (
             <div>
               <button
