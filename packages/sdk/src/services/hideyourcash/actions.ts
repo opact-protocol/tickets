@@ -20,6 +20,7 @@ import type {
   MerkleTreeCacheInterface,
   PublicArgsInterface,
   RelayerDataInterface,
+  Logger,
 } from "../../interfaces";
 import { Views } from "./views";
 
@@ -116,7 +117,7 @@ export class Actions extends Views {
     relayer: RelayerDataInterface,
     recipient: string,
     currencyContract: string,
-    logger: any,
+    logger: Logger,
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface
   ) {

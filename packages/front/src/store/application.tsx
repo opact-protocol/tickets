@@ -2,22 +2,12 @@ import { create } from "zustand";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
-import { Currency, HideyourCash, RelayerDataInterface } from "hideyourcash-sdk";
+import { Currency, HideyourCash, Logger, RelayerDataInterface } from "hideyourcash-sdk";
 import { AxiosError } from "axios";
-import Logger from "logplease";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
 const relayerNetwork = useEnv("VITE_RELAYER_NETWORK");
-
-// const logger = Logger.create("snarkjs", { showTimestamp: false });
-
-const logger = {
-  debug: (message) => console.log(`[DEBUG] ${message}`),
-  info: (message) => console.log(`[INFO] ${message}`),
-  warn: (message) => console.log(`[WARN] ${message}`),
-  error: (message) => console.log(`[ERROR] ${message}`),
-};
 
 const appService = new HideyourCash(
   useEnv("VITE_NEAR_NETWORK"),
@@ -52,7 +42,8 @@ export const useApplication = create<{
   prepareWithdraw: (
     currencyContract: string,
     fee: string,
-    payload: { note: string; recipient: string }
+    payload: { note: string; recipient: string },
+    logger: Logger
   ) => Promise<void>;
   prepareDeposit: (
     account: string,
@@ -107,7 +98,8 @@ export const useApplication = create<{
   prepareWithdraw: async (
     currencyContract: string,
     fee: string,
-    { note, recipient }
+    { note, recipient },
+    logger: Logger
   ) => {
     const { relayerData } = get();
 

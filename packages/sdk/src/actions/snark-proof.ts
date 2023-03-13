@@ -6,6 +6,7 @@ import { mimc as mimcService } from "../services";
 import type { RelayerDataInterface } from "../interfaces";
 import { viewAccountHash } from "../views";
 import type {
+  Logger,
   PublicArgsInterface,
   WithdrawInputInterface,
 } from "../interfaces/snark-proof";
@@ -14,7 +15,7 @@ export const createSnarkProof = async (
   payload: WithdrawInputInterface,
   verifierUrl = "./verifier.wasm",
   circuitUrl = "./circuit.zkey",
-  logger: any
+  logger: Logger
 ): Promise<{ proof: any; publicSignals: string[] }> => {
   /**
    * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
@@ -49,7 +50,7 @@ export const prepareWithdraw = async (
   note: string,
   relayer: RelayerDataInterface,
   recipient: string,
-  logger: any,
+  logger: Logger,
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
   verifierUrl = "./verifier.wasm",
