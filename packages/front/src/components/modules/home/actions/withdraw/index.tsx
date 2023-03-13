@@ -350,7 +350,7 @@ export function Withdraw() {
 
               <div className="flex flex-col w-full mt-2">
                 <div className="flex items-center justify-between pb-[12px]">
-                  <span className="text-black text-[14px]">Network fee:</span>
+                  <span className="text-black text-[14px]">Protocol fee:</span>
 
                   <span className="text-black font-bold">
                     {dynamicFee.human_network_fee}
