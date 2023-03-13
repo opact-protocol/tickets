@@ -130,7 +130,7 @@ test("should return error - Your withdraw payload is not valid", async () => {
   expect(body.error).toContain("Your withdraw payload is not valid");
 });
 
-test("should return sucess - withdraw", async () => {
+test("should return success - withdraw", async () => {
   const {
     body: { token },
   } = (await calculateFee(

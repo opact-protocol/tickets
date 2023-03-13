@@ -154,6 +154,7 @@ export function Withdraw() {
   const preWithdraw = async (data: WithDrawProps) => {
     try {
       buttonText.current = "Preparing your withdraw...";
+      clearTimeout(toRef);
       setGeneratinProof(true);
       await prepareWithdraw(ticket.contract, dynamicFee.price_token_fee, {
         note: data.ticket,
@@ -330,16 +331,20 @@ export function Withdraw() {
                 </div>
 
                 <div className="text-black text-sm">
-                  <Countdown
-                    date={Date.now() + dynamicFee.valid_fee_for_ms}
-                    key={dynamicFee.token}
-                    renderer={({ hours, minutes, seconds }) => (
-                      <span className="w-[65px] flex items-center">
-                        {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
-                        {getHumanFormat(seconds)}
-                      </span>
-                    )}
-                  />
+                  {
+                    !generatingProof && (
+                      <Countdown
+                        date={Date.now() + dynamicFee.valid_fee_for_ms}
+                        key={dynamicFee.token}
+                        renderer={({ hours, minutes, seconds }) => (
+                          <span className="w-[65px] flex items-center">
+                            {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
+                            {getHumanFormat(seconds)}
+                          </span>
+                        )}
+                      />
+                    )
+                  }
                 </div>
               </div>
 
