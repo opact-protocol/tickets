@@ -61,7 +61,7 @@ export const sendDeposit = async (
       nodeUrl
     );
 
-    if (!storage || storage.total < "0.10") {
+    if (!storage) {
       transactions.push(
         getTransaction(
           accountId,
@@ -71,7 +71,7 @@ export const sendDeposit = async (
             account_id: depositContract,
             registration_only: true,
           },
-          "0.50"
+          "0.5"
         )
       );
     }
@@ -82,7 +82,7 @@ export const sendDeposit = async (
       nodeUrl
     );
 
-    if (!signerStorage || signerStorage.total < "0.10") {
+    if (!signerStorage) {
       transactions.push(
         getTransaction(
           accountId,
@@ -92,7 +92,7 @@ export const sendDeposit = async (
             account_id: accountId,
             registration_only: true,
           },
-          "0.50"
+          "0.5"
         )
       );
     }
