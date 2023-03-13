@@ -11,7 +11,7 @@
     "test:only": "yarn build && node --experimental-vm-modules --no-warnings node_modules/.bin/jest",
     "test": "(cd ../contracts && yarn tests:ts) && (cd ../sdk && yarn test:only) && yarn test:only",
     "types:check": "tsc && tsc -p test/tsconfig.json",
-    "deploy": "yarn build && wrangler publish"
+    "deploy": "yarn build && wrangler publish --keep-vars"
   },
   "keywords": [],
   "author": "",
