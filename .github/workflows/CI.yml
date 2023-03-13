@@ -135,6 +135,7 @@ jobs:
               RELAYER_URL
         env:
           RELAYER_FEE: "0.10"
+          NEAR_NETWORK: "testnet"
           ACCOUNT_ID: ${{ env.RELAYER_ACCOUNT_ID }}
           PRIVATE_KEY: ${{ env.RELAYER_PRIVATE_KEY }}
           HYC_CONTRACT: ${{ env.VITE_CONTRACT }}
