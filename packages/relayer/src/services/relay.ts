@@ -17,12 +17,22 @@ export const relayer = async (
 
   const isValidToken = await jwt.verify(token, env.PRIVATE_KEY);
 
-  if (!publicArgs || !isValidToken) {
+  if (!publicArgs) {
     return {
       status: errorStatus,
       body: {
         status: "failure",
-        error: "Your withdraw payload is not valid",
+        error: "Public args is required",
+      },
+    };
+  }
+
+  if (!isValidToken) {
+    return {
+      status: errorStatus,
+      body: {
+        status: "failure",
+        error: "Token is not valid",
       },
     };
   }
