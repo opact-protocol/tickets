@@ -56,7 +56,6 @@
     "graphql": "^16.6.0",
     "hideyourcash-sdk": "*",
     "lodash": "^4.17.21",
-    "logplease": "^1.2.15",
     "near-api-js": "^1.0.0",
     "node-stdlib-browser": "^1.2.0",
     "pg": "^8.8.0",
