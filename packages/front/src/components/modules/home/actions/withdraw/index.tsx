@@ -194,6 +194,8 @@ export function Withdraw() {
     }
   }, [relayerData]);
 
+  console.log(relayerData)
+
   return (
     <>
       <div>

@@ -116,6 +116,7 @@ export class Actions extends Views {
     relayer: RelayerDataInterface,
     recipient: string,
     currencyContract: string,
+    logger: any,
     allowlistTreeCache?: MerkleTreeCacheInterface,
     commitmentsTreeCache?: MerkleTreeCacheInterface
   ) {
@@ -148,6 +149,7 @@ export class Actions extends Views {
       note,
       relayer,
       recipient,
+      logger,
       allowlistTree,
       commitmentsTree,
       this.verifierUrl,
