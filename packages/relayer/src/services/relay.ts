@@ -46,7 +46,7 @@ export const relayer = async (
   }
 
   const {
-    payload: { tokenId, price_token_fee, reciver_storage, currencyContractId },
+    payload: { tokenId, price_token_fee, receiver_storage, currencyContractId },
   } = jwt.decode(token);
 
   if (publicArgs.fee !== price_token_fee) {
@@ -77,16 +77,16 @@ export const relayer = async (
     };
   }
 
-  if (reciver_storage) {
+  if (receiver_storage) {
     await account.functionCall({
       contractId: tokenId,
       methodName: "storage_deposit",
       args: {
-        account_id: reciver_storage,
+        account_id: receiver_storage,
         registration_only: true,
       },
       gas: AttachedGas as any,
-      attachedDeposit: "2350000000000000000000" as any,
+      attachedDeposit: "1000000000000000000000000" as any,
     });
   }
 
@@ -96,7 +96,7 @@ export const relayer = async (
     env.RPC_URL
   );
 
-  if (!relayerStorage || relayerStorage.total < "0.10") {
+  if (!relayerStorage) {
     await account.functionCall({
       contractId: tokenId,
       methodName: "storage_deposit",
@@ -105,7 +105,7 @@ export const relayer = async (
         registration_only: true,
       },
       gas: AttachedGas as any,
-      attachedDeposit: "2350000000000000000000" as any,
+      attachedDeposit: "1000000000000000000000000" as any,
     });
   }
 
