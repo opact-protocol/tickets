@@ -87,7 +87,7 @@ export class Views {
     return [
       {
         url: baseRelayers[network],
-        account: data.data.relayerAccount,
+        account: data.data.account_id,
         feePercent: data.data.feePercent,
       },
     ];
