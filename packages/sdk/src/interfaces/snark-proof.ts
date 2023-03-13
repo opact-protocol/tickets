@@ -47,3 +47,6 @@ export interface ParseNoteInterface {
   nullifier: string;
   account_hash: string;
 }
+export interface Logger {
+  debug(message: string): void;
+}
