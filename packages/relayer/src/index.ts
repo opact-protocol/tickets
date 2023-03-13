@@ -9,6 +9,8 @@ router.cors({
 });
 
 router.get("/data", ({ env, res }) => {
+  console.log(env);
+
   res.body = {
     data: {
       url: env.RELAYER_URL,
