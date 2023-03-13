@@ -4,10 +4,20 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
 import { Currency, HideyourCash, RelayerDataInterface } from "hideyourcash-sdk";
 import { AxiosError } from "axios";
+import Logger from "logplease";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
 const relayerNetwork = useEnv("VITE_RELAYER_NETWORK");
+
+// const logger = Logger.create("snarkjs", { showTimestamp: false });
+
+const logger = {
+  debug: (message) => console.log(`[DEBUG] ${message}`),
+  info: (message) => console.log(`[INFO] ${message}`),
+  warn: (message) => console.log(`[WARN] ${message}`),
+  error: (message) => console.log(`[ERROR] ${message}`),
+};
 
 const appService = new HideyourCash(
   useEnv("VITE_NEAR_NETWORK"),
@@ -108,6 +118,7 @@ export const useApplication = create<{
         relayerData,
         recipient,
         currencyContract,
+        logger
       );
 
       set({
