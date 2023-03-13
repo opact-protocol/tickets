@@ -88,7 +88,7 @@ export const useApplication = create<{
   },
 
   fetchRelayerData: async () => {
-    const data = await appService.getRandomRelayer();
+    const data = await appService.getRandomRelayer("local");
 
     set({ relayerData: data[0] });
   },
