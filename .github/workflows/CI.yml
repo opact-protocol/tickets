@@ -71,15 +71,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: check_build_and_tests
     env:
-      // Relayer Envs
       RELAYER_ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
       RELAYER_PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
-
-      // Vercel Envs
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      // Front Envs
       VITE_NEAR_NETWORK: testnet
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_NEAR_NODE_URL: https://rpc.testnet.near.org
