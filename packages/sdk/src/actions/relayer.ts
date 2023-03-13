@@ -7,7 +7,7 @@ import type {
   PublicArgsInterface,
   RelayerDataInterface,
 } from "../interfaces";
-import { OneYOctoNear } from "../constants";
+import { OneNear } from "../constants";
 
 export const getRelayerFee = async (
   relayer: RelayerDataInterface,
@@ -88,7 +88,7 @@ export const checkWithdrawStorages = async (
           account_id: contract,
           registration_only: true,
         },
-        OneYOctoNear
+        OneNear
       )
     );
   }
@@ -99,7 +99,7 @@ export const checkWithdrawStorages = async (
 
   const relayerStorage = await getTokenStorage(nodeUrl, contract, relayerId);
 
-  if (!relayerStorage || relayerStorage.total < "0.10") {
+  if (!relayerStorage) {
     transactions.push(
       getTransaction(
         signerId,
@@ -109,7 +109,7 @@ export const checkWithdrawStorages = async (
           account_id: contract,
           registration_only: true,
         },
-        OneYOctoNear
+        OneNear
       )
     );
   }
