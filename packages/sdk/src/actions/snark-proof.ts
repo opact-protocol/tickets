@@ -13,7 +13,8 @@ import type {
 export const createSnarkProof = async (
   payload: WithdrawInputInterface,
   verifierUrl = "./verifier.wasm",
-  circuitUrl = "./circuit.zkey"
+  circuitUrl = "./circuit.zkey",
+  logger: any
 ): Promise<{ proof: any; publicSignals: string[] }> => {
   /**
    * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
@@ -22,7 +23,8 @@ export const createSnarkProof = async (
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
       verifierUrl,
-      circuitUrl
+      circuitUrl,
+      logger
     );
 
     return { proof, publicSignals };
@@ -32,7 +34,8 @@ export const createSnarkProof = async (
     const { proof, publicSignals } = await plonk.fullProve(
       payload,
       verifierUrl,
-      circuitUrl
+      circuitUrl,
+      logger
     );
 
     return { proof, publicSignals };
@@ -46,6 +49,7 @@ export const prepareWithdraw = async (
   note: string,
   relayer: RelayerDataInterface,
   recipient: string,
+  logger: any,
   allowlistTree: MerkleTree,
   commitmentsTree: MerkleTree,
   verifierUrl = "./verifier.wasm",
@@ -81,7 +85,8 @@ export const prepareWithdraw = async (
   const { proof, publicSignals } = await createSnarkProof(
     input,
     verifierUrl,
-    circuitUrl
+    circuitUrl,
+    logger
   );
 
   const publicArgs = getPublicArgs(proof, relayer, publicSignals, recipient);
