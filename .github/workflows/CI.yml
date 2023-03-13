@@ -161,4 +161,4 @@ jobs:
           --prebuilt
           --token=${{ secrets.VERCEL_TOKEN }}
         env:
-          VITE_CONTRACT: ${{ $HYC_CONTRACT }}
+          VITE_CONTRACT: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
