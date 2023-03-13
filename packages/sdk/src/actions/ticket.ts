@@ -66,49 +66,7 @@ export const sendDeposit = async (
             account_id: depositContract,
             registration_only: true,
           },
-          FT_Storage,
-        )
-      );
-    }
-
-    const signerStorage = await getTokenStorage(
-      accountId,
-      depositContract,
-      nodeUrl
-    );
-
-    if (!signerStorage) {
-      transactions.push(
-        getTransaction(
-          accountId,
-          tokenContract,
-          "storage_deposit",
-          {
-            account_id: accountId,
-            registration_only: true,
-          },
-          FT_Storage,
-        )
-      );
-    }
-
-    const signerStorage = await getTokenStorage(
-      accountId,
-      depositContract,
-      nodeUrl
-    );
-
-    if (!signerStorage || signerStorage.total < "0.10") {
-      transactions.push(
-        getTransaction(
-          accountId,
-          tokenContract,
-          "storage_deposit",
-          {
-            account_id: accountId,
-            registration_only: true,
-          },
-          "0.50"
+          "0.5"
         )
       );
     }
