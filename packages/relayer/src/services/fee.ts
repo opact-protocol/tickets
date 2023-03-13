@@ -131,7 +131,7 @@ export const calculateFee = async (
     tokenMetadata
   );
 
-  const humanNetworkFee = await getHumanFormat(networkFee, tokenMetadata);
+  const humanNetworkFee = getHumanFormat(networkFee, tokenMetadata);
 
   const token = await jwt.sign(
     {
@@ -139,11 +139,11 @@ export const calculateFee = async (
       percentage_fee: humanFee,
       price_token_fee: rawTokenFee.toString(),
       currencyContractId: params.instanceId,
-      exp: getExpirationTime(),
-      reciver_storage:
+      exp: getExpirationTime(30),
+      receiver_storage:
         nearStoragePrice !== "0" ? params.receiverAccountId : null,
     },
-    env.PRIVATE_KEY
+    env.PRIVATE_KEY,
   );
 
   return {
@@ -152,7 +152,7 @@ export const calculateFee = async (
       token,
       status: "sucess",
       timestamp: Date.now(),
-      valid_fee_for_ms: 120000,
+      valid_fee_for_ms: 300000,
       percentage_fee: humanFee,
       network_fee: networkFee,
       human_network_fee: humanNetworkFee,
@@ -164,12 +164,12 @@ export const calculateFee = async (
   };
 };
 
-export const getExpirationTime = () => {
+export const getExpirationTime = (min: number) => {
   const nowInSeconds = Math.floor(Date.now() / 1000);
 
-  const twoMinutesInSeconds = 120;
+  const expTime = min * 60;
 
-  return nowInSeconds + twoMinutesInSeconds;
+  return nowInSeconds + expTime;
 };
 
 export const validateFeeRequest = async (
@@ -281,7 +281,7 @@ export const getNearStorageBoundsById = async (
     env.RPC_URL
   );
 
-  if (!currentStorage || currentStorage.total < "0.10") {
+  if (!currentStorage) {
     return utils.format.formatNearAmount("2350000000000000000000");
   }
 
