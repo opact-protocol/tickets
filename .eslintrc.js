@@ -26,5 +26,7 @@ module.exports = {
     "no-extra-boolean-cast": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    'no-useless-escape': "off",
   },
 };
