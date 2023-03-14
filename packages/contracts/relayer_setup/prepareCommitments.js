@@ -19,7 +19,9 @@ const snarkjs = require("snarkjs");
 const { plonk } = snarkjs;
 
 const bfj = require("bfj");
+
 const { utils } = require("ffjavascript");
+
 const { stringifyBigInts } = utils;
 
 const Logger = require("logplease");
