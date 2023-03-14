@@ -8,9 +8,9 @@ export const useProgressProof = () => {
   const logger: Logger = {
     debug: (message: string) => {
       setMessage((prev) => {
-        if (prev.includes("calculating")) {
-          setProgress(86);
-          return message;
+        if (progress === 10) {
+          setProgress((prev) => prev + 0.5);
+          return message
         }
 
         if (message !== prev) {
@@ -23,7 +23,7 @@ export const useProgressProof = () => {
     },
   };
 
-  if (progress === 100) {
+  if (progress >= 100) {
     setProgress(0);
   }
 

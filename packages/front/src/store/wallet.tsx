@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import {
   setupWalletSelector,
-  WalletSelector
+  WalletSelector,
 } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
@@ -12,6 +12,15 @@ import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
+import { BN } from "bn.js";
+import { providers } from "near-api-js";
+
+interface Balance {
+  total: string;
+  stateStaked: string;
+  staked: string;
+  available: string;
+}
 
 export interface WalletStoreInterface {
   toggleModal: () => void;
@@ -20,6 +29,7 @@ export interface WalletStoreInterface {
   signOut: () => Promise<void>;
   selector: WalletSelector | null;
   initWallet: () => Promise<string>;
+  viewNearBalance: () => Promise<Balance>;
 }
 
 export const useWallet = create<WalletStoreInterface>((set, get) => ({
@@ -45,19 +55,19 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
         setupNightly(),
         setupWelldoneWallet(),
         setupXDEFI(),
-        setupHereWallet()
-      ]
+        setupHereWallet(),
+      ],
     });
 
     const state = newSelector.store.getState();
 
     const newAccount =
-      state?.accounts.find(account => account.active)?.accountId || "";
+      state?.accounts.find((account) => account.active)?.accountId || "";
 
     try {
       set(() => ({
         accountId: newAccount,
-        selector: newSelector
+        selector: newSelector,
       }));
     } catch (e) {
       console.warn(e);
@@ -86,5 +96,37 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
     }
 
     set(() => ({ accountId: "" }));
-  }
+  },
+  viewNearBalance: async (): Promise<Balance> => {
+    const { accountId } = get();
+
+    const provider = new providers.JsonRpcProvider({
+      url: useEnv("VITE_NEAR_NODE_URL"),
+    });
+
+    const protocolConfig = await provider.experimental_protocolConfig({
+      finality: "final",
+    });
+
+    const state = (await provider.query({
+      finality: "final",
+      account_id: accountId,
+      request_type: "view_account",
+    })) as any;
+
+    const costPerByte = new BN(
+      protocolConfig.runtime_config.storage_amount_per_byte
+    );
+    const stateStaked = new BN(state.storage_usage).mul(costPerByte);
+    const staked = new BN(state.locked);
+    const totalBalance = new BN(state.amount).add(staked);
+    const availableBalance = totalBalance.sub(BN.max(staked, stateStaked));
+
+    return {
+      total: totalBalance.toString(),
+      stateStaked: stateStaked.toString(),
+      staked: staked.toString(),
+      available: availableBalance.toString(),
+    } as Balance;
+  },
 }));
