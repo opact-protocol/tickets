@@ -1,5 +1,5 @@
 import { useApplication } from "@/store";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useState } from "react";
 
@@ -64,10 +64,20 @@ export default function Modal({
                 <div>
                   <button
                     onClick={async () => await withdraw()}
-                    disabled={loading}
                     className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9]"
                   >
-                    {loading ? "Confirming..." : "Confirm"}
+                    {loading ? (
+                      <>
+                        <div className="flex items-center justify-center w-full my-auto text-black">
+                          <svg
+                            className="animate-spin h-6 w-6 border border-l-current rounded-full"
+                            viewBox="0 0 24 24"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      "Confirm"
+                    )}
                   </button>
                 </div>
               </Dialog.Panel>
