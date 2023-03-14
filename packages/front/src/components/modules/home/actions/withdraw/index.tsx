@@ -49,7 +49,7 @@ export function Withdraw() {
   const [recipientAddressError, setRecipientAddressError] = useState(false);
 
   const { logger, progress } = useProgressProof();
-
+  console.log(progress)
   const {
     prepareWithdraw,
     relayerData,
@@ -69,13 +69,11 @@ export function Withdraw() {
         async (value) => {
           const commitment = generateCommitment(value);
           const ticketStored = await getTicketInTheMerkleTree(commitment!);
-          const nullifier = value.split("-")[2];
           try {
             setTicket(ticketStored);
             return !(await viewWasNullifierSpent(
               useEnv("VITE_NEAR_NODE_URL"),
-              ticketStored.contract,
-              nullifier
+              value
             ));
           } catch (error) {
             return false;

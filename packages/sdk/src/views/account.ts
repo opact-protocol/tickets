@@ -19,3 +19,13 @@ export const viewAccountHash = async (
     account_id: accountId,
   });
 };
+
+export const viewAccountBalance = async (
+  rpcUrl: string,
+  contract: string,
+  accountId: string
+) => {
+  return await viewFunction(rpcUrl, contract, "ft_balance_of", {
+    account_id: accountId,
+  });
+};
