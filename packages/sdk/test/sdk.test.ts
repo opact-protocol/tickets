@@ -1,9 +1,11 @@
-import { setupNear } from "./utils";
+import { setupNear, Logger } from "./utils";
 import { HideyourCash, mimc } from "../src";
 import path from "path";
 import env from "./test_setup.json";
 import fs from "fs";
 import { describe, expect, jest, beforeAll, it } from '@jest/globals';
+
+const logger = Logger();
 
 describe("Test all service actions", () => {
   jest.setTimeout(1000000000);
@@ -128,6 +130,7 @@ describe("Test all service actions", () => {
       },
       env.account.account_id,
       currencyId,
+      logger,
       {
         branches: allowListBranches,
       } as any,
