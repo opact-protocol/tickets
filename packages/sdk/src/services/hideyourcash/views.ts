@@ -8,6 +8,7 @@ import {
   viewIsWithdrawValid,
   viewWasNullifierSpent,
   viewIsAllowlistRootValid,
+  viewAccountBalance,
 } from "../../views";
 import axios from "axios";
 import type {
@@ -63,8 +64,12 @@ export class Views {
     return viewIsWithdrawValid(this.nodeUrl, this.contract, contract, payload);
   }
 
-  async viewWasNullifierSpent(nullifier: string) {
-    return viewWasNullifierSpent(this.nodeUrl, this.contract, nullifier);
+  async viewWasNullifierSpent(ticket: string) {
+    return viewWasNullifierSpent(this.nodeUrl, ticket);
+  }
+
+  async viewAccountBalance(contract: string, accountId: string) {
+    return viewAccountBalance(this.nodeUrl, contract, accountId);
   }
 
   async getRandomRelayer(

@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
@@ -20,12 +20,14 @@ import {
   formatBigNumberWithDecimals,
   getDecimals,
   ViewCurrenciesResponseInterface,
+  viewAccountBalance,
 } from "hideyourcash-sdk";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
 import { useDepositScore } from "@/hooks/useDepositScore";
+import { useEnv } from "@/hooks/useEnv";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -49,9 +51,10 @@ export function Deposit() {
     );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
+  const [haveBalance, setHaveBalance] = useState(true);
 
   const { prepareDeposit } = useApplication();
-  const { accountId, toggleModal } = useWallet();
+  const { accountId, toggleModal, viewNearBalance } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
   const { allCurrencies } = useAllCurrencies();
@@ -118,6 +121,32 @@ export function Deposit() {
     setShowModal(!showModal);
   };
 
+  useEffect(() => {
+    if (!selectedAmount.value) {
+      return;
+    }
+
+    (async () => {
+      if (selectedToken.type === "Near") {
+        const { available } = await viewNearBalance();
+
+        if (+available < +selectedAmount.value) {
+          setHaveBalance(false);
+          return;
+        }
+      }
+      const accountBalance = await viewAccountBalance(
+        useEnv("VITE_NEAR_NODE_URL"),
+        selectedToken.account_id!,
+        accountId!
+      );
+
+      if (+accountBalance < +selectedAmount.value) {
+        setHaveBalance(false);
+      }
+    })();
+  }, [selectedAmount.value]);
+
   return (
     <>
       <div>
@@ -136,10 +165,30 @@ export function Deposit() {
                     errorMessage ? "border-error" : "border-transparent"
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
-                  <span className="block truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.type
-                      ? selectedToken.type
-                      : "Select token"}
+                  <span className="flex gap-2 items-center truncate text-dark-grafiti font-normal">
+                    {selectedToken && selectedToken.metadata ? (
+                      <>
+                        <img
+                          src={
+                            selectedToken.type === "Near"
+                              ? "./assets/near-logo.png"
+                              : selectedToken.metadata.icon!
+                          }
+                          alt={
+                            selectedToken.type === "Near"
+                              ? "Near"
+                              : selectedToken.metadata.name!
+                          }
+                          className="w-5 rounded-full"
+                          loading="lazy"
+                        />
+                        {selectedToken.type === "Near"
+                          ? selectedToken.type
+                          : selectedToken.metadata.name!}
+                      </>
+                    ) : (
+                      "Select token"
+                    )}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronDownIcon
@@ -167,20 +216,23 @@ export function Deposit() {
                         }
                         value={token}
                       >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`flex gap-2 truncate text-black font-bold`}
-                            >
-                              <div
-                                className={`w-4 h-4  rounded-[50%] ${
-                                  selected ? "bg-success" : "bg-gray-300"
-                                }`}
-                              />{" "}
-                              {token.type}
-                            </span>
-                          </>
-                        )}
+                        <span
+                          className={`flex gap-2 truncate text-black font-bold`}
+                        >
+                          <img
+                            src={
+                              token.type === "Near"
+                                ? "./assets/near-logo.png"
+                                : token.metadata.icon!
+                            }
+                            alt=""
+                            className="w-5 rounded-full"
+                            loading="lazy"
+                          />{" "}
+                          {token.type === "Near"
+                            ? token.type
+                            : token.metadata.name!}
+                        </span>
                       </Listbox.Option>
                     ))}
                   </Listbox.Options>
@@ -191,11 +243,16 @@ export function Deposit() {
 
           {selectedToken.type ? (
             <div className="mt-8">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col items-start justify-center w-full">
                 <span className="text-black text-[1.1rem] font-bold ">
                   Amount{" "}
                   <span className="text-error">{errorMessage && "*"}</span>
                 </span>
+                {!haveBalance && (
+                  <span className="text-error text-sm font-normal">
+                    {"Your account doesn't have enough balance"}
+                  </span>
+                )}
               </div>
 
               <RadioGroup
@@ -231,7 +288,7 @@ export function Deposit() {
                               )
                             )
                           ).toFixed(0)}{" "}
-                          {selectedToken.type}
+                          {selectedToken.metadata.symbol}
                         </RadioGroup.Label>
                       </div>
                     </RadioGroup.Option>
@@ -248,7 +305,7 @@ export function Deposit() {
             </div>
           ) : null}
 
-          {selectedAmount.value && (
+          {haveBalance && selectedAmount.value && (
             <div className="mt-16 mb-16">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
@@ -302,7 +359,7 @@ export function Deposit() {
 
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button
-            disabled={depositing}
+            disabled={depositing || !haveBalance}
             onClick={() => preDeposit()}
             className="bg-soft-blue-from-deep-blue p-[12px] rounded-full mt-5 w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >

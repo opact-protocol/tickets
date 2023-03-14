@@ -183,12 +183,14 @@ export default function Modal({
                 >
                   {buttonText
                     ? buttonText
-                    : `Deposit ${formatBigNumberWithDecimals(
-                        amount,
-                        getDecimals(
-                          token.type === "Near" ? 24 : token.metadata.decimals
+                    : `Deposit ${Number(
+                        formatBigNumberWithDecimals(
+                          amount,
+                          getDecimals(
+                            token.type === "Near" ? 24 : token.metadata.decimals
+                          )
                         )
-                      )} ${token.type}`}
+                      ).toFixed(0)} ${token.metadata.name}`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>

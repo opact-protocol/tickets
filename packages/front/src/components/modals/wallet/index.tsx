@@ -12,7 +12,7 @@ export function WalletSelectorModal() {
   const [modules, setModules] = useState<ModuleState[]>([]);
 
   useEffect(() => {
-    const subscription = selector?.store.observable.subscribe(state => {
+    const subscription = selector?.store.observable.subscribe((state) => {
       state.modules.sort((current, next) => {
         if (current.metadata.deprecated === next.metadata.deprecated) {
           return 0;
@@ -39,11 +39,11 @@ export function WalletSelectorModal() {
       if (wallet.type === "hardware") {
         return;
       }
-
       await wallet.signIn({
         contractId: useEnv("VITE_CONTRACT"),
-        methodNames: []
+        methodNames: [],
       });
+
       reloadPage(wallet.id);
     } catch (e) {
       console.warn(e);
@@ -84,7 +84,7 @@ export function WalletSelectorModal() {
                 </div>
 
                 <div className="space-y-[12px] flex flex-col">
-                  {modules.map(module => (
+                  {modules.map((module) => (
                     <button
                       key={"wallet-selector-modal-module" + module.id}
                       onClick={() => handleWalletClick(module)}
