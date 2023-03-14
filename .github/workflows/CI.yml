@@ -133,7 +133,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: YiIE5uPMl8VIDfNtG5uNT2HKiOuheTI6JocD8J9L
-          command: publish --name dev-relayer
+          command: publish --project-name=dev-relayer
           workingDirectory: 'packages/relayer'
           secrets: |
               RELAYER_FEE
