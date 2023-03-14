@@ -79,19 +79,22 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
       VITE_NEAR_NETWORK: testnet
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_NEAR_NODE_URL: https://rpc.testnet.near.org
       VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
       VITE_CONTRACT: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
       VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc2
+
       RELAYER_FEE: "0.10"
       NEAR_NETWORK: "testnet"
       ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
       PRIVATE_KEY: ${{ needs.check_build_and_tests.outputs.PRIVATE_KEY }}
       HYC_CONTRACT: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
-      RPC_URL: "https://rpc.testnet.near.org"
+      RPC_URL: "test1234"
       RELAYER_URL: "https://dev-relayer.hideyourcash.workers.dev"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -133,7 +136,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: YiIE5uPMl8VIDfNtG5uNT2HKiOuheTI6JocD8J9L
-          command: publish --name dev-relayer --persist
+          command: publish --name dev-relayer
           workingDirectory: 'packages/relayer'
           secrets: |
               RELAYER_FEE
