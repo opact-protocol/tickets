@@ -209,7 +209,7 @@ export async function setup(): Promise<void> {
 
     const resSecrets = await deploySecrets(
       process.env.CF_TOKEN,
-      'prod-relayer',
+      'dev-relayer',
       process.env.CF_IDENTIFIER,
       [
         {
