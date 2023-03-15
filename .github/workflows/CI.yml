@@ -55,6 +55,9 @@ jobs:
         run: yarn circuits circuit:setup:plonk
 
       - name: Run test-ts setup and test SDK and Relayer
+        env:
+          CF_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
         run: |
           yarn relayer test
           echo "TESTNET_RELAYER_ACCOUNT_ID=$TESTNET_RELAYER_ACCOUNT_ID" >> $GITHUB_OUTPUT
@@ -122,8 +125,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: check_build_and_tests
     env:
-      CF_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       VITE_NEAR_NETWORK: testnet
