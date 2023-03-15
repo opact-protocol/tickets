@@ -267,6 +267,10 @@ export const getTokenDataById = async (token: string): Promise<any> => {
 
   const { tickers } = (await res.json()) as any;
 
+  if (!tickers) {
+    throw new Error(`Tickers for token ${token} is not valid`);
+  }
+
   return tickers.find(({ target }: { target: string }) => target === "USD");
 };
 
