@@ -45,7 +45,7 @@ export function Withdraw() {
   const [recipientAddressError, setRecipientAddressError] = useState(false);
 
   const { logger, progress } = useProgressProof();
-  console.log(progress)
+
   const {
     prepareWithdraw,
     relayerData,
