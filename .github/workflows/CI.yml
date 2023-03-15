@@ -178,16 +178,8 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name dev-relayer
+          command: publish --name dev-relayer --keep-vars
           workingDirectory: 'packages/relayer'
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
-              RELAYER_URL
 
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk

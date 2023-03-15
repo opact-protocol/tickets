@@ -11,6 +11,7 @@ import { deployInstance, deployRegistry, addEntry } from "./actions/registry";
 import { addBalances, addStorage, registerUser } from "./actions/contracts";
 import { buildCommitments } from "./prepare_commitments";
 import { readInputs } from "./utils/file";
+import { deploySecrets } from './utils/secrets';
 
 export async function setup(): Promise<void> {
   console.log("Creating connection");
@@ -197,6 +198,33 @@ export async function setup(): Promise<void> {
     );
 
     console.log("Exported env vars");
+
+    console.log("Creating relayer secrets");
+
+    await deploySecrets(
+      process.env.cftoken,
+      'prod-relayer',
+      process.env.cfindentifier,
+      [
+        {
+          name: 'ACCOUNT_ID',
+          text: proofInputs.relayer.account_id,
+          type: 'secret_text',
+        },
+        {
+          name: 'PRIVATE_KEY',
+          text: proofInputs.relayer.private_key,
+          type: 'secret_text',
+        },
+        {
+          name: 'HYC_CONTRACT',
+          text: registryAccount.accountId,
+          type: 'secret_text',
+        }
+      ]
+    );
+
+    console.log('finish setup');
   }
 
   const last_block = await near.connection.provider.block({
