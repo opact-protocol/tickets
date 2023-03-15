@@ -3,6 +3,7 @@ import { HideyourCash, mimc } from "../src";
 import path from "path";
 import env from "./test_setup.json";
 import fs from "fs";
+import { describe, expect, jest, beforeAll, it } from '@jest/globals';
 
 describe("Test all service actions", () => {
   jest.setTimeout(1000000000);
@@ -26,7 +27,7 @@ describe("Test all service actions", () => {
     // init hideyourcash service
     service = new HideyourCash(
       "testnet",
-      "https://archival-rpc.testnet.near.org",
+      "https://rpc.testnet.near.org",
       env.hyc_contract,
       "https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc_registry",
       path.resolve(__dirname, "./verifier.wasm"),
