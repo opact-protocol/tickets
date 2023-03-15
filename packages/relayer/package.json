@@ -37,6 +37,7 @@
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
+    "mathjs": "^11.7.0",
     "near-api-js": "^1.1.0"
   }
 }
