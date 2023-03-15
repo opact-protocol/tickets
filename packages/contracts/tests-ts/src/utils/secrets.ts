@@ -37,6 +37,10 @@ export const deploySecrets = async (
       },
     );
 
+    console.log('deploy secret response: ', secret);
+    console.log(response);
+    console.log('');
+
     return await response.text();
   }));
 }
