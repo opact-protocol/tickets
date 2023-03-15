@@ -19,9 +19,9 @@ export interface SecretInterface {
 }
 
 export const deploySecrets = async (
-  apiToken = 'bgjn-smeaoC6mhuiuO-XGs8k4N3SLBbCvB20bU0Q',
+  apiToken = '',
   scriptName = 'prod-relayer',
-  accountIdentifier = 'd9aa72480d24297dbd1408d9a1cbd0d0',
+  accountIdentifier = '',
   secrets: SecretInterface[],
 ) => {
   const url = `/accounts/${accountIdentifier}/workers/services/${scriptName}/environments/production/secrets`;
