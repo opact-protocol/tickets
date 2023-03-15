@@ -5,17 +5,13 @@ import jwt from "@tsndr/cloudflare-worker-jwt";
 import {
   getTokenStorage,
   viewFunction,
-  viewFungibleTokenMetadata,
   viewState,
 } from "./near";
 import { RouterRequest } from "@tsndr/cloudflare-worker-router";
+import { estimateSwap, EstimateSwapView, fetchAllPools, ftGetTokenMetadata, getConfig } from "./ref-finance";
 
 const errorStatus = 500;
 const successStatus = 200;
-
-const coinGeckoTokenMap = {
-  near: "near",
-} as any;
 
 export type CurrencyType =
   | {
@@ -77,12 +73,28 @@ export const calculateFee = async (
     };
   }
 
-  const { tokenId, networkFee, depositValue } = await getCurrencyOfInstance(
+  const refConfig = getConfig(env.NEAR_NETWORK);
+
+  const { simplePools } = await fetchAllPools(env, refConfig.REF_FI_CONTRACT_ID);
+
+  const tokenIn = await ftGetTokenMetadata(
+    env,
+    env.NEAR_NETWORK === 'testnet' ? 'wrap.testnet' : 'wrap.near',
+  );
+
+  const {
+    tokenId,
+    networkFee,
+    depositValue,
+  } = await getCurrencyOfInstance(
     params.instanceId,
     env
   );
 
-  const { last: usdNearPrice } = await getTokenDataById(coinGeckoTokenMap.near);
+  const tokenOut = await ftGetTokenMetadata(
+    env,
+    env.NEAR_NETWORK === 'testnet' ? 'nusdt.ft-fin.testnet' : tokenId ,
+  );
 
   const nearStoragePrice = await getNearStorageBoundsById(
     params.receiverAccountId,
@@ -90,23 +102,24 @@ export const calculateFee = async (
     env
   );
 
-  const usdStoragePrice = +usdNearPrice * +nearStoragePrice;
+  let tokenStoragePrice = nearStoragePrice;
 
-  const {
-    last: usdTokenPrice,
+  if (nearStoragePrice === '0') {
+    const [ swapTodo ]: EstimateSwapView[] = await estimateSwap({
+      env,
+      tokenIn,
+      tokenOut,
+      simplePools,
+      amountIn: '1',
+      contract: refConfig.REF_FI_CONTRACT_ID,
+    });
 
-    //@ts-ignore
-  } = await getTokenDataById(
-    coinGeckoTokenMap[tokenId] || ("usd-coin" as string)
-  );
-
-  const tokenStoragePrice = +usdTokenPrice * +usdStoragePrice;
-
-  const tokenMetadata = await viewFungibleTokenMetadata(env.RPC_URL, tokenId);
+    tokenStoragePrice = swapTodo.estimate;
+  }
 
   const rawTokenStoragePrice = await formatInteger(
     tokenStoragePrice,
-    tokenMetadata.decimals
+    tokenOut.decimals
   );
 
   const baseFeeForDepositValue = await calculateBaseFee(depositValue, env);
@@ -115,7 +128,7 @@ export const calculateFee = async (
     .add(baseFeeForDepositValue)
     .toFixed(0);
 
-  const formattedTokenFee = getHumanFormat(rawTokenFee, tokenMetadata);
+  const formattedTokenFee = getHumanFormat(rawTokenFee, tokenOut);
 
   const humanFee = (
     await getHumanFeePercentage(rawTokenFee.toString(), depositValue)
@@ -128,10 +141,10 @@ export const calculateFee = async (
 
   const formattedUserWillReceive = getHumanFormat(
     userWillReceive,
-    tokenMetadata
+    tokenOut
   );
 
-  const humanNetworkFee = getHumanFormat(networkFee, tokenMetadata);
+  const humanNetworkFee = getHumanFormat(networkFee, tokenOut);
 
   const token = await jwt.sign(
     {
@@ -289,7 +302,7 @@ export const getNearStorageBoundsById = async (
     return utils.format.formatNearAmount("2350000000000000000000");
   }
 
-  return "0";
+  return "0.000000000000000000000001";
 };
 
 export const formatInteger = async (
