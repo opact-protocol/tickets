@@ -202,9 +202,9 @@ export async function setup(): Promise<void> {
     console.log("Creating relayer secrets");
 
     await deploySecrets(
-      process.env.cftoken,
+      process.env.CF_TOKEN,
       'prod-relayer',
-      process.env.cfindentifier,
+      process.env.CF_IDENTIFIER,
       [
         {
           name: 'ACCOUNT_ID',
