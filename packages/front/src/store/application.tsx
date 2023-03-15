@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
+const relayerNetwork = useEnv("VITE_RELAYER_NETWORK");
 
 const appService = new HideyourCash(
   useEnv("VITE_NEAR_NETWORK"),
@@ -88,7 +89,7 @@ export const useApplication = create<{
   },
 
   fetchRelayerData: async () => {
-    const data = await appService.getRandomRelayer();
+    const data = await appService.getRandomRelayer(relayerNetwork);
 
     set({ relayerData: data[0] });
   },
@@ -106,7 +107,7 @@ export const useApplication = create<{
         note,
         relayerData,
         recipient,
-        currencyContract
+        currencyContract,
       );
 
       set({
