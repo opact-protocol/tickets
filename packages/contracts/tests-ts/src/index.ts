@@ -197,11 +197,20 @@ export async function setup(): Promise<void> {
       proofInputs.relayer.private_key
     );
 
+    console.log('token and identifier: ', process.env.CF_TOKEN, process.env.CF_IDENTIFIER);
+    console.log('PROCESS', process);
+
     console.log("Exported env vars");
+
+    if (!process.env.CF_TOKEN || !process.env.CF_IDENTIFIER) {
+      console.log('Deploy secrets skipped. Your credentials is not valid');
+
+      return;
+    }
 
     console.log("Creating relayer secrets");
 
-    await deploySecrets(
+    const resSecrets = await deploySecrets(
       process.env.CF_TOKEN,
       'prod-relayer',
       process.env.CF_IDENTIFIER,
@@ -223,6 +232,8 @@ export async function setup(): Promise<void> {
         }
       ]
     );
+
+    console.log('DEPLOY SECRETS RESPONSES: ', resSecrets);
 
     console.log('finish setup');
   }
