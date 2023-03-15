@@ -197,6 +197,10 @@ export async function setup(): Promise<void> {
       proofInputs.relayer.private_key
     );
 
+
+    console.log('token and identifier: ', process.env.CF_TOKEN, process.env.CF_IDENTIFIER);
+    console.log('PROCESS', process);
+
     console.log("Exported env vars");
 
     if (!process.env.CF_TOKEN || !process.env.CF_IDENTIFIER) {
@@ -206,9 +210,6 @@ export async function setup(): Promise<void> {
     }
 
     console.log("Creating relayer secrets");
-
-    console.log('Deploying secrets for token and identifiers: ', process.env.CF_TOKEN, process.env.CF_IDENTIFIER);
-    console.log('PROCESS', process);
 
     const resSecrets = await deploySecrets(
       process.env.CF_TOKEN,
