@@ -1,3 +1,17 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ * This file was copied from the ref-finance source code
+ *
+ *
+ *
+ *
+ *
+ */
+
 // @ts-nocheck
 /* eslint-disable */
 import { TokenMetadata, Pool, StablePool, EstimateSwapView } from '../types';

@@ -1,3 +1,17 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ * This file was copied from the ref-finance source code
+ *
+ *
+ *
+ *
+ *
+ */
+
 const icons: { [tokenId: string]: string } = {
   '4691937a7508860f876c9c0a2a617e7d9e945d4b.factory.bridge.near':
     'https://ref-finance-images.s3.amazonaws.com/images/woo-wtrue.png',
