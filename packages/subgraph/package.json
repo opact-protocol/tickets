@@ -10,7 +10,8 @@
     "remove-local": "graph remove --node http://localhost:8020/ hideyour-cash/hyc",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 hideyour-cash/hyc",
     "test": "graph test",
-    "deploy:hosted": "graph deploy --product hosted-service"
+    "deploy:hosted": "graph deploy --product hosted-service",
+    "deploy:staging": "yarn codegen && yarn build && graph deploy --product=hosted-service hack-a-chain/hyc_staging"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.37.0",
