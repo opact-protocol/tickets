@@ -299,7 +299,13 @@ export const getNearStorageBoundsById = async (
   );
 
   if (!currentStorage) {
-    return utils.format.formatNearAmount("2350000000000000000000");
+    const { min } = await viewFunction(
+      env.RPC_URL,
+      currencyId,
+      'storage_balance_bounds',
+    );
+
+    return utils.format.formatNearAmount(min);
   }
 
   return "0.000000000000000000000001";
