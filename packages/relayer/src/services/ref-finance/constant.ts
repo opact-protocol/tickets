@@ -1,3 +1,17 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ * This file was copied from the ref-finance source code
+ *
+ *
+ *
+ *
+ *
+ */
+
 import { TokenMetadata } from './types';
 
 export const FEE_DIVISOR = 10000;
