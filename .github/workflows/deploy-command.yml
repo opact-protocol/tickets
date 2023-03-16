@@ -1,0 +1,91 @@
+name: Deploy PR to Staging
+
+on:
+  repository_dispatch:
+    types: [deploy-command]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-pr-to-staging:
+    runs-on: ubuntu-latest
+    env:
+      THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
+      VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+      VITE_NEAR_NODE_URL: ${{ secrets.STAGING_NEAR_NODE_URL }}
+      VITE_CONTRACT: ${{ secrets.STAGING_HYC_CONTRACT }}
+      VITE_API_GRAPHQL_URL: ${{ secrets.STAGING_API_GRAPHQL_URL }}
+      VITE_NEAR_NETWORK: ${{ secrets.STAGING_NEAR_NETWORK }}
+      VITE_RELAYER_NETWORK: ${{ secrets.STAGING_RELAYER_NETWORK }}
+      VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
+      HYC_CONTRACT_PREFIX: ${{ secrets.HYC_STAGING_CONTRACT_PREFIX }}
+      HYC_START_BLOCK: ${{ secrets.HYC_STAGING_START_BLOCK }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.12.1
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn
+
+      - name: Installing TheGraph
+        run: yarn global add @graphprotocol/graph-cli
+
+      - name: Signin on TheGraph
+        run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
+
+      - name: Deploy The graph
+        run: graph deploy --product=hosted-service hack-a-chain/hyc_staging
+
+      - name: Building Relayer
+        run: yarn relayer build
+
+      - name: Publish Relayer
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          command: publish --name staging-relayer --keep-vars
+          workingDirectory: 'packages/relayer'
+
+      - name: Compile circuits
+        run: yarn circuits circuit:setup:plonk
+
+      - name: Pull vercel setup
+        run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: >
+          vercel
+          deploy
+          --prebuilt
+          --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          issue-number: ${{ github.event.client_payload.pull_request.number }}
+          body: |
+            Build finished and sent to Vercel to finish the deploy.
+          reactions: rocket
+
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reaction-type: rocket
+
