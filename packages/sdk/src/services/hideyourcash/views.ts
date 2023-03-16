@@ -17,11 +17,7 @@ import type {
 } from "../../interfaces";
 
 const baseRelayers = {
-  /**
-   * TODO: fix dev relayer with ENV
-   */
   test: "https://prod-relayer.mateus4loading.workers.dev",
-
   prod: "https://prod-relayer.hideyourcash.workers.dev",
   local: "http://127.0.0.1:8787",
 };
