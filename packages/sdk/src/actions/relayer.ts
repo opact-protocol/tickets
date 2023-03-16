@@ -78,7 +78,7 @@ export const checkWithdrawStorages = async (
 
   const receiverStorage = await getTokenStorage(nodeUrl, contract, receiverId);
 
-  if (!receiverStorage || receiverStorage.total < "0.10") {
+  if (!receiverStorage) {
     transactions.push(
       getTransaction(
         signerId,
