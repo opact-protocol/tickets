@@ -102,20 +102,16 @@ export const calculateFee = async (
     env
   );
 
-  let tokenStoragePrice = nearStoragePrice;
+  const [ swapTodo ]: EstimateSwapView[] = await estimateSwap({
+    env,
+    tokenIn,
+    tokenOut,
+    simplePools,
+    amountIn: '1',
+    contract: refConfig.REF_FI_CONTRACT_ID,
+  });
 
-  if (nearStoragePrice === '0') {
-    const [ swapTodo ]: EstimateSwapView[] = await estimateSwap({
-      env,
-      tokenIn,
-      tokenOut,
-      simplePools,
-      amountIn: '1',
-      contract: refConfig.REF_FI_CONTRACT_ID,
-    });
-
-    tokenStoragePrice = swapTodo.estimate;
-  }
+  const tokenStoragePrice = swapTodo.estimate;
 
   const rawTokenStoragePrice = await formatInteger(
     tokenStoragePrice,
