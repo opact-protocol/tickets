@@ -11,6 +11,6 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
-[**.{ts,tsx,json,vue,css,sass,html,yml,ts,xml,yaml,yml,toml}]
+[**.{ts,tsx,json,vue,css,sass,html,yml,ts,xml,yaml,yml,toml,js}]
 indent_style = space
 indent_size = 2
