@@ -66,7 +66,7 @@ export const sendDeposit = async (
             account_id: depositContract,
             registration_only: true,
           },
-          "0.5"
+          FT_Storage,
         )
       );
     }
