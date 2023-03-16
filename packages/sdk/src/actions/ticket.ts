@@ -4,6 +4,8 @@ import { sendTransactionsCallback } from "./connection";
 import type { ConnectionType, Currency } from "../interfaces";
 import { getTransaction, randomBN, viewFunction } from "../helpers";
 
+const FT_Storage = '0.5';
+
 export const createTicket = async (
   nodeRpcUrl: string,
   contract: string,
@@ -18,13 +20,6 @@ export const createTicket = async (
   const secretsHash = hash!(secret!, nullifier!);
 
   const accountHash = await viewAccountHash(nodeRpcUrl, contract, accountId);
-
-  // TODO: check who pass hash and send deposit with hashed value
-  // const currencyHash = await viewAccountHash(
-  //   nodeRpcUrl,
-  //   contract,
-  //   currencyId,
-  // );
 
   const note =
     currencyId.toString() +
@@ -71,7 +66,7 @@ export const sendDeposit = async (
             account_id: depositContract,
             registration_only: true,
           },
-          "0.5"
+          FT_Storage,
         )
       );
     }
@@ -92,7 +87,7 @@ export const sendDeposit = async (
             account_id: accountId,
             registration_only: true,
           },
-          "0.5"
+          FT_Storage,
         )
       );
     }
