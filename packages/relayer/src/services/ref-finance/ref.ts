@@ -1,3 +1,17 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ * This file was copied from the ref-finance source code
+ *
+ *
+ *
+ *
+ *
+ */
+
 import {
   config,
   WRAP_NEAR_CONTRACT_ID,
