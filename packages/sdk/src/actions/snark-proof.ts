@@ -92,7 +92,7 @@ export const prepareWithdraw = async (
 };
 
 export const getWithdrawInput = async (
-  { hash }: RelayerDataInterface & { hash: string },
+  { hash }: { hash: string },
   fee: string,
   recipientHash: string,
   path: any,
