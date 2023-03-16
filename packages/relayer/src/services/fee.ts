@@ -93,7 +93,11 @@ export const calculateFee = async (
 
   const tokenOut = await ftGetTokenMetadata(
     env,
-    env.NEAR_NETWORK === 'testnet' ? 'nusdt.ft-fin.testnet' : tokenId ,
+    env.NEAR_NETWORK === 'testnet'
+      ? tokenId.includes('wrap')
+        ? tokenId
+        : 'nusdt.ft-fin.testnet'
+      : tokenId ,
   );
 
   const nearStoragePrice = await getNearStorageBoundsById(
@@ -107,7 +111,7 @@ export const calculateFee = async (
     tokenIn,
     tokenOut,
     simplePools,
-    amountIn: '1',
+    amountIn: nearStoragePrice,
     contract: refConfig.REF_FI_CONTRACT_ID,
   });
 
@@ -210,7 +214,7 @@ export const getHumanFormat = (
 
   const bigValue = new Big(value);
 
-  return `${bigValue.div(bigDecimals).toFixed(2)} ${symbol}`;
+  return `${bigValue.div(bigDecimals).toFixed(2)} ${symbol.replace('w', '')}`;
 };
 
 /**
