@@ -20,6 +20,8 @@ jobs:
       VITE_NEAR_NETWORK: ${{ secrets.STAGING_NEAR_NETWORK }}
       VITE_RELAYER_NETWORK: ${{ secrets.STAGING_RELAYER_NETWORK }}
       VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
+      HYC_CONTRACT_PREFIX: ${{ secrets.HYC_STAGING_CONTRACT_PREFIX }}
+      HYC_START_BLOCK: ${{ secrets.HYC_STAGING_START_BLOCK }}
 
     steps:
       - name: Checkout
@@ -38,10 +40,10 @@ jobs:
         run: yarn global add @graphprotocol/graph-cli
 
       - name: Signin on TheGraph
-        run: graph auth --product "$THE_GRAPH_TOKEN"
+        run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
 
       - name: Deploy The graph
-        run: graph deploy --product hosted-service hack-a-chain/hyc_staging
+        run: graph deploy --product=hosted-service hack-a-chain/hyc_staging
 
       - name: Building Relayer
         run: yarn relayer build
