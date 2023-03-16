@@ -2,8 +2,14 @@ import { create } from "zustand";
 import { useEnv } from "@/hooks/useEnv";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { toast } from "react-toastify";
-import { Currency, HideyourCash, Logger, RelayerDataInterface } from "hideyourcash-sdk";
+import {
+  Currency,
+  HideyourCash,
+  Logger,
+  RelayerDataInterface,
+} from "hideyourcash-sdk";
 import { AxiosError } from "axios";
+import { reloadPage } from "@/utils/reloadPage";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
@@ -164,7 +170,8 @@ export const useApplication = create<{
     }
   },
   sendWhitelist: async (connection, accountId) => {
-    appService.sendAllowlist(accountId, connection);
+    await appService.sendAllowlist(accountId, connection);
+    window.location.reload();
   },
   getRelayerFee: async (
     accountId: string,
