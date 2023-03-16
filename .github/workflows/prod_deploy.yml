@@ -20,8 +20,6 @@ env:
   ACCOUNT_ID: ${{ secrets.RELAYER_ACCOUNT_ID }}
   PRIVATE_KEY: ${{ secrets.RELAYER_PRIVATE_KEY }}
 
-  VITE_TRACES_SAMPLE_RATE: 1
-  VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }} 
 on:
   push:
     branches:
@@ -50,19 +48,12 @@ jobs:
       - name: Building Relayer
         run: yarn relayer build
 
-      - name: Publish
+      - name: Publish Relayer
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name prod-relayer
+          command: publish --name dev-relayer --keep-vars
           workingDirectory: 'packages/relayer'
-          secrets: |
-              RELAYER_FEE
-              NEAR_NETWORK
-              ACCOUNT_ID
-              PRIVATE_KEY
-              HYC_CONTRACT
-              RPC_URL
 
   vercel_deploy:
     runs-on: ubuntu-latest
