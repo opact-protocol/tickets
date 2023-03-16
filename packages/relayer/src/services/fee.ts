@@ -260,7 +260,7 @@ export const checkIsRegisteredAccountId = async (
 
 export const getCurrencyOfInstance = async (
   instanceId: string,
-  { RPC_URL }: Env
+  { RPC_URL, NEAR_NETWORK }: Env
 ): Promise<{ depositValue: string; tokenId: string; networkFee: string }> => {
   const { currency, deposit_value, protocol_fee } = await viewFunction(
     RPC_URL,
@@ -268,10 +268,16 @@ export const getCurrencyOfInstance = async (
     "view_contract_params"
   );
 
+  const tokenId = currency.type === 'Near'
+    ? NEAR_NETWORK === 'testnet'
+      ? 'wrap.testnet'
+      : 'wrap.near'
+    : currency.account_id;
+
   return {
+    tokenId,
     networkFee: protocol_fee,
     depositValue: deposit_value,
-    tokenId: currency.account_id || "near",
   };
 };
 
