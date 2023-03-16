@@ -165,14 +165,18 @@ export function Deposit() {
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
                 Choose token{" "}
-                <span className="text-error">{errorMessage && "*"}</span>
+                <span className="text-error">
+                  {errorMessage.includes("token") && "*"}
+                </span>
               </span>
             </div>
             <Listbox value={selectedToken} onChange={setSelectedToken}>
               <div className="relative mt-1">
                 <Listbox.Button
                   className={`cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left border-[2px] ${
-                    errorMessage ? "border-error" : "border-transparent"
+                    errorMessage.includes("token")
+                      ? "border-error"
+                      : "border-transparent"
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="flex gap-2 items-center truncate text-dark-grafiti font-normal">
@@ -298,7 +302,9 @@ export function Deposit() {
                               )
                             )
                           ).toFixed(0)}{" "}
-                          {selectedToken.metadata.symbol}
+                          {selectedToken.type === "Near"
+                            ? "Near"
+                            : selectedToken.metadata.symbol}
                         </RadioGroup.Label>
                       </div>
                     </RadioGroup.Option>
