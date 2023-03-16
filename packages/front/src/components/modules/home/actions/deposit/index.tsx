@@ -108,6 +108,11 @@ export function Deposit() {
       return;
     }
 
+    if (!haveBalance) {
+      setErrorMessage("Your account doesn't have enough balance");
+      return;
+    }
+
     if (!allowList) {
       setShowAllowlist(true);
       return;

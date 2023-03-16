@@ -4,7 +4,7 @@ import { sendTransactionsCallback } from "./connection";
 import type { ConnectionType, Currency } from "../interfaces";
 import { getTransaction, randomBN, viewFunction } from "../helpers";
 
-const FT_Storage = '0.5';
+const FT_Storage = "0.5";
 
 export const createTicket = async (
   nodeRpcUrl: string,
