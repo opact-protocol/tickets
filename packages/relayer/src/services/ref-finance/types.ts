@@ -1,3 +1,17 @@
+/**
+ *
+ *
+ *
+ *
+ *
+ * This file was copied from the ref-finance source code
+ *
+ *
+ *
+ *
+ *
+ */
+
 import Big from 'big.js';
 import { PoolMode } from './swap/swap';
 
