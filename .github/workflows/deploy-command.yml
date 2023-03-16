@@ -43,7 +43,7 @@ jobs:
         run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
 
       - name: Deploy The graph
-        run: graph deploy --product=hosted-service hack-a-chain/hyc_staging
+        run: yarn subgraph deploy:staging
 
       - name: Building Relayer
         run: yarn relayer build
