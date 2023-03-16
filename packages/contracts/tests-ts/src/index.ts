@@ -13,6 +13,8 @@ import { buildCommitments } from "./prepare_commitments";
 import { readInputs } from "./utils/file";
 import { deploySecrets } from './utils/secrets';
 
+const NEAR_DECIMALS = "000000000000000000000000";
+
 export async function setup(): Promise<void> {
   console.log("Creating connection");
 
@@ -27,6 +29,13 @@ export async function setup(): Promise<void> {
     config,
     near,
     accountId: `${random_prefix}registryhyctest.testnet`,
+  });
+
+  const nearInstanceAccount10 = await createAccount({
+    creator,
+    config,
+    near,
+    accountId: `${random_prefix}nearhyctest10.testnet`,
   });
 
   const tokenInstanceAccount10 = await createAccount({
@@ -86,6 +95,14 @@ export async function setup(): Promise<void> {
   await deployInstance({
     owner,
     registry: registryAccount,
+    account: nearInstanceAccount10,
+    currency: { type: "Near" },
+    depositValue: `10${NEAR_DECIMALS}`,
+  });
+
+  await deployInstance({
+    owner,
+    registry: registryAccount,
     account: tokenInstanceAccount10,
     currency: { type: "Nep141", account_id: tokenContractAccount.accountId },
     depositValue: `10${FT_DECIMALS}`,
@@ -97,6 +114,14 @@ export async function setup(): Promise<void> {
     currency: { type: "Nep141", account_id: tokenContractAccount.accountId },
     amount: `10${FT_DECIMALS}`,
     instance: tokenInstanceAccount10,
+  });
+
+  await addEntry({
+    owner,
+    registry: registryAccount,
+    currency: { type: "Near" },
+    amount: `10${NEAR_DECIMALS}`,
+    instance: nearInstanceAccount10,
   });
 
   console.log("building commitments");
