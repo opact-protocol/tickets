@@ -147,7 +147,7 @@ export const useApplication = create<{
         <ToastCustom
           icon="/check-circle-icon.svg"
           title="Withdrawal sent"
-          message="The fund has been withdrawn to the address"
+          message="The funds have been withdrawn with success to the address"
         />,
         {
           toastId: "withdraw-toast",
