@@ -18,9 +18,9 @@ import type {
 } from "../../interfaces";
 
 const baseRelayers = {
-  test: "https://dev-relayer.mateus4loading.workers.dev",
+  test: "https://dev-relayer.hideyourcash.workers.dev",
   prod: "https://prod-relayer.hideyourcash.workers.dev",
-  staging: 'https://staging-relayer.mateus4loading.workers.dev',
+  staging: 'https://staging-relayer.hideyourcash.workers.dev',
   local: "http://127.0.0.1:8787",
 };
 
