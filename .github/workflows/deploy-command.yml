@@ -48,6 +48,9 @@ jobs:
           node-version: 18.12.1
           cache: 'yarn'
 
+      - name: Install Vercel CLI
+        run: npm install --global vercel@canary
+
       - name: Installing Dependencies
         run: yarn
 
