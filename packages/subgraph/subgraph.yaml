@@ -4,12 +4,12 @@ schema:
 dataSources:
   - kind: near
     name: hyc
-    network: near-testnet
+    network: near-mainnet
     source:
       accounts: 
-        prefixes:
-          - 40b0c58afb404faebbb6
-      startBlock: 118832846
+        suffixes:
+          - hideyourcash.near
+      startBlock: 87518288
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
