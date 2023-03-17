@@ -70,7 +70,7 @@ export async function deployToken(
   account: Account,
   owner: Account
 ): Promise<void> {
-  const contractWasm = fs.readFileSync("../../out/fungible_token.wasm");
+  const contractWasm = fs.readFileSync("../out/fungible_token.wasm");
   await account.deployContract(contractWasm);
   await account.functionCall({
     contractId: account.accountId,
