@@ -17,15 +17,20 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
+
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
-      VITE_NEAR_NODE_URL: ${{ secrets.STAGING_NEAR_NODE_URL }}
-      VITE_CONTRACT: ${{ secrets.STAGING_HYC_CONTRACT }}
-      VITE_API_GRAPHQL_URL: ${{ secrets.STAGING_API_GRAPHQL_URL }}
-      VITE_NEAR_NETWORK: ${{ secrets.STAGING_NEAR_NETWORK }}
-      VITE_RELAYER_NETWORK: ${{ secrets.STAGING_RELAYER_NETWORK }}
+      VITE_NEAR_NODE_URL: https://rpc.testnet.near.org/
+      VITE_CONTRACT: 2635d665d4dd894555f2registryhyctest.testnet
+      VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_staging
+      VITE_NEAR_NETWORK: testnet
+      VITE_RELAYER_NETWORK: staging
       VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
-      HYC_CONTRACT_PREFIX: ${{ secrets.HYC_STAGING_CONTRACT_PREFIX }}
-      HYC_START_BLOCK: ${{ secrets.HYC_STAGING_START_BLOCK }}
+
+      HYC_CONTRACT_PREFIX: 2635d665d4dd894555f2
+      HYC_START_BLOCK: 120696821
+
+      VITE_TRACES_SAMPLE_RATE: 0
+      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
     steps:
       - name: Checkout
