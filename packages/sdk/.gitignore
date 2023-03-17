@@ -23,5 +23,5 @@ temp
 *.sln
 *.sw?
 verifier.wasm
-# */circuit.zkey
+*/circuit.zkey
 env.json

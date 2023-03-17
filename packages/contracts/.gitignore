@@ -28,7 +28,7 @@ yarn-debug.log*
 yarn-error.log*
 .near-credentials
 verifier.wasm
-# circuit.zkey
+circuit.zkey
 commitment1.json
 commitment2.json
 commitment3.json
