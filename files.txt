@@ -1,0 +1,6 @@
+packages/circuits/ci_sample_compile_groth16/withdraw_0001.zkey
+packages/contract-libraries/groth_verifier/sample_circuit/circuit_0000.zkey
+packages/contract-libraries/groth_verifier/sample_circuit/circuit_0001.zkey
+packages/contract-libraries/plonk_verifier/sample_circuit/circuit.zkey
+packages/contracts/tests-ts/circuit.zkey
+packages/sdk/test/circuit.zkey
