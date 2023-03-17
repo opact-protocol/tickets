@@ -12,6 +12,10 @@ jobs:
   deploy-pr-to-staging:
     runs-on: ubuntu-latest
     env:
+      # vercel envs
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
       THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_NEAR_NODE_URL: ${{ secrets.STAGING_NEAR_NODE_URL }}
