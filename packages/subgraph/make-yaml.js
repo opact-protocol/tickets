@@ -15,6 +15,7 @@ writeYamlFile('subgraph.yaml', {
   schema: {
     file: './schema.graphql',
   },
+
   dataSources: [
     {
       kind: 'near',
