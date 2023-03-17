@@ -5,16 +5,20 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "make:yaml": "node make-yaml.js",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ hideyour-cash/hyc",
     "create-local": "graph create --node http://localhost:8020/ hideyour-cash/hyc",
     "remove-local": "graph remove --node http://localhost:8020/ hideyour-cash/hyc",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 hideyour-cash/hyc",
     "test": "graph test",
-    "deploy:hosted": "graph deploy --product hosted-service"
+    "deploy:hosted": "graph deploy --product hosted-service",
+    "deploy:staging": "yarn make:yaml && yarn codegen && yarn build && graph deploy --product hosted-service hack-a-chain/hyc_staging"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.37.0",
-    "@graphprotocol/graph-ts": "0.28.1"
+    "@graphprotocol/graph-ts": "0.28.1",
+    "dotenv": "^16.0.3",
+    "write-yaml-file": "^4.2.0"
   },
   "devDependencies": {
     "matchstick-as": "^0.5.0"

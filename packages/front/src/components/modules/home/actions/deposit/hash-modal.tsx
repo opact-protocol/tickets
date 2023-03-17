@@ -1,5 +1,5 @@
 import { useApplication } from "@/store";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
@@ -10,6 +10,7 @@ import {
   getDecimals,
   ViewCurrenciesResponseInterface,
 } from "hideyourcash-sdk";
+import FileSaver from "file-saver";
 
 export default function Modal({
   isOpen,
@@ -62,11 +63,17 @@ export default function Modal({
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const blob = new Blob([note], { type: "text/plain;charset=utf-8" });
+    FileSaver.saveAs(blob, "ticket.txt");
+  }, [isOpen]);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-[999]"
         onClose={() => {
           closeModal();
           setCopy(false);
@@ -100,21 +107,25 @@ export default function Modal({
                   as="h1"
                   className="text-black text-xl font-bold font-[Sora] text-center mt-[40px]"
                 >
-                  Withdraw ticket
+                  Withdrawal ticket
                 </Dialog.Title>
 
-                <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[61px]">
-                  The number bellow is your withdraw ticket, and it will be
-                  necessary to withdraw the funds you`ve deposited. We encourage
-                  you copy this number, and paste in a notepad or somewhere
-                  safe.
+                <p className="text-dark-grafiti-medium text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-5 mb-[61px]">
+                  The number below is your withdrawal ticket, and it will be
+                  necessary to withdraw the funds you’ve deposited. The ticket
+                  is downloaded automatically to ensure that you do not forget
+                  to manually copy or download. We also encourage you to copy
+                  this number and paste it in a notepad or somewhere else safe.
+                  <strong className="text-error block">
+                    If you lose this ticket you’ll lose your funds
+                  </strong>
                 </p>
 
-                <p className="text-error text-sm font-normal text-center mt-[19px] mb-2">
+                <p className="text-error text-sm font-normal text-center mt-[19px]">
                   {errorMessage}
                 </p>
                 <div
-                  className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto mt-[48px] border-[2px] ${
+                  className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto border-[2px] ${
                     errorMessage
                       ? "border-error mt-0"
                       : copy
@@ -171,15 +182,15 @@ export default function Modal({
                     />
                   </span>
                 </p>
-                <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[30px]">
-                  To ensure the anonimity of your transaction, we recommend you
+                <p className="text-black text-lg font-normal w-full max-w-[607px] text-center mx-auto mt-[50px]">
+                  To ensure the anonymity of your transaction, we recommend you
                   wait <strong>at least 30 minutes</strong> to withdraw the
                   funds deposited.{" "}
                 </p>
                 <button
                   disabled={sending}
                   onClick={() => deposit()}
-                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[118px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
+                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[90px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
                   {buttonText
                     ? buttonText

@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import { useApplication } from "@/store/application";
 import {
@@ -26,6 +26,15 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
 import { useDepositScore } from "@/hooks/useDepositScore";
+import "swiper/css";
+import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
+import { BlockecLocationModal } from "@/components/modals/blockedLocation";
+import axios from "axios";
+
+interface SelectedTokenProps {
+  id: number;
+  name: string;
+}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -37,6 +46,7 @@ const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
+  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
     {} as AmountsProps
@@ -49,6 +59,7 @@ export function Deposit() {
     );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
+  const [showBlockedLocationModal, setBlockedLocationModal] = useState(false);
 
   const { prepareDeposit } = useApplication();
   const { accountId, toggleModal } = useWallet();
@@ -117,6 +128,16 @@ export function Deposit() {
 
     setShowModal(!showModal);
   };
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await axios.get("/api/geoloc");
+      if (data.result) {
+        setBlockedLocationModal(true);
+        return;
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -324,12 +345,22 @@ export function Deposit() {
             />
           )}
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <WhatIsThisModal
+            isOpen={showModalPoolAnonymity}
+            onClose={() => setShowModalPoolAnonymity(false)}
+          />
         </div>
       </div>
       <WhitelistModal
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}
       />
+      {showBlockedLocationModal && (
+        <BlockecLocationModal
+          isOpen={true}
+          onClose={() => setBlockedLocationModal(true)}
+        />
+      )}
     </>
   );
 }

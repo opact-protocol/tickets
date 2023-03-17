@@ -119,10 +119,22 @@ const HeaderLanding = () => {
             <a href="#easy-to-use">How to use</a>
           </li>
           <li className="text-black font-bold text-base border-b-[1px] border-transparent hover:border-black transition-all">
-            <a href="">Documentation</a>
+            <a
+              href="https://docs.hideyour.cash/"
+              target="_blank"
+              rel="noopener"
+            >
+              Documentation
+            </a>
           </li>
           <li className="text-black font-bold text-base border-b-[1px] border-transparent hover:border-black transition-all">
-            <a href="#faq">FAQ</a>
+            <a
+              href="https://docs.hideyour.cash/general-information/faq"
+              target="_blank"
+              rel="noopener"
+            >
+              FAQ
+            </a>
           </li>
           <li className="text-white font-bold text-base">
             <button

@@ -16,6 +16,8 @@ import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import _ from "lodash";
 import Countdown from "react-countdown";
+import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
+import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 
 interface WithDrawProps {
   ticket: string;
@@ -36,6 +38,8 @@ const hycTransaction = "hyc-transaction";
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
+  const [showModalDeposits, setShowModalDeposits] = useState(false);
+  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
   const [ticket, setTicket] = useState<any>();
   const [recipientAddress, setRecipientAddress] = useState("");
@@ -148,10 +152,6 @@ export function Withdraw() {
   }
 
   const preWithdraw = async (data: WithDrawProps) => {
-    if (!accountId) {
-      toggleModal();
-      return;
-    }
     try {
       buttonText.current = "Preparing your withdraw...";
       clearTimeout(toRef);
@@ -201,7 +201,7 @@ export function Withdraw() {
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
-                Withdraw ticket{" "}
+                Withdrawal ticket{" "}
                 {errors.ticket?.message && (
                   <span className="text-error"> * </span>
                 )}
@@ -420,6 +420,14 @@ export function Withdraw() {
       {generatingProof && (
         <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
       )}
+      <TotalDepositsModal
+        isOpen={showModalDeposits}
+        onClose={() => setShowModalDeposits(false)}
+      />
+      <TotalWithdrawsModal
+        isOpen={showModalWithdrawals}
+        onClose={() => setShowModalWithdrawals(false)}
+      />
     </>
   );
 }

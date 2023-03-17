@@ -4,6 +4,6 @@ import axios from "axios";
 export const relayer = axios.create({
   baseURL: useEnv("VITE_RELAYER_URL"),
   headers: {
-    "Content-Type": "application/json",
-  },
+    "Content-Type": "application/json"
+  }
 });

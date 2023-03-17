@@ -77,7 +77,12 @@ const Index = () => {
                 >
                   Launch app
                 </button>
-                <button className="text-white p-3 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full hover:bg-dark-grafiti-medium hover:transition-all">
+                <button
+                  className="text-white p-3 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full hover:bg-dark-grafiti-medium hover:transition-all"
+                  onClick={() =>
+                    window.open("https://docs.hideyour.cash/", "_blank")
+                  }
+                >
                   Read documentation
                 </button>
               </div>
@@ -99,17 +104,17 @@ const Index = () => {
               </p>
               <Card
                 title="The problem"
-                message="The existing privacy tools for blockchain can be used to support illicit activities, such as money laundering."
+                message="Illicit activities, such as money laundering, can be supported by the existing privacy tools for blockchain."
                 img="/computer-icon.svg"
               />
               <Card
                 title="The challenge"
-                message="To create a tool that  guarantees people’s right to privacy in their day-to-day activities, without facilitating criminal activities."
+                message="To create a tool that safeguards individuals' right to privacy, while also ensuring that the tool is not misused for illegal purposes."
                 img="/challenge-icon.svg"
               />
               <Card
                 title="The solution"
-                message="Hideyour.cash blocks wallets with suspicious behavior by integrating with blockchain analytics firms, opening the way for well-intended users."
+                message="Hideyour.cash integrates with reputable blockchain analytics firms to block wallets with suspicious activity, providing increased security for legitimate users."
                 img="/solution-icon.svg"
               />
             </div>
@@ -140,7 +145,7 @@ const Index = () => {
                     Allowlist application
                   </h2>
                   <p className="text-dark-grafiti text-xl font-normal pl-14">
-                    Apply your wallet address on the allowlist to process the
+                    Apply your wallet address to the allowlist to process the
                     verification.
                   </p>
                 </div>
@@ -150,7 +155,7 @@ const Index = () => {
                     Deposit
                   </h2>
                   <p className="text-dark-grafiti text-xl font-normal pl-14">
-                    Since your address is verified, deposit your funds and save
+                    Once your address is verified, deposit your funds and save
                     your withdrawal ticket.
                   </p>
                 </div>
@@ -192,17 +197,17 @@ const Index = () => {
               <div className="w-full max-w-[313px] sm:mr-20">
                 <p className="text-xl font-normal text-dark-grafiti text-center">
                   <strong className="text-dark-grafiti">
-                    You can only deposit
+                    To make a deposit
                   </strong>{" "}
-                  if your wallet is below a suspicion score that will be given
-                  by top blockchain analysis firms
+                  your wallet must have a suspicion score below a certain
+                  threshold.
                 </p>
               </div>
               <div className="w-full max-w-[391px] sm:pl-10">
                 <p className="text-xl font-normal text-dark-grafiti text-center">
                   <strong>Before withdrawing</strong>, your suspicion score will
                   be updated, and in case your wallet is connected to illicit
-                  activities, the funds will be blocked
+                  activities, your funds will be blocked
                 </p>
               </div>
             </div>
@@ -213,12 +218,12 @@ const Index = () => {
                 className="mb-[33px] mt-[26px]"
               />
               <p className="font-normal text-dark-grafiti text-xl w-full max-w-[766px] mb-[64px] text-center">
-                <strong>There is an interval</strong> in which you need to keep
-                your funds in the protocol so that they can be actually mixed,
-                and the transaction becomes anonymous. If you are a bad actor
-                and need to remove your funds fast, it is likely that your
-                transaction will be tracked. If you take too long, you might get
-                blocked before withdrawing. <strong>Take your chance!</strong>
+                <strong>There is a required interval</strong> in which you need
+                to keep your funds in the protocol so that they can be mixed and
+                the transaction becomes anonymous. If you are a bad actor and
+                need to remove your funds fast, your transaction will likely be
+                tracked. If you take too long, you might get blocked before
+                withdrawing. <strong>Take your chance!</strong>
               </p>
             </div>
           </section>
@@ -234,7 +239,7 @@ const Index = () => {
                 !
               </h1>
               <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[110px]">
-                Keep your money and identity safe
+                Keep your funds and identity safe
               </p>
             </div>
             <div className="w-full flex flex-col items-center justify-between xl:flex-row">
@@ -244,11 +249,11 @@ const Index = () => {
                   <span className="text-aqua">public.</span>
                 </h2>
                 <p className="text-dark-grafiti text-xl font-normal">
-                  It’s possible to track every activity ever done by a wallet,
+                  It is possible to track every activity ever done by a wallet,
                   including its available funds. If someone connects your wallet
-                  to yourself, they might find out everything about your
+                  to yourself, they might discover everything about your
                   on-chain movements. If you want to protect yourself from this,
-                  you need to start using privacy tools, such as{" "}
+                  you need to start using privacy tools, such as hideyour.cash{" "}
                   <strong>hideyour.cash</strong>
                 </p>
               </div>
@@ -280,7 +285,7 @@ const Index = () => {
               {[
                 "Account balance display",
                 "Transactions tracking",
-                "Wallet connections tracking",
+                "Doxing",
                 "Profile analysis",
                 "Portfolio tracking",
                 "Front run",
@@ -304,24 +309,27 @@ const Index = () => {
                 !
               </h1>
               <p className="text-black text-2xl font-normal text-center mt-[24px] mb-[145px]">
-                The protocol works through a technology called zkSNARKS, a type
-                of zero-knowledge cryptographic proof
+                The protocol is powered by zkSNARKS - a zero-knowledge
+                cryptographic proof technology.
               </p>
             </div>
             <div className="w-full flex flex-col gap-24 justify-between items-center xl:flex-row">
               <div className="bg-white shadow-md rounded-[20px] w-full max-w-[552px] p-20">
                 <p className="text-aqua font-extrabold text-4xl">1.</p>
                 <p className="text-dark-grafiti text-xl font-normal mt-[25px] md:w-[330px]">
-                  Any user can deposit to the smart contract by sending over a
-                  commitment (think of it as the hash of a private key)
+                  Users on the allow-list can make a deposit and in return, they
+                  will receive a unique withdrawal ticket that must be kept
+                  confidential.
                 </p>
               </div>
               <div className="bg-white shadow-md rounded-[20px] w-full max-w-[552px] p-20">
                 <p className="text-aqua font-extrabold text-4xl">2.</p>
                 <p className="text-dark-grafiti text-xl font-normal mt-[25px] md:w-[370px]">
-                  Later any other account can withdraw the amount deposited by
-                  submitting a zero-knowledge proof that they know the secret
-                  key that generated one of the deposits
+                  With that withdrawal ticket and the receiver account, the user
+                  generates a zero-knowledge proof and sends it to the protocol.
+                  The protocol will verify the proof and transfer the funds to
+                  the desired account. The withdrawal key is never exposed
+                  during this process.
                 </p>
               </div>
             </div>
@@ -331,14 +339,15 @@ const Index = () => {
             <div className="w-full mt-[219px]">
               <div className="bg-white rounded-[20px] shadow-md flex flex-col items-center justify-center gap-10">
                 <h2 className="font-bold text-dark-grafiti text-2xl font-[Sora] mt-[57px]">
-                  What <span className="text-aqua"> happen</span> is
+                  How the <span className="text-aqua"> mixing</span> works
                 </h2>
                 <p className="w-full max-w-[900px] text-dark-grafiti font-normal text-2xl mb-[60px] text-center">
-                  What happens is, since multiple people are depositing and
-                  withdrawing from the protocol at the same time, there is no
-                  way to tell which withdrawing account belongs to each initial
-                  depositor, thus your withdrawing account becomes private, no
-                  one can tell who originally deposited it.
+                  Different from a standard blockchain transaction, there is no
+                  link between the accounts depositing and withdrawing from the
+                  protocol. Since multiple deposits and withdrawals are
+                  occurring, it becomes impossible to identify a relationship
+                  between a specific deposit and a withdrawal, therefore making
+                  the transaction private.
                 </p>
               </div>
               <div className="mt-[114px] bg-white rounded-[20px] shadow-md flex flex-col items-center justify-center gap-10">
@@ -353,7 +362,12 @@ const Index = () => {
               </div>
             </div>
             <div className="mt-[112px]">
-              <button className="text-white p-3 px-12 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full  hover:bg-dark-grafiti-medium hover:transition-all">
+              <button
+                className="text-white p-3 px-12 rounded-[50px] font-bold text-lg bg-dark-grafiti w-full  hover:bg-dark-grafiti-medium hover:transition-all"
+                onClick={() =>
+                  window.open("https://docs.hideyour.cash/", "_blank")
+                }
+              >
                 Read documentation
               </button>
             </div>
@@ -392,7 +406,7 @@ const Index = () => {
                 { title: "Q3 2023", message: "Native integration to wallets" },
                 {
                   title: "Q4 2023",
-                  message: "Explore new use cases and integartions",
+                  message: "Explore new use cases and integrations",
                 },
               ].map(({ title, message }) => (
                 <div
@@ -484,24 +498,24 @@ const Index = () => {
                         leaveTo="transform scale-95 opacity-0"
                       >
                         <Disclosure.Panel className="border-t-[1px] border-dark-grafiti mx-16 pt-9 pb-16 text-lg text-dark-grafiti">
-                          It is impossible to remain 100% anonymous. What the
-                          mixer does is: instead of sending a transaction
-                          directly to another wallet, you'll send a
-                          cryptographic transaction to the mixer, get a proof of
-                          your deposit, which can't be traced back to your
-                          wallet, and you can use this proof to withdraw your
-                          funds. By the time you're doing that, many people will
-                          be doing the same thing. So all the transactions will
-                          be "mixed" on the protocol, and it won't be possible
-                          to know for sure where they came from. The fact is
-                          that if the volume on the protocol is too small, it
-                          will be easier to trace back the transaction to the
-                          deposited wallet since the "mixing" will have a
-                          smaller volume. It's impossible to be 100% sure of
-                          where it came from, but the less volume and the less
-                          time the funds are kept on the mixer, the bigger the
-                          probability of finding out the wallet that has
-                          deposited the funds.
+                          Hideyour.cash operates by providing users with a way
+                          to enhance their privacy when conducting transactions.
+                          Instead of directly sending a transaction from their
+                          wallet to another, users send a cryptographic
+                          transaction to the mixer and receive a proof of their
+                          deposit (a withdrawal ticket). This proof can't be
+                          traced back to their wallet and is used to withdraw
+                          their funds. Many users will be doing the same thing
+                          at the same time, and their transactions will be mixed
+                          together on the protocol. This makes it difficult to
+                          know for sure where a particular transaction came
+                          from. However, if the volume of transactions on the
+                          protocol is too small, it becomes easier to trace back
+                          a particular transaction to the deposited wallet. It's
+                          impossible to be 100% certain of the origin of a
+                          transaction, but the less volume and the less time
+                          funds are kept on the mixer, the greater the chance of
+                          identifying the originating wallet.
                         </Disclosure.Panel>
                       </Transition>
                     </>
@@ -610,7 +624,7 @@ const Index = () => {
         <footer className="p-10 flex flex-col gap-5 justify-between relative z-[10]">
           <div className="w-full flex flex-col justify-between gap-5 md:flex-row">
             <a
-              href=""
+              href="https://docs.hideyour.cash/"
               target="_blank"
               rel="noreferrer"
               className="text-dark-grafiti font-semibold text-xl flex gap-5 items-center"
@@ -635,7 +649,7 @@ const Index = () => {
               <img src="/twitter.svg" alt="Twitter Icon" className="w-10" />{" "}
               Twitter
             </a>
-            <a
+            {/* <a
               href=""
               target="_blank"
               rel="noreferrer"
@@ -643,7 +657,7 @@ const Index = () => {
             >
               <img src="/discord.svg" alt="Discord Icon" className="w-10" />{" "}
               Discord
-            </a>
+            </a> */}
             <button
               className="ml-auto mt-[-50px] md:m-0 bg-aqua-gradient-medium w-10 h-10 rounded-full flex justify-center items-center cursor-pointer"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

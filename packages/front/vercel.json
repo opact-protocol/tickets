@@ -1,9 +1,8 @@
 {
   "routes": [
     {
-      "src": "/[^.]+",
-      "dest": "/",
-      "status": 200
+      "src": "/(?!api/)[^.]+",
+      "dest": "/"
     },
     {
       "src": "/circuit.zkey",

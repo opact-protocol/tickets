@@ -137,14 +137,26 @@ export const useApplication = create<{
       toast(
         <ToastCustom
           icon="/check-circle-icon.svg"
-          title="Withdraw sent"
-          message="The funds has been withdraw to the address."
+          title="Withdrawal sent"
+          message="The fund has been withdrawn to the address"
         />,
         {
           toastId: "withdraw-toast",
         }
       );
     } catch (error) {
+      if (error instanceof AxiosError) {
+        toast(
+          <ToastCustom
+            icon="/error-circle-icon.svg"
+            title="Withdraw error"
+            message={error.response?.data.error}
+          />,
+          {
+            toastId: "withdraw-toast",
+          }
+        );
+      }
       console.log(error);
       if (error instanceof AxiosError) {
         toast(
