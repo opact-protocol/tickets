@@ -16,12 +16,9 @@ export default function Modal({
   isOpen,
   onClose,
   amount,
-<<<<<<< HEAD
-=======
   contract,
   currency,
   token,
->>>>>>> c34e7b4 (feat(front): cherry pick)
 }: {
   isOpen: boolean;
   amount: string;
