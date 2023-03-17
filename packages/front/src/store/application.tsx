@@ -183,7 +183,6 @@ export const useApplication = create<{
   },
   sendWhitelist: async (connection, accountId) => {
     await appService.sendAllowlist(accountId, connection);
-    window.location.reload();
   },
   getRelayerFee: async (
     accountId: string,

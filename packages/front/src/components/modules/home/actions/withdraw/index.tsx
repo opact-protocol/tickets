@@ -57,7 +57,8 @@ export function Withdraw() {
     getRelayerFee,
     setRelayerJWT,
   } = useApplication();
-  const { accountId, toggleModal } = useWallet();
+  const { accountId } = useWallet();
+
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()
@@ -143,6 +144,7 @@ export function Withdraw() {
     register,
     handleSubmit,
     getFieldState,
+    reset,
     formState: { errors },
   } = useForm<WithDrawProps>({
     resolver: yupResolver(withdrawSchema),
@@ -338,7 +340,7 @@ export function Withdraw() {
                 </div>
 
                 <div className="text-black text-sm">
-                  {!generatingProof && (
+                  {(!generatingProof || showModal) && (
                     <Countdown
                       date={Date.now() + dynamicFee.valid_fee_for_ms}
                       key={dynamicFee.token}
@@ -419,6 +421,14 @@ export function Withdraw() {
           <ConfirmModal
             isOpen={showModal}
             onClose={() => setShowModal(false)}
+            cleanupInputsCallback={() => {
+              setTicket('');
+              setDynamicFee(null);
+              setRecipientAddress('');
+              setRecipientAddressError(false);
+
+              reset();
+            }}
           />
         </form>
       </div>
