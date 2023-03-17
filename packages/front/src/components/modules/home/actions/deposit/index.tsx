@@ -14,15 +14,6 @@ import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
-import "swiper/css";
-import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
-import { BlockecLocationModal } from "@/components/modals/blockedLocation";
-import axios from "axios";
-
-interface SelectedTokenProps {
-  id: number;
-  name: string;
-}
 import { useAllCurrencies } from "@/hooks/useAllCurrencies";
 import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
 import {
@@ -48,7 +39,6 @@ const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
-  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
     {} as AmountsProps
@@ -115,6 +105,11 @@ export function Deposit() {
 
     if (!selectedAmount.value) {
       setErrorMessage("Select amount to deposit");
+      return;
+    }
+
+    if (!haveBalance) {
+      setErrorMessage("Your account doesn't have enough balance");
       return;
     }
 
@@ -397,22 +392,12 @@ export function Deposit() {
             />
           )}
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
-          <WhatIsThisModal
-            isOpen={showModalPoolAnonymity}
-            onClose={() => setShowModalPoolAnonymity(false)}
-          />
         </div>
       </div>
       <WhitelistModal
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}
       />
-      {showBlockedLocationModal && (
-        <BlockecLocationModal
-          isOpen={true}
-          onClose={() => setBlockedLocationModal(true)}
-        />
-      )}
     </>
   );
 }
