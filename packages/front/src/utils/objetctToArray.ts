@@ -10,5 +10,5 @@ export const objetctToArray = (data: any) => {
     amounts.push({ value, accountId: data[value] });
   }
 
-  return amounts;
+  return amounts.sort((amountA, amountB) => Number(amountA.value) - Number(amountB.value));
 };

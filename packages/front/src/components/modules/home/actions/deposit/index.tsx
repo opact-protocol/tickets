@@ -139,7 +139,12 @@ export function Deposit() {
           setHaveBalance(false);
           return;
         }
+
+        setHaveBalance(true);
+
+        return;
       }
+
       const accountBalance = await viewAccountBalance(
         useEnv("VITE_NEAR_NODE_URL"),
         selectedToken.account_id!,
@@ -148,9 +153,13 @@ export function Deposit() {
 
       if (+accountBalance < +selectedAmount.value) {
         setHaveBalance(false);
+
+        return;
       }
+
+      setHaveBalance(true);
     })();
-  }, [selectedAmount.value]);
+  }, [selectedAmount]);
 
   return (
     <>
@@ -175,7 +184,7 @@ export function Deposit() {
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="flex gap-2 items-center truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.metadata ? (
+                    {selectedToken && selectedToken.type === 'Near' && (
                       <>
                         <img
                           src={
@@ -195,7 +204,31 @@ export function Deposit() {
                           ? selectedToken.type
                           : selectedToken.metadata.name!}
                       </>
-                    ) : (
+                    )}
+
+                    {selectedToken && selectedToken.metadata && (
+                      <>
+                        <img
+                          src={
+                            selectedToken.type === "Near"
+                              ? "./assets/near-logo.png"
+                              : selectedToken.metadata.icon!
+                          }
+                          alt={
+                            selectedToken.type === "Near"
+                              ? "Near"
+                              : selectedToken.metadata.name!
+                          }
+                          className="w-5 rounded-full"
+                          loading="lazy"
+                        />
+                        {selectedToken.type === "Near"
+                          ? selectedToken.type
+                          : selectedToken.metadata.name!}
+                      </>
+                    )}
+
+                    {(!selectedToken || !selectedToken.type) && (
                       "Select token"
                     )}
                   </span>
@@ -276,11 +309,11 @@ export function Deposit() {
                       key={token.accountId}
                       value={token}
                       as="li"
-                      className={({ active }) => `
-                              bg-transparent rounded-full p-1 w-min mb-2 ${
-                                active ? "bg-soft-blue-from-deep-blue" : ""
-                              }
-                            `}
+                      className={() => `
+                        bg-transparent rounded-full p-1 w-min mb-2 ${
+                          selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
+                        }
+                      `}
                     >
                       <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
                         <RadioGroup.Label

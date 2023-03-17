@@ -201,7 +201,7 @@ export default function Modal({
                             token.type === "Near" ? 24 : token.metadata.decimals
                           )
                         )
-                      ).toFixed(0)} ${token.metadata.name}`}
+                      ).toFixed(0)} ${ token.type === "Near" ? "Near" : token.metadata.name}`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>
