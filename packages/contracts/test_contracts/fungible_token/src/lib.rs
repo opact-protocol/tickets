@@ -17,6 +17,8 @@ pub mod errors;
 
 use crate::errors::ERR_001;
 
+const HALF_NEAR: u128 = 500_000_000_000_000_000_000_000;
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
@@ -39,6 +41,14 @@ impl Contract {
     this.token.internal_register_account(&owner_id);
     this.token.internal_deposit(&owner_id, total_supply.0);
     this
+  }
+
+  #[payable]
+  pub fn faucet(&mut self, amount: U128) {
+    assert_eq!(env::attached_deposit(), HALF_NEAR, "must deposit {} yoctoNear", HALF_NEAR);
+    let user_id = env::predecessor_account_id();
+    self.token.internal_register_account(&user_id);
+    self.token.internal_deposit(&user_id, amount.0);
   }
 
   fn on_account_closed(&mut self, account_id: AccountId, balance: Balance) {
