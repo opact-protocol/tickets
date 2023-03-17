@@ -5,9 +5,11 @@ import { Dialog, Transition } from "@headlessui/react";
 export default function Modal({
   isOpen,
   onClose,
+  cleanupInputsCallback,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  cleanupInputsCallback: () => void;
 }) {
   const { sendWithdraw } = useApplication();
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,7 @@ export default function Modal({
     setLoading(true);
     await sendWithdraw();
     setLoading(false);
+    cleanupInputsCallback();
     onClose();
   };
 
