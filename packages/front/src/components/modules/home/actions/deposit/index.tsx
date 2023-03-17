@@ -174,7 +174,11 @@ export function Deposit() {
                 </span>
               </span>
             </div>
-            <Listbox value={selectedToken} onChange={setSelectedToken}>
+            <Listbox value={selectedToken} onChange={(payload) => {
+              setHaveBalance(true);
+              setSelectedToken(payload);
+              setSelectedAmount({} as any);
+            }}>
               <div className="relative mt-1">
                 <Listbox.Button
                   className={`cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left border-[2px] ${
