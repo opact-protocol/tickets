@@ -2,3 +2,13 @@ temp
 .near-credentials
 node_modules
 build
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.near-credentials
+*.wtns
+*.json
+*.zkey
+*.wasm
