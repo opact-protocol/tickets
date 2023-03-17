@@ -19,18 +19,25 @@ jobs:
       THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
 
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
-      VITE_NEAR_NODE_URL: https://rpc.testnet.near.org/
-      VITE_CONTRACT: 2635d665d4dd894555f2registryhyctest.testnet
+      VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
+      VITE_CONTRACT: registry.hideyourcash.near
       VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_staging
-      VITE_NEAR_NETWORK: testnet
+      VITE_NEAR_NETWORK: mainnet
       VITE_RELAYER_NETWORK: staging
-      VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
+      VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
 
-      HYC_CONTRACT_PREFIX: 2635d665d4dd894555f2
-      HYC_START_BLOCK: 120696821
+      HYC_CONTRACT_PREFIX: hideyourcash.near
+      HYC_START_BLOCK: 87518288
 
       VITE_TRACES_SAMPLE_RATE: 0
       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+
+      # relayer envs
+      PRIVATE_KEY: ${{ secrets.PROD_RELAYER_SECRET_KEY }}
+      ACCOUNT_ID: relayer.hideyourcash.near
+      RELAYER_FEE: "0.003"
+      BASE_STORAGE_FEE: "0.1"
+      RELAYER_NAME: "staging-relayer"
 
     steps:
       - name: Checkout
@@ -81,6 +88,17 @@ jobs:
 
       - name: Building Relayer
         run: yarn relayer build
+
+      - name: Set Relayer Variables
+        env: 
+          NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
+          RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
+          RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
+          HYC_CONTRACT: ${{ env.VITE_CONTRACT }} 
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
+        run: yarn relayer populate:envs
+
 
       - name: Publish Relayer
         uses: cloudflare/wrangler-action@2.0.0
