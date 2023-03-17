@@ -13,6 +13,7 @@ mod tests_core;
 pub use methods::*;
 
 pub const OUT_DIR: &str = "../out";
+
 pub const PROOF_DIR: &str = "temp";
 
 pub const FRACTION_BASE: u128 = 10_000;
