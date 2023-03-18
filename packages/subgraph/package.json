@@ -6,6 +6,7 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "make:yaml": "node make-yaml.js",
+    "predeploy": "yarn codegen && yarn build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ hideyour-cash/hyc",
     "create-local": "graph create --node http://localhost:8020/ hideyour-cash/hyc",
     "remove-local": "graph remove --node http://localhost:8020/ hideyour-cash/hyc",
