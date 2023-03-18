@@ -61,7 +61,11 @@ export const calculateFee = async (
 ): Promise<CalculateFeeResponseInterface> => {
   const params = request.body;
 
+  console.log('params', params);
+
   const requestIsValid = await validateFeeRequest(params, env);
+
+  console.log('requestIsValid', requestIsValid);
 
   if (!requestIsValid) {
     return {
@@ -75,12 +79,18 @@ export const calculateFee = async (
 
   const refConfig = getConfig(env.NEAR_NETWORK);
 
+  console.log('refConfig', refConfig);
+
   const { simplePools } = await fetchAllPools(env, refConfig.REF_FI_CONTRACT_ID);
+
+  console.log('refConfig', simplePools);
 
   const tokenIn = await ftGetTokenMetadata(
     env,
     env.NEAR_NETWORK === 'testnet' ? 'wrap.testnet' : 'wrap.near',
   );
+
+  console.log('tokenIn', tokenIn);
 
   const {
     tokenId,
@@ -91,6 +101,8 @@ export const calculateFee = async (
     env
   );
 
+  console.log('tokenId', tokenId);
+
   const tokenOut = await ftGetTokenMetadata(
     env,
     env.NEAR_NETWORK === 'testnet'
@@ -100,11 +112,15 @@ export const calculateFee = async (
       : tokenId ,
   );
 
+  console.log('tokenOut', tokenOut);
+
   const nearStoragePrice = await getNearStorageBoundsById(
     params.receiverAccountId,
     tokenId,
     env
   );
+
+  console.log('nearStoragePrice', nearStoragePrice);
 
   const [ swapTodo ]: EstimateSwapView[] = await estimateSwap({
     env,
@@ -115,6 +131,8 @@ export const calculateFee = async (
     contract: refConfig.REF_FI_CONTRACT_ID,
   });
 
+  console.log('swapTodo', swapTodo);
+
   const tokenStoragePrice = swapTodo.estimate;
 
   const rawTokenStoragePrice = await formatInteger(
@@ -122,29 +140,45 @@ export const calculateFee = async (
     tokenOut.decimals
   );
 
+  console.log('rawTokenStoragePrice', rawTokenStoragePrice);
+
   const baseFeeForDepositValue = await calculateBaseFee(depositValue, env);
+
+  console.log('baseFeeForDepositValue', baseFeeForDepositValue);
 
   const rawTokenFee = new Big(rawTokenStoragePrice)
     .add(baseFeeForDepositValue)
     .toFixed(0);
 
+  console.log('rawTokenFee', rawTokenFee);
+
   const formattedTokenFee = getHumanFormat(rawTokenFee, tokenOut);
+
+  console.log('formattedTokenFee', formattedTokenFee);
 
   const humanFee = (
     await getHumanFeePercentage(rawTokenFee.toString(), depositValue)
   ).toString();
+
+  console.log('humanFee', humanFee);
 
   const userWillReceive = new Big(depositValue)
     .sub(rawTokenFee)
     .sub(networkFee)
     .toFixed(0);
 
+    console.log('userWillReceive', userWillReceive);
+
   const formattedUserWillReceive = getHumanFormat(
     userWillReceive,
     tokenOut
   );
 
+  console.log('formattedUserWillReceive', formattedUserWillReceive);
+
   const humanNetworkFee = getHumanFormat(networkFee, tokenOut);
+
+  console.log('humanNetworkFee', humanNetworkFee);
 
   const token = await jwt.sign(
     {
@@ -158,6 +192,8 @@ export const calculateFee = async (
     },
     env.PRIVATE_KEY,
   );
+
+  console.log('token', token);
 
   return {
     status: successStatus,
