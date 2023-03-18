@@ -18,7 +18,7 @@ import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import _ from "lodash";
 import Countdown from "react-countdown";
-import { useProgressProof } from "@/hooks/useProgressProof";
+import type { Logger } from "hideyourcash-sdk";
 
 interface WithDrawProps {
   ticket: string;
@@ -36,6 +36,8 @@ let toRef;
 
 const hycTransaction = "hyc-transaction";
 
+let totalProgress = 40;
+
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
@@ -47,8 +49,17 @@ export function Withdraw() {
   const [dynamicFee, setDynamicFee] = useState<any>();
   const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
   const [recipientAddressError, setRecipientAddressError] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const { logger, progress } = useProgressProof();
+  const logger: Logger = {
+    debug: (message: string) => {
+      totalProgress = totalProgress + 0.37;
+      // console.log(totalProgress);
+      setProgress(totalProgress);
+
+      return message;
+    },
+  };
 
   const {
     prepareWithdraw,
@@ -171,6 +182,7 @@ export function Withdraw() {
       );
       setGeneratinProof(false);
       setShowModal(true);
+      totalProgress = 40;
     } catch (err) {
       console.warn(err);
       setGeneratinProof(false);
@@ -386,7 +398,7 @@ export function Withdraw() {
           )}
 
           {generatingProof ? (
-            <LoadingModal progress={progress} />
+            <LoadingModal key={progress} progress={progress} />
           ) : (
             <div>
               <button
