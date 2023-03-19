@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 export const LoadingModal = ({ progress, loading }: { progress: number, loading: boolean }) => {
   const [localProgress, setLocalProgress] = useState(0);
 
+  if (!loading) {
+    return;
+  }
+
   useEffect(() => {
     console.log(' ');
     console.log('progress component trigget for loading: ', loading);
