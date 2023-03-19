@@ -73,4 +73,6 @@ deploySecrets(CF_API_TOKEN, RELAYER_NAME, CF_IDENTIFIER, [
         text: BASE_STORAGE_FEE,
         type: 'secret_text',
     },
-]);
+]).then(res => {
+  console.log('Deploy secrets res: ', res);
+});
