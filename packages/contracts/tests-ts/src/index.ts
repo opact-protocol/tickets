@@ -151,6 +151,14 @@ export async function setup(): Promise<void> {
     receiver: sdkAccount,
   });
 
+  console.log("Add storage to token instance");
+
+  await addStorage({
+    owner,
+    receiver: tokenInstanceAccount10,
+    contract: tokenContractAccount,
+  });
+
   console.log("Register users");
 
   await registerUser({
