@@ -49,12 +49,12 @@ export function Withdraw() {
   const [dynamicFee, setDynamicFee] = useState<any>();
   const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
   const [recipientAddressError, setRecipientAddressError] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(40);
 
   const logger: Logger = {
     debug: (message: string) => {
       totalProgress = totalProgress + 0.37;
-      // console.log(totalProgress);
+
       setProgress(totalProgress);
 
       return message;
@@ -182,7 +182,6 @@ export function Withdraw() {
       );
       setGeneratinProof(false);
       setShowModal(true);
-      totalProgress = 40;
     } catch (err) {
       console.warn(err);
       setGeneratinProof(false);
@@ -196,6 +195,9 @@ export function Withdraw() {
           toastId: "error-toast",
         }
       );
+    } finally {
+      totalProgress = 40;
+      setProgress(40);
     }
   };
 
@@ -398,7 +400,7 @@ export function Withdraw() {
           )}
 
           {generatingProof ? (
-            <LoadingModal key={progress} progress={progress} />
+            <LoadingModal loading={generatingProof} progress={progress} />
           ) : (
             <div>
               <button
@@ -444,9 +446,9 @@ export function Withdraw() {
           />
         </form>
       </div>
-      {generatingProof && (
+      {/* {generatingProof && (
         <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
-      )}
+      )} */}
       <TotalDepositsModal
         isOpen={showModalDeposits}
         onClose={() => setShowModalDeposits(false)}
