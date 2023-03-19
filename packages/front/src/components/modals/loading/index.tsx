@@ -20,10 +20,9 @@ export const LoadingModal = ({ progress, loading }: { progress: number, loading:
       </p>
       <div className="relative overflow-hidden w-full max-w-[350px] bg-gray-200 rounded-full">
         <div
-          className={`bg-dark-grafiti-medium text-xs font-medium text-blue-100 text-center h-[15px] p-0.5 leading-none rounded-full`}
+          className="bg-dark-grafiti-medium text-xs font-medium h-[15px] p-0.5 leading-none rounded-full w-auto progress"
           style={{
             width: `${localProgress.toFixed(0)}%`,
-            transition: 'width 3s',
           }}
         />
       </div>
