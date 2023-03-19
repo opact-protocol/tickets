@@ -30,6 +30,8 @@ if (
     throw new Error("There are missing Envs that need to be set");
 }
 
+console.log(`Deploy secrets for script: ${RELAYER_NAME}`);
+
 deploySecrets(CF_API_TOKEN, RELAYER_NAME, CF_IDENTIFIER, [
     {
         name: "NEAR_NETWORK",
@@ -71,4 +73,4 @@ deploySecrets(CF_API_TOKEN, RELAYER_NAME, CF_IDENTIFIER, [
         text: BASE_STORAGE_FEE,
         type: 'secret_text',
     },
-])
+]);
