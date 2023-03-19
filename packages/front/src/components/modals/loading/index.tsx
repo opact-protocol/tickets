@@ -4,7 +4,7 @@ export const LoadingModal = ({ progress, loading }: { progress: number, loading:
   const [localProgress, setLocalProgress] = useState(0);
 
   if (!loading) {
-    return;
+    return <></>;
   }
 
   useEffect(() => {
