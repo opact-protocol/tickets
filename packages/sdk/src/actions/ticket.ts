@@ -4,8 +4,6 @@ import { sendTransactionsCallback } from "./connection";
 import type { ConnectionType, Currency } from "../interfaces";
 import { getTransaction, randomBN, viewFunction } from "../helpers";
 
-const FT_Storage = '0.5';
-
 export const createTicket = async (
   nodeRpcUrl: string,
   contract: string,
@@ -50,48 +48,6 @@ export const sendDeposit = async (
   if (currency.type === "Nep141") {
     const tokenContract = currency.account_id || "";
 
-    const storage = await getTokenStorage(
-      tokenContract,
-      depositContract,
-      nodeUrl
-    );
-
-    if (!storage) {
-      transactions.push(
-        getTransaction(
-          accountId,
-          tokenContract,
-          "storage_deposit",
-          {
-            account_id: depositContract,
-            registration_only: true,
-          },
-          FT_Storage,
-        )
-      );
-    }
-
-    const signerStorage = await getTokenStorage(
-      accountId,
-      depositContract,
-      nodeUrl
-    );
-
-    if (!signerStorage) {
-      transactions.push(
-        getTransaction(
-          accountId,
-          tokenContract,
-          "storage_deposit",
-          {
-            account_id: accountId,
-            registration_only: true,
-          },
-          FT_Storage,
-        )
-      );
-    }
-
     transactions.push(
       getTransaction(accountId, tokenContract, "ft_transfer_call", {
         amount,
@@ -121,15 +77,17 @@ export const sendDeposit = async (
 };
 
 export const getTokenStorage = async (
-  token: string,
   contract: string,
+  accountId: string,
   nodeRpcUrl: string
 ) => {
   try {
-    return await viewFunction(nodeRpcUrl, token, "storage_balance_of", {
-      account_id: contract,
+    return await viewFunction(nodeRpcUrl, contract, "storage_balance_of", {
+      account_id: accountId,
     });
   } catch (e) {
+    console.warn(e);
+
     return;
   }
 };
