@@ -47,12 +47,14 @@ export const WhatIsThisModal = ({
                   as="h1"
                   className="text-dark-grafiti-medium text-xl font-bold text-center mb-10"
                 >
-                  What is pool anonymity ?
+                  What is anonymity score ?
                 </Dialog.Title>
                 <p className="text-dark-grafiti-medium text-lg max-w-[450px] text-center mx-auto mb-10">
                   The anonymity score shows how hard it would be to track a
-                  transaction on hideyour.cash - it depends directly on how many
-                  transactions happened between a deposit and a withdrawal
+                  transaction on hideyour.cash. 
+                  When making a deposit, it depends on the volume of the pool you selected. 
+                  When withdrawing, it depends on the number of users that interacted with the pool
+                  after your initial deposit.
                 </p>
                 <button
                   className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
