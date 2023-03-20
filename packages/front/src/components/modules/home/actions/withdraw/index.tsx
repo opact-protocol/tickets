@@ -259,7 +259,7 @@ export function Withdraw() {
                 <div className="my-5">
                   <div className="flex items-center justify-between">
                     <span className="text-black text-[1.1rem] font-bold ">
-                      Pool Anonimity
+                      Transaction Anonymity
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-2">

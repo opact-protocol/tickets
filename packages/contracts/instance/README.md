@@ -6,7 +6,7 @@ The contract references the registry in its initialization and trusts the regist
 
 ## API
 
-### Anonimity methods
+### Anonymity methods
 
 1. `deposit`
 params:
