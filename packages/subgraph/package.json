@@ -13,7 +13,8 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 hideyour-cash/hyc",
     "test": "graph test",
     "deploy:hosted": "graph deploy --product hosted-service",
-    "deploy:staging": "yarn make:yaml && yarn codegen && yarn build && graph deploy --product hosted-service hack-a-chain/hyc_staging"
+    "deploy:staging": "yarn make:yaml && yarn codegen && yarn build && graph deploy --product hosted-service hack-a-chain/hyc_staging",
+    "deploy:production": "yarn make:yaml && yarn codegen && yarn build && graph deploy --product hosted-service hack-a-chain/hyc_mainnet"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.37.0",
