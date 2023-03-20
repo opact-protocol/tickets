@@ -25,7 +25,7 @@ jobs:
       VITE_NEAR_NETWORK: mainnet
       VITE_RELAYER_NETWORK: staging
       VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
-
+                        
       HYC_CONTRACT_PREFIX: hideyourcash.near
       HYC_START_BLOCK: 87518288
 
