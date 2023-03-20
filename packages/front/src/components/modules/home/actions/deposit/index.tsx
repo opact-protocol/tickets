@@ -359,7 +359,7 @@ export function Deposit() {
             <div className="mt-16 mb-16">
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold ">
-                  Pool Anonimity
+                  Pool Anonymity
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-2">

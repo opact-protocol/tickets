@@ -53,4 +53,4 @@ The system is designed around a single REGISTRY smart contract and multiple INST
 
 The registry is responsible for the setup of all AML parameters and for keeeping track of all different currencies and amounts supported by the protocol.
 
-Instace smart contracts are where funds are actually mixed. Each instance only accepts one token type and deposits and withdraws can only be made in a fixed amount. That ensures external observers cannot differentiate between withdraws, guaranteeing more anonimity to users.
+Instace smart contracts are where funds are actually mixed. Each instance only accepts one token type and deposits and withdraws can only be made in a fixed amount. That ensures external observers cannot differentiate between withdraws, guaranteeing more anonymity to users.
