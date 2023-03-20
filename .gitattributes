@@ -1,5 +1,2 @@
 package-lock.json linguist-generated=true -diff
 yarn.lock linguist-generated=true -diff
-*.psd filter=lfs diff=lfs merge=lfs -text
-*.zkey filter=lfs diff=lfs merge=lfs -text
-packages/front/public/withdraw_0000.zkey filter=lfs diff=lfs merge=lfs -text
