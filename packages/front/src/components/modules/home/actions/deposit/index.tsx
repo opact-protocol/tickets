@@ -16,6 +16,7 @@ import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import { useAllCurrencies } from "@/hooks/useAllCurrencies";
 import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
+import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import {
   formatBigNumberWithDecimals,
   getDecimals,
@@ -39,6 +40,7 @@ const customId = "deposit-toast";
 
 export function Deposit() {
   const [showModal, setShowModal] = useState(false);
+  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
     {} as AmountsProps
@@ -397,8 +399,9 @@ export function Deposit() {
                 )}
               </div>
               <p
-                className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
                 title="Coming soon"
+                onClick={() => setShowModalPoolAnonymity(true)}
               >
                 What is this <QuestionMarkCircleIcon className="w-4 h-4" />
               </p>
@@ -431,6 +434,10 @@ export function Deposit() {
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
+      <WhatIsThisModal
+        isOpen={showModalPoolAnonymity}
+        onClose={() => setShowModalPoolAnonymity(false)}
+      />
       <WhitelistModal
         isOpen={showAllowlist}
         onClose={() => setShowAllowlist(false)}

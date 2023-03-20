@@ -17,6 +17,7 @@ import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import _ from "lodash";
+import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
 
@@ -40,6 +41,7 @@ let totalProgress = 40;
 
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
+  const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
   const [showModalDeposits, setShowModalDeposits] = useState(false);
   const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
@@ -300,8 +302,9 @@ export function Withdraw() {
                     )}
                   </div>
                   <p
-                    className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-not-allowed"
+                    className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
                     title="Coming soon"
+                    onClick={() => setShowModalPoolAnonymity(true)}
                   >
                     What is this <QuestionMarkCircleIcon className="w-4 h-4" />
                   </p>
@@ -449,6 +452,10 @@ export function Withdraw() {
       {/* {generatingProof && (
         <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
       )} */}
+      <WhatIsThisModal
+        isOpen={showModalPoolAnonymity}
+        onClose={() => setShowModalPoolAnonymity(false)}
+      />
       <TotalDepositsModal
         isOpen={showModalDeposits}
         onClose={() => setShowModalDeposits(false)}
