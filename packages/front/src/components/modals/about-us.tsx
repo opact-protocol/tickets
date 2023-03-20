@@ -62,10 +62,8 @@ export const AboutUsModal = ({
                     on <strong>NEAR</strong>
                   </p>
                   <p className="text-dark-grafiti-medium text-lg font-normal text-center w-full max-w-[607px] mt-5 mb-16 mx-auto">
-                    You'll need to add yourself to the allowlist and then you'll
-                    be able to make transactions. We highly recommend it to
-                    ensure security. It will take <strong>X time</strong> to
-                    evaluate your request.
+                    You`ll need to add yourself to the allowlist and then you`ll
+                    be able to make transactions.
                   </p>
 
                   <button
@@ -81,7 +79,7 @@ export const AboutUsModal = ({
                     className="text-soft-blue font-normal text-lg underline text-center mb-10 cursor-pointer"
                     onClick={() => onClose()}
                   >
-                    I'll do it later
+                    I`ll do it later
                   </p>
                 </Dialog.Panel>
               </Transition.Child>
