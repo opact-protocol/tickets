@@ -1,121 +1,121 @@
-name: Production Deploy
-env:
-   # vercel envs
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+# name: Production Deploy
+# env:
+#    # vercel envs
+#       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+#       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
+#       THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
 
-      VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
-      VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
-      VITE_CONTRACT: registry.hideyourcash.near
-      VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_mainnet
-      VITE_NEAR_NETWORK: mainnet
-      VITE_RELAYER_NETWORK: prod
-      VITE_RELAYER_URL: https://prod-relayer.hideyourcash.workers.dev
+#       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+#       VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
+#       VITE_CONTRACT: registry.hideyourcash.near
+#       VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_mainnet
+#       VITE_NEAR_NETWORK: mainnet
+#       VITE_RELAYER_NETWORK: prod
+#       VITE_RELAYER_URL: https://prod-relayer.hideyourcash.workers.dev
 
-      HYC_CONTRACT_PREFIX: hideyourcash.near
-      HYC_START_BLOCK: 87518288
+#       HYC_CONTRACT_PREFIX: hideyourcash.near
+#       HYC_START_BLOCK: 87518288
 
-      VITE_TRACES_SAMPLE_RATE: 1
-      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+#       VITE_TRACES_SAMPLE_RATE: 1
+#       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
-      # relayer envs
-      PRIVATE_KEY: ${{ secrets.PROD_RELAYER_SECRET_KEY }}
-      ACCOUNT_ID: relayer.hideyourcash.near
-      RELAYER_FEE: "0.005"
-      BASE_STORAGE_FEE: "0.1"
-      RELAYER_NAME: "prod-relayer"
+#       # relayer envs
+#       PRIVATE_KEY: ${{ secrets.PROD_RELAYER_SECRET_KEY }}
+#       ACCOUNT_ID: relayer.hideyourcash.near
+#       RELAYER_FEE: "0.005"
+#       BASE_STORAGE_FEE: "0.1"
+#       RELAYER_NAME: "prod-relayer"
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ci-${{ github.ref }}
+#   cancel-in-progress: true
 
-jobs:
-  relayer_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+# jobs:
+#   relayer_deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
 
-      - name: Fetch circom
-        uses: dsaltares/fetch-gh-release-asset@master
-        with:
-          repo: "iden3/circom"
-          version: "tags/v2.1.3"
-          file: "circom-linux-amd64"
-          target: "circom"
-          token: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Fetch circom
+#         uses: dsaltares/fetch-gh-release-asset@master
+#         with:
+#           repo: "iden3/circom"
+#           version: "tags/v2.1.3"
+#           file: "circom-linux-amd64"
+#           target: "circom"
+#           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Give circom exec permissions
-        run: chmod +x circom
+#       - name: Give circom exec permissions
+#         run: chmod +x circom
 
-      - name: Add circom to path
-        run: echo $(pwd) >> $GITHUB_PATH
+#       - name: Add circom to path
+#         run: echo $(pwd) >> $GITHUB_PATH
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.12.1
-          cache: 'yarn'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18.12.1
+#           cache: 'yarn'
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@canary
+#       - name: Install Vercel CLI
+#         run: npm install --global vercel@canary
 
-      - name: Install Yarn Globally
-        run: npm install -g yarn
+#       - name: Install Yarn Globally
+#         run: npm install -g yarn
 
-      - name: Installing Dependencies
-        run: yarn
+#       - name: Installing Dependencies
+#         run: yarn
 
-      - name: Installing TheGraph
-        run: yarn global add @graphprotocol/graph-cli
+#       - name: Installing TheGraph
+#         run: yarn global add @graphprotocol/graph-cli
 
-      - name: Signin on TheGraph
-        run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
+#       - name: Signin on TheGraph
+#         run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
 
-      - name: Deploy The graph
-        run: yarn subgraph deploy:staging
+#       - name: Deploy The graph
+#         run: yarn subgraph deploy:staging
 
-      - name: Building Relayer
-        run: yarn relayer build
+#       - name: Building Relayer
+#         run: yarn relayer build
 
-      - name: Set Relayer Variables
-        env: 
-          NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
-          RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
-          RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
-          HYC_CONTRACT: ${{ env.VITE_CONTRACT }} 
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
-        run: yarn relayer populate:envs
+#       - name: Set Relayer Variables
+#         env: 
+#           NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
+#           RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
+#           RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
+#           HYC_CONTRACT: ${{ env.VITE_CONTRACT }} 
+#           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+#           CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
+#         run: yarn relayer populate:envs
 
 
-      - name: Publish Relayer
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name staging-relayer --keep-vars
-          workingDirectory: 'packages/relayer'
+#       - name: Publish Relayer
+#         uses: cloudflare/wrangler-action@2.0.0
+#         with:
+#           apiToken: ${{ secrets.CF_API_TOKEN }}
+#           command: publish --name staging-relayer --keep-vars
+#           workingDirectory: 'packages/relayer'
 
-      - name: Compile circuits
-        run: yarn circuits circuit:setup:plonk
+#       - name: Compile circuits
+#         run: yarn circuits circuit:setup:plonk
 
-      - name: Pull vercel setup
-        run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Pull vercel setup
+#         run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Build Project Artifacts
+#         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy Project Artifacts to Vercel
-        run: >
-          vercel
-          deploy
-          --prebuilt
-          --prod
-          --token=${{ secrets.VERCEL_TOKEN }}
+#       - name: Deploy Project Artifacts to Vercel
+#         run: >
+#           vercel
+#           deploy
+#           --prebuilt
+#           --prod
+#           --token=${{ secrets.VERCEL_TOKEN }}
