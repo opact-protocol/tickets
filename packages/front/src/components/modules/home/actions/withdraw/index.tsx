@@ -9,7 +9,6 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useWallet } from "@/store/wallet";
 import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
 import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 import { viewWasNullifierSpent } from "hideyourcash-sdk";
@@ -70,8 +69,6 @@ export function Withdraw() {
     getRelayerFee,
     setRelayerJWT,
   } = useApplication();
-  const { accountId } = useWallet();
-
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()
@@ -425,11 +422,7 @@ export function Withdraw() {
                 {!loadingDynamicFee && (
                   <>
                     {" "}
-                    {!accountId
-                      ? "Connect Wallet"
-                      : !showModal
-                      ? "Withdraw"
-                      : buttonText.current}{" "}
+                    {!showModal ? "Withdraw" : buttonText.current}{" "}
                   </>
                 )}
               </button>
@@ -449,9 +442,6 @@ export function Withdraw() {
           />
         </form>
       </div>
-      {/* {generatingProof && (
-        <div className="bg-transparent w-screen h-screen absolute -top-[40%] -left-10 sm:-left-[25%] md:-left-[35%] lg:-left-[50%] xl:-left-[108%] z-[99999] overflow-hidden" />
-      )} */}
       <WhatIsThisModal
         isOpen={showModalPoolAnonymity}
         onClose={() => setShowModalPoolAnonymity(false)}
