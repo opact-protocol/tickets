@@ -80,7 +80,7 @@
 #         run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
 
 #       - name: Deploy The graph
-#         run: yarn subgraph deploy:staging
+#         run: yarn subgraph deploy:production
 
 #       - name: Building Relayer
 #         run: yarn relayer build
