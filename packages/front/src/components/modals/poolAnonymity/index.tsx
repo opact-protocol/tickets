@@ -52,7 +52,7 @@ export const WhatIsThisModal = ({
                 <p className="text-dark-grafiti-medium text-lg max-w-[450px] text-center mx-auto mb-10">
                   The anonymity score shows how hard it would be to track a
                   transaction on hideyour.cash. {"\n"}
-                  
+
                   To learn more about anonymity best practices <a className="text-soft-blue" href="https://docs.hideyour.cash/how-to-use-hyc/enhanced-anonymity" target="_blank" rel="noopener noreferrer">check out the docs</a>.
                 </p>
                 <ol className="text-dark-grafiti-medium text-lg max-w-[450px] text-center mx-auto mb-10">
@@ -61,7 +61,7 @@ export const WhatIsThisModal = ({
                   <li>Level three protects against spy-grade analytics software</li>
                 </ol>
                 <button
-                  className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
+                  className="max-w-[367px] block mx-auto bg-intermediate-score mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
                   onClick={() => onClose()}
                 >
                   Close

@@ -269,7 +269,7 @@ export function Withdraw() {
                           <div
                             key={item}
                             className={`w-[77px] h-[9px] ${
-                              item === 1 ? "bg-error" : "bg-gray-300"
+                              item === 1 ? "bg-deep-blue" : "bg-gray-300"
                             } rounded-full`}
                           />
                         ))}
@@ -280,7 +280,7 @@ export function Withdraw() {
                           <div
                             key={item}
                             className={`w-[77px] h-[9px] ${
-                              item !== 3 ? "bg-warning" : "bg-gray-300"
+                              item !== 3 ? "bg-intermediate-score" : "bg-gray-300"
                             } rounded-full`}
                           />
                         ))}
