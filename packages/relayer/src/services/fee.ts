@@ -250,7 +250,7 @@ export const getHumanFormat = (
 
   const bigValue = new Big(value);
 
-  return `${bigValue.div(bigDecimals).toFixed(2)} ${symbol.replace('w', '')}`;
+  return `${bigValue.div(bigDecimals).toFixed(4)} ${symbol.replace('w', '')}`;
 };
 
 /**
