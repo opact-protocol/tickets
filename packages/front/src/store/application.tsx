@@ -155,6 +155,8 @@ export const useApplication = create<{
       );
     } catch (error) {
       if (error instanceof AxiosError) {
+        console.warn(error.response);
+
         toast(
           <ToastCustom
             icon="/error-circle-icon.svg"
@@ -166,7 +168,7 @@ export const useApplication = create<{
           }
         );
       }
-      console.log(error);
+
       if (error instanceof AxiosError) {
         toast(
           <ToastCustom
