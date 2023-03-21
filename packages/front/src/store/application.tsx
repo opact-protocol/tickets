@@ -9,7 +9,6 @@ import {
   RelayerDataInterface,
 } from "hideyourcash-sdk";
 import { AxiosError } from "axios";
-import { reloadPage } from "@/utils/reloadPage";
 
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");

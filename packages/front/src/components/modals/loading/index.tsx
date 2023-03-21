@@ -8,27 +8,25 @@ export const LoadingModal = ({ progress, loading }: { progress: number, loading:
   }
 
   useEffect(() => {
-    console.log(' ');
-    console.log('progress component trigget for loading: ', loading);
-    console.log('progress component trigget for progress: ', progress);
-
     if (!loading) {
       setLocalProgress(0);
 
       return;
     }
 
-    setLocalProgress(progress);
+    setTimeout(() => {
+      setLocalProgress(progress);
+    }, 100);
   }, [loading, progress]);
 
   return (
     <>
-      <p className="text-dark-grafiti-medium text-center text-lg font-bold mt-2 pointer-events-auto">
+      <p className="text-dark-grafiti-medium text-center text-lg font-bold mt-8 pointer-events-auto">
         Generating your zero knowledge proof
       </p>
       <div className="relative overflow-hidden w-full max-w-[350px] bg-gray-200 rounded-full">
         <div
-          className="bg-dark-grafiti-medium text-xs font-medium h-[15px] p-0.5 leading-none rounded-full w-auto progress"
+          className="bg-intermediate-score text-xs font-medium h-[15px] p-0.5 leading-none rounded-full w-auto progress"
           style={{
             width: `${localProgress.toFixed(0)}%`,
           }}
