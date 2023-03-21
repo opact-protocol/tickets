@@ -176,11 +176,14 @@ export function Deposit() {
                 </span>
               </span>
             </div>
-            <Listbox value={selectedToken} onChange={(payload) => {
-              setHaveBalance(true);
-              setSelectedToken(payload);
-              setSelectedAmount({} as any);
-            }}>
+            <Listbox
+              value={selectedToken}
+              onChange={(payload) => {
+                setHaveBalance(true);
+                setSelectedToken(payload);
+                setSelectedAmount({} as any);
+              }}
+            >
               <div className="relative mt-1">
                 <Listbox.Button
                   className={`cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left border-[2px] ${
@@ -190,7 +193,7 @@ export function Deposit() {
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="flex gap-2 items-center truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.type === 'Near' && (
+                    {selectedToken && selectedToken.type === "Near" && (
                       <>
                         <img
                           src={
@@ -234,9 +237,7 @@ export function Deposit() {
                       </>
                     )}
 
-                    {(!selectedToken || !selectedToken.type) && (
-                      "Select token"
-                    )}
+                    {(!selectedToken || !selectedToken.type) && "Select token"}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronDownIcon
@@ -317,7 +318,9 @@ export function Deposit() {
                       as="li"
                       className={() => `
                         bg-transparent rounded-full p-1 w-min mb-2 ${
-                          selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
+                          selectedAmount.accountId === token.accountId
+                            ? "bg-soft-blue-from-deep-blue"
+                            : ""
                         }
                       `}
                     >
@@ -369,7 +372,7 @@ export function Deposit() {
                       <div
                         key={item}
                         className={`w-[77px] h-[9px] ${
-                          item === 1 ? "bg-error" : "bg-gray-300"
+                          item === 1 ? "bg-deep-blue" : "bg-gray-300"
                         } rounded-full`}
                       />
                     ))}
@@ -380,7 +383,7 @@ export function Deposit() {
                       <div
                         key={item}
                         className={`w-[77px] h-[9px] ${
-                          item !== 3 ? "bg-warning" : "bg-gray-300"
+                          item !== 3 ? "bg-intermediate-score" : "bg-gray-300"
                         } rounded-full`}
                       />
                     ))}
