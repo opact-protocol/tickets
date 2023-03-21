@@ -55,11 +55,11 @@ export const WhatIsThisModal = ({
                   
                   To learn more about anonymity best practices <a className="text-soft-blue" href="https://docs.hideyour.cash/how-to-use-hyc/enhanced-anonymity" target="_blank" rel="noopener noreferrer">check out the docs</a>.
                 </p>
-                <ol className="text-dark-grafiti-medium text-lg max-w-[450px] text-center mx-auto mb-10">
-                  <li>Level one protects against simple users (lookers on explorer and simple bots)</li>
-                  <li>Level two protects against advanced AI-powered robots</li>
-                  <li>Level three protects against spy-grade analytics software</li>
-                </ol>
+                <ul className="list-disc list-inside justify-center text-dark-grafiti-medium text-lg max-w-[450px] mx-auto mb-10">
+                  <li className="text-left">Level one protects against regular users</li>
+                  <li className="text-left">Level two protects against advanced robots</li>
+                  <li className="text-left">Level three protects against spy-grade analytics</li>
+                </ul>
                 <button
                   className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
                   onClick={() => onClose()}
