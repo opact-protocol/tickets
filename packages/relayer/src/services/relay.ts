@@ -77,7 +77,9 @@ export const relayer = async (
       "view_is_withdraw_valid",
       publicArgs
     );
-  } catch (error) {
+  } catch (e) {
+    console.warn(e);
+
     return {
       status: errorStatus,
       body: {
@@ -88,35 +90,59 @@ export const relayer = async (
   }
 
   if (receiver_storage) {
-    await account.functionCall({
-      contractId: tokenId,
-      methodName: "storage_deposit",
-      args: {
-        account_id: receiver_storage,
-        registration_only: true,
-      },
-      gas: AttachedGas as any,
-      attachedDeposit: "1000000000000000000000000" as any,
-    });
+    try {
+      await account.functionCall({
+        contractId: tokenId,
+        methodName: "storage_deposit",
+        args: {
+          account_id: receiver_storage,
+          registration_only: true,
+        },
+        gas: AttachedGas as any,
+        attachedDeposit: "1000000000000000000000000" as any,
+      });
+    } catch (e: any) {
+      console.warn(e);
+
+      return {
+        status: errorStatus,
+        body: {
+          status: "failure",
+          error: e.message,
+        },
+      };
+    }
   }
 
-  const relayerStorage = await getTokenStorage(
-    tokenId,
-    env.ACCOUNT_ID,
-    env.RPC_URL
-  );
+  try {
+    const relayerStorage = await getTokenStorage(
+      tokenId,
+      env.ACCOUNT_ID,
+      env.RPC_URL
+    );
 
-  if (!relayerStorage) {
-    await account.functionCall({
-      contractId: tokenId,
-      methodName: "storage_deposit",
-      args: {
-        account_id: env.ACCOUNT_ID,
-        registration_only: true,
+    if (!relayerStorage) {
+      await account.functionCall({
+        contractId: tokenId,
+        methodName: "storage_deposit",
+        args: {
+          account_id: env.ACCOUNT_ID,
+          registration_only: true,
+        },
+        gas: AttachedGas as any,
+        attachedDeposit: "1000000000000000000000000" as any,
+      });
+    }
+  } catch (e: any) {
+    console.warn(e);
+
+    return {
+      status: errorStatus,
+      body: {
+        status: "failure",
+        error: e.message,
       },
-      gas: AttachedGas as any,
-      attachedDeposit: "1000000000000000000000000" as any,
-    });
+    };
   }
 
   // since payload is valid, submit transaction and return hash
