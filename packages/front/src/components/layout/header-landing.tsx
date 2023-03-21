@@ -122,7 +122,7 @@ const HeaderLanding = () => {
             <a
               href="https://docs.hideyour.cash/"
               target="_blank"
-              rel="noopener"
+              rel="noreferrer"
             >
               Documentation
             </a>
@@ -131,7 +131,7 @@ const HeaderLanding = () => {
             <a
               href="https://docs.hideyour.cash/general-information/faq"
               target="_blank"
-              rel="noopener"
+              rel="noreferrer"
             >
               FAQ
             </a>

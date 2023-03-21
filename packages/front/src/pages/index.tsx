@@ -10,8 +10,6 @@ import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const Waves = () => {
   return (
     <>
@@ -35,13 +33,6 @@ const Index = () => {
   useEffect(() => {
     document.body.style.background =
       "linear-gradient(90deg, #ffffff -1.75%, #d5eef4 105.87%)";
-
-    (async () => {
-      if (location.hash === "#faq") {
-        await delay(100);
-        window.scrollTo(0, document.body.scrollHeight);
-      }
-    })();
   }, []);
 
   return (
@@ -503,7 +494,7 @@ const Index = () => {
                           Instead of directly sending a transaction from their
                           wallet to another, users send a cryptographic
                           transaction to the mixer and receive a proof of their
-                          deposit (a withdrawal ticket). This proof can't be
+                          deposit (a withdrawal ticket). This proof can&apos;t be
                           traced back to their wallet and is used to withdraw
                           their funds. Many users will be doing the same thing
                           at the same time, and their transactions will be mixed
@@ -511,7 +502,7 @@ const Index = () => {
                           know for sure where a particular transaction came
                           from. However, if the volume of transactions on the
                           protocol is too small, it becomes easier to trace back
-                          a particular transaction to the deposited wallet. It's
+                          a particular transaction to the deposited wallet. It&apos;s
                           impossible to be 100% certain of the origin of a
                           transaction, but the less volume and the less time
                           funds are kept on the mixer, the greater the chance of
@@ -551,8 +542,8 @@ const Index = () => {
                           Hideyour.cash has an allowlist and blocklist
                           mechanism. Only allowed wallets can interact with the
                           protocol. We have partners that trace on-chain wallet
-                          activities and create a "suspicion score" from this
-                          data. Suspicious wallets won't be able to deposit or
+                          activities and create a &ldquo;suspicion score&ldquo; from this
+                          data. Suspicious wallets won&apos;t be able to deposit or
                           withdraw from the protocol. If a bad actor deposits
                           into the protocol before our partners can add their
                           wallets to a suspicious list, they can still be
@@ -604,7 +595,7 @@ const Index = () => {
                           yourself. However, someone may find out, at some
                           point, what is your wallet and trace back all the
                           activities that you have done, everyone that you have
-                          interacted with, and your wallet's balance. In the
+                          interacted with, and your wallet&apos;s balance. In the
                           traditional financial system, bank secrecy offers a
                           basic level of privacy by keeping transactions
                           confidential between the bank and authorities. To

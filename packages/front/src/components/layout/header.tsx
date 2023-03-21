@@ -2,14 +2,12 @@ import { Container } from "@/components";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
-import { useAllowlist } from "@/hooks/useAllowlist";
-import { useWallet } from "@/store/wallet";
+import { useApp, useWallet } from "@/store";
 
 export function Header() {
   const { accountId, toggleModal, signOut } = useWallet();
+  const { allowlist } = useApp();
   const [showModal, setShowModal] = useState(false);
-
-  const { allowList } = useAllowlist(accountId!);
 
   return (
     <>
@@ -35,23 +33,23 @@ export function Header() {
               <button
                 onClick={() => setShowModal(true)}
                 className={`${
-                  allowList && accountId
+                  allowlist && accountId
                     ? "bg-green-light"
                     : "bg-soft-blue-normal"
                 } flex h-[3rem] sm:h-full items-center justify-center space-x-[8px] text-black px-[24px] py-[12px] sm:py-[10px] rounded-full w-full font-normal ${
-                  allowList && accountId
+                  allowlist && accountId
                     ? "hover:bg-green-medium"
                     : "hover:bg-hover-button"
                 } justify-bettween hover:transition-all`}
               >
-                {allowList && accountId ? (
+                {allowlist && accountId ? (
                   <img src="/copied-icon.svg" alt="Check icon" />
                 ) : (
                   <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
                 )}
                 <span
                   className={`hidden sm:block whitespace-nowrap text-soft-blue-medium font-bold text-base ${
-                    allowList && accountId && "text-success"
+                    allowlist && accountId && "text-success"
                   }`}
                 >
                   Allowlist

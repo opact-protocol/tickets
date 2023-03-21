@@ -1,4 +1,4 @@
-import { useApplication } from "@/store";
+import { useWithdraw } from "@/store";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
@@ -11,7 +11,7 @@ export default function Modal({
   onClose: () => void;
   cleanupInputsCallback: () => void;
 }) {
-  const { sendWithdraw } = useApplication();
+  const { sendWithdraw } = useWithdraw();
   const [loading, setLoading] = useState(false);
 
   const withdraw = async () => {

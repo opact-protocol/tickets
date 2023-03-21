@@ -1,34 +1,30 @@
 import HashModal from "./hash-modal";
 import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
-import { useApplication } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
-import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
-import { useAllCurrencies } from "@/hooks/useAllCurrencies";
 import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import {
   formatBigNumberWithDecimals,
   getDecimals,
   ViewCurrenciesResponseInterface,
-  viewAccountBalance,
 } from "hideyourcash-sdk";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { settings } from "@/utils/sliderSettings";
 import { useDepositScore } from "@/hooks/useDepositScore";
-import { useEnv } from "@/hooks/useEnv";
+import { useApp, useDeposit } from "@/store";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -53,13 +49,12 @@ export function Deposit() {
     );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAllowlist, setShowAllowlist] = useState(false);
-  const [haveBalance, setHaveBalance] = useState(true);
 
-  const { prepareDeposit } = useApplication();
-  const { accountId, toggleModal, viewNearBalance } = useWallet();
+  const { prepareDeposit } = useDeposit();
+  const { accountId, toggleModal, viewBalance, haveBalance } = useWallet();
+  const { allCurrencies, allowlist } = useApp();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);
-  const { allCurrencies } = useAllCurrencies();
   const amounts = objetctToArray(selectedToken.contracts);
   const { depositScore } = useDepositScore(selectedAmount.accountId);
 
@@ -91,8 +86,6 @@ export function Deposit() {
     });
   }
 
-  const { allowList } = useAllowlist(accountId!);
-
   const preDeposit = async () => {
     if (!accountId) {
       toggleModal();
@@ -115,7 +108,7 @@ export function Deposit() {
       return;
     }
 
-    if (!allowList) {
+    if (!allowlist) {
       setShowAllowlist(true);
       return;
     }
@@ -134,32 +127,11 @@ export function Deposit() {
     }
 
     (async () => {
-      if (selectedToken.type === "Near") {
-        const { available } = await viewNearBalance();
-
-        if (+available < +selectedAmount.value) {
-          setHaveBalance(false);
-          return;
-        }
-
-        setHaveBalance(true);
-
-        return;
-      }
-
-      const accountBalance = await viewAccountBalance(
-        useEnv("VITE_NEAR_NODE_URL"),
+      await viewBalance(
+        selectedToken.type,
         selectedToken.account_id!,
-        accountId!
+        +selectedAmount.value
       );
-
-      if (+accountBalance < +selectedAmount.value) {
-        setHaveBalance(false);
-
-        return;
-      }
-
-      setHaveBalance(true);
     })();
   }, [selectedAmount]);
 
@@ -176,11 +148,13 @@ export function Deposit() {
                 </span>
               </span>
             </div>
-            <Listbox value={selectedToken} onChange={(payload) => {
-              setHaveBalance(true);
-              setSelectedToken(payload);
-              setSelectedAmount({} as any);
-            }}>
+            <Listbox
+              value={selectedToken}
+              onChange={(payload) => {
+                setSelectedToken(payload);
+                setSelectedAmount({} as any);
+              }}
+            >
               <div className="relative mt-1">
                 <Listbox.Button
                   className={`cursor-pointer relative w-full rounded-[15px] bg-soft-blue-normal py-3 pl-3 pr-10 text-left border-[2px] ${
@@ -190,7 +164,7 @@ export function Deposit() {
                   } focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm`}
                 >
                   <span className="flex gap-2 items-center truncate text-dark-grafiti font-normal">
-                    {selectedToken && selectedToken.type === 'Near' && (
+                    {selectedToken && selectedToken.type === "Near" && (
                       <>
                         <img
                           src={
@@ -234,9 +208,7 @@ export function Deposit() {
                       </>
                     )}
 
-                    {(!selectedToken || !selectedToken.type) && (
-                      "Select token"
-                    )}
+                    {(!selectedToken || !selectedToken.type) && "Select token"}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronDownIcon
@@ -317,7 +289,9 @@ export function Deposit() {
                       as="li"
                       className={() => `
                         bg-transparent rounded-full p-1 w-min mb-2 ${
-                          selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
+                          selectedAmount.accountId === token.accountId
+                            ? "bg-soft-blue-from-deep-blue"
+                            : ""
                         }
                       `}
                     >

@@ -1,6 +1,6 @@
 import ConfirmModal from "./confirm-modal";
-import { useApplication } from "@/store";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRelayer, useWithdraw } from "@/store";
+import { useState, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
@@ -62,13 +62,8 @@ export function Withdraw() {
     },
   };
 
-  const {
-    prepareWithdraw,
-    relayerData,
-    fetchRelayerData,
-    getRelayerFee,
-    setRelayerJWT,
-  } = useApplication();
+  const { getRelayerFee, setRelayerJWT, relayerData } = useRelayer();
+  const { prepareWithdraw } = useWithdraw();
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()
@@ -209,12 +204,6 @@ export function Withdraw() {
       checkRelayerFee(accountId, contract);
     }, ms);
   };
-
-  useEffect(() => {
-    if (!relayerData) {
-      fetchRelayerData();
-    }
-  }, [relayerData]);
 
   return (
     <>
@@ -420,10 +409,7 @@ export function Withdraw() {
                 )}
 
                 {!loadingDynamicFee && (
-                  <>
-                    {" "}
-                    {!showModal ? "Withdraw" : buttonText.current}{" "}
-                  </>
+                  <> {!showModal ? "Withdraw" : buttonText.current} </>
                 )}
               </button>
             </div>
@@ -432,9 +418,9 @@ export function Withdraw() {
             isOpen={showModal}
             onClose={() => setShowModal(false)}
             cleanupInputsCallback={() => {
-              setTicket('');
+              setTicket("");
               setDynamicFee(null);
-              setRecipientAddress('');
+              setRecipientAddress("");
               setRecipientAddressError(false);
 
               reset();

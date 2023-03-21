@@ -1,4 +1,3 @@
-import { useApplication } from "@/store";
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -11,6 +10,7 @@ import {
   getDecimals,
   ViewCurrenciesResponseInterface,
 } from "hideyourcash-sdk";
+import { useDeposit } from "@/store";
 
 export default function Modal({
   isOpen,
@@ -32,7 +32,7 @@ export default function Modal({
   const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { selector, accountId } = useWallet();
-  const { note, sendDeposit } = useApplication();
+  const { note, sendDeposit } = useDeposit();
 
   const closeModal = () => {
     if (sending) {
@@ -201,7 +201,9 @@ export default function Modal({
                             token.type === "Near" ? 24 : token.metadata.decimals
                           )
                         )
-                      ).toFixed(0)} ${ token.type === "Near" ? "Near" : token.metadata.name}`}
+                      ).toFixed(0)} ${
+                        token.type === "Near" ? "Near" : token.metadata.name
+                      }`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>

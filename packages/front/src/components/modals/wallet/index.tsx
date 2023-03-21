@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { ModuleState } from "@near-wallet-selector/core";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useEnv } from "@/hooks/useEnv";
-import { useWallet } from "@/store/wallet";
+import { useWallet } from "@/store";
 import { reloadPage } from "@/utils/reloadPage";
 
 export function WalletSelectorModal() {
