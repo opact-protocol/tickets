@@ -383,8 +383,10 @@ export function Deposit() {
                       <div
                         key={item}
                         className={`w-[77px] h-[9px] ${
-                          item !== 3 ? "bg-intermediate-score" : "bg-gray-300"
-                        } rounded-full`}
+                          item === 1 && "bg-deep-blue"
+                        } ${item === 2 && "bg-intermediate-score"} ${
+                          item === 3 && "bg-gray-300"
+                        }  rounded-full`}
                       />
                     ))}
                   </>
@@ -394,7 +396,11 @@ export function Deposit() {
                       {[1, 2, 3].map((item) => (
                         <div
                           key={item}
-                          className={`w-[77px] h-[9px] bg-success rounded-full`}
+                          className={`w-[77px] h-[9px] ${
+                            item === 1 && "bg-deep-blue"
+                          } ${item === 2 && "bg-intermediate-score"} ${
+                            item === 3 && "bg-success"
+                          }  rounded-full`}
                         />
                       ))}
                     </>
@@ -447,4 +453,15 @@ export function Deposit() {
       />
     </>
   );
+}
+
+{
+  [1, 2, 3].map((item) => (
+    <div
+      key={item}
+      className={`w-[77px] h-[9px] ${item === 1 && "bg-deep-blue"} ${
+        item === 2 && "bg-intermediate-score"
+      } ${item === 3 && "bg-success"}  rounded-full`}
+    />
+  ));
 }

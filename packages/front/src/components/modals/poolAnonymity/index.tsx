@@ -61,7 +61,7 @@ export const WhatIsThisModal = ({
                   <li>Level three protects against spy-grade analytics software</li>
                 </ol>
                 <button
-                  className="max-w-[367px] block mx-auto bg-intermediate-score mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
+                  className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
                   onClick={() => onClose()}
                 >
                   Close
