@@ -108,7 +108,7 @@ export const relayer = async (
         status: errorStatus,
         body: {
           status: "failure",
-          error: e.message,
+          error: e.message.split('.').at(0),
         },
       };
     }
@@ -140,7 +140,7 @@ export const relayer = async (
       status: errorStatus,
       body: {
         status: "failure",
-        error: e.message,
+        error: e.message.split('.').at(0),
       },
     };
   }
