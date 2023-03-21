@@ -92,6 +92,8 @@ jobs:
       VITE_RELAYER_URL: https://dev-relayer.hideyourcash.workers.dev
       VITE_CONTRACT: ${{ needs.check_build_and_tests.outputs.HYC_CONTRACT }}
       VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/veigajoao/test_hyc2
+      VITE_TRACES_SAMPLE_RATE: 0
+      VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
       RELAYER_FEE: "0.10"
       NEAR_NETWORK: "testnet"
       ACCOUNT_ID: ${{ needs.check_build_and_tests.outputs.ACCOUNT_ID }}
