@@ -1,6 +1,7 @@
 import type { WalletSelector } from "@near-wallet-selector/core";
 import type {
   Currency,
+  CurrencyContract,
   Logger,
   RelayerDataInterface,
   ViewCurrenciesResponseInterface,
@@ -27,10 +28,25 @@ export interface DepositStore {
     account: string,
     currencieContract: string
   ) => Promise<string>;
-  poolDepositScore: (contract: string) => Promise<void>;
+  preDeposit: () => Promise<void>;
+  deposit: () => Promise<void>;
+  poolDepositScore: () => Promise<void>;
+  setSelectedToken: (payload: ViewCurrenciesResponseInterface) => void;
+  setSelectedAmount: (payload: AmountsProps) => void;
+  setCopyTicket: (state: boolean) => void;
+  setAllowlistModal: (state: boolean) => void;
+  formatAmounts: (data: CurrencyContract) => CurrencyContract[];
   depositScore: number;
   hash: string;
   note: string;
+  errorMessage: string;
+  selectedToken: ViewCurrenciesResponseInterface;
+  selectedAmount: AmountsProps;
+  copyTicket: boolean;
+  sendingDeposit: boolean;
+  showAllowlistModal: boolean;
+  depositing: boolean;
+  buttonText: string;
 }
 
 export interface RelayerStore {
@@ -54,7 +70,7 @@ export interface WalletStore {
     tokenContract: string,
     tokenValue: number
   ) => Promise<void>;
-  sendWhitelist: (connection: any, account: string) => Promise<void>;
+  sendWhitelist: () => Promise<void>;
   accountId: string | null;
   showWalletModal: boolean;
   selector: WalletSelector | null;
@@ -74,9 +90,21 @@ export interface WithdrawStore {
   publicArgs: any;
 }
 
+export interface ModalStore {
+  toggleHashModal: () => void;
+  hashModal: boolean;
+  toggleConfirmWithdrawModal: () => void;
+  confirmWithdrawModal: boolean;
+}
+
 export interface Balance {
   total: string;
   stateStaked: string;
   staked: string;
   available: string;
+}
+
+export interface AmountsProps {
+  value: string;
+  accountId: string;
 }

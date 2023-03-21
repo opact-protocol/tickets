@@ -1,7 +1,4 @@
-export interface AmountsProps {
-  value: string;
-  accountId: string;
-}
+import { AmountsProps } from "@/interfaces";
 
 export const objetctToArray = (data: any) => {
   const amounts: AmountsProps[] = [];

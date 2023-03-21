@@ -81,8 +81,10 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     set(() => ({ accountId: "" }));
   },
-  sendWhitelist: async (connection, accountId) => {
-    await hycService.sendAllowlist(accountId, connection);
+  sendWhitelist: async () => {
+    const { selector, accountId } = get();
+    if (!accountId) return;
+    await hycService.sendAllowlist(accountId!, selector);
   },
   viewBalance: async (
     tokenType: string,

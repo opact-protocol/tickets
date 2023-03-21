@@ -9,8 +9,6 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
-import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 import { viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
@@ -42,8 +40,6 @@ export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [generatingProof, setGeneratinProof] = useState(false);
-  const [showModalDeposits, setShowModalDeposits] = useState(false);
-  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
   const buttonText = useRef("Withdraw");
   const [ticket, setTicket] = useState<any>();
   const [recipientAddress, setRecipientAddress] = useState("");
@@ -414,32 +410,28 @@ export function Withdraw() {
               </button>
             </div>
           )}
-          <ConfirmModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            cleanupInputsCallback={() => {
-              setTicket("");
-              setDynamicFee(null);
-              setRecipientAddress("");
-              setRecipientAddressError(false);
+          {showModal && (
+            <ConfirmModal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              cleanupInputsCallback={() => {
+                setTicket("");
+                setDynamicFee(null);
+                setRecipientAddress("");
+                setRecipientAddressError(false);
 
-              reset();
-            }}
-          />
+                reset();
+              }}
+            />
+          )}
         </form>
       </div>
-      <WhatIsThisModal
-        isOpen={showModalPoolAnonymity}
-        onClose={() => setShowModalPoolAnonymity(false)}
-      />
-      <TotalDepositsModal
-        isOpen={showModalDeposits}
-        onClose={() => setShowModalDeposits(false)}
-      />
-      <TotalWithdrawsModal
-        isOpen={showModalWithdrawals}
-        onClose={() => setShowModalWithdrawals(false)}
-      />
+      {showModalPoolAnonymity && (
+        <WhatIsThisModal
+          isOpen={showModalPoolAnonymity}
+          onClose={() => setShowModalPoolAnonymity(false)}
+        />
+      )}
     </>
   );
 }
