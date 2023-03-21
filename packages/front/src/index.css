@@ -58,7 +58,7 @@ body {
 
 .progress {
   display:block;
-  transition: width 3.5s ease-out;
-  -webkit-transition: width 3.5s ease-out;
-  -moz-transition: width 3.5s ease-out;
+  transition: width 10s ease-out;
+  -webkit-transition: width 10s ease-out;
+  -moz-transition: width 10s ease-out;
 }
