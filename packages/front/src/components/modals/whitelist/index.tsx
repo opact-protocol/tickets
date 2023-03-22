@@ -1,8 +1,6 @@
-import { useApp } from "@/store";
+import { useApp, useWallet } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useAllowlist } from "@/hooks/useAllowlist";
-import { useWallet } from "@/store/wallet";
 
 export function WhitelistModal({
   isOpen,
@@ -11,18 +9,8 @@ export function WhitelistModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { selector, accountId, toggleModal } = useWallet();
-
-  const { sendWhitelist } = useApp();
-
-  const { allowList } = useAllowlist(accountId!);
-
-  const apply = () => {
-    if (!accountId) {
-      return;
-    }
-    sendWhitelist(selector, accountId!);
-  };
+  const { accountId, toggleModal, sendWhitelist } = useWallet();
+  const allowlist = useApp((state) => state.allowlist);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -55,12 +43,12 @@ export function WhitelistModal({
                   as="h1"
                   className="text-black text-[18px] font-medium text-center font-[Sora]"
                 >
-                  {allowList && accountId
+                  {allowlist && accountId
                     ? "You are already on the allowlist"
                     : "Apply for Allowlist"}
                 </Dialog.Title>
 
-                {!allowList && (
+                {!allowlist && (
                   <div className="mt-2 text-[16px] text-black space-y-[12px]">
                     <p className="text-center">
                       Apply to our allowlist to receive permission to make
@@ -78,7 +66,7 @@ export function WhitelistModal({
                 )}
 
                 <div>
-                  {accountId && allowList ? (
+                  {accountId && allowlist ? (
                     <div>
                       <h2
                         className="text-dark-grafiti font-bold font-[Sora] mt-4 mx-28 text-center truncate"
@@ -110,10 +98,10 @@ export function WhitelistModal({
                   </div>
                 )}
 
-                {!allowList && accountId && (
+                {!allowlist && accountId && (
                   <div>
                     <button
-                      onClick={() => apply()}
+                      onClick={() => sendWhitelist()}
                       className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                     >
                       Apply now

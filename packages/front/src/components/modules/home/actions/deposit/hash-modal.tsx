@@ -1,38 +1,27 @@
-import { useApp } from "@/store";
+import { useDeposit } from "@/store";
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
-import { useWallet } from "@/store/wallet";
 import FileSaver from "file-saver";
-import {
-  Currency,
-  formatBigNumberWithDecimals,
-  getDecimals,
-  ViewCurrenciesResponseInterface,
-} from "hideyourcash-sdk";
+import { formatBigNumberWithDecimals, getDecimals } from "hideyourcash-sdk";
 
 export default function Modal({
   isOpen,
   onClose,
-  amount,
-  contract,
-  currency,
-  token,
 }: {
   isOpen: boolean;
-  amount: string;
-  contract: string;
-  token: ViewCurrenciesResponseInterface;
-  currency: Currency;
   onClose: () => void;
 }) {
-  const [sending, setSending] = useState(false);
   const [buttonText, setButtonText] = useState<string>("");
-  const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { selector, accountId } = useWallet();
-  const { note, sendDeposit } = useApp();
+  const selectedToken = useDeposit((state) => state.selectedToken);
+  const selectedAmount = useDeposit((state) => state.selectedAmount);
+  const note = useDeposit((state) => state.note);
+  const copyTicket = useDeposit((state) => state.copyTicket);
+  const sending = useDeposit((state) => state.sendingDeposit);
+  const setCopyTicket = useDeposit((state) => state.setCopyTicket);
+  const deposit = useDeposit((state) => state.deposit);
 
   const closeModal = () => {
     if (sending) {
@@ -42,25 +31,15 @@ export default function Modal({
     onClose();
   };
 
-  const deposit = async () => {
-    if (!copy) {
+  const handleDeposit = async () => {
+    if (!copyTicket) {
       setErrorMessage("Copy or download your withdraw ticket to continue");
       return;
     }
-
-    setSending(true);
     setButtonText("Sending your Deposit...");
-
-    try {
-      await sendDeposit(amount, contract, accountId!, currency, selector!);
-
-      closeModal();
-      setSending(false);
-      setButtonText(`Deposit ${amount} Near`);
-      setCopy(false);
-    } catch (e) {
-      console.warn(e);
-    }
+    await deposit();
+    closeModal();
+    setButtonText(`Deposit ${selectedAmount.value} Near`);
   };
 
   useEffect(() => {
@@ -76,7 +55,7 @@ export default function Modal({
         className="relative z-[999]"
         onClose={() => {
           closeModal();
-          setCopy(false);
+          setCopyTicket(false);
         }}
       >
         <Transition.Child
@@ -128,14 +107,14 @@ export default function Modal({
                   className={`flex items-center bg-soft-blue-normal rounded-[15px] w-full max-w-[609px] mx-auto border-[2px] ${
                     errorMessage
                       ? "border-error mt-0"
-                      : copy
+                      : copyTicket
                       ? "border-success"
                       : "border-transparent"
                   }`}
                 >
                   <p
                     className={`${
-                      copy ? "text-success" : "text-dark-grafiti-medium"
+                      copyTicket ? "text-success" : "text-dark-grafiti-medium"
                     } text-sm font-semibold truncate w-full p-3 pl-10`}
                   >
                     {note}
@@ -143,20 +122,20 @@ export default function Modal({
                   <CopyToClipboard
                     text={note}
                     onCopy={() => {
-                      setCopy(true);
+                      setCopyTicket(true);
                       setErrorMessage("");
                     }}
                   >
                     <button
                       className={`flex items-center gap-3 pr-10 ${
-                        copy ? "text-success" : "text-dark-grafiti-medium"
+                        copyTicket ? "text-success" : "text-dark-grafiti-medium"
                       } text-sm font-normal`}
                     >
                       <img
-                        src={copy ? "/copied-icon.svg" : "/copy-icon.svg"}
-                        alt={copy ? "Copied Icon" : "Copy Icon"}
+                        src={copyTicket ? "/copied-icon.svg" : "/copy-icon.svg"}
+                        alt={copyTicket ? "Copied Icon" : "Copy Icon"}
                       />
-                      {copy ? "Copied" : "Copy"}
+                      {copyTicket ? "Copied" : "Copy"}
                     </button>
                   </CopyToClipboard>
                 </div>
@@ -165,7 +144,7 @@ export default function Modal({
                   <span
                     className="text-info underline flex gap-3 cursor-pointer"
                     onClick={() => {
-                      setCopy(true);
+                      setCopyTicket(true);
                       setErrorMessage("");
                     }}
                   >
@@ -175,7 +154,7 @@ export default function Modal({
                       label="Download your ticket in txt file"
                       filename="ticket.txt"
                       exportFile={() => {
-                        setCopy(true);
+                        setCopyTicket(true);
                         setErrorMessage("");
                         return note;
                       }}
@@ -189,19 +168,25 @@ export default function Modal({
                 </p>
                 <button
                   disabled={sending}
-                  onClick={() => deposit()}
+                  onClick={() => handleDeposit()}
                   className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[90px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
                 >
                   {buttonText
                     ? buttonText
                     : `Deposit ${Number(
                         formatBigNumberWithDecimals(
-                          amount,
+                          selectedAmount.value,
                           getDecimals(
-                            token.type === "Near" ? 24 : token.metadata.decimals
+                            selectedToken.type === "Near"
+                              ? 24
+                              : selectedToken.metadata.decimals
                           )
                         )
-                      ).toFixed(0)} ${ token.type === "Near" ? "Near" : token.metadata.name}`}
+                      ).toFixed(0)} ${
+                        selectedToken.type === "Near"
+                          ? "Near"
+                          : selectedToken.metadata.name
+                      }`}
                 </button>
               </Dialog.Panel>
             </Transition.Child>
