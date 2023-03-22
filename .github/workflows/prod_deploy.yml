@@ -83,11 +83,11 @@ jobs:
         run: yarn relayer build
 
       - name: Set Relayer Variables
-        env: 
+        env:
           NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
           RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
           RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
-          HYC_CONTRACT: ${{ env.VITE_CONTRACT }} 
+          HYC_CONTRACT: ${{ env.VITE_CONTRACT }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
         run: yarn relayer populate:envs
