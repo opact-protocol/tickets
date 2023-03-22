@@ -1,30 +1,23 @@
 import HashModal from "./hash-modal";
 import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
-import { useApp } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
-import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
-import { useAllCurrencies } from "@/hooks/useAllCurrencies";
-import { AmountsProps, objetctToArray } from "@/utils/objetctToArray";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
+import { useDeposit, useModal, useApp } from "@/store";
 import {
-  formatBigNumberWithDecimals,
   getDecimals,
-  ViewCurrenciesResponseInterface,
-  viewAccountBalance,
+  formatBigNumberWithDecimals,
 } from "hideyourcash-sdk";
-import { useDepositScore } from "@/hooks/useDepositScore";
-import { useEnv } from "@/hooks/useEnv";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -35,29 +28,30 @@ const hycTransaction = "hyc-transaction";
 const customId = "deposit-toast";
 
 export function Deposit() {
-  const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState<AmountsProps>(
-    {} as AmountsProps
-  );
-  const [buttonText, setButtonText] = useState("Deposit");
-  const [depositing, setDepositing] = useState(false);
-  const [selectedToken, setSelectedToken] =
-    useState<ViewCurrenciesResponseInterface>(
-      {} as ViewCurrenciesResponseInterface
-    );
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [showAllowlist, setShowAllowlist] = useState(false);
-  const [haveBalance, setHaveBalance] = useState(true);
-
-  const { prepareDeposit } = useApp();
-  const { accountId, toggleModal, viewNearBalance } = useWallet();
-  const { action } = useAction(transactionHashes!, accountId!);
+  const { accountId, viewBalance, haveBalance, toggleModal } = useWallet();
+  const { allCurrencies } = useApp();
+  const {
+    setSelectedToken,
+    setSelectedAmount,
+    setAllowlistModal,
+    formatAmounts,
+    poolDepositScore,
+    preDeposit,
+    selectedToken,
+    selectedAmount,
+    depositScore,
+    errorMessage,
+    showAllowlistModal,
+    buttonText,
+    depositing,
+  } = useDeposit();
+  const hashModal = useModal((state) => state.hashModal);
+  const toggleHashModal = useModal((state) => state.toggleHashModal);
+  const amounts = formatAmounts(selectedToken.contracts);
   const approved = localStorage.getItem(hycTransaction);
-  const { allCurrencies } = useAllCurrencies();
-  const amounts = objetctToArray(selectedToken.contracts);
-  const { depositScore } = useDepositScore(selectedAmount.accountId);
+  const { action } = useAction(transactionHashes!, accountId!);
 
   if (!action && transactionHashes && !approved) {
     toast(
@@ -87,41 +81,12 @@ export function Deposit() {
     });
   }
 
-  const { allowList } = useAllowlist(accountId!);
-
-  const preDeposit = async () => {
+  const handleDeposit = async () => {
     if (!accountId) {
       toggleModal();
-
       return;
     }
-
-    if (!selectedToken.type) {
-      setErrorMessage("Select token to deposit");
-      return;
-    }
-
-    if (!selectedAmount.value) {
-      setErrorMessage("Select amount to deposit");
-      return;
-    }
-
-    if (!haveBalance) {
-      setErrorMessage("Your account doesn't have enough balance");
-      return;
-    }
-
-    if (!allowList) {
-      setShowAllowlist(true);
-      return;
-    }
-
-    setDepositing(true);
-    setButtonText("Preparing your deposit...");
-
-    await prepareDeposit(accountId!, selectedAmount.accountId);
-
-    setShowModal(!showModal);
+    await preDeposit();
   };
 
   useEffect(() => {
@@ -130,32 +95,13 @@ export function Deposit() {
     }
 
     (async () => {
-      if (selectedToken.type === "Near") {
-        const { available } = await viewNearBalance();
-
-        if (+available < +selectedAmount.value) {
-          setHaveBalance(false);
-          return;
-        }
-
-        setHaveBalance(true);
-
-        return;
-      }
-
-      const accountBalance = await viewAccountBalance(
-        useEnv("VITE_NEAR_NODE_URL"),
+      await viewBalance(
+        selectedToken.type,
         selectedToken.account_id!,
-        accountId!
+        +selectedAmount.value
       );
 
-      if (+accountBalance < +selectedAmount.value) {
-        setHaveBalance(false);
-
-        return;
-      }
-
-      setHaveBalance(true);
+      await poolDepositScore();
     })();
   }, [selectedAmount]);
 
@@ -175,7 +121,6 @@ export function Deposit() {
             <Listbox
               value={selectedToken}
               onChange={(payload) => {
-                setHaveBalance(true);
                 setSelectedToken(payload);
                 setSelectedAmount({} as any);
               }}
@@ -412,48 +357,40 @@ export function Deposit() {
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button
             disabled={depositing || !haveBalance}
-            onClick={() => preDeposit()}
+            onClick={() => handleDeposit()}
             className="bg-soft-blue-from-deep-blue p-[12px] rounded-full mt-5 w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
           >
             {!accountId ? "Connect Wallet" : buttonText}
           </button>
 
-          {showModal && (
+          {hashModal && (
             <HashModal
-              isOpen={showModal}
-              currency={selectedToken}
-              contract={selectedAmount.accountId}
-              amount={selectedAmount.value}
-              token={selectedToken}
+              isOpen={hashModal}
               onClose={() => {
-                setDepositing(false);
-                setShowModal(!showModal);
-                setButtonText("Deposit");
+                toggleHashModal();
               }}
             />
           )}
-          <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          {isOpen && (
+            <FixedValuesModal
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+            />
+          )}
         </div>
       </div>
-      <WhatIsThisModal
-        isOpen={showModalPoolAnonymity}
-        onClose={() => setShowModalPoolAnonymity(false)}
-      />
-      <WhitelistModal
-        isOpen={showAllowlist}
-        onClose={() => setShowAllowlist(false)}
-      />
+      {showModalPoolAnonymity && (
+        <WhatIsThisModal
+          isOpen={showModalPoolAnonymity}
+          onClose={() => setShowModalPoolAnonymity(false)}
+        />
+      )}
+      {showAllowlistModal && (
+        <WhitelistModal
+          isOpen={showAllowlistModal}
+          onClose={() => setAllowlistModal(false)}
+        />
+      )}
     </>
   );
-}
-
-{
-  [1, 2, 3].map((item) => (
-    <div
-      key={item}
-      className={`w-[77px] h-[9px] ${item === 1 && "bg-deep-blue"} ${
-        item === 2 && "bg-intermediate-score"
-      } ${item === 3 && "bg-success"}  rounded-full`}
-    />
-  ));
 }
