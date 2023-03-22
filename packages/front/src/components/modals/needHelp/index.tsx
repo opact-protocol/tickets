@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
@@ -114,7 +114,11 @@ const NeedHelpModal = ({
             >
               <Dialog.Panel className="w-full max-w-[620px] transform overflow-hidden rounded-[35px] bg-white p-6 text-left align-middle shadow-xl transition-all relative">
                 <button
-                  onClick={() => onClose()}
+                  onClick={() => {
+                    onClose();
+                    setForm({ ...baseForm });
+                    setTouched({ ...baseTouched });
+                  }}
                   className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
                 >
                   <XMarkIcon className="text-black w-[24px]" />
