@@ -1,5 +1,5 @@
 import ConfirmModal from "./confirm-modal";
-import { useApplication } from "@/store";
+import { useApp } from "@/store";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
@@ -68,7 +68,7 @@ export function Withdraw() {
     fetchRelayerData,
     getRelayerFee,
     setRelayerJWT,
-  } = useApplication();
+  } = useApp();
   const withdrawSchema = yup.object().shape({
     ticket: yup
       .string()

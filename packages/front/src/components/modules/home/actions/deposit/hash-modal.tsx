@@ -1,4 +1,4 @@
-import { useApplication } from "@/store";
+import { useApp } from "@/store";
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -32,7 +32,7 @@ export default function Modal({
   const [copy, setCopy] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { selector, accountId } = useWallet();
-  const { note, sendDeposit } = useApplication();
+  const { note, sendDeposit } = useApp();
 
   const closeModal = () => {
     if (sending) {

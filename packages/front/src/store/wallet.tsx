@@ -1,8 +1,5 @@
 import { create } from "zustand";
-import {
-  setupWalletSelector,
-  WalletSelector,
-} from "@near-wallet-selector/core";
+import { setupWalletSelector } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
@@ -14,28 +11,15 @@ import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
 import { BN } from "bn.js";
 import { providers } from "near-api-js";
+import { hycService } from "@/lib";
+import { Balance, WalletStore } from "@/interfaces";
+import { viewAccountBalance } from "hideyourcash-sdk";
 
-interface Balance {
-  total: string;
-  stateStaked: string;
-  staked: string;
-  available: string;
-}
-
-export interface WalletStoreInterface {
-  toggleModal: () => void;
-  accountId: string | null;
-  showWalletModal: boolean;
-  signOut: () => Promise<void>;
-  selector: WalletSelector | null;
-  initWallet: () => Promise<string>;
-  viewNearBalance: () => Promise<Balance>;
-}
-
-export const useWallet = create<WalletStoreInterface>((set, get) => ({
-  accountId: null,
+export const useWallet = create<WalletStore>((set, get) => ({
+  accountId: "",
   selector: null,
   showWalletModal: false,
+  haveBalance: true,
 
   toggleModal: () => {
     const { showWalletModal } = get();
@@ -97,8 +81,28 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
 
     set(() => ({ accountId: "" }));
   },
-  viewNearBalance: async (): Promise<Balance> => {
+  sendWhitelist: async () => {
+    const { selector, accountId } = get();
+    if (!accountId) return;
+    await hycService.sendAllowlist(accountId!, selector);
+  },
+  viewBalance: async (
+    tokenType: string,
+    tokenContract: string,
+    tokenValue: number
+  ): Promise<void> => {
     const { accountId } = get();
+
+    if (tokenType !== "Near") {
+      const accountBalance = await viewAccountBalance(
+        useEnv("VITE_NEAR_NODE_URL"),
+        tokenContract,
+        accountId!
+      );
+
+      set({ haveBalance: +accountBalance < tokenValue ? false : true });
+      return;
+    }
 
     const provider = new providers.JsonRpcProvider({
       url: useEnv("VITE_NEAR_NODE_URL"),
@@ -122,11 +126,14 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
     const totalBalance = new BN(state.amount).add(staked);
     const availableBalance = totalBalance.sub(BN.max(staked, stateStaked));
 
-    return {
+    const balance = {
       total: totalBalance.toString(),
       stateStaked: stateStaked.toString(),
       staked: staked.toString(),
       available: availableBalance.toString(),
     } as Balance;
+
+    set({ haveBalance: +balance.available < tokenValue ? false : true });
+    return;
   },
 }));
