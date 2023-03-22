@@ -1,9 +1,23 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
+import { twMerge } from 'tailwind-merge';
+
+const baseForm = {
+  name: '',
+  email: '',
+  message: '',
+}
+
+const baseTouched = {
+  name: false,
+  email: false,
+  message: false,
+}
+
 
 const NeedHelpModal = ({
   isOpen,
@@ -12,28 +26,43 @@ const NeedHelpModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
+  const [form, setForm] = useState({ ...baseForm });
+  const [touched, setTouched] = useState({ ...baseTouched })
+
+  const handleTouch = (key: string) => {
+    if (touched[key]) {
+      return;
+    }
+
+    setTouched({ ...touched, [key]: true });
+  };
+
+  const handleForm = (key: string, value: string) => {
+    console.log('formkeytrigger', key);
+
+    if (form[key] === value) {
+      return;
+    }
+
+    setForm({
+      ...form,
+      [key]: value,
+    });
+
+    handleTouch(key);
+  }
 
   const onSubmit = () => {
     try {
-      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", {
-        name,
-        email,
-        message,
-      }, {
+      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", baseForm, {
         headers: { "Content-Type": "application/json" },
       });
-      setName('');
-      setEmail('');
-      setMessage('');
+
+      setForm({ ...baseForm });
+      setTouched({ ...baseTouched });
+
       onClose();
+
       toast(
         <ToastCustom
           icon="check-circle-icon.svg"
@@ -42,7 +71,7 @@ const NeedHelpModal = ({
         />
       );
     } catch (error) {
-      console.error(error);
+
       toast(
         <ToastCustom
           icon="error-circle-icon.svg"
@@ -55,7 +84,11 @@ const NeedHelpModal = ({
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-[100000]" onClose={onClose}>
+      <Dialog as="div" className="relative z-[100000]" onClose={() => {
+        onClose();
+        setForm({ ...baseForm });
+        setTouched({ ...baseTouched });
+      }}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -93,107 +126,73 @@ const NeedHelpModal = ({
                 >
                   Contact us
                 </Dialog.Title>
-                <form onSubmit={() => onSubmit()}>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    onSubmit();
+                  }}
+                >
                   <div className="flex flex-col gap-2 mb-2 sm:flex-row">
                     <div className="w-full">
                       <label
-                        className={`${
-                          errors.name
-                            ? "text-error"
-                            : "text-dark-grafiti"
-                        }`}
+                        className="text-dark-grafiti"
                       >
-                        Your name{" "}
-                        {errors.name && `- ${errors.name}`}
+                        Your name
                       </label>
+
                       <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={form.name}
+                        onChange={(e) => {
+                          handleForm('name', e.target.value);
+                        }}
                         type="text"
                         name="name"
+                        pattern=".{3,}"
+                        title="2 characters minimum"
+                        required
                         placeholder="Write your name here"
-                        className={`
-                      p-[8px]
-                      h-[43px]
-                      bg-soft-blue-normal
-                      rounded-[15px]
-                      text-dark-grafiti-light
-                      w-full
-                      flex items-center justify-between
-                      border-[2px]
-                      ${
-                        errors.name
-                          ? "border-error"
-                          : "border-transparent"
-                      }
-                      focus:outline-none`}
+                        className={twMerge("p-[8px] h-[43px] bg-soft-blue-normal rounded-[15px] text-dark-grafiti-light w-full flex items-center justify-between border-[2px] border-transparent focus:outline-none", touched.name && 'invalid:border-error' )}
                       />
                     </div>
+
                     <div className="w-full">
                       <label
-                        className={`${
-                          errors.email
-                            ? "text-error"
-                            : "text-dark-grafiti"
-                        }`}
+                        className="text-dark-grafiti"
                       >
-                        Your email{" "}
-                        {errors.email && `- ${errors.email}`}
+                        Your email
                       </label>
+
                       <input
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        id="contact-us-email"
+                        value={form.email}
+                        onChange={(e) => handleForm('email', e.target.value)}
                         name="email"
+                        type="email"
+                        required
                         placeholder="example@email.com"
-                        className={`p-[8px]
-                      h-[43px]
-                      bg-soft-blue-normal
-                      rounded-[15px]
-                      text-dark-grafiti-light
-                      w-full
-                      flex items-center justify-between
-                      border-[2px]
-                      ${
-                        errors.email
-                          ? "border-error"
-                          : "border-transparent"
-                      }
-                      focus:outline-none`}
+                        className={twMerge("p-[8px] h-[43px] bg-soft-blue-normal rounded-[15px] text-dark-grafiti-light w-full flex items-center justify-between border-[2px] border-transparent focus:outline-none", touched.email && 'invalid:border-error')}
                       />
                     </div>
                   </div>
+
                   <div>
                     <label
-                      className={`${
-                        errors.message
-                          ? "text-error"
-                          : "text-dark-grafiti"
-                      }`}
+                      className="text-dark-grafiti"
                     >
-                      Your message{" "}
-                      {errors.message && `- ${errors.message}`}
+                      Your message
                     </label>
+
                     <textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
+                      value={form.message}
+                      onChange={(e) => handleForm('message', e.target.value)}
                       name="message"
+                      required
                       placeholder="Write your message here"
-                      className={`resize-none p-[8px]
-                    h-[160px]
-                    bg-soft-blue-normal
-                    rounded-[15px]
-                    text-dark-grafiti-light
-                    w-full
-                    flex items-center justify-between
-                    border-[2px]
-                    ${
-                      errors.message
-                        ? "border-error"
-                        : "border-transparent"
-                    }
-                    focus:outline-none`}
+                      className={twMerge("w-full h-[160px] border-[2px] rounded-[15px] resize-none p-[8px] border-transparent focus:outline-none bg-soft-blue-normal text-dark-grafiti-light flex items-center justify-between", touched.message && 'invalid:border-error')}
                     />
                   </div>
+
                   <button
                     type="submit"
                     className="bg-soft-blue-from-deep-blue p-[12px] rounded-full block w-full mt-6 mx-auto font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
