@@ -5,8 +5,8 @@ import { ChevronUpIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { DocumentIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-import Zoom from "react-reveal/Zoom";
-import Fade from "react-reveal/Fade";
+// import Zoom from "react-reveal/Zoom";
+// import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
@@ -50,7 +50,7 @@ const Index = () => {
       <Waves />
       <Container className="relative z-10">
         <HeaderLanding />
-        <Zoom>
+        {/* <Zoom> */}
           <section className="flex flex-col justify-center items-center">
             <div className="pb-16 pt-40 w-[30px]">
               <img
@@ -89,8 +89,8 @@ const Index = () => {
               </div>
             </div>
           </section>
-        </Zoom>
-        <Fade right>
+        {/* </Zoom> */}
+        {/* <Fade right> */}
           <section className="flex flex-col justify-center items-center mt-[216px]">
             <div className="w-full">
               <h1 className="text-5xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -120,8 +120,8 @@ const Index = () => {
               />
             </div>
           </section>
-        </Fade>
-        <Fade left>
+        {/* </Fade> */}
+        {/* <Fade left> */}
           <section
             className="flex flex-col justify-center items-center mt-[70px]"
             id="easy-to-use"
@@ -176,8 +176,8 @@ const Index = () => {
               </div>
             </div>
           </section>
-        </Fade>
-        <Fade right>
+        {/* </Fade> */}
+        {/* <Fade right> */}
           <section className="flex flex-col justify-center items-center mt-[125px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center flex items-center justify-center">
@@ -228,8 +228,8 @@ const Index = () => {
               </p>
             </div>
           </section>
-        </Fade>
-        <Fade left>
+        {/* </Fade> */}
+        {/* <Fade left> */}
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -295,8 +295,8 @@ const Index = () => {
               ))}
             </ul>
           </section>
-        </Fade>
-        <Fade right>
+        {/* </Fade>
+        <Fade right> */}
           <section
             className="flex flex-col justify-center items-center mt-[150px]"
             id="how-it-works"
@@ -373,8 +373,8 @@ const Index = () => {
               </button>
             </div>
           </section>
-        </Fade>
-        <Fade left>
+        {/* </Fade>
+        <Fade left> */}
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -424,8 +424,8 @@ const Index = () => {
               ))}
             </div>
           </section>
-        </Fade>
-        <Fade right>
+        {/* </Fade>
+        <Fade right> */}
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -462,8 +462,8 @@ const Index = () => {
               ))}
             </ul>
           </section>
-        </Fade>
-        <Fade left>
+        {/* </Fade>
+        <Fade left> */}
           <section
             className="flex flex-col justify-center items-center mt-[150px]"
             id="faq"
@@ -504,7 +504,7 @@ const Index = () => {
                           Instead of directly sending a transaction from their
                           wallet to another, users send a cryptographic
                           transaction to the mixer and receive a proof of their
-                          deposit (a withdrawal ticket). This proof can't be
+                          deposit (a withdrawal ticket). This proof can{"'"}t be
                           traced back to their wallet and is used to withdraw
                           their funds. Many users will be doing the same thing
                           at the same time, and their transactions will be mixed
@@ -512,7 +512,7 @@ const Index = () => {
                           know for sure where a particular transaction came
                           from. However, if the volume of transactions on the
                           protocol is too small, it becomes easier to trace back
-                          a particular transaction to the deposited wallet. It's
+                          a particular transaction to the deposited wallet. It{"'"}s
                           impossible to be 100% certain of the origin of a
                           transaction, but the less volume and the less time
                           funds are kept on the mixer, the greater the chance of
@@ -552,8 +552,8 @@ const Index = () => {
                           Hideyour.cash has an allowlist and blocklist
                           mechanism. Only allowed wallets can interact with the
                           protocol. We have partners that trace on-chain wallet
-                          activities and create a "suspicion score" from this
-                          data. Suspicious wallets won't be able to deposit or
+                          activities and create a {'"'}suspicion score{'"'} from this
+                          data. Suspicious wallets won{"'"}t be able to deposit or
                           withdraw from the protocol. If a bad actor deposits
                           into the protocol before our partners can add their
                           wallets to a suspicious list, they can still be
@@ -605,7 +605,7 @@ const Index = () => {
                           yourself. However, someone may find out, at some
                           point, what is your wallet and trace back all the
                           activities that you have done, everyone that you have
-                          interacted with, and your wallet's balance. In the
+                          interacted with, and your wallet{"'"}s balance. In the
                           traditional financial system, bank secrecy offers a
                           basic level of privacy by keeping transactions
                           confidential between the bank and authorities. To
@@ -621,7 +621,7 @@ const Index = () => {
               </div>
             </div>
           </section>
-        </Fade>
+        {/* </Fade> */}
         <footer className="p-10 flex flex-col gap-5 justify-between relative z-[10]">
           <div className="w-full flex flex-col justify-between gap-5 md:flex-row">
             <a

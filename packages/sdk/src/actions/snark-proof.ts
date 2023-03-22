@@ -97,6 +97,16 @@ export const prepareWithdraw = async (
   };
 };
 
+export const getCommitmentByTicket = async (note: string): Promise<string> => {
+  const { hash } = await mimcService.initMimc();
+
+  const parsedNote = parseNote(note);
+
+  const secretsHash = hash(parsedNote.secret, parsedNote.nullifier);
+
+  return hash(secretsHash, parsedNote.account_hash);
+}
+
 export const getWithdrawInput = async (
   { hash }: { hash: string },
   fee: string,
