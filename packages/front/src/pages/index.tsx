@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Container } from "@/components";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
@@ -73,7 +74,7 @@ const Index = () => {
               <div className="flex flex-col items-center justify-center w-full gap-8 mt-[50px] md:flex-row">
                 <button
                   className="text-white p-3 rounded-[50px] font-bold text-lg bg-aqua w-full hover:bg-aqua-medium hover:transition-all"
-                  onClick={() => navigate("/hideyourcash")}
+                  onClick={() => navigate("/app")}
                 >
                   Launch app
                 </button>

@@ -96,7 +96,7 @@ const HeaderLanding = () => {
                         <li className="text-white font-bold text-base">
                           <button
                             className="p-2 px-6 rounded-[20px] bg-aqua-gradient-medium cursor-pointer hover:opacity-70 hover:transition-all"
-                            onClick={() => navigate("/hideyourcash")}
+                            onClick={() => navigate("/app")}
                           >
                             Launch app
                           </button>
@@ -122,7 +122,7 @@ const HeaderLanding = () => {
             <a
               href="https://docs.hideyour.cash/"
               target="_blank"
-              rel="noopener"
+              rel="noreferrer"
             >
               Documentation
             </a>
@@ -131,7 +131,7 @@ const HeaderLanding = () => {
             <a
               href="https://docs.hideyour.cash/general-information/faq"
               target="_blank"
-              rel="noopener"
+              rel="noreferrer"
             >
               FAQ
             </a>
@@ -139,7 +139,7 @@ const HeaderLanding = () => {
           <li className="text-white font-bold text-base">
             <button
               className="p-2 px-6 rounded-[20px] bg-aqua-gradient-medium cursor-pointer hover:opacity-70 hover:transition-all"
-              onClick={() => navigate("/hideyourcash")}
+              onClick={() => navigate("/app")}
             >
               Launch app
             </button>
