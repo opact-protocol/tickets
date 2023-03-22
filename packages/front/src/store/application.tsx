@@ -1,178 +1,47 @@
-import { create } from "zustand";
 import { useEnv } from "@/hooks/useEnv";
-import { ToastCustom } from "@/components/shared/toast-custom";
-import { toast } from "react-toastify";
+import { AppStore } from "@/interfaces";
 import {
-  Currency,
-  HideyourCash,
-  Logger,
-  RelayerDataInterface,
+  viewAllCurrencies,
+  viewIsInAllowlist as isInAllowlist,
 } from "hideyourcash-sdk";
-const hycTransaction = "hyc-transaction";
-const CONTRACT = useEnv("VITE_CONTRACT");
-const relayerNetwork = useEnv("VITE_RELAYER_NETWORK");
+import { create } from "zustand";
+import { useRelayer } from "./relayer";
+import { useWallet } from "./wallet";
 
-const appService = new HideyourCash(
-  useEnv("VITE_NEAR_NETWORK"),
-  useEnv("VITE_NEAR_NODE_URL"),
-  CONTRACT,
-  useEnv("VITE_API_GRAPHQL_URL"),
-  "./verifier.wasm",
-  "./circuit.zkey"
-);
+export const useApp = create<AppStore>((set, get) => ({
+  allCurrencies: [],
+  allowlist: false,
+  appStarted: false,
 
-export const useApplication = create<{
-  publicArgs: any;
-  hash: any;
-  note: any;
-  relayerData: any;
-  relayerJWT: string;
-  setRelayerJWT: (token: string) => any;
-  getRelayerFee: (
-    accountId: string,
-    instanceId: string,
-    relayer: RelayerDataInterface
-  ) => Promise<any>;
-  sendDeposit: (
-    amount: string,
-    contract: string,
-    accountId: string,
-    currency: Currency,
-    connection: any
-  ) => Promise<void>;
-  fetchRelayerData: () => Promise<void>;
-  sendWithdraw: () => Promise<void>;
-  prepareWithdraw: (
-    currencyContract: string,
-    fee: string,
-    payload: { note: string; recipient: string },
-    logger: Logger
-  ) => Promise<void>;
-  prepareDeposit: (
-    account: string,
-    currencieContract: string
-  ) => Promise<string>;
-  sendWhitelist: (connection: any, account: string) => Promise<any>;
-}>((set, get) => ({
-  publicArgs: null,
-  hash: null,
-  note: null,
-  relayerData: null,
-  relayerJWT: "",
-
-  prepareDeposit: async (account: string, currencieContract: string) => {
-    const { hash, note } = await appService.createTicket(
-      account,
-      currencieContract
+  getAllCurrencies: async () => {
+    const currencies = await viewAllCurrencies(
+      useEnv("VITE_NEAR_NODE_URL"),
+      useEnv("VITE_CONTRACT")
     );
 
-    set({
-      hash,
-      note,
-    });
-
-    return hash;
+    set({ allCurrencies: currencies });
   },
+  viewIsInAllowlist: async () => {
+    const { accountId } = useWallet.getState();
 
-  sendDeposit: async (
-    amount: string,
-    depositContract: string,
-    accountId: string,
-    currency: Currency,
-    connection: any
-  ) => {
-    appService.sendDeposit(
-      get().hash,
-      amount,
-      depositContract,
-      accountId,
-      currency,
-      connection
+    if (!accountId) return;
+
+    const result: boolean = await isInAllowlist(
+      useEnv("VITE_NEAR_NODE_URL"),
+      useEnv("VITE_CONTRACT"),
+      accountId
     );
-    localStorage.removeItem(hycTransaction);
+
+    set({ allowlist: result });
   },
+  initApp: async () => {
+    const { getAllCurrencies, viewIsInAllowlist } = get();
+    const { fetchRelayerData } = useRelayer.getState();
 
-  fetchRelayerData: async () => {
-    const data = await appService.getRandomRelayer(relayerNetwork);
+    await getAllCurrencies();
+    await viewIsInAllowlist();
+    await fetchRelayerData();
 
-    set({ relayerData: data[0] });
-  },
-
-  prepareWithdraw: async (
-    currencyContract: string,
-    fee: string,
-    { note, recipient },
-    logger: Logger
-  ) => {
-    const { relayerData } = get();
-
-    try {
-      const publicArgs = await appService.prepareWithdraw(
-        fee,
-        note,
-        relayerData,
-        recipient,
-        currencyContract,
-        logger
-      );
-
-      set({
-        publicArgs,
-      });
-    } catch (e) {
-      console.error("prepareWithdraw", e);
-
-      if (e instanceof Error) {
-        throw new Error(e.message);
-      }
-    }
-  },
-
-  setRelayerJWT: (value) => {
-    set({ relayerJWT: value });
-  },
-
-  sendWithdraw: async () => {
-    const { publicArgs, relayerData, relayerJWT } = get();
-
-    try {
-      await appService.sendWithdraw(relayerData, {
-        publicArgs,
-        token: relayerJWT,
-      });
-      toast(
-        <ToastCustom
-          icon="/check-circle-icon.svg"
-          title="Withdrawal sent"
-          message="The funds have been withdrawn with success to the address"
-        />,
-        {
-          toastId: "withdraw-toast",
-        }
-      );
-    } catch (error: any) {
-      console.warn(error.response);
-
-      toast(
-        <ToastCustom
-          icon="/error-circle-icon.svg"
-          title="Failure"
-          message={error.response?.data.error}
-        />,
-        {
-          toastId: "withdraw-toast",
-        }
-      );
-    }
-  },
-  sendWhitelist: async (connection, accountId) => {
-    await appService.sendAllowlist(accountId, connection);
-  },
-  getRelayerFee: async (
-    accountId: string,
-    instanceId: string,
-    relayer: RelayerDataInterface
-  ) => {
-    return appService.getRelayerFee(relayer, accountId, instanceId);
+    set({ appStarted: true });
   },
 }));

@@ -1,4 +1,4 @@
-import { useApplication } from "@/store";
+import { useApp } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useAllowlist } from "@/hooks/useAllowlist";
@@ -13,7 +13,7 @@ export function WhitelistModal({
 }) {
   const { selector, accountId, toggleModal } = useWallet();
 
-  const { sendWhitelist } = useApplication();
+  const { sendWhitelist } = useApp();
 
   const { allowList } = useAllowlist(accountId!);
 
