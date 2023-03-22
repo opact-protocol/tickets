@@ -1,7 +1,7 @@
 import HashModal from "./hash-modal";
 import { Fragment, useEffect, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
-import { useApplication } from "@/store/application";
+import { useApp } from "@/store/application";
 import {
   QuestionMarkCircleIcon,
   ChevronDownIcon,
@@ -51,7 +51,7 @@ export function Deposit() {
   const [showAllowlist, setShowAllowlist] = useState(false);
   const [haveBalance, setHaveBalance] = useState(true);
 
-  const { prepareDeposit } = useApplication();
+  const { prepareDeposit } = useApp();
   const { accountId, toggleModal, viewNearBalance } = useWallet();
   const { action } = useAction(transactionHashes!, accountId!);
   const approved = localStorage.getItem(hycTransaction);

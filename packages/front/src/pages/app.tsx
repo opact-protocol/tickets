@@ -2,10 +2,10 @@ import { Container, Actions } from "@/components";
 import { Header } from "@/components/layout/header";
 import { NeedHelp } from "@/components/layout/needHelp";
 import { AboutUsModal } from "@/components/modals";
-import { useWallet } from "@/store/wallet";
 import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect, useState } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useApp, useWallet } from "@/store";
 
 const methods = {
   deposit: "hyc-deposits",
@@ -53,6 +53,7 @@ function BackgroundIllustration() {
 
 export function Index() {
   const [showModal, setShowModal] = useState(false);
+  const { initApp, appStarted } = useApp();
   const { initWallet } = useWallet();
 
   useEffect(() => {
@@ -62,41 +63,56 @@ export function Index() {
   }, [initWallet]);
 
   useEffect(() => {
+    void (async () => {
+      await initApp();
+    })();
+  });
+
+  useEffect(() => {
     document.body.style.background = "#e8eaff";
     handleOpenModal((show) => setShowModal(show));
   });
   return (
     <>
-      <div className="w-full bg-error relative animate-pulse">
-        <div className="flex gap-2 flex-wrap items-center justify-center py-1">
-          <ExclamationTriangleIcon className="w-7 text-white" />
-          <p className="hidden lg:block text-bold text-white text-center">
-            This app is in beta version with limited features. It has not been
-            audited yet, use it at your own risk.
-          </p>
-          <p className="lg:hidden text-bold text-white text-center">
-            App in beta version. Audit in progress.
-          </p>
-          <a
-            href="https://docs.hideyour.cash/general-information/alpha-version"
-            target={`_blank`}
-            className="text-bold text-white text-center underline cursor-pointer"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <Header />
-      <div className="overflow-hidden relative py-20 sm:py-32 lg:pb-32 xl:pb-36">
-        <BackgroundIllustration />
-        <Container>
-          <div className="relative">
-            <Actions />
+      {appStarted ? (
+        <>
+          <div className="w-full bg-error relative animate-pulse">
+            <div className="flex gap-2 flex-wrap items-center justify-center py-1">
+              <ExclamationTriangleIcon className="w-7 text-white" />
+              <p className="hidden lg:block text-bold text-white text-center">
+                This app is in beta version with limited features. It has not
+                been audited yet, use it at your own risk.
+              </p>
+              <p className="lg:hidden text-bold text-white text-center">
+                App in beta version. Audit in progress.
+              </p>
+              <a
+                href="https://docs.hideyour.cash/general-information/alpha-version"
+                target={`_blank`}
+                className="text-bold text-white text-center underline cursor-pointer"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
-        </Container>
-      </div>
-      <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
-      <NeedHelp />
+          <Header />
+          <div className="overflow-hidden relative py-20 sm:py-32 lg:pb-32 xl:pb-36">
+            <BackgroundIllustration />
+            <Container>
+              <div className="relative">
+                <Actions />
+              </div>
+            </Container>
+          </div>
+          <AboutUsModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+          />
+          <NeedHelp />
+        </>
+      ) : (
+        <h1 className="text-black text-xl text-center">HIDEYOURCASH</h1>
+      )}
     </>
   );
 }
