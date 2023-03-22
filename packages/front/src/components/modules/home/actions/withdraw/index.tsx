@@ -4,26 +4,17 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
-import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
 import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
 import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
-import { viewWasNullifierSpent } from "hideyourcash-sdk";
+import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import _ from "lodash";
+import debounce from "lodash/debounce";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
-
-interface WithDrawProps {
-  ticket: string;
-  address: string;
-}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -51,6 +42,8 @@ export function Withdraw() {
   const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
   const [recipientAddressError, setRecipientAddressError] = useState(false);
   const [progress, setProgress] = useState(40);
+  const [ticketError, setTicketError] = useState('');
+  const [note, setNote] = useState('');
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -69,42 +62,48 @@ export function Withdraw() {
     getRelayerFee,
     setRelayerJWT,
   } = useApplication();
-  const withdrawSchema = yup.object().shape({
-    ticket: yup
-      .string()
-      .min(220, "This ticket is invalid")
-      .required("Invalid withdraw ticket")
-      .test(
-        "isValidTicket",
-        "This ticket is not valid anymore",
-        async (value) => {
-          const commitment = generateCommitment(value);
-          const ticketStored = await getTicketInTheMerkleTree(commitment!);
-          try {
-            setTicket(ticketStored);
-            return !(await viewWasNullifierSpent(
-              useEnv("VITE_NEAR_NODE_URL"),
-              value
-            ));
-          } catch (error) {
-            return false;
-          }
-        }
-      )
-      .test(
-        "isStored",
-        "This ticket has not been deposited yet",
-        async (value) => {
-          const commitment = generateCommitment(value);
 
-          const ticketStored = await getTicketInTheMerkleTree(commitment!);
+  const validateNote = useCallback(debounce(async (value: string) => {
+    console.log('validate note', value);
 
-          if (!ticketStored) return false;
+    setTicket({});
+    setTicketError('');
 
-          return true;
-        }
-      ),
-  });
+    if (value === '') {
+      return;
+    }
+
+    if (value.split('-').length < 4) {
+      return setTicketError('Invalid withdraw ticket');
+    }
+
+    const isNullifierSpent = (await viewWasNullifierSpent(
+      useEnv("VITE_NEAR_NODE_URL"),
+      value,
+    ));
+
+    if (isNullifierSpent) {
+      return setTicketError('Your ticket has been spent');
+    }
+
+    const commitment = await getCommitmentByTicket(value);
+
+    const ticketStored = await getTicketInTheMerkleTree(commitment);
+
+    if (!ticketStored) {
+      return setTicketError('This ticket has not been deposited yet');
+    }
+
+    setTicketError('');
+    setTicket(ticketStored);
+
+    return true;
+  }, 500), []);
+
+  const handleNote = (value) => {
+    setNote(value);
+    validateNote(value);
+  };
 
   const handleRecipientAddress = (value) => {
     setRecipientAddress(value);
@@ -118,7 +117,7 @@ export function Withdraw() {
   };
 
   const checkRelayerFee = useCallback(
-    _.debounce(async (value, contract) => {
+    debounce(async (value, contract) => {
       if (!value || !relayerData || !contract) {
         return;
       }
@@ -150,22 +149,11 @@ export function Withdraw() {
 
   const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
 
-  const {
-    register,
-    handleSubmit,
-    getFieldState,
-    reset,
-    formState: { errors },
-  } = useForm<WithDrawProps>({
-    resolver: yupResolver(withdrawSchema),
-    mode: "onChange",
-  });
-
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
-  const preWithdraw = async (data: WithDrawProps) => {
+  const preWithdraw = async () => {
     try {
       buttonText.current = "Preparing your withdraw...";
       clearTimeout(toRef);
@@ -174,7 +162,7 @@ export function Withdraw() {
         ticket.contract,
         dynamicFee.price_token_fee,
         {
-          note: data.ticket,
+          note: note,
           recipient: recipientAddress,
         },
         logger
@@ -219,12 +207,15 @@ export function Withdraw() {
   return (
     <>
       <div>
-        <form onSubmit={handleSubmit(preWithdraw)}>
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          preWithdraw()
+        }}>
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
                 Withdrawal ticket{" "}
-                {errors.ticket?.message && (
+                {ticketError && (
                   <span className="text-error"> * </span>
                 )}
               </span>
@@ -244,18 +235,19 @@ export function Withdraw() {
                 border-[2px]
                 focus:outline-none
                 ${
-                  errors.ticket?.message ? "border-error" : "border-transparent"
+                  ticketError ? "border-error" : "border-transparent"
                 }
               `}
-                  {...register("ticket")}
+                  value={note}
+                  onChange={(e) => handleNote(e.target.value)}
                   autoComplete="off"
                   placeholder="Paste your withdraw ticked"
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
-                {errors.ticket?.message && errors.ticket.message.toString()}
+                {ticketError && ticketError}
               </p>
-              {ticket && !getFieldState("ticket").invalid && (
+              {ticket && !ticketError && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
                     <span className="text-black text-[1.1rem] font-bold ">
@@ -312,7 +304,7 @@ export function Withdraw() {
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold">
                   Recipient Address{" "}
-                  {errors.address?.message && (
+                  {recipientAddressError && (
                     <span className="text-error"> * </span>
                   )}
                 </span>
@@ -436,8 +428,6 @@ export function Withdraw() {
               setDynamicFee(null);
               setRecipientAddress('');
               setRecipientAddressError(false);
-
-              reset();
             }}
           />
         </form>

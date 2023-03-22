@@ -23,10 +23,6 @@ import {
   ViewCurrenciesResponseInterface,
   viewAccountBalance,
 } from "hideyourcash-sdk";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import { settings } from "@/utils/sliderSettings";
 import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
 
@@ -307,46 +303,42 @@ export function Deposit() {
               <RadioGroup
                 value={selectedAmount}
                 onChange={setSelectedAmount}
-                className="mt-2 max-w-[371px]"
+                className="mt-2 max-w-[371px] flex"
                 as="ul"
               >
-                <Slider {...settings}>
-                  {amounts?.map((token) => (
-                    <RadioGroup.Option
-                      key={token.accountId}
-                      value={token}
-                      as="li"
-                      className={() => `
-                        bg-transparent rounded-full p-1 w-min mb-2 ${
-                          selectedAmount.accountId === token.accountId
-                            ? "bg-soft-blue-from-deep-blue"
-                            : ""
-                        }
-                      `}
-                    >
-                      <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
-                        <RadioGroup.Label
-                          as="span"
-                          className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue"
-                        >
-                          {Number(
-                            formatBigNumberWithDecimals(
-                              token.value,
-                              getDecimals(
-                                selectedToken.type === "Near"
-                                  ? 24
-                                  : selectedToken.metadata.decimals
-                              )
+                {amounts?.map((token) => (
+                  <RadioGroup.Option
+                    key={token.accountId}
+                    value={token}
+                    as="li"
+                    className={() => `
+                      bg-transparent rounded-full p-1 w-min mb-2 ${
+                        selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
+                      }
+                    `}
+                  >
+                    <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
+                      <RadioGroup.Label
+                        as="span"
+                        className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue w-min"
+                      >
+                        {Number(
+                          formatBigNumberWithDecimals(
+                            token.value,
+                            getDecimals(
+                              selectedToken.type === "Near"
+                                ? 24
+                                : selectedToken.metadata.decimals
                             )
-                          ).toFixed(0)}{" "}
-                          {selectedToken.type === "Near"
-                            ? "Near"
-                            : selectedToken.metadata.symbol}
-                        </RadioGroup.Label>
-                      </div>
-                    </RadioGroup.Option>
-                  ))}
-                </Slider>
+                          )
+                        ).toFixed(0)}{" "}
+                        {selectedToken.type === "Near"
+                          ? "Near"
+                          : selectedToken.metadata.symbol}
+                      </RadioGroup.Label>
+                    </div>
+                  </RadioGroup.Option>
+                ))}
               </RadioGroup>
               <p
                 className="text-info font-normal text-sm underline flex items-center gap-2 cursor-pointer mt-2"

@@ -1,27 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { Fragment, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
-
-interface FormProps {
-  name: string;
-  email: string;
-  message: string;
-}
-
-const contactUsSchema = yup.object().shape({
-  name: yup.string().min(2, "Minimun 2 letters").required("Required field"),
-  email: yup
-    .string()
-    .email("This email is not valid")
-    .required("Required field"),
-  message: yup.string().min(2, "Minumim 2 letters").required("Required field"),
-});
 
 const NeedHelpModal = ({
   isOpen,
@@ -30,19 +12,27 @@ const NeedHelpModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormProps>({ resolver: yupResolver(contactUsSchema) });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
 
-  const onSubmit = (data: FormProps) => {
+  const onSubmit = () => {
     try {
-      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", data, {
+      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", {
+        name,
+        email,
+        message,
+      }, {
         headers: { "Content-Type": "application/json" },
       });
-      reset();
+      setName('');
+      setEmail('');
+      setMessage('');
       onClose();
       toast(
         <ToastCustom
@@ -103,21 +93,22 @@ const NeedHelpModal = ({
                 >
                   Contact us
                 </Dialog.Title>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={() => onSubmit()}>
                   <div className="flex flex-col gap-2 mb-2 sm:flex-row">
                     <div className="w-full">
                       <label
                         className={`${
-                          errors.name?.message
+                          errors.name
                             ? "text-error"
                             : "text-dark-grafiti"
                         }`}
                       >
                         Your name{" "}
-                        {errors.name?.message && `- ${errors.name.message}`}
+                        {errors.name && `- ${errors.name}`}
                       </label>
                       <input
-                        {...register("name")}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         type="text"
                         name="name"
                         placeholder="Write your name here"
@@ -131,7 +122,7 @@ const NeedHelpModal = ({
                       flex items-center justify-between
                       border-[2px]
                       ${
-                        errors.name?.message
+                        errors.name
                           ? "border-error"
                           : "border-transparent"
                       }
@@ -141,16 +132,17 @@ const NeedHelpModal = ({
                     <div className="w-full">
                       <label
                         className={`${
-                          errors.email?.message
+                          errors.email
                             ? "text-error"
                             : "text-dark-grafiti"
                         }`}
                       >
                         Your email{" "}
-                        {errors.email?.message && `- ${errors.email.message}`}
+                        {errors.email && `- ${errors.email}`}
                       </label>
                       <input
-                        {...register("email")}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         name="email"
                         placeholder="example@email.com"
                         className={`p-[8px]
@@ -162,7 +154,7 @@ const NeedHelpModal = ({
                       flex items-center justify-between
                       border-[2px]
                       ${
-                        errors.email?.message
+                        errors.email
                           ? "border-error"
                           : "border-transparent"
                       }
@@ -173,16 +165,17 @@ const NeedHelpModal = ({
                   <div>
                     <label
                       className={`${
-                        errors.message?.message
+                        errors.message
                           ? "text-error"
                           : "text-dark-grafiti"
                       }`}
                     >
                       Your message{" "}
-                      {errors.message?.message && `- ${errors.message.message}`}
+                      {errors.message && `- ${errors.message}`}
                     </label>
                     <textarea
-                      {...register("message")}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       name="message"
                       placeholder="Write your message here"
                       className={`resize-none p-[8px]
@@ -194,7 +187,7 @@ const NeedHelpModal = ({
                     flex items-center justify-between
                     border-[2px]
                     ${
-                      errors.message?.message
+                      errors.message
                         ? "border-error"
                         : "border-transparent"
                     }
