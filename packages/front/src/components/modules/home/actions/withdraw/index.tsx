@@ -11,10 +11,23 @@ import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
 import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import debounce from "lodash/debounce";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
+
+function debounce (fn, time) {
+  let timeoutId
+  return wrapper
+  function wrapper (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null
+      fn(...args)
+    }, time)
+  }
+}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -77,13 +90,17 @@ export function Withdraw() {
       return setTicketError('Invalid withdraw ticket');
     }
 
-    const isNullifierSpent = (await viewWasNullifierSpent(
-      useEnv("VITE_NEAR_NODE_URL"),
-      value,
-    ));
+    try {
+      const isNullifierSpent = (await viewWasNullifierSpent(
+        useEnv("VITE_NEAR_NODE_URL"),
+        value,
+      ));
 
-    if (isNullifierSpent) {
-      return setTicketError('Your ticket has been spent');
+      if (isNullifierSpent) {
+        return setTicketError('Your ticket has been spent');
+      }
+    } catch(e) {
+      console.warn(e);
     }
 
     const commitment = await getCommitmentByTicket(value);
@@ -323,6 +340,7 @@ export function Withdraw() {
                flex items-center justify-between
                border-[2px]
                focus:outline-none
+               disabled:cursor-not-allowed
                ${recipientAddressError ? "border-error" : "border-transparent"}
              `}
                   disabled={!!!ticket?.contract}

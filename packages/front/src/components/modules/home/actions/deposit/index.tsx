@@ -312,7 +312,7 @@ export function Deposit() {
                     value={token}
                     as="li"
                     className={() => `
-                      bg-transparent rounded-full p-1 w-min mb-2 ${
+                      bg-transparent rounded-full p-1 w-min mb-2 grow ${
                         selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
                       }
                     `}
