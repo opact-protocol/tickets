@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTransactionsAction } from "@/utils/tools";
+import { getTransactionsAction } from "@/utils/near";
 import { getTransactionState } from "hideyourcash-sdk";
 import { useEnv } from "./useEnv";
 

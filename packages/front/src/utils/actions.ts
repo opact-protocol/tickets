@@ -1,4 +1,4 @@
-import { TransactionPayload } from "./tools/modules/near";
+import { TransactionPayload } from "./near";
 
 export interface Actionable {
   error: string;
