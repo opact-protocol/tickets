@@ -40,7 +40,6 @@ export function Withdraw() {
   const [progress, setProgress] = useState(40);
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
-
   const {
     errorMessage,
     ticket,
@@ -265,7 +264,6 @@ export function Withdraw() {
               <p className="text-error mt-2 text-sm font-normal">
                 {errorMessage && errorMessage}
               </p>
-
               {ticket.contract && !errorMessage && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
