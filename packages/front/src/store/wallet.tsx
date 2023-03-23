@@ -12,13 +12,9 @@ import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
-import { BN } from "bn.js";
 import { providers } from "near-api-js";
 
 interface Balance {
-  total: string;
-  stateStaked: string;
-  staked: string;
   available: string;
 }
 
@@ -97,6 +93,7 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
 
     set(() => ({ accountId: "" }));
   },
+
   viewNearBalance: async (): Promise<Balance> => {
     const { accountId } = get();
 
@@ -104,29 +101,16 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
       url: useEnv("VITE_NEAR_NODE_URL"),
     });
 
-    const protocolConfig = await provider.experimental_protocolConfig({
-      finality: "final",
-    });
-
-    const state = (await provider.query({
+    const {
+      amount,
+    } = (await provider.query({
       finality: "final",
       account_id: accountId,
       request_type: "view_account",
     })) as any;
 
-    const costPerByte = new BN(
-      protocolConfig.runtime_config.storage_amount_per_byte
-    );
-    const stateStaked = new BN(state.storage_usage).mul(costPerByte);
-    const staked = new BN(state.locked);
-    const totalBalance = new BN(state.amount).add(staked);
-    const availableBalance = totalBalance.sub(BN.max(staked, stateStaked));
-
     return {
-      total: totalBalance.toString(),
-      stateStaked: stateStaked.toString(),
-      staked: staked.toString(),
-      available: availableBalance.toString(),
+      available: amount,
     } as Balance;
   },
 }));
