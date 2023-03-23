@@ -1,5 +1,5 @@
-import { client } from "@/services/graphqlClient";
-import { gql } from "@apollo/client";
+import { useEnv } from "@/hooks/useEnv";
+import { gql, request } from "graphql-request";
 
 interface Storage {
   __typename: string;
@@ -11,47 +11,15 @@ interface Storage {
   counter: string;
 }
 
-export const getDeposits = async (
-  startId: string,
-  len: string
-): Promise<Storage[]> => {
-  // const counter = startId === "0" ? "-1" : startId;
-
-  const { data } = await client.query({
-    query: gql`
-      query manyTokens($startId: String, $len: String) {
-        depositMerkleTreeUpdates(
-          first: $len
-          where: { counter_gte: $startId }
-          orderBy: counter
-          orderDirection: asc
-        ) {
-          id
-          contract
-          signer
-          index
-          value
-          counter
-        }
-      }
-    `,
-    variables: {
-      startId,
-      first: len,
-    },
-  });
-
-  return data.depositMerkleTreeUpdates;
-};
+const graphqlUrl = useEnv("VITE_API_GRAPHQL_URL");
 
 export const getAllowLists = async (
   startId: string,
   len: string
 ): Promise<Storage[]> => {
-  // const counter = startId === "0" ? "-1" : startId;
-
-  const { data } = await client.query({
-    query: gql`
+  const data = await request(
+    graphqlUrl,
+    gql`
       query manyTokens($startId: String, $len: String) {
         allowlistMerkleTreeUpdates(
           first: $len
@@ -68,34 +36,19 @@ export const getAllowLists = async (
         }
       }
     `,
-    variables: {
+    {
       startId,
       first: len,
     },
-  });
+  ) as any;
+
   return data.allowlistMerkleTreeUpdates;
 };
 
-export const getLastDeposit = async (): Promise<string> => {
-  const { data } = await client.query({
-    query: gql`
-      query lastDeposit {
-        depositMerkleTreeUpdates(
-          first: 1
-          orderBy: timestamp
-          orderDirection: desc
-        ) {
-          counter
-        }
-      }
-    `,
-  });
-  return data.depositMerkleTreeUpdates[0].counter;
-};
-
 export const getLastDepositOfContract = async (contract: string) => {
-  const { data } = await client.query({
-    query: gql`
+  const data = await request(
+    graphqlUrl,
+    gql`
       query currentGraetestCounter($contract: String) {
         depositMerkleTreeUpdates(
           first: 1
@@ -109,16 +62,18 @@ export const getLastDepositOfContract = async (contract: string) => {
         }
       }
     `,
-    variables: {
+    {
       contract,
     },
-  });
+  ) as any;
+
   return data.depositMerkleTreeUpdates;
 };
 
 export const getLastWithdrawalOfContract = async (contract: string) => {
-  const { data } = await client.query({
-    query: gql`
+  const data = await await request(
+    graphqlUrl,
+    gql`
       query mostRecentWithdraw {
         withdrawals(
           first: 1
@@ -131,15 +86,16 @@ export const getLastWithdrawalOfContract = async (contract: string) => {
         }
       }
     `,
-    variables: { contract },
-  });
+    { contract },
+  ) as any;
 
   return data.withdrawals;
 };
 
 export const getLastAllowlist = async (): Promise<string> => {
-  const { data } = await client.query({
-    query: gql`
+  const data = await request(
+    graphqlUrl,
+    gql`
       query lastAllowList {
         allowlistMerkleTreeUpdates(
           first: 1
@@ -150,13 +106,15 @@ export const getLastAllowlist = async (): Promise<string> => {
         }
       }
     `,
-  });
+  ) as any;
+
   return data.allowlistMerkleTreeUpdates[0].counter;
 };
 
 export const getTicketInTheMerkleTree = async (commitment: string) => {
-  const { data } = await client.query({
-    query: gql`
+  const data = await request(
+    graphqlUrl,
+    gql`
       query ticketInTheMerkleTree($commitment: String) {
         depositMerkleTreeUpdates(where: { value: $commitment }) {
           contract
@@ -166,76 +124,10 @@ export const getTicketInTheMerkleTree = async (commitment: string) => {
         }
       }
     `,
-    variables: {
+    {
       commitment,
     },
-  });
+  ) as any;
 
   return data.depositMerkleTreeUpdates[0];
 };
-
-export const getLastWithdrawBeforeTheTicketWasCreated = async (
-  timestamp: string
-) => {
-  const { data } = await client.query({
-    query: gql`
-      query teste($timestamp: String) {
-        withdrawals(
-          first: 1
-          where: { timestamp_lte: $timestamp }
-          orderBy: counter
-          orderDirection: desc
-        ) {
-          counter
-          timestamp
-        }
-      }
-    `,
-    variables: { timestamp },
-  });
-
-  if (data.withdrawals[0]) return data.withdrawals[0];
-  else return 0;
-};
-
-export const getLastDepositsBeforeTheTicketWasCreated = async (
-  timestamp: string
-) => {
-  const { data } = await client.query({
-    query: gql`
-      query lastDeposits($timestamp: String) {
-        depositMerkleTreeUpdates(
-          first: 1
-          where: { timestamp_lte: $timestamp }
-          orderBy: counter
-          orderDirection: desc
-        ) {
-          counter
-          timestamp
-        }
-      }
-    `,
-    variables: { timestamp },
-  });
-
-  if (data.depositMerkleTreeUpdates[0]) return data.depositMerkleTreeUpdates[0];
-  else return 0;
-};
-
-export const GET_MOST_RECENT_DEPOSIT = gql`
-  query currentGraetestCounter {
-    depositMerkleTreeUpdates(first: 1, orderBy: counter, orderDirection: desc) {
-      counter
-      timestamp
-    }
-  }
-`;
-
-export const GET_MOST_RECENT_WITHDRAW = gql`
-  query mostRecentWithdraw {
-    withdrawals(first: 1, orderBy: timestamp, orderDirection: desc) {
-      counter
-      timestamp
-    }
-  }
-`;
