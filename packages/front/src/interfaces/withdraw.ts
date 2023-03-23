@@ -1,4 +1,4 @@
-import { Logger } from "hideyourcash-sdk";
+import type { Logger } from "hideyourcash-sdk";
 
 export interface WithdrawStore {
   prepareWithdraw: (
@@ -9,6 +9,29 @@ export interface WithdrawStore {
   ) => Promise<void>;
   sendWithdraw: () => Promise<void>;
   poolWithdrawScore: (commitment: string) => Promise<void>;
+  validateTicket: (ticket: string) => Promise<boolean>;
+  generateCommitment: (ticket: string) => string | undefined;
+  preWithdraw: (
+    recipient: string,
+    note: string,
+    logger: Logger
+  ) => Promise<void>;
+  errorMessage: string;
+  ticket: TicketStored;
   withdrawScore: number;
+  buttonText: string;
+  generatingProof: boolean;
   publicArgs: any;
+}
+
+export interface TicketStored {
+  contract: string;
+  counter: string;
+  timestamp: string;
+  value: string;
+}
+
+export interface WithdrawProps {
+  ticket: string;
+  address: string;
 }

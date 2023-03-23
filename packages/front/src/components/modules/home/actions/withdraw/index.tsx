@@ -1,14 +1,10 @@
 import ConfirmModal from "./confirm-modal";
-import { useApp } from "@/store";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRelayer, useWithdraw, useApp } from "@/store";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
-import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
-import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
 import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
-import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
@@ -36,28 +32,31 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 const getHumanFormat = (value: number | string): string =>
   value < 10 ? `0${value}` : String(value);
 
-let toRef;
-
 const hycTransaction = "hyc-transaction";
 
 let totalProgress = 40;
 
 export function Withdraw() {
+  const [progress, setProgress] = useState(40);
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
-  const [generatingProof, setGeneratinProof] = useState(false);
-  const [showModalDeposits, setShowModalDeposits] = useState(false);
-  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
-  const buttonText = useRef("Withdraw");
-  const [ticket, setTicket] = useState<any>();
-  const [recipientAddress, setRecipientAddress] = useState("");
-  const [dynamicFee, setDynamicFee] = useState<any>();
-  const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
-  const [recipientAddressError, setRecipientAddressError] = useState(false);
-  const [progress, setProgress] = useState(40);
-  const [ticketError, setTicketError] = useState('');
-  const [note, setNote] = useState('');
-  const [validatingNote, setValidatingNote] = useState(true);
+
+  const {
+    errorMessage,
+    ticket,
+    buttonText,
+    generatingProof,
+    withdrawScore,
+    note,
+    recipientAddress,
+    preWithdraw,
+    validateTicket,
+    poolWithdrawScore,
+    handleRecipientAddress,
+    cleanupInputs,
+  } = useWithdraw();
+
+  const { loadingDynamicFee, dynamicFee, recipientAddressError } = useRelayer();
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -77,131 +76,129 @@ export function Withdraw() {
     setRelayerJWT,
   } = useApp();
 
-  const validateNote = useCallback(debounce(async (value: string) => {
-    console.log('validate note', value);
+  // const validateNote = useCallback(debounce(async (value: string) => {
+  //   console.log('validate note', value);
 
-    setTicket({});
-    setTicketError('');
-    setValidatingNote(true);
+  //   setTicket({});
+  //   setTicketError('');
+  //   setValidatingNote(true);
 
-    if (value === '') {
-      setValidatingNote(false);
+  //   if (value === '') {
+  //     setValidatingNote(false);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    if (value.split('-').length < 4) {
-      setValidatingNote(false);
+  //   if (value.split('-').length < 4) {
+  //     setValidatingNote(false);
 
-      return setTicketError('Invalid withdraw ticket');
-    }
+  //     return setTicketError('Invalid withdraw ticket');
+  //   }
 
-    try {
-      const isNullifierSpent = (await viewWasNullifierSpent(
-        useEnv("VITE_NEAR_NODE_URL"),
-        value,
-      ));
+  //   try {
+  //     const isNullifierSpent = (await viewWasNullifierSpent(
+  //       useEnv("VITE_NEAR_NODE_URL"),
+  //       value,
+  //     ));
 
-      if (isNullifierSpent) {
-        setValidatingNote(false);
+  //     if (isNullifierSpent) {
+  //       setValidatingNote(false);
 
-        return setTicketError('Your ticket has been spent');
-      }
-    } catch(e) {
-      setValidatingNote(false);
+  //       return setTicketError('Your ticket has been spent');
+  //     }
+  //   } catch(e) {
+  //     setValidatingNote(false);
 
-      console.warn(e);
-    }
+  //     console.warn(e);
+  //   }
 
-    const commitment = await getCommitmentByTicket(value);
+  //   const commitment = await getCommitmentByTicket(value);
 
-    const ticketStored = await getTicketInTheMerkleTree(commitment);
+  //   const ticketStored = await getTicketInTheMerkleTree(commitment);
 
-    if (!ticketStored) {
-      setValidatingNote(false);
+  //   if (!ticketStored) {
+  //     setValidatingNote(false);
 
-      return setTicketError('This ticket has not been deposited yet');
-    }
+  //     return setTicketError('This ticket has not been deposited yet');
+  //   }
 
-    setTicketError('');
-    setTicket(ticketStored);
-    setValidatingNote(false);
+  //   setTicketError('');
+  //   setTicket(ticketStored);
+  //   setValidatingNote(false);
 
-    return true;
-  }, 500), []);
+  //   return true;
+  // }, 500), []);
 
-  const handleNote = (value) => {
-    setNote(value);
-    validateNote(value);
-  };
+  // const handleNote = (value) => {
+  //   setNote(value);
+  //   validateNote(value);
+  // };
 
-  const handleRecipientAddress = (value) => {
-    setRecipientAddress(value);
-    setDynamicFee(null);
+  // const handleRecipientAddress = (value) => {
+  //   setRecipientAddress(value);
 
-    if (!ticket?.contract || !value) {
-      return;
-    }
+  //   if (value.length < 10) {
+  //     return;
+  //   }
 
-    checkRelayerFee(value, ticket?.contract);
-  };
+  //   checkRelayerFee(value);
+  // };
 
-  const checkRelayerFee = useCallback(
-    debounce(async (value, contract) => {
-      if (!value || !relayerData || !contract) {
-        return;
-      }
+  // const checkRelayerFee = useCallback(
+  //   debounce(async (value, contract) => {
+  //     if (!value || !relayerData || !contract) {
+  //       return;
+  //     }
 
-      setLoadingDynamicFee(true);
+  //     setLoadingDynamicFee(true);
 
-      try {
-        const { data } = await getRelayerFee(value, contract, relayerData);
+  //     try {
+  //       const { data } = await getRelayerFee(value, contract, relayerData);
 
-        console.log(data);
-        setDynamicFee(data);
-        setRelayerJWT(data.token);
-        setRecipientAddressError(false);
-        createTimeout(data.valid_fee_for_ms, value, contract);
-      } catch (e) {
-        console.warn(e);
-        setDynamicFee(null);
-        setRecipientAddressError(true);
+  //       console.log(data);
+  //       setDynamicFee(data);
+  //       setRelayerJWT(data.token);
+  //       setRecipientAddressError(false);
+  //       createTimeout(data.valid_fee_for_ms, value, contract);
+  //     } catch (e) {
+  //       console.warn(e);
+  //       setDynamicFee(null);
+  //       setRecipientAddressError(true);
 
-        if (toRef) {
-          clearTimeout(toRef);
-        }
-      } finally {
-        setLoadingDynamicFee(false);
-      }
-    }, 500),
-    [relayerData]
-  );
+  //       if (toRef) {
+  //         clearTimeout(toRef);
+  //       }
+  //     } finally {
+  //       setLoadingDynamicFee(false);
+  //     }
+  //   }, 500),
+  //   [relayerData]
+  // );
 
   const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
 
-  if (transactionHashes) {
-    localStorage.setItem(hycTransaction, JSON.stringify(true));
-  }
+  // if (transactionHashes) {
+  //   localStorage.setItem(hycTransaction, JSON.stringify(true));
+  // }
 
-  const preWithdraw = async () => {
+  const handleWithdraw = async () => {
     try {
-      buttonText.current = "Preparing your withdraw...";
-      clearTimeout(toRef);
-      setGeneratinProof(true);
-      await prepareWithdraw(
-        ticket.contract,
-        dynamicFee.price_token_fee,
-        {
-          note: note,
-          recipient: recipientAddress,
-        },
-        logger
-      );
-      setGeneratinProof(false);
+      // buttonText.current = "Preparing your withdraw...";
+      // clearTimeout(toRef);
+      // setGeneratinProof(true);
+      // await prepareWithdraw(
+      //   ticket.contract,
+      //   dynamicFee.price_token_fee,
+      //   {
+      //     note: note,
+      //     recipient: recipientAddress,
+      //   },
+      //   logger
+      // );
+      // setGeneratinProof(false);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
-      setGeneratinProof(false);
       toast(
         <ToastCustom
           icon="/error-circle-icon.svg"
@@ -217,22 +214,6 @@ export function Withdraw() {
       setProgress(40);
     }
   };
-
-  const createTimeout = (ms: number, accountId: string, contract: string) => {
-    if (toRef) {
-      clearTimeout(toRef);
-    }
-
-    toRef = setTimeout(() => {
-      checkRelayerFee(accountId, contract);
-    }, ms);
-  };
-
-  useEffect(() => {
-    if (!relayerData) {
-      fetchRelayerData();
-    }
-  }, [relayerData]);
 
   return (
     <>
@@ -271,7 +252,10 @@ export function Withdraw() {
                   value={note}
                   onChange={(e) => handleNote(e.target.value)}
                   autoComplete="off"
+                  autoFocus
+                  value={recipientTicket}
                   placeholder="Paste your withdraw ticked"
+                  onInput={(e) => validateTicket(e.currentTarget.value)}
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
@@ -302,7 +286,9 @@ export function Withdraw() {
                           <div
                             key={item}
                             className={`w-[77px] h-[9px] ${
-                              item !== 3 ? "bg-intermediate-score" : "bg-gray-300"
+                              item !== 3
+                                ? "bg-intermediate-score"
+                                : "bg-gray-300"
                             } rounded-full`}
                           />
                         ))}
@@ -356,7 +342,6 @@ export function Withdraw() {
                disabled:cursor-not-allowed
                ${recipientAddressError ? "border-error" : "border-transparent"}
              `}
-                  disabled={!!!ticket?.contract}
                   placeholder="Wallet Address"
                   autoComplete="off"
                   value={recipientAddress}
@@ -364,12 +349,12 @@ export function Withdraw() {
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
-                {recipientAddressError && "Your recipient address is not valid"}
+                {recipientAddressError && recipientAddressError}
               </p>
             </div>
           </div>
 
-          {dynamicFee && !loadingDynamicFee && (
+          {dynamicFee.token && !loadingDynamicFee && (
             <div className="mt-[24px] mb-4">
               <div className="flex justify-between items-center mb-3">
                 <div>
@@ -427,8 +412,9 @@ export function Withdraw() {
           ) : (
             <div>
               <button
-                type="submit"
-                disabled={!dynamicFee || loadingDynamicFee}
+                type="button"
+                disabled={!dynamicFee.token || loadingDynamicFee}
+                onClick={() => handleWithdraw()}
                 className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
               >
                 {loadingDynamicFee && (
@@ -443,10 +429,7 @@ export function Withdraw() {
                 )}
 
                 {!loadingDynamicFee && (
-                  <>
-                    {" "}
-                    {!showModal ? "Withdraw" : buttonText.current}{" "}
-                  </>
+                  <> {!showModal ? "Withdraw" : buttonText} </>
                 )}
               </button>
             </div>
@@ -463,18 +446,12 @@ export function Withdraw() {
           />
         </form>
       </div>
-      <WhatIsThisModal
-        isOpen={showModalPoolAnonymity}
-        onClose={() => setShowModalPoolAnonymity(false)}
-      />
-      <TotalDepositsModal
-        isOpen={showModalDeposits}
-        onClose={() => setShowModalDeposits(false)}
-      />
-      <TotalWithdrawsModal
-        isOpen={showModalWithdrawals}
-        onClose={() => setShowModalWithdrawals(false)}
-      />
+      {showModalPoolAnonymity && (
+        <WhatIsThisModal
+          isOpen={showModalPoolAnonymity}
+          onClose={() => setShowModalPoolAnonymity(false)}
+        />
+      )}
     </>
   );
 }

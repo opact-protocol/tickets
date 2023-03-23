@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: near
     name: hyc
-    network: near-mainnet
+    network: near-testnet
     source:
-      accounts: 
+      accounts:
         suffixes:
           - hideyourcash.near
           - proxy.hapiprotocol.near
