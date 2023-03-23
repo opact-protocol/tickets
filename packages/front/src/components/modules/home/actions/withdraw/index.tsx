@@ -57,6 +57,7 @@ export function Withdraw() {
   const [progress, setProgress] = useState(40);
   const [ticketError, setTicketError] = useState('');
   const [note, setNote] = useState('');
+  const [validatingNote, setValidatingNote] = useState(true);
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -81,12 +82,17 @@ export function Withdraw() {
 
     setTicket({});
     setTicketError('');
+    setValidatingNote(true);
 
     if (value === '') {
+      setValidatingNote(false);
+
       return;
     }
 
     if (value.split('-').length < 4) {
+      setValidatingNote(false);
+
       return setTicketError('Invalid withdraw ticket');
     }
 
@@ -97,9 +103,13 @@ export function Withdraw() {
       ));
 
       if (isNullifierSpent) {
+        setValidatingNote(false);
+
         return setTicketError('Your ticket has been spent');
       }
     } catch(e) {
+      setValidatingNote(false);
+
       console.warn(e);
     }
 
@@ -108,11 +118,14 @@ export function Withdraw() {
     const ticketStored = await getTicketInTheMerkleTree(commitment);
 
     if (!ticketStored) {
+      setValidatingNote(false);
+
       return setTicketError('This ticket has not been deposited yet');
     }
 
     setTicketError('');
     setTicket(ticketStored);
+    setValidatingNote(false);
 
     return true;
   }, 500), []);
@@ -264,7 +277,7 @@ export function Withdraw() {
               <p className="text-error mt-2 text-sm font-normal">
                 {ticketError && ticketError}
               </p>
-              {ticket && !ticketError && (
+              {ticket && !ticketError && !validatingNote && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
                     <span className="text-black text-[1.1rem] font-bold ">
