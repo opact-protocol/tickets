@@ -12,7 +12,9 @@ import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
-import { providers } from "near-api-js";
+import { getAccountBalance } from 'hideyourcash-sdk';
+
+const nodeUrl = useEnv("VITE_NEAR_NODE_URL");
 
 interface Balance {
   available: string;
@@ -97,17 +99,18 @@ export const useWallet = create<WalletStoreInterface>((set, get) => ({
   viewNearBalance: async (): Promise<Balance> => {
     const { accountId } = get();
 
-    const provider = new providers.JsonRpcProvider({
-      url: useEnv("VITE_NEAR_NODE_URL"),
-    });
+    if (!accountId) {
+      return {
+        available: '0',
+      };
+    }
 
     const {
-      amount,
-    } = (await provider.query({
-      finality: "final",
-      account_id: accountId,
-      request_type: "view_account",
-    })) as any;
+      amount
+    } = await getAccountBalance({
+      nodeUrl,
+      accountId,
+    }) as any;
 
     return {
       available: amount,
