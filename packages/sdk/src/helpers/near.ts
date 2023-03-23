@@ -73,6 +73,43 @@ export const viewFunction = async (
   return JSON.parse(Buffer.from(result.result).toString());
 };
 
+export const getTransactionState = async ({
+  nodeUrl,
+  txHash,
+  accountId,
+}: { txHash: string, accountId: string, nodeUrl: string }) => {
+  const { data: { result } = {} } = await sendJsonRpc(
+    nodeUrl,
+    "tx",
+    [
+      txHash,
+      accountId,
+    ],
+  );
+
+  return result;
+}
+
+export const getAccountBalance = async ({
+  nodeUrl,
+  accountId,
+}: {
+  nodeUrl: string,
+  accountId: string,
+}) => {
+  const { data: { result } = {} } = await sendJsonRpc(
+    nodeUrl,
+    "query",
+    {
+      finality: "final",
+      account_id: accountId,
+      request_type: "view_account",
+    }
+  );
+
+  return result;
+}
+
 export const sendJsonRpc = async (
   nodeUrl: string,
   method: string,

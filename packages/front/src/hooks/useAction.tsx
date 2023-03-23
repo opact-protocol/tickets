@@ -1,11 +1,15 @@
-import { getTransactionsAction, getTransactionState } from "@/utils/tools";
 import { useEffect, useState } from "react";
+import { getTransactionsAction } from "@/utils/tools";
+import { getTransactionState } from "hideyourcash-sdk";
+import { useEnv } from "./useEnv";
 
 interface ActionProps {
   status: string;
   message: string;
   methodName: string;
 }
+
+const nodeUrl = useEnv('VITE_NEAR_NODE_URL');
 
 export const useAction = (transactionHashes: string, accountId: string) => {
   const [action, setAction] = useState<ActionProps>();
@@ -21,7 +25,12 @@ export const useAction = (transactionHashes: string, accountId: string) => {
       const states: any[] = [];
 
       for (let i = 0; i < transactions.length; i++) {
-        const state = await getTransactionState(transactions[i], accountId);
+        const state = await getTransactionState({
+          nodeUrl,
+          accountId,
+          txHash: transactions[i],
+        });
+
         states.push(state);
       }
 
