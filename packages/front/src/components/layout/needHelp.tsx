@@ -65,7 +65,9 @@ export const NeedHelp = () => {
           </Transition>
         </div>
       </Listbox>
-      <NeedHelpModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      {showModal && (
+        <NeedHelpModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      )}
     </>
   );
 };

@@ -1,13 +1,15 @@
 import { ToastCustom } from "@/components/shared/toast-custom";
-import { WithdrawStore } from "@/interfaces";
+import { useEnv } from "@/hooks/useEnv";
+import { TicketStored, WithdrawStore } from "@/interfaces";
 import { hycService } from "@/lib";
+import { mimc } from "@/services";
 import {
   getLastDepositsBeforeTheTicketWasCreated,
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
 } from "@/utils/graphql-queries";
 import { AxiosError } from "axios";
-import { Logger } from "hideyourcash-sdk";
+import { Logger, parseNote, viewWasNullifierSpent } from "hideyourcash-sdk";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { useRelayer } from "./relayer";
@@ -15,6 +17,10 @@ import { useRelayer } from "./relayer";
 export const useWithdraw = create<WithdrawStore>((set, get) => ({
   publicArgs: null,
   withdrawScore: 0,
+  ticket: { contract: "", counter: "", timestamp: "", value: "" },
+  errorMessage: "",
+  buttonText: "Withdraw",
+  generatingProof: false,
   prepareWithdraw: async (
     currencyContract: string,
     fee: string,
@@ -93,5 +99,75 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     const score = lastWithdrawal + lastDeposit + pastTime / 3600;
 
     set({ withdrawScore: score });
+  },
+
+  preWithdraw: async (recipient: string, note: string, logger: Logger) => {
+    const { ticket, prepareWithdraw, validateTicket } = get();
+    const { dynamicFee, toRef } = useRelayer.getState();
+
+    try {
+      clearTimeout(toRef);
+
+      set({
+        generatingProof: true,
+        buttonText: "Preparing your withdraw...",
+      });
+      await prepareWithdraw(
+        ticket.contract,
+        dynamicFee.price_token_fee,
+        {
+          note,
+          recipient,
+        },
+        logger
+      );
+      set({ generatingProof: false });
+    } catch (error) {
+      console.warn(error);
+      set({ generatingProof: false });
+    }
+  },
+
+  generateCommitment: (ticket: string) => {
+    if (ticket.length < 220) return;
+
+    const parsedNote = parseNote(ticket);
+
+    const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
+    const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
+
+    return commitment;
+  },
+
+  validateTicket: async (ticket: string) => {
+    const { generateCommitment } = get();
+    if (ticket.length < 220) {
+      set({ errorMessage: "Ticket invalid" });
+      return false;
+    }
+
+    const commitment = generateCommitment(ticket);
+
+    const ticketStored: TicketStored = await getTicketInTheMerkleTree(
+      commitment!
+    );
+
+    if (!ticketStored) {
+      set({ errorMessage: "This ticket has not been deposited yet" });
+      return false;
+    }
+
+    const wasNullifierSpent = await viewWasNullifierSpent(
+      useEnv("VITE_NEAR_NODE_URL"),
+      ticket
+    );
+
+    if (wasNullifierSpent) {
+      set({ errorMessage: "This ticket is not valid anymore" });
+      return false;
+    }
+
+    set({ ticket: ticketStored, errorMessage: "" });
+    return true;
   },
 }));
