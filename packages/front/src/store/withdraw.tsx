@@ -19,6 +19,9 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
   withdrawScore: 0,
   ticket: { contract: "", counter: "", timestamp: "", value: "" },
   errorMessage: "",
+  note: "",
+  recipientAddress: "",
+  commitment: "",
   buttonText: "Withdraw",
   generatingProof: false,
   prepareWithdraw: async (
@@ -85,7 +88,8 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       console.log(error);
     }
   },
-  poolWithdrawScore: async (commitment: string) => {
+  poolWithdrawScore: async () => {
+    const { commitment } = get();
     const tickedStored = await getTicketInTheMerkleTree(commitment);
     const lastWithdrawal = await getLastWithdrawBeforeTheTicketWasCreated(
       tickedStored.timestamp
@@ -101,8 +105,8 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     set({ withdrawScore: score });
   },
 
-  preWithdraw: async (recipient: string, note: string, logger: Logger) => {
-    const { ticket, prepareWithdraw, validateTicket } = get();
+  preWithdraw: async (logger: Logger) => {
+    const { ticket, prepareWithdraw, note, recipientAddress } = get();
     const { dynamicFee, toRef } = useRelayer.getState();
 
     try {
@@ -117,7 +121,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
         dynamicFee.price_token_fee,
         {
           note,
-          recipient,
+          recipient: recipientAddress,
         },
         logger
       );
@@ -167,7 +171,25 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       return false;
     }
 
-    set({ ticket: ticketStored, errorMessage: "" });
+    set({
+      ticket: ticketStored,
+      note: ticket,
+      commitment: commitment,
+      errorMessage: "",
+    });
     return true;
+  },
+  handleRecipientAddress: (value: string) => {
+    const { checkRelayerFee } = useRelayer.getState();
+    set({ recipientAddress: value });
+
+    if (value.length < 5) {
+      return;
+    }
+
+    checkRelayerFee(value);
+  },
+  cleanupInputs: () => {
+    set({ note: "", recipientAddress: ""});
   },
 }));

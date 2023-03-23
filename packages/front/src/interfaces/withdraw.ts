@@ -8,19 +8,20 @@ export interface WithdrawStore {
     logger: Logger
   ) => Promise<void>;
   sendWithdraw: () => Promise<void>;
-  poolWithdrawScore: (commitment: string) => Promise<void>;
+  poolWithdrawScore: () => Promise<void>;
   validateTicket: (ticket: string) => Promise<boolean>;
   generateCommitment: (ticket: string) => string | undefined;
-  preWithdraw: (
-    recipient: string,
-    note: string,
-    logger: Logger
-  ) => Promise<void>;
+  preWithdraw: (logger: Logger) => Promise<void>;
+  handleRecipientAddress: (address: string) => void;
+  cleanupInputs: () => void;
   errorMessage: string;
   ticket: TicketStored;
   withdrawScore: number;
   buttonText: string;
   generatingProof: boolean;
+  note: string;
+  commitment: string;
+  recipientAddress: string;
   publicArgs: any;
 }
 

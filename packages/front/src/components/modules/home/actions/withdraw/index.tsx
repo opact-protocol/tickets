@@ -1,10 +1,9 @@
 import ConfirmModal from "./confirm-modal";
 import { useRelayer, useWithdraw } from "@/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
@@ -24,23 +23,22 @@ let totalProgress = 40;
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
-  const [recipientAddress, setRecipientAddress] = useState("");
-  const [recipientTicket, setRecipientTicket] = useState("");
   const [progress, setProgress] = useState(40);
   const {
     errorMessage,
     ticket,
     buttonText,
     generatingProof,
+    withdrawScore,
+    note,
+    recipientAddress,
     preWithdraw,
     validateTicket,
+    poolWithdrawScore,
+    handleRecipientAddress,
+    cleanupInputs,
   } = useWithdraw();
-  const {
-    loadingDynamicFee,
-    dynamicFee,
-    recipientAddressError,
-    checkRelayerFee,
-  } = useRelayer();
+  const { loadingDynamicFee, dynamicFee, recipientAddressError } = useRelayer();
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -52,25 +50,13 @@ export function Withdraw() {
     },
   };
 
-  const handleRecipientAddress = (value: string) => {
-    setRecipientAddress(value);
-
-    if (value.length < 10) {
-      return;
-    }
-
-    checkRelayerFee(value);
-  };
-
-  const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
-
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
   const handleWithdraw = async () => {
     try {
-      await preWithdraw(recipientAddress, recipientTicket, logger);
+      await preWithdraw(logger);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
@@ -89,6 +75,12 @@ export function Withdraw() {
       setProgress(40);
     }
   };
+
+  useEffect(() => {
+    if (!ticket.contract) return;
+
+    poolWithdrawScore();
+  }, [ticket]);
 
   return (
     <>
@@ -119,7 +111,7 @@ export function Withdraw() {
               `}
                   autoComplete="off"
                   autoFocus
-                  value={recipientTicket}
+                  value={note}
                   placeholder="Paste your withdraw ticked"
                   onInput={(e) => validateTicket(e.currentTarget.value)}
                 />
@@ -135,7 +127,7 @@ export function Withdraw() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-2">
-                    {withdrawalScore < 30 ? (
+                    {withdrawScore < 30 ? (
                       <>
                         {[1, 2, 3].map((item) => (
                           <div
@@ -146,7 +138,7 @@ export function Withdraw() {
                           />
                         ))}
                       </>
-                    ) : withdrawalScore > 30 && withdrawalScore < 60 ? (
+                    ) : withdrawScore > 30 && withdrawScore < 60 ? (
                       <>
                         {[1, 2, 3].map((item) => (
                           <div
@@ -160,7 +152,7 @@ export function Withdraw() {
                         ))}
                       </>
                     ) : (
-                      withdrawalScore > 60 && (
+                      withdrawScore > 60 && (
                         <>
                           {[1, 2, 3].map((item) => (
                             <div
@@ -304,8 +296,7 @@ export function Withdraw() {
               isOpen={showModal}
               onClose={() => setShowModal(false)}
               cleanupInputsCallback={() => {
-                setRecipientTicket("");
-                setRecipientAddress("");
+                cleanupInputs();
               }}
             />
           )}
