@@ -1,6 +1,6 @@
 import ConfirmModal from "./confirm-modal";
 import { useRelayer, useWithdraw, useApp } from "@/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { ToastCustom } from "@/components/shared/toast-custom";
@@ -215,12 +215,20 @@ export function Withdraw() {
     }
   };
 
+  useEffect(() => {
+    if (!ticket.contract) {
+      return;
+    }
+
+    poolWithdrawScore();
+  }, [ticket]);
+
   return (
     <>
       <div>
         <form onSubmit={(e) => {
           e.preventDefault();
-          preWithdraw()
+          handleWithdraw()
         }}>
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">

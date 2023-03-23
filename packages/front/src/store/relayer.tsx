@@ -60,7 +60,7 @@ export const useRelayer = create<RelayerStore>((set, get) => ({
       dynamicFee: initialDynamicFee,
     });
     _.debounce(async () => {
-      if (!address) return;
+      if (!address || !ticket.contract) return;
 
       set({ loadingDynamicFee: true });
 
