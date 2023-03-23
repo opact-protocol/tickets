@@ -1,8 +1,6 @@
 import {
   getAllowLists,
-  getDeposits,
   getLastAllowlist,
-  getLastDeposit,
 } from "./graphql-queries";
 
 import { verifyStorage } from "./verify-storage";
@@ -20,46 +18,6 @@ interface Storage {
 const methods = {
   deposit: "hyc-deposits",
   allowlist: "hyc-allowlists",
-};
-
-export const depositsStorage = async () => {
-  let deposits: Storage[];
-  let newStorage: Storage[];
-
-  if (!verifyStorage(methods.deposit)) {
-    localStorage.setItem(
-      methods.deposit,
-      JSON.stringify({ despositLastIndex: null, depositStorage: [] })
-    );
-  } else {
-    const { despositLastIndex, depositStorage } = JSON.parse(
-      localStorage.getItem(methods.deposit)!
-    );
-
-    const lastDeposit = await getLastDeposit();
-
-    if (!despositLastIndex || +despositLastIndex < +lastDeposit) {
-      const qtyToQuer = +lastDeposit - +despositLastIndex || 0;
-
-      deposits = await getDeposits(
-        despositLastIndex || "0",
-        qtyToQuer.toString()
-      );
-
-      newStorage = [...depositStorage, ...deposits];
-    } else {
-      newStorage = depositStorage;
-    }
-
-    localStorage.setItem(
-      methods.deposit,
-      JSON.stringify({
-        despositLastIndex: lastDeposit,
-        depositStorage: newStorage,
-      })
-    );
-    return newStorage;
-  }
 };
 
 export const allowlistStorage = async () => {
