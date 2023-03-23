@@ -5,8 +5,8 @@ import { ChevronUpIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { DocumentIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-// import Zoom from "react-reveal/Zoom";
-// import Fade from "react-reveal/Fade";
+import Zoom from "react-reveal/Zoom";
+import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
 import Card from "@/components/shared/card";
 import MiniCard from "@/components/shared/mini-card";
@@ -50,7 +50,7 @@ const Index = () => {
       <Waves />
       <Container className="relative z-10">
         <HeaderLanding />
-        {/* <Zoom> */}
+        <Zoom>
           <section className="flex flex-col justify-center items-center">
             <div className="pb-16 pt-40 w-[30px]">
               <img
@@ -89,8 +89,8 @@ const Index = () => {
               </div>
             </div>
           </section>
-        {/* </Zoom> */}
-        {/* <Fade right> */}
+        </Zoom>
+        <Fade right>
           <section className="flex flex-col justify-center items-center mt-[216px]">
             <div className="w-full">
               <h1 className="text-5xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -120,8 +120,8 @@ const Index = () => {
               />
             </div>
           </section>
-        {/* </Fade> */}
-        {/* <Fade left> */}
+        </Fade>
+        <Fade left>
           <section
             className="flex flex-col justify-center items-center mt-[70px]"
             id="easy-to-use"
@@ -176,8 +176,8 @@ const Index = () => {
               </div>
             </div>
           </section>
-        {/* </Fade> */}
-        {/* <Fade right> */}
+        </Fade>
+        <Fade right>
           <section className="flex flex-col justify-center items-center mt-[125px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center flex items-center justify-center">
@@ -228,8 +228,8 @@ const Index = () => {
               </p>
             </div>
           </section>
-        {/* </Fade> */}
-        {/* <Fade left> */}
+        </Fade>
+        <Fade left>
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -295,8 +295,8 @@ const Index = () => {
               ))}
             </ul>
           </section>
-        {/* </Fade>
-        <Fade right> */}
+        </Fade>
+        <Fade right>
           <section
             className="flex flex-col justify-center items-center mt-[150px]"
             id="how-it-works"
@@ -373,8 +373,8 @@ const Index = () => {
               </button>
             </div>
           </section>
-        {/* </Fade>
-        <Fade left> */}
+        </Fade>
+        <Fade left>
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -424,8 +424,8 @@ const Index = () => {
               ))}
             </div>
           </section>
-        {/* </Fade>
-        <Fade right> */}
+        </Fade>
+        <Fade right>
           <section className="flex flex-col justify-center items-center mt-[150px]">
             <div className="w-full">
               <h1 className="text-4xl text-dark-grafiti font-[Sora] font-bold text-center">
@@ -462,8 +462,8 @@ const Index = () => {
               ))}
             </ul>
           </section>
-        {/* </Fade>
-        <Fade left> */}
+        </Fade>
+        <Fade left>
           <section
             className="flex flex-col justify-center items-center mt-[150px]"
             id="faq"
@@ -621,7 +621,7 @@ const Index = () => {
               </div>
             </div>
           </section>
-        {/* </Fade> */}
+        </Fade>
         <footer className="p-10 flex flex-col gap-5 justify-between relative z-[10]">
           <div className="w-full flex flex-col justify-between gap-5 md:flex-row">
             <a
