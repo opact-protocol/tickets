@@ -8,8 +8,6 @@ import {
   Logger,
   RelayerDataInterface,
 } from "hideyourcash-sdk";
-import { AxiosError } from "axios";
-
 const hycTransaction = "hyc-transaction";
 const CONTRACT = useEnv("VITE_CONTRACT");
 const relayerNetwork = useEnv("VITE_RELAYER_NETWORK");
@@ -152,34 +150,19 @@ export const useApplication = create<{
           toastId: "withdraw-toast",
         }
       );
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.warn(error.response);
+    } catch (error: any) {
+      console.warn(error.response);
 
-        toast(
-          <ToastCustom
-            icon="/error-circle-icon.svg"
-            title="Withdraw error"
-            message={error.response?.data.error}
-          />,
-          {
-            toastId: "withdraw-toast",
-          }
-        );
-      }
-
-      if (error instanceof AxiosError) {
-        toast(
-          <ToastCustom
-            icon="/error-circle-icon.svg"
-            title="Failure"
-            message={error.response?.data.error}
-          />,
-          {
-            toastId: "withdraw-toast",
-          }
-        );
-      }
+      toast(
+        <ToastCustom
+          icon="/error-circle-icon.svg"
+          title="Failure"
+          message={error.response?.data.error}
+        />,
+        {
+          toastId: "withdraw-toast",
+        }
+      );
     }
   },
   sendWhitelist: async (connection, accountId) => {

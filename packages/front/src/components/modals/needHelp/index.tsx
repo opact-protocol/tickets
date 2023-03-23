@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";
 import { twMerge } from 'tailwind-merge';
@@ -54,9 +53,13 @@ const NeedHelpModal = ({
 
   const onSubmit = () => {
     try {
-      axios.post("https://formsubmit.co/ajax/hideyourcash@gmail.com", baseForm, {
-        headers: { "Content-Type": "application/json" },
-      });
+      fetch(
+        'https://formsubmit.co/ajax/hideyourcash@gmail.com',
+        {
+          method: "POST",
+          body: JSON.stringify(form)
+        }
+      );
 
       setForm({ ...baseForm });
       setTouched({ ...baseTouched });

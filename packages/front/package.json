@@ -34,7 +34,6 @@
     "@sentry/tracing": "^7.38.0",
     "@vercel/node": "^2.9.12",
     "autoprefixer": "^10.4.7",
-    "axios": "^1.2.0",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",

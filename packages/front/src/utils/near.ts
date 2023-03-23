@@ -52,9 +52,14 @@ export interface TokenId {
   account_id: string;
 }
 
-export const hycTransaction = "hyc-transaction";
-
+/**
+ * Near constants
+ */
 export const AttachedGas = "300000000000000";
+export const OneYOctoNear = "1000000000000000000000000";
+
+
+export const hycTransaction = "hyc-transaction";
 
 export const getTransactionsStatus = (receiptsOutcome: ReceiptOutcome[]) =>
   receiptsOutcome.every(
