@@ -47,6 +47,7 @@
     "react-dom": "^18.0.0",
     "react-download-link": "^2.3.0",
     "react-gtm-module": "^2.0.11",
+    "react-reveal": "^1.2.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-toastify": "^9.1.1",
