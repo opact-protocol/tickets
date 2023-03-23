@@ -66,7 +66,7 @@ export function Index() {
     void (async () => {
       await initApp();
     })();
-  });
+  },[]);
 
   useEffect(() => {
     document.body.style.background = "#e8eaff";
