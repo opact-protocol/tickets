@@ -8,7 +8,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
-import { useAllowlist } from "@/hooks/useAllowlist";
 import { useAction } from "@/hooks/useAction";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/shared/toast-custom";

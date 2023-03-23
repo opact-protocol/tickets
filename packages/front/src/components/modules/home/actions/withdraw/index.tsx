@@ -1,29 +1,14 @@
 import ConfirmModal from "./confirm-modal";
-import { useApp } from "@/store";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRelayer, useWithdraw } from "@/store";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
-import { getTicketInTheMerkleTree } from "@/utils/graphql-queries";
-import { generateCommitment } from "@/utils/generate-commitment";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import TotalDepositsModal from "@/components/modals/statistics/totalDeposits";
-import TotalWithdrawsModal from "@/components/modals/statistics/totalWithdraws";
-import { viewWasNullifierSpent } from "hideyourcash-sdk";
-import { useEnv } from "@/hooks/useEnv";
 import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import _ from "lodash";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
-
-interface WithDrawProps {
-  ticket: string;
-  address: string;
-}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -32,8 +17,6 @@ const transactionHashes = new URLSearchParams(window.location.search).get(
 const getHumanFormat = (value: number | string): string =>
   value < 10 ? `0${value}` : String(value);
 
-let toRef;
-
 const hycTransaction = "hyc-transaction";
 
 let totalProgress = 40;
@@ -41,16 +24,23 @@ let totalProgress = 40;
 export function Withdraw() {
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
-  const [generatingProof, setGeneratinProof] = useState(false);
-  const [showModalDeposits, setShowModalDeposits] = useState(false);
-  const [showModalWithdrawals, setShowModalWithdrawals] = useState(false);
-  const buttonText = useRef("Withdraw");
-  const [ticket, setTicket] = useState<any>();
   const [recipientAddress, setRecipientAddress] = useState("");
-  const [dynamicFee, setDynamicFee] = useState<any>();
-  const [loadingDynamicFee, setLoadingDynamicFee] = useState(false);
-  const [recipientAddressError, setRecipientAddressError] = useState(false);
+  const [recipientTicket, setRecipientTicket] = useState("");
   const [progress, setProgress] = useState(40);
+  const {
+    errorMessage,
+    ticket,
+    buttonText,
+    generatingProof,
+    preWithdraw,
+    validateTicket,
+  } = useWithdraw();
+  const {
+    loadingDynamicFee,
+    dynamicFee,
+    recipientAddressError,
+    checkRelayerFee,
+  } = useRelayer();
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -62,128 +52,28 @@ export function Withdraw() {
     },
   };
 
-  const {
-    prepareWithdraw,
-    relayerData,
-    fetchRelayerData,
-    getRelayerFee,
-    setRelayerJWT,
-  } = useApp();
-  const withdrawSchema = yup.object().shape({
-    ticket: yup
-      .string()
-      .min(220, "This ticket is invalid")
-      .required("Invalid withdraw ticket")
-      .test(
-        "isValidTicket",
-        "This ticket is not valid anymore",
-        async (value) => {
-          const commitment = generateCommitment(value);
-          const ticketStored = await getTicketInTheMerkleTree(commitment!);
-          try {
-            setTicket(ticketStored);
-            return !(await viewWasNullifierSpent(
-              useEnv("VITE_NEAR_NODE_URL"),
-              value
-            ));
-          } catch (error) {
-            return false;
-          }
-        }
-      )
-      .test(
-        "isStored",
-        "This ticket has not been deposited yet",
-        async (value) => {
-          const commitment = generateCommitment(value);
-
-          const ticketStored = await getTicketInTheMerkleTree(commitment!);
-
-          if (!ticketStored) return false;
-
-          return true;
-        }
-      ),
-  });
-
-  const handleRecipientAddress = (value) => {
+  const handleRecipientAddress = (value: string) => {
     setRecipientAddress(value);
-    setDynamicFee(null);
 
-    if (!ticket?.contract || !value) {
+    if (value.length < 10) {
       return;
     }
 
-    checkRelayerFee(value, ticket?.contract);
+    checkRelayerFee(value);
   };
 
-  const checkRelayerFee = useCallback(
-    _.debounce(async (value, contract) => {
-      if (!value || !relayerData || !contract) {
-        return;
-      }
-
-      setLoadingDynamicFee(true);
-
-      try {
-        const { data } = await getRelayerFee(value, contract, relayerData);
-
-        console.log(data);
-        setDynamicFee(data);
-        setRelayerJWT(data.token);
-        setRecipientAddressError(false);
-        createTimeout(data.valid_fee_for_ms, value, contract);
-      } catch (e) {
-        console.warn(e);
-        setDynamicFee(null);
-        setRecipientAddressError(true);
-
-        if (toRef) {
-          clearTimeout(toRef);
-        }
-      } finally {
-        setLoadingDynamicFee(false);
-      }
-    }, 500),
-    [relayerData]
-  );
-
   const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
-
-  const {
-    register,
-    handleSubmit,
-    getFieldState,
-    reset,
-    formState: { errors },
-  } = useForm<WithDrawProps>({
-    resolver: yupResolver(withdrawSchema),
-    mode: "onChange",
-  });
 
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
-  const preWithdraw = async (data: WithDrawProps) => {
+  const handleWithdraw = async () => {
     try {
-      buttonText.current = "Preparing your withdraw...";
-      clearTimeout(toRef);
-      setGeneratinProof(true);
-      await prepareWithdraw(
-        ticket.contract,
-        dynamicFee.price_token_fee,
-        {
-          note: data.ticket,
-          recipient: recipientAddress,
-        },
-        logger
-      );
-      setGeneratinProof(false);
+      await preWithdraw(recipientAddress, recipientTicket, logger);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
-      setGeneratinProof(false);
       toast(
         <ToastCustom
           icon="/error-circle-icon.svg"
@@ -200,33 +90,15 @@ export function Withdraw() {
     }
   };
 
-  const createTimeout = (ms: number, accountId: string, contract: string) => {
-    if (toRef) {
-      clearTimeout(toRef);
-    }
-
-    toRef = setTimeout(() => {
-      checkRelayerFee(accountId, contract);
-    }, ms);
-  };
-
-  useEffect(() => {
-    if (!relayerData) {
-      fetchRelayerData();
-    }
-  }, [relayerData]);
-
   return (
     <>
       <div>
-        <form onSubmit={handleSubmit(preWithdraw)}>
+        <div>
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
                 Withdrawal ticket{" "}
-                {errors.ticket?.message && (
-                  <span className="text-error"> * </span>
-                )}
+                {errorMessage && <span className="text-error"> * </span>}
               </span>
             </div>
             <div>
@@ -243,19 +115,19 @@ export function Withdraw() {
                 flex items-center justify-between
                 border-[2px]
                 focus:outline-none
-                ${
-                  errors.ticket?.message ? "border-error" : "border-transparent"
-                }
+                ${errorMessage ? "border-error" : "border-transparent"}
               `}
-                  {...register("ticket")}
                   autoComplete="off"
+                  autoFocus
+                  value={recipientTicket}
                   placeholder="Paste your withdraw ticked"
+                  onInput={(e) => validateTicket(e.currentTarget.value)}
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
-                {errors.ticket?.message && errors.ticket.message.toString()}
+                {errorMessage && errorMessage}
               </p>
-              {ticket && !getFieldState("ticket").invalid && (
+              {ticket.contract && !errorMessage && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
                     <span className="text-black text-[1.1rem] font-bold ">
@@ -280,7 +152,9 @@ export function Withdraw() {
                           <div
                             key={item}
                             className={`w-[77px] h-[9px] ${
-                              item !== 3 ? "bg-intermediate-score" : "bg-gray-300"
+                              item !== 3
+                                ? "bg-intermediate-score"
+                                : "bg-gray-300"
                             } rounded-full`}
                           />
                         ))}
@@ -312,7 +186,7 @@ export function Withdraw() {
               <div className="flex items-center justify-between">
                 <span className="text-black text-[1.1rem] font-bold">
                   Recipient Address{" "}
-                  {errors.address?.message && (
+                  {recipientAddressError && (
                     <span className="text-error"> * </span>
                   )}
                 </span>
@@ -333,7 +207,6 @@ export function Withdraw() {
                focus:outline-none
                ${recipientAddressError ? "border-error" : "border-transparent"}
              `}
-                  disabled={!!!ticket?.contract}
                   placeholder="Wallet Address"
                   autoComplete="off"
                   value={recipientAddress}
@@ -341,12 +214,12 @@ export function Withdraw() {
                 />
               </div>
               <p className="text-error mt-2 text-sm font-normal">
-                {recipientAddressError && "Your recipient address is not valid"}
+                {recipientAddressError && recipientAddressError}
               </p>
             </div>
           </div>
 
-          {dynamicFee && !loadingDynamicFee && (
+          {dynamicFee.token && !loadingDynamicFee && (
             <div className="mt-[24px] mb-4">
               <div className="flex justify-between items-center mb-3">
                 <div>
@@ -404,8 +277,9 @@ export function Withdraw() {
           ) : (
             <div>
               <button
-                type="submit"
-                disabled={!dynamicFee || loadingDynamicFee}
+                type="button"
+                disabled={!dynamicFee.token || loadingDynamicFee}
+                onClick={() => handleWithdraw()}
                 className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
               >
                 {loadingDynamicFee && (
@@ -420,40 +294,29 @@ export function Withdraw() {
                 )}
 
                 {!loadingDynamicFee && (
-                  <>
-                    {" "}
-                    {!showModal ? "Withdraw" : buttonText.current}{" "}
-                  </>
+                  <> {!showModal ? "Withdraw" : buttonText} </>
                 )}
               </button>
             </div>
           )}
-          <ConfirmModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            cleanupInputsCallback={() => {
-              setTicket('');
-              setDynamicFee(null);
-              setRecipientAddress('');
-              setRecipientAddressError(false);
-
-              reset();
-            }}
-          />
-        </form>
+          {showModal && (
+            <ConfirmModal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              cleanupInputsCallback={() => {
+                setRecipientTicket("");
+                setRecipientAddress("");
+              }}
+            />
+          )}
+        </div>
       </div>
-      <WhatIsThisModal
-        isOpen={showModalPoolAnonymity}
-        onClose={() => setShowModalPoolAnonymity(false)}
-      />
-      <TotalDepositsModal
-        isOpen={showModalDeposits}
-        onClose={() => setShowModalDeposits(false)}
-      />
-      <TotalWithdrawsModal
-        isOpen={showModalWithdrawals}
-        onClose={() => setShowModalWithdrawals(false)}
-      />
+      {showModalPoolAnonymity && (
+        <WhatIsThisModal
+          isOpen={showModalPoolAnonymity}
+          onClose={() => setShowModalPoolAnonymity(false)}
+        />
+      )}
     </>
   );
 }
