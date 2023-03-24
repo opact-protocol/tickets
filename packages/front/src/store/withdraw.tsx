@@ -2,14 +2,13 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import { useEnv } from "@/hooks/useEnv";
 import { TicketStored, WithdrawStore } from "@/interfaces";
 import { hycService } from "@/lib";
-import { mimc } from "@/services";
 import {
   getLastDepositsBeforeTheTicketWasCreated,
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
 } from "@/utils/graphql-queries";
 import { AxiosError } from "axios";
-import { Logger, parseNote, viewWasNullifierSpent } from "hideyourcash-sdk";
+import { Logger, parseNote, viewWasNullifierSpent, getCommitmentByTicket } from "hideyourcash-sdk";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { useRelayer } from "./relayer";
@@ -72,20 +71,19 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
           toastId: "withdraw-toast",
         }
       );
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast(
-          <ToastCustom
-            icon="/error-circle-icon.svg"
-            title="Withdraw error"
-            message={error.response?.data.error}
-          />,
-          {
-            toastId: "withdraw-toast",
-          }
-        );
-      }
-      console.log(error);
+    } catch (error: any) {
+      toast(
+        <ToastCustom
+          icon="/error-circle-icon.svg"
+          title="Withdraw error"
+          message={error.response?.data.error}
+        />,
+        {
+          toastId: "withdraw-toast",
+        }
+      );
+
+      console.warn(error);
     }
   },
   poolWithdrawScore: async () => {
@@ -132,25 +130,13 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     }
   },
 
-  generateCommitment: (ticket: string) => {
-    if (ticket.length < 220) return;
-
-    const parsedNote = parseNote(ticket);
-
-    const secretsHash = mimc.hash(parsedNote.secret, parsedNote.nullifier);
-    const commitment = mimc.hash(secretsHash, parsedNote.account_hash);
-
-    return commitment;
-  },
-
   validateTicket: async (ticket: string) => {
-    const { generateCommitment } = get();
     if (ticket.length < 220) {
       set({ errorMessage: "Ticket invalid" });
       return false;
     }
 
-    const commitment = generateCommitment(ticket);
+    const commitment = await getCommitmentByTicket(ticket);
 
     const ticketStored: TicketStored = await getTicketInTheMerkleTree(
       commitment!

@@ -4,11 +4,11 @@ export interface WalletStore {
   toggleModal: () => void;
   signOut: () => Promise<void>;
   initWallet: () => Promise<string>;
-  // viewBalance: (
-  //   tokenType: string,
-  //   tokenContract: string,
-  //   tokenValue: number
-  // ) => Promise<void>;
+  viewBalance: (
+    tokenType: string,
+    tokenContract: string,
+    tokenValue: number
+  ) => Promise<void>;
   sendWhitelist: () => Promise<void>;
   viewNearBalance: () => Promise<any>
   accountId: string | null;

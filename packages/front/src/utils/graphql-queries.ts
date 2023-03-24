@@ -131,3 +131,59 @@ export const getTicketInTheMerkleTree = async (commitment: string) => {
 
   return data.depositMerkleTreeUpdates[0];
 };
+
+export const getLastDepositsBeforeTheTicketWasCreated = async (
+  timestamp: string
+) => {
+  const data = await request(
+    graphqlUrl,
+    gql`
+      query lastDeposits($timestamp: String) {
+        depositMerkleTreeUpdates(
+          first: 1
+          where: { timestamp_lte: $timestamp }
+          orderBy: counter
+          orderDirection: desc
+        ) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    { timestamp },
+  ) as any;
+
+  if (data.depositMerkleTreeUpdates[0]) {
+    return data.depositMerkleTreeUpdates[0];
+  }
+
+  return 0;
+};
+
+export const getLastWithdrawBeforeTheTicketWasCreated = async (
+  timestamp: string
+) => {
+  const data = await request(
+    graphqlUrl,
+    gql`
+      query teste($timestamp: String) {
+        withdrawals(
+          first: 1
+          where: { timestamp_lte: $timestamp }
+          orderBy: counter
+          orderDirection: desc
+        ) {
+          counter
+          timestamp
+        }
+      }
+    `,
+    { timestamp },
+  ) as any;
+
+  if (data.withdrawals[0]) {
+    return data.withdrawals[0];
+  }
+
+  return 0;
+};
