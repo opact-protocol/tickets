@@ -4,25 +4,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { ToastCustom } from "@/components/shared/toast-custom";
-// import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
-
-function debounce (fn, time) {
-  let timeoutId
-  return wrapper
-  function wrapper (...args) {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-    timeoutId = setTimeout(() => {
-      timeoutId = null
-      fn(...args)
-    }, time)
-  }
-}
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -67,124 +52,12 @@ export function Withdraw() {
     },
   };
 
-  // const validateNote = useCallback(debounce(async (value: string) => {
-  //   console.log('validate note', value);
-
-  //   setTicket({});
-  //   setTicketError('');
-  //   setValidatingNote(true);
-
-  //   if (value === '') {
-  //     setValidatingNote(false);
-
-  //     return;
-  //   }
-
-  //   if (value.split('-').length < 4) {
-  //     setValidatingNote(false);
-
-  //     return setTicketError('Invalid withdraw ticket');
-  //   }
-
-  //   try {
-  //     const isNullifierSpent = (await viewWasNullifierSpent(
-  //       useEnv("VITE_NEAR_NODE_URL"),
-  //       value,
-  //     ));
-
-  //     if (isNullifierSpent) {
-  //       setValidatingNote(false);
-
-  //       return setTicketError('Your ticket has been spent');
-  //     }
-  //   } catch(e) {
-  //     setValidatingNote(false);
-
-  //     console.warn(e);
-  //   }
-
-  //   const commitment = await getCommitmentByTicket(value);
-
-  //   const ticketStored = await getTicketInTheMerkleTree(commitment);
-
-  //   if (!ticketStored) {
-  //     setValidatingNote(false);
-
-  //     return setTicketError('This ticket has not been deposited yet');
-  //   }
-
-  //   setTicketError('');
-  //   setTicket(ticketStored);
-  //   setValidatingNote(false);
-
-  //   return true;
-  // }, 500), []);
-
-  // const handleNote = (value) => {
-  //   setNote(value);
-  //   validateNote(value);
-  // };
-
-  // const handleRecipientAddress = (value) => {
-  //   setRecipientAddress(value);
-
-  //   if (value.length < 10) {
-  //     return;
-  //   }
-
-  //   checkRelayerFee(value);
-  // };
-
-  // const checkRelayerFee = useCallback(
-  //   debounce(async (value, contract) => {
-  //     if (!value || !relayerData || !contract) {
-  //       return;
-  //     }
-
-  //     setLoadingDynamicFee(true);
-
-  //     try {
-  //       const { data } = await getRelayerFee(value, contract, relayerData);
-
-  //       console.log(data);
-  //       setDynamicFee(data);
-  //       setRelayerJWT(data.token);
-  //       setRecipientAddressError(false);
-  //       createTimeout(data.valid_fee_for_ms, value, contract);
-  //     } catch (e) {
-  //       console.warn(e);
-  //       setDynamicFee(null);
-  //       setRecipientAddressError(true);
-
-  //       if (toRef) {
-  //         clearTimeout(toRef);
-  //       }
-  //     } finally {
-  //       setLoadingDynamicFee(false);
-  //     }
-  //   }, 500),
-  //   [relayerData]
-  // );
-
   if (transactionHashes) {
     localStorage.setItem(hycTransaction, JSON.stringify(true));
   }
 
   const handleWithdraw = async () => {
     try {
-      // buttonText.current = "Preparing your withdraw...";
-      // clearTimeout(toRef);
-      // setGeneratinProof(true);
-      // await prepareWithdraw(
-      //   ticket.contract,
-      //   dynamicFee.price_token_fee,
-      //   {
-      //     note: note,
-      //     recipient: recipientAddress,
-      //   },
-      //   logger
-      // );
-      // setGeneratinProof(false);
       await preWithdraw(logger);
       setShowModal(true);
     } catch (err) {
@@ -216,10 +89,12 @@ export function Withdraw() {
   return (
     <>
       <div>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          handleWithdraw()
-        }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleWithdraw();
+          }}
+        >
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
@@ -273,7 +148,7 @@ export function Withdraw() {
                           />
                         ))}
                       </>
-                    ) : withdrawScore > 30 && withdrawScore < 60 ? (
+                    ) : withdrawScore >= 30 && withdrawScore < 60 ? (
                       <>
                         {[1, 2, 3].map((item) => (
                           <div
@@ -287,7 +162,7 @@ export function Withdraw() {
                         ))}
                       </>
                     ) : (
-                      withdrawScore > 60 && (
+                      withdrawScore >= 60 && (
                         <>
                           {[1, 2, 3].map((item) => (
                             <div

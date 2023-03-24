@@ -2,13 +2,17 @@ import { ToastCustom } from "@/components/shared/toast-custom";
 import { useEnv } from "@/hooks/useEnv";
 import { TicketStored, WithdrawStore } from "@/interfaces";
 import { hycService } from "@/lib";
+import { debounce } from "@/utils/debounce";
 import {
   getLastDepositsBeforeTheTicketWasCreated,
   getLastWithdrawBeforeTheTicketWasCreated,
   getTicketInTheMerkleTree,
 } from "@/utils/graphql-queries";
-import { AxiosError } from "axios";
-import { Logger, parseNote, viewWasNullifierSpent, getCommitmentByTicket } from "hideyourcash-sdk";
+import {
+  Logger,
+  viewWasNullifierSpent,
+  getCommitmentByTicket,
+} from "hideyourcash-sdk";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { useRelayer } from "./relayer";
@@ -98,7 +102,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
 
     const pastTime = Date.now();
 
-    const score = lastWithdrawal + lastDeposit + pastTime / 3600;
+    const score = +lastWithdrawal + +lastDeposit + pastTime / 3600;
 
     set({ withdrawScore: score });
   },
@@ -114,16 +118,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
         generatingProof: true,
         buttonText: "Preparing your withdraw...",
       });
-
-      console.log(
-        ticket.contract,
-        dynamicFee.price_token_fee,
-        {
-          note,
-          recipient: recipientAddress,
-        },
-      );
-
+      
       await prepareWithdraw(
         ticket.contract,
         dynamicFee.price_token_fee,
@@ -140,12 +135,10 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     }
   },
 
-  validateTicket: async (ticket: string) => {
-    console.log('fooo');
-
-    if (ticket.length < 220) {
+  validateTicket: debounce(async (ticket: string) => {
+    if (ticket.split("-").length < 4) {
       set({ errorMessage: "Ticket invalid" });
-      return false;
+      return;
     }
 
     const commitment = await getCommitmentByTicket(ticket);
@@ -156,7 +149,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
 
     if (!ticketStored) {
       set({ errorMessage: "This ticket has not been deposited yet" });
-      return false;
+      return;
     }
 
     const wasNullifierSpent = await viewWasNullifierSpent(
@@ -166,7 +159,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
 
     if (wasNullifierSpent) {
       set({ errorMessage: "This ticket is not valid anymore" });
-      return false;
+      return;
     }
 
     set({
@@ -175,8 +168,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       commitment: commitment,
       errorMessage: "",
     });
-    return true;
-  },
+  }, 500),
 
   handleNote: (value) => {
     const { validateTicket } = get();
@@ -195,6 +187,6 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
   },
 
   cleanupInputs: () => {
-    set({ note: "", recipientAddress: ""});
+    set({ note: "", recipientAddress: "" });
   },
 }));

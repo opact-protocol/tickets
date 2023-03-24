@@ -14,10 +14,7 @@ import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { useDeposit, useModal, useApp } from "@/store";
-import {
-  getDecimals,
-  formatBigNumberWithDecimals,
-} from "hideyourcash-sdk";
+import { getDecimals, formatBigNumberWithDecimals } from "hideyourcash-sdk";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -30,8 +27,9 @@ const customId = "deposit-toast";
 export function Deposit() {
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { accountId, viewBalance, haveBalance, toggleModal } = useWallet();
-  const { allCurrencies } = useApp();
+  const [haveBalance, setHaveBalance] = useState(true);
+  const { accountId, toggleModal } = useWallet();
+  const { allCurrencies, nearBalance, tokenBalance } = useApp();
   const {
     setSelectedToken,
     setSelectedAmount,
@@ -93,16 +91,7 @@ export function Deposit() {
     if (!selectedAmount.value) {
       return;
     }
-
-    (async () => {
-      await viewBalance(
-        selectedToken.type,
-        selectedToken.account_id!,
-        +selectedAmount.value
-      );
-
-      await poolDepositScore();
-    })();
+    poolDepositScore();
   }, [selectedAmount]);
 
   return (
@@ -247,7 +236,14 @@ export function Deposit() {
 
               <RadioGroup
                 value={selectedAmount}
-                onChange={setSelectedAmount}
+                onChange={(payload) => {
+                  if (selectedToken.type === "Near") {
+                    setHaveBalance(() => nearBalance > +payload.value);
+                  } else {
+                    setHaveBalance(() => tokenBalance > +payload.value);
+                  }
+                  setSelectedAmount(payload)
+                }}
                 className="mt-2 max-w-[371px] flex"
                 as="ul"
               >
@@ -258,14 +254,16 @@ export function Deposit() {
                     as="li"
                     className={() => `
                       bg-transparent rounded-full p-1 w-min mb-2 grow ${
-                        selectedAmount.accountId === token.accountId ? "bg-soft-blue-from-deep-blue" : ""
+                        selectedAmount.accountId === token.accountId
+                          ? "bg-soft-blue-from-deep-blue"
+                          : ""
                       }
                     `}
                   >
                     <div className="bg-white p-2 px-3 shadow-sm rounded-full flex items-center justify-center cursor-pointer">
                       <RadioGroup.Label
                         as="span"
-                        className="whitespace-nowrap space-x-[4px] w-[95%] truncate text-center font-bold text-soft-blue w-min"
+                        className="whitespace-nowrap space-x-[4px] truncate text-center font-bold text-soft-blue w-min"
                       >
                         {Number(
                           formatBigNumberWithDecimals(
@@ -314,7 +312,7 @@ export function Deposit() {
                       />
                     ))}
                   </>
-                ) : depositScore > 500 && depositScore < 1000 ? (
+                ) : depositScore >= 500 && depositScore < 1000 ? (
                   <>
                     {[1, 2, 3].map((item) => (
                       <div
@@ -328,7 +326,7 @@ export function Deposit() {
                     ))}
                   </>
                 ) : (
-                  depositScore > 1000 && (
+                  depositScore >= 1000 && (
                     <>
                       {[1, 2, 3].map((item) => (
                         <div
@@ -346,7 +344,6 @@ export function Deposit() {
               </div>
               <p
                 className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
-                title="Coming soon"
                 onClick={() => setShowModalPoolAnonymity(true)}
               >
                 What is this <QuestionMarkCircleIcon className="w-4 h-4" />

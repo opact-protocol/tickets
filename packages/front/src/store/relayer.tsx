@@ -1,6 +1,7 @@
 import { useEnv } from "@/hooks/useEnv";
 import { RelayerStore } from "@/interfaces";
 import { hycService } from "@/lib";
+import { debounce } from "@/utils/debounce";
 import { RelayerDataInterface } from "hideyourcash-sdk";
 import { create } from "zustand";
 import { useWithdraw } from "./withdraw";
@@ -15,20 +16,6 @@ const initialDynamicFee = {
   formatted_user_will_receive: "",
   formatted_token_fee: "",
 };
-
-export function debounce (fn, time) {
-  let timeoutId
-  return wrapper
-  function wrapper (...args) {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-    timeoutId = setTimeout(() => {
-      timeoutId = null
-      fn(...args)
-    }, time)
-  }
-}
 
 export const useRelayer = create<RelayerStore>((set, get) => ({
   relayerData: { account: "", feePercent: "", url: "" },
@@ -88,7 +75,7 @@ export const useRelayer = create<RelayerStore>((set, get) => ({
         relayerData,
       );
 
-      set({ dynamicFee: data, relayerData: data.token });
+      set({ dynamicFee: data, relayerJWT: data.token });
 
       createTimeout(data.valid_fee_for_ms, address);
     } catch (error) {
