@@ -78,8 +78,8 @@ export const useDeposit = create<DepositStore>((set, get) => ({
     localStorage.removeItem(hycTransaction);
   },
 
-  preDeposit: async () => {
-    const { accountId, haveBalance } = useWallet.getState();
+  preDeposit: async (haveBalance: boolean) => {
+    const { accountId } = useWallet.getState();
     const { toggleHashModal } = useModal.getState();
     const { allowlist } = useApp.getState();
     const { selectedToken, selectedAmount, prepareDeposit } = get();
@@ -138,7 +138,7 @@ export const useDeposit = create<DepositStore>((set, get) => ({
 
   poolDepositScore: async () => {
     const { selectedAmount } = get();
-  
+
     const lastDeposit = await getLastDepositOfContract(
       selectedAmount.accountId
     );
@@ -167,6 +167,7 @@ export const useDeposit = create<DepositStore>((set, get) => ({
   setSelectedToken: (payload: ViewCurrenciesResponseInterface) => {
     set({ selectedToken: payload, errorMessage: "" });
   },
+
   setSelectedAmount: (payload: AmountsProps) => {
     set({ selectedAmount: payload, errorMessage: "" });
   },

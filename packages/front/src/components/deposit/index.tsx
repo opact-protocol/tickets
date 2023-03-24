@@ -92,7 +92,7 @@ export function Deposit() {
       toggleModal();
       return;
     }
-    await preDeposit();
+    await preDeposit(haveBalance);
   };
 
   useEffect(() => {
@@ -132,6 +132,7 @@ export function Deposit() {
               onChange={(payload) => {
                 setSelectedToken(payload);
                 setSelectedAmount({} as any);
+                setHaveBalance(true)
               }}
             >
               <div className="relative mt-1">
