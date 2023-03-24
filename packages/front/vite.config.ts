@@ -2,8 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import Pages from "vite-plugin-pages";
 import react from "@vitejs/plugin-react";
-import reactRefresh from "@vitejs/plugin-react-refresh";
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const inject = require("@rollup/plugin-inject");
 
 export default defineConfig(async () => {
@@ -12,7 +11,6 @@ export default defineConfig(async () => {
   return {
     plugins: [
       react(),
-      reactRefresh(),
       Pages({
         pagesDir: "src/pages"
       }),
