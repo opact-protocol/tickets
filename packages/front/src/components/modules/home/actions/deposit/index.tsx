@@ -25,6 +25,8 @@ import {
 } from "hideyourcash-sdk";
 import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
+import axios from "axios";
+import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -35,6 +37,7 @@ const hycTransaction = "hyc-transaction";
 const customId = "deposit-toast";
 
 export function Deposit() {
+  const [blockedLocationModal, setBlockedLocationModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -125,6 +128,14 @@ export function Deposit() {
   };
 
   useEffect(() => {
+    (async () => {
+      const { data } = await axios.get("/api/geoloc");
+      if (data.result) {
+        setBlockedLocationModal(true);
+        return;
+      }
+    })();
+
     if (!selectedAmount.value) {
       return;
     }
@@ -435,6 +446,12 @@ export function Deposit() {
           <FixedValuesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
+      {blockedLocationModal && (
+        <BlockecLocationModal
+          isOpen={blockedLocationModal}
+          onClose={() => setBlockedLocationModal(true)}
+        />
+      )}
       <WhatIsThisModal
         isOpen={showModalPoolAnonymity}
         onClose={() => setShowModalPoolAnonymity(false)}
@@ -447,13 +464,3 @@ export function Deposit() {
   );
 }
 
-{
-  [1, 2, 3].map((item) => (
-    <div
-      key={item}
-      className={`w-[77px] h-[9px] ${item === 1 && "bg-deep-blue"} ${
-        item === 2 && "bg-intermediate-score"
-      } ${item === 3 && "bg-success"}  rounded-full`}
-    />
-  ));
-}
