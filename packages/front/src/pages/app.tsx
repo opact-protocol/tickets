@@ -6,8 +6,6 @@ import { useWallet } from "@/store/wallet";
 import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect, useState } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
-import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 
 const methods = {
   deposit: "hyc-deposits",
@@ -55,7 +53,6 @@ function BackgroundIllustration() {
 
 export function Index() {
   const [showModal, setShowModal] = useState(false);
-  const [blockedLocationModal, setBlockedLocationModal] = useState(false);
   const { initWallet } = useWallet();
 
   useEffect(() => {
@@ -67,14 +64,6 @@ export function Index() {
   useEffect(() => {
     document.body.style.background = "#e8eaff";
     handleOpenModal((show) => setShowModal(show));
-
-    (async () => {
-      const { data } = await axios.get("/api/geoloc");
-      if (data.result) {
-        setBlockedLocationModal(true);
-        return;
-      }
-    })();
   });
   return (
     <>
@@ -106,14 +95,11 @@ export function Index() {
           </div>
         </Container>
       </div>
-      <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
-      <NeedHelp />
-      {blockedLocationModal && (
-        <BlockecLocationModal
-          isOpen={blockedLocationModal}
-          onClose={() => setBlockedLocationModal(true)}
-        />
+      {showModal && (
+        <AboutUsModal isOpen={showModal} onClose={() => setShowModal(false)} />
       )}
+
+      <NeedHelp />
     </>
   );
 }
