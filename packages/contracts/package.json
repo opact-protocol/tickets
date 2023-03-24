@@ -6,8 +6,6 @@
   "scripts": {
     "build:contract": "node compile.js",
     "build:contract:debug": "node compile.js --debug",
-    "dev:deploy:contract": "near dev-deploy",
-    "deploy:contract": "near deploy",
     "tests:ts": "yarn build:contract && (cd ./tests-ts && yarn setup)",
     "deploy": "yarn build:contract && yarn deploy:contract",
     "test:rust": "yarn build:contract && cargo test -- --nocapture",
