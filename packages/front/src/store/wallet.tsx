@@ -23,7 +23,6 @@ export const useWallet = create<WalletStore>((set, get) => ({
   accountId: "",
   selector: null,
   showWalletModal: false,
-  haveBalance: true,
 
   toggleModal: () => {
     const { showWalletModal } = get();
