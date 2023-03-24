@@ -9,7 +9,8 @@ dataSources:
       accounts: 
         suffixes:
           - hideyourcash.near
-      startBlock: 87518288
+          - proxy.hapiprotocol.near
+      startBlock: 59503757 # 87518288
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
@@ -17,6 +18,8 @@ dataSources:
         - DepositMerkleTreeUpdate
         - AllowlistMerkleTreeUpdate
         - Withdrawal
+        - HapioneEntry
+        - HapioneControl
       receiptHandlers:
         - handler: handleReceipt
       file: ./assembly/mappings.ts
