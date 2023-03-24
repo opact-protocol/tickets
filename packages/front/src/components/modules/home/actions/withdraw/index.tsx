@@ -21,9 +21,10 @@ const hycTransaction = "hyc-transaction";
 let totalProgress = 40;
 
 export function Withdraw() {
+  const [progress, setProgress] = useState(40);
   const [showModal, setShowModal] = useState(false);
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
-  const [progress, setProgress] = useState(40);
+
   const {
     errorMessage,
     ticket,
@@ -38,6 +39,7 @@ export function Withdraw() {
     handleRecipientAddress,
     cleanupInputs,
   } = useWithdraw();
+
   const { loadingDynamicFee, dynamicFee, recipientAddressError } = useRelayer();
 
   const logger: Logger = {
@@ -77,7 +79,9 @@ export function Withdraw() {
   };
 
   useEffect(() => {
-    if (!ticket.contract) return;
+    if (!ticket.contract) {
+      return;
+    }
 
     poolWithdrawScore();
   }, [ticket]);
