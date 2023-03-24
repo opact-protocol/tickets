@@ -114,6 +114,16 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
         generatingProof: true,
         buttonText: "Preparing your withdraw...",
       });
+
+      console.log(
+        ticket.contract,
+        dynamicFee.price_token_fee,
+        {
+          note,
+          recipient: recipientAddress,
+        },
+      );
+
       await prepareWithdraw(
         ticket.contract,
         dynamicFee.price_token_fee,
@@ -131,6 +141,8 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
   },
 
   validateTicket: async (ticket: string) => {
+    console.log('fooo');
+
     if (ticket.length < 220) {
       set({ errorMessage: "Ticket invalid" });
       return false;
@@ -165,16 +177,23 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     });
     return true;
   },
+
+  handleNote: (value) => {
+    const { validateTicket } = get();
+
+    set({ note: value });
+
+    validateTicket(value);
+  },
+
   handleRecipientAddress: (value: string) => {
     const { checkRelayerFee } = useRelayer.getState();
-    set({ recipientAddress: value });
 
-    if (value.length < 5) {
-      return;
-    }
+    set({ recipientAddress: value });
 
     checkRelayerFee(value);
   },
+
   cleanupInputs: () => {
     set({ note: "", recipientAddress: ""});
   },

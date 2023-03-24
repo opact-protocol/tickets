@@ -48,8 +48,8 @@ export function Withdraw() {
     withdrawScore,
     note,
     recipientAddress,
+    handleNote,
     preWithdraw,
-    validateTicket,
     poolWithdrawScore,
     handleRecipientAddress,
     cleanupInputs,
@@ -185,6 +185,7 @@ export function Withdraw() {
       //   logger
       // );
       // setGeneratinProof(false);
+      await preWithdraw(logger);
       setShowModal(true);
     } catch (err) {
       console.warn(err);
@@ -246,8 +247,7 @@ export function Withdraw() {
                   value={note}
                   autoFocus
                   placeholder="Paste your withdraw ticked"
-                  // onChange={(e) => handleNote(e.target.value)}
-                  onInput={(e) => validateTicket(e.currentTarget.value)}
+                  onChange={(e) => handleNote(e.target.value)}
                 />
               </div>
 
