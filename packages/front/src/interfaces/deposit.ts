@@ -1,4 +1,8 @@
-import { Currency, CurrencyContract, ViewCurrenciesResponseInterface } from "hideyourcash-sdk";
+import {
+  Currency,
+  CurrencyContract,
+  ViewCurrenciesResponseInterface,
+} from "hideyourcash-sdk";
 
 export interface DepositStore {
   sendDeposit: (
@@ -12,7 +16,7 @@ export interface DepositStore {
     account: string,
     currencieContract: string
   ) => Promise<string>;
-  preDeposit: () => Promise<void>;
+  preDeposit: (haveBalance: boolean) => Promise<void>;
   deposit: () => Promise<void>;
   poolDepositScore: () => Promise<void>;
   setSelectedToken: (payload: ViewCurrenciesResponseInterface) => void;
@@ -32,7 +36,6 @@ export interface DepositStore {
   depositing: boolean;
   buttonText: string;
 }
-
 
 export interface AmountsProps {
   value: string;

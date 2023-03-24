@@ -10,7 +10,6 @@ export interface WalletStore {
   accountId: string | null;
   showWalletModal: boolean;
   selector: WalletSelector | null;
-  haveBalance: boolean;
 }
 export interface Balance {
   total: string;
