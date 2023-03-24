@@ -4,7 +4,7 @@ export const Loader = () => {
       <div className="flex flex-col items-center justify-center space-y-[24px]">
         <img
           src="/assets/logo-vertical.png"
-          className="text-white/[0.75] w-80"
+          className="text-white/[0.75] w-44"
         />
 
         <div>
@@ -15,7 +15,7 @@ export const Loader = () => {
                 rounded-[50px]
                 shadow-inner
                 relative
-                bg-white/[0.10]"
+                bg-soft-blue-normal"
             >
             <div
               className="
@@ -27,7 +27,7 @@ export const Loader = () => {
                 bottom-[2px]
                 shadow-sm
                 animate-loader
-                bg-intermediate-score"
+                bg-green"
             />
           </div>
         </div>
