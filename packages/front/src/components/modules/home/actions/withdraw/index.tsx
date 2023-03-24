@@ -1,11 +1,10 @@
 import ConfirmModal from "./confirm-modal";
-import { useRelayer, useWithdraw, useApp } from "@/store";
+import { useRelayer, useWithdraw } from "@/store";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
 import { ToastCustom } from "@/components/shared/toast-custom";
-import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
-import { useWithdrawalScore } from "@/hooks/useWithdrawalScore";
+// import { getCommitmentByTicket, viewWasNullifierSpent } from "hideyourcash-sdk";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import Countdown from "react-countdown";
@@ -67,14 +66,6 @@ export function Withdraw() {
       return message;
     },
   };
-
-  const {
-    prepareWithdraw,
-    relayerData,
-    fetchRelayerData,
-    getRelayerFee,
-    setRelayerJWT,
-  } = useApp();
 
   // const validateNote = useCallback(debounce(async (value: string) => {
   //   console.log('validate note', value);
@@ -175,11 +166,9 @@ export function Withdraw() {
   //   [relayerData]
   // );
 
-  const { withdrawalScore } = useWithdrawalScore(ticket ? ticket.value : "");
-
-  // if (transactionHashes) {
-  //   localStorage.setItem(hycTransaction, JSON.stringify(true));
-  // }
+  if (transactionHashes) {
+    localStorage.setItem(hycTransaction, JSON.stringify(true));
+  }
 
   const handleWithdraw = async () => {
     try {
