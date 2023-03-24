@@ -85,7 +85,6 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     set(() => ({ accountId: "" }));
   },
-
   sendWhitelist: async () => {
     const { selector, accountId } = get();
     if (!accountId) return;

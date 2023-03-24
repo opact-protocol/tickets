@@ -265,7 +265,6 @@ export function Withdraw() {
               <p className="text-error mt-2 text-sm font-normal">
                 {errorMessage && errorMessage}
               </p>
-
               {ticket.contract && !errorMessage && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
