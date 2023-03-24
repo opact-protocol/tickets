@@ -8,8 +8,8 @@ import { useEffect } from "react";
 import Zoom from "react-reveal/Zoom";
 import Fade from "react-reveal/Fade";
 import HeaderLanding from "@/components/layout/header-landing";
-import Card from "@/components/shared/card";
-import MiniCard from "@/components/shared/mini-card";
+import Card from "@/components/card";
+import MiniCard from "@/components/mini-card";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
