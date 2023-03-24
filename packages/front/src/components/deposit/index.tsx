@@ -137,7 +137,6 @@ export function Deposit() {
                               : selectedToken.metadata.name!
                           }
                           className="w-5 rounded-full"
-                          loading="lazy"
                         />
                         {selectedToken.type === "Near"
                           ? selectedToken.type
@@ -159,7 +158,6 @@ export function Deposit() {
                               : selectedToken.metadata.name!
                           }
                           className="w-5 rounded-full"
-                          loading="lazy"
                         />
                         {selectedToken.type === "Near"
                           ? selectedToken.type
@@ -242,7 +240,7 @@ export function Deposit() {
                   } else {
                     setHaveBalance(() => tokenBalance > +payload.value);
                   }
-                  setSelectedAmount(payload)
+                  setSelectedAmount(payload);
                 }}
                 className="mt-2 max-w-[371px] flex"
                 as="ul"
