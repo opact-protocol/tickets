@@ -2,7 +2,6 @@ import { useEnv } from "@/hooks/useEnv";
 import { RelayerStore } from "@/interfaces";
 import { hycService } from "@/lib";
 import { RelayerDataInterface } from "hideyourcash-sdk";
-import _ from "lodash";
 import { create } from "zustand";
 import { useWithdraw } from "./withdraw";
 
@@ -16,6 +15,20 @@ const initialDynamicFee = {
   formatted_user_will_receive: "",
   formatted_token_fee: "",
 };
+
+export function debounce (fn, time) {
+  let timeoutId
+  return wrapper
+  function wrapper (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null
+      fn(...args)
+    }, time)
+  }
+}
 
 export const useRelayer = create<RelayerStore>((set, get) => ({
   relayerData: { account: "", feePercent: "", url: "" },
@@ -53,34 +66,41 @@ export const useRelayer = create<RelayerStore>((set, get) => ({
     });
   },
 
-  checkRelayerFee: (address: string) => {
-    const { relayerData, getRelayerFee, createTimeout } = get();
+  checkRelayerFee: debounce(async (address: string) => {
     const { ticket } = useWithdraw.getState();
+
+    const { relayerData, getRelayerFee, createTimeout } = get();
+
     set({
       dynamicFee: initialDynamicFee,
     });
-    _.debounce(async () => {
-      if (!address || !ticket.contract) return;
 
-      set({ loadingDynamicFee: true });
+    if (!address || !ticket.contract) {
+      return;
+    }
 
-      try {
-        const { data } = await getRelayerFee(
-          address,
-          ticket.contract,
-          relayerData
-        );
-        set({ dynamicFee: data, relayerData: data.token });
-        createTimeout(data.valid_fee_for_ms, address);
-      } catch (error) {
-        console.warn(error);
-        set({
-          dynamicFee: initialDynamicFee,
-          recipientAddressError: "Your recipient address is not valid",
-        });
-      } finally {
-        set({ loadingDynamicFee: false });
-      }
-    }, 500)();
-  },
+    set({ loadingDynamicFee: true });
+
+    try {
+      const { data } = await getRelayerFee(
+        address,
+        ticket.contract,
+        relayerData,
+      );
+
+      set({ dynamicFee: data, relayerData: data.token });
+
+      createTimeout(data.valid_fee_for_ms, address);
+    } catch (error) {
+      console.warn(error);
+
+      set({
+        dynamicFee: initialDynamicFee,
+        recipientAddressError: "Your recipient address is not valid",
+      });
+
+    } finally {
+      set({ loadingDynamicFee: false });
+    }
+  }, 500),
 }));

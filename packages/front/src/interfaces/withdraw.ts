@@ -14,6 +14,7 @@ export interface WithdrawStore {
   preWithdraw: (logger: Logger) => Promise<void>;
   handleRecipientAddress: (address: string) => void;
   cleanupInputs: () => void;
+  handleNote: (value: string) => void;
   errorMessage: string;
   ticket: TicketStored;
   withdrawScore: number;
