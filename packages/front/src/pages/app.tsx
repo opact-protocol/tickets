@@ -55,7 +55,6 @@ function BackgroundIllustration() {
 
 export function Index() {
   const [showModal, setShowModal] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const { initApp, appStarted } = useApp();
   const { initWallet } = useWallet();
 
