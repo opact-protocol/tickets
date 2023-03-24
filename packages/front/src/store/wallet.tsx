@@ -85,6 +85,17 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     set(() => ({ accountId: "" }));
   },
+
+  viewBalance: async (
+    tokenType: string,
+    tokenContract: string,
+    tokenValue: number,
+  ) => {
+    console.log(tokenType, tokenContract, tokenValue);
+
+    return;
+  },
+
   sendWhitelist: async () => {
     const { selector, accountId } = get();
     if (!accountId) return;
