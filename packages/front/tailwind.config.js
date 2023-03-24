@@ -75,7 +75,7 @@ module.exports = {
         "slide-right":
           "slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
         loading: "loading 1s alternate infinite",
-        loader: "sliding 2s alternate infinite",
+        loader: "sliding 0.8s alternate infinite",
       },
       keyframes: {
         "slide-left": {
@@ -105,12 +105,10 @@ module.exports = {
         sliding: {
           "0%": {
             left: "1px",
-            color: "#A429E4",
             right: "174px",
           },
           "100%": {
             right: "1px",
-            color: "#F124AD",
             left: "174px",
           },
         },
