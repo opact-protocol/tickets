@@ -154,7 +154,7 @@ export const getLastDepositsBeforeTheTicketWasCreated = async (
   ) as any;
 
   if (data.depositMerkleTreeUpdates[0]) {
-    return data.depositMerkleTreeUpdates[0];
+    return data.depositMerkleTreeUpdates[0].counter;
   }
 
   return 0;
@@ -182,7 +182,7 @@ export const getLastWithdrawBeforeTheTicketWasCreated = async (
   ) as any;
 
   if (data.withdrawals[0]) {
-    return data.withdrawals[0];
+    return data.withdrawals[0].counter;
   }
 
   return 0;

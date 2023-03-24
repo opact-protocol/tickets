@@ -9,8 +9,7 @@ export interface WithdrawStore {
   ) => Promise<void>;
   sendWithdraw: () => Promise<void>;
   poolWithdrawScore: () => Promise<void>;
-  validateTicket: (ticket: string) => Promise<boolean>;
-  // generateCommitment: (ticket: string) => string | undefined;
+  validateTicket: (ticket: string) => void;
   preWithdraw: (logger: Logger) => Promise<void>;
   handleRecipientAddress: (address: string) => void;
   cleanupInputs: () => void;

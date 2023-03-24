@@ -86,14 +86,16 @@ export const useWallet = create<WalletStore>((set, get) => ({
     set(() => ({ accountId: "" }));
   },
 
-  viewBalance: async (
-    tokenType: string,
-    tokenContract: string,
-    tokenValue: number,
-  ) => {
-    console.log(tokenType, tokenContract, tokenValue);
+  viewBalance: async (contract: string) => {
+    const { accountId } = get();
 
-    return;
+    if (!accountId) return;
+
+    return await viewAccountBalance(
+      useEnv("VITE_NEAR_NODE_URL"),
+      contract,
+      accountId
+    );
   },
 
   sendWhitelist: async () => {
@@ -107,16 +109,14 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     if (!accountId) {
       return {
-        available: '0',
+        available: "0",
       };
     }
 
-    const {
-      amount
-    } = await getAccountBalance({
+    const { amount } = (await getAccountBalance({
       nodeUrl,
       accountId,
-    }) as any;
+    })) as any;
 
     return {
       available: amount,
