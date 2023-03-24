@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import { toast } from "react-toastify";
-import { ToastCustom } from "@/components/shared/toast-custom";
+import { ToastCustom } from "@/components/toast-custom";
 import { twMerge } from 'tailwind-merge';
 
 const baseForm = {

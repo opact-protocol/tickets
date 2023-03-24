@@ -3,18 +3,17 @@ import { useRelayer, useWithdraw } from "@/store";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { LoadingModal } from "@/components/modals/loading";
-import { ToastCustom } from "@/components/shared/toast-custom";
+import { ToastCustom } from "@/components/toast-custom";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
-import Countdown from "react-countdown";
 import type { Logger } from "hideyourcash-sdk";
+import { Button } from "@/components/button";
+import { If } from "@/components/if";
+import { RelayerFee } from "../relayer-fee";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
 );
-
-const getHumanFormat = (value: number | string): string =>
-  value < 10 ? `0${value}` : String(value);
 
 const hycTransaction = "hyc-transaction";
 
@@ -26,21 +25,27 @@ export function Withdraw() {
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
 
   const {
-    errorMessage,
+    // values
+    note,
     ticket,
     buttonText,
-    generatingProof,
+    errorMessage,
     withdrawScore,
-    note,
+    generatingProof,
     recipientAddress,
+    // methods
     handleNote,
     preWithdraw,
+    cleanupInputs,
     poolWithdrawScore,
     handleRecipientAddress,
-    cleanupInputs,
   } = useWithdraw();
 
-  const { loadingDynamicFee, dynamicFee, recipientAddressError } = useRelayer();
+  const {
+    dynamicFee,
+    loadingDynamicFee,
+    recipientAddressError,
+  } = useRelayer();
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -224,102 +229,37 @@ export function Withdraw() {
           </div>
 
           {dynamicFee.token && !loadingDynamicFee && (
-            <div className="mt-[24px] mb-4">
-              <div className="flex justify-between items-center mb-3">
-                <div>
-                  <span className="text-black font-bold">Total</span>
-                </div>
-
-                <div className="text-black text-sm">
-                  {(!generatingProof || showModal) && (
-                    <Countdown
-                      date={Date.now() + dynamicFee.valid_fee_for_ms}
-                      key={dynamicFee.token}
-                      renderer={({ hours, minutes, seconds }) => (
-                        <span className="w-[65px] flex items-center">
-                          {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
-                          {getHumanFormat(seconds)}
-                        </span>
-                      )}
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col w-full mt-2">
-                <div className="flex items-center justify-between pb-[12px]">
-                  <span className="text-black text-[14px]">Protocol fee:</span>
-
-                  <span className="text-black font-bold">
-                    {dynamicFee.human_network_fee}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between pb-[12px]">
-                  <span className="text-black text-[14px]">Relayer fee:</span>
-
-                  <span className="text-black font-bold">
-                    {dynamicFee.formatted_token_fee}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between mt-4">
-                  <span className="text-black text-[14px]">
-                    Total to receive:
-                  </span>
-
-                  <span className="text-black font-bold">
-                    {dynamicFee.formatted_user_will_receive}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <RelayerFee/>
           )}
 
-          {generatingProof ? (
-            <LoadingModal loading={generatingProof} progress={progress} />
-          ) : (
+          <If
+            condition={!generatingProof}
+            fallback={<LoadingModal loading={generatingProof} progress={progress} /> as any}
+          >
             <div>
-              <button
-                type="button"
-                disabled={!dynamicFee.token || loadingDynamicFee}
+              <Button
+                isLoading={loadingDynamicFee}
                 onClick={() => handleWithdraw()}
-                className="bg-soft-blue-from-deep-blue mt-[12px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-              >
-                {loadingDynamicFee && (
-                  <>
-                    <div className="flex items-center justify-center w-full my-auto text-black">
-                      <svg
-                        className="animate-spin h-6 w-6 border border-l-current rounded-full"
-                        viewBox="0 0 24 24"
-                      />
-                    </div>
-                  </>
-                )}
-
-                {!loadingDynamicFee && (
-                  <> {!showModal ? "Withdraw" : buttonText} </>
-                )}
-              </button>
+                text={!showModal ? "Withdraw" : buttonText}
+                disabled={!dynamicFee.token || loadingDynamicFee}
+              />
             </div>
-          )}
-          {showModal && (
-            <ConfirmModal
-              isOpen={showModal}
-              onClose={() => setShowModal(false)}
-              cleanupInputsCallback={() => {
-                cleanupInputs();
-              }}
-            />
-          )}
+          </If>
         </form>
       </div>
-      {showModalPoolAnonymity && (
-        <WhatIsThisModal
-          isOpen={showModalPoolAnonymity}
-          onClose={() => setShowModalPoolAnonymity(false)}
-        />
-      )}
+
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        cleanupInputsCallback={() => {
+          cleanupInputs();
+        }}
+      />
+
+      <WhatIsThisModal
+        isOpen={showModalPoolAnonymity}
+        onClose={() => setShowModalPoolAnonymity(false)}
+      />
     </>
   );
 }

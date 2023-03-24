@@ -9,7 +9,7 @@ import { FixedValuesModal } from "@/components/modals/fixedValues";
 import { WhitelistModal } from "@/components/modals";
 import { useAction } from "@/hooks/useAction";
 import { toast } from "react-toastify";
-import { ToastCustom } from "@/components/shared/toast-custom";
+import { ToastCustom } from "@/components/toast-custom";
 import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";

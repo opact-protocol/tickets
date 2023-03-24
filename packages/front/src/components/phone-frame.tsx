@@ -1,7 +1,5 @@
 import clsx from "clsx";
 
-import frame from "@/images/phone-frame.svg";
-
 function PlaceholderFrame(props) {
   return (
     <svg viewBox="0 0 366 729" aria-hidden="true" {...props}>
@@ -19,7 +17,6 @@ function PlaceholderFrame(props) {
 export function PhoneFrame({
   className,
   children,
-  priority = false,
   ...props
 }) {
   return (
