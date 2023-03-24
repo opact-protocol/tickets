@@ -1,6 +1,6 @@
 export const Loader = () => {
   return (
-    <div className="w-[100vw] h-[100vh] bg-blue-100 flex items-center justify-center z-[-1] fixed">
+    <div className="w-[100vw] h-[100vh] bg-blue-[#e8eaff] flex items-center justify-center z-[-1] fixed">
       <div className="flex flex-col items-center justify-center space-y-[24px]">
         <img
           src="/assets/logo-vertical.png"
