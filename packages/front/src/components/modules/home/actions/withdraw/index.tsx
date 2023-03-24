@@ -54,6 +54,7 @@ export function Withdraw() {
     handleRecipientAddress,
     cleanupInputs,
   } = useWithdraw();
+
   const { loadingDynamicFee, dynamicFee, recipientAddressError } = useRelayer();
 
   const logger: Logger = {
