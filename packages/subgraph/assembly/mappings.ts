@@ -2,6 +2,7 @@ import { near, log } from "@graphprotocol/graph-ts";
 
 import { handleDeposit, handleAllowlist } from "./merkle";
 import { handleWithdrawal } from "./withdraw";
+import { handleHapiOne } from "./hapiOne";
 
 export function handleReceipt(receipt: near.ReceiptWithOutcome): void {
   const actions = receipt.receipt.actions;
@@ -34,5 +35,10 @@ function handleAction(
     methodName == "denylist_callback"
   ) {
     handleAllowlist(contractAddress, signer, timestamp, logs);
+  } else if (
+    methodName == "create_address" ||
+    methodName == "update_address"
+  ) {
+    handleHapiOne(functionCall);
   }
 }

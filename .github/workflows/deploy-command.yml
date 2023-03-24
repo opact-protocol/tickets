@@ -27,7 +27,8 @@ jobs:
       VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
                         
       HYC_CONTRACT_PREFIX: hideyourcash.near
-      HYC_START_BLOCK: 87518288
+      HAPI_CONTRACT_PREFIX: proxy.hapiprotocol.near
+      HYC_START_BLOCK: 59503757
 
       VITE_TRACES_SAMPLE_RATE: 0
       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}

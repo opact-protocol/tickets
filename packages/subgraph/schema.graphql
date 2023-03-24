@@ -9,7 +9,7 @@ type DepositMerkleTreeUpdate @entity {
 }
 
 type AllowlistMerkleTreeUpdate @entity {
-  id: ID!
+  id: ID!,
   counter: BigInt!,
   contract: String!,
   signer: String,
@@ -21,7 +21,7 @@ type AllowlistMerkleTreeUpdate @entity {
 }
 
 type Withdrawal @entity {
-  id: ID!
+  id: ID!,
   counter: BigInt!,
   contract: String!,
   signer: String!,
@@ -30,4 +30,17 @@ type Withdrawal @entity {
   fee: BigInt!,
   nullifier: String!,
   timestamp: BigInt!,
+}
+
+type HapioneEntry @entity {
+  id: ID!,
+  counter: BigInt!,
+  account: String!,
+  category: String!,
+  risk: BigInt!,
+}
+
+type HapioneControl @entity {
+  id: ID!,
+  counter: BigInt!
 }

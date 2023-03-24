@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal,
+  BigDecimal
 } from "@graphprotocol/graph-ts";
 
 export class DepositMerkleTreeUpdate extends Entity {
@@ -328,5 +328,114 @@ export class Withdrawal extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class HapioneEntry extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save HapioneEntry entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HapioneEntry must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HapioneEntry", id.toString(), this);
+    }
+  }
+
+  static load(id: string): HapioneEntry | null {
+    return changetype<HapioneEntry | null>(store.get("HapioneEntry", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get counter(): BigInt {
+    let value = this.get("counter");
+    return value!.toBigInt();
+  }
+
+  set counter(value: BigInt) {
+    this.set("counter", Value.fromBigInt(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    return value!.toString();
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get category(): string {
+    let value = this.get("category");
+    return value!.toString();
+  }
+
+  set category(value: string) {
+    this.set("category", Value.fromString(value));
+  }
+
+  get risk(): BigInt {
+    let value = this.get("risk");
+    return value!.toBigInt();
+  }
+
+  set risk(value: BigInt) {
+    this.set("risk", Value.fromBigInt(value));
+  }
+}
+
+export class HapioneControl extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save HapioneControl entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HapioneControl must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HapioneControl", id.toString(), this);
+    }
+  }
+
+  static load(id: string): HapioneControl | null {
+    return changetype<HapioneControl | null>(store.get("HapioneControl", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get counter(): BigInt {
+    let value = this.get("counter");
+    return value!.toBigInt();
+  }
+
+  set counter(value: BigInt) {
+    this.set("counter", Value.fromBigInt(value));
   }
 }
