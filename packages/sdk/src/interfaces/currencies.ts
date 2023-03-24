@@ -3,8 +3,9 @@ import type { FungibleTokenMetadataInterface } from "./near";
 export type CurrencyContract = { [key: string]: string };
 
 export interface Currency {
-  type: string
+  type: string;
   account_id?: string;
+  icon: string;
 }
 
 export interface ViewCurrenciesResponseInterface extends Currency {

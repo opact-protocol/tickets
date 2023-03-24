@@ -21,7 +21,12 @@ export const useApp = create<AppStore>((set, get) => ({
       useEnv("VITE_CONTRACT")
     );
 
-    set({ allCurrencies: currencies });
+    set({
+      allCurrencies: currencies.map((token) => ({
+        ...token,
+        ...(token.type === "Near" && { icon: "/near_icon.svg" }),
+      })),
+    });
   },
   viewIsInAllowlist: async () => {
     const { accountId } = useWallet.getState();
@@ -41,7 +46,14 @@ export const useApp = create<AppStore>((set, get) => ({
     const { allCurrencies } = get();
     const { viewBalance, viewNearBalance } = useWallet.getState();
 
-    const balance = await viewBalance(allCurrencies[0].account_id!);
+    const token = allCurrencies.find((token) => {
+      if ("account_id" in token) return token;
+    });
+
+    if (!token) return;
+
+    const balance = await viewBalance(token.account_id!);
+
     const { available } = await viewNearBalance();
 
     set({ nearBalance: +available, tokenBalance: +balance });

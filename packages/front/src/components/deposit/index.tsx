@@ -112,7 +112,7 @@ export function Deposit() {
               onChange={(payload) => {
                 setSelectedToken(payload);
                 setSelectedAmount({} as any);
-                setHaveBalance(true)
+                setHaveBalance(true);
               }}
             >
               <div className="relative mt-1">
@@ -129,7 +129,7 @@ export function Deposit() {
                         <img
                           src={
                             selectedToken.type === "Near"
-                              ? "./assets/near-logo.png"
+                              ? selectedToken.icon
                               : selectedToken.metadata.icon!
                           }
                           alt={
@@ -150,7 +150,7 @@ export function Deposit() {
                         <img
                           src={
                             selectedToken.type === "Near"
-                              ? "./assets/near-logo.png"
+                              ? selectedToken.icon
                               : selectedToken.metadata.icon!
                           }
                           alt={
@@ -200,7 +200,7 @@ export function Deposit() {
                           <img
                             src={
                               token.type === "Near"
-                                ? "./assets/near-logo.png"
+                                ? token.icon
                                 : token.metadata.icon!
                             }
                             alt=""
