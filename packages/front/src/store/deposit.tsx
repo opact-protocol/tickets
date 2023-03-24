@@ -138,8 +138,7 @@ export const useDeposit = create<DepositStore>((set, get) => ({
 
   poolDepositScore: async () => {
     const { selectedAmount } = get();
-    if (!selectedAmount.accountId) return;
-
+  
     const lastDeposit = await getLastDepositOfContract(
       selectedAmount.accountId
     );

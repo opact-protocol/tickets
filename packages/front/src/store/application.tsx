@@ -12,6 +12,8 @@ export const useApp = create<AppStore>((set, get) => ({
   allCurrencies: [],
   allowlist: false,
   appStarted: false,
+  nearBalance: 0,
+  tokenBalance: 0,
 
   getAllCurrencies: async () => {
     const currencies = await viewAllCurrencies(
@@ -34,13 +36,24 @@ export const useApp = create<AppStore>((set, get) => ({
 
     set({ allowlist: result });
   },
+
+  viewAccountBalance: async () => {
+    const { allCurrencies } = get();
+    const { viewBalance, viewNearBalance } = useWallet.getState();
+
+    const balance = await viewBalance(allCurrencies[0].account_id!);
+    const { available } = await viewNearBalance();
+
+    set({ nearBalance: +available, tokenBalance: +balance });
+  },
   initApp: async () => {
-    const { getAllCurrencies, viewIsInAllowlist } = get();
+    const { getAllCurrencies, viewIsInAllowlist, viewAccountBalance } = get();
     const { fetchRelayerData } = useRelayer.getState();
 
     await getAllCurrencies();
     await viewIsInAllowlist();
     await fetchRelayerData();
+    await viewAccountBalance();
 
     set({ appStarted: true });
   },
