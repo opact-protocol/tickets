@@ -233,10 +233,8 @@ export function Withdraw() {
           <div className={`mb-5`}>
             <div className="flex items-center justify-between">
               <span className="text-black text-[1.1rem] font-bold">
-                Withdrawal ticket{" "}
-                {ticketError && (
-                  <span className="text-error"> * </span>
-                )}
+                Withdrawal ticket
+                {errorMessage && <span className="text-error"> * </span>}
               </span>
             </div>
             <div>
@@ -253,23 +251,22 @@ export function Withdraw() {
                 flex items-center justify-between
                 border-[2px]
                 focus:outline-none
-                ${
-                  ticketError ? "border-error" : "border-transparent"
-                }
+                ${errorMessage ? "border-error" : "border-transparent"}
               `}
-                  value={note}
-                  onChange={(e) => handleNote(e.target.value)}
                   autoComplete="off"
+                  value={note}
                   autoFocus
-                  value={recipientTicket}
                   placeholder="Paste your withdraw ticked"
+                  // onChange={(e) => handleNote(e.target.value)}
                   onInput={(e) => validateTicket(e.currentTarget.value)}
                 />
               </div>
+
               <p className="text-error mt-2 text-sm font-normal">
-                {ticketError && ticketError}
+                {errorMessage && errorMessage}
               </p>
-              {ticket && !ticketError && !validatingNote && (
+
+              {ticket.contract && !errorMessage && (
                 <div className="my-5">
                   <div className="flex items-center justify-between">
                     <span className="text-black text-[1.1rem] font-bold ">
@@ -277,7 +274,7 @@ export function Withdraw() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-2">
-                    {withdrawalScore < 30 ? (
+                    {withdrawScore < 30 ? (
                       <>
                         {[1, 2, 3].map((item) => (
                           <div
@@ -288,7 +285,7 @@ export function Withdraw() {
                           />
                         ))}
                       </>
-                    ) : withdrawalScore > 30 && withdrawalScore < 60 ? (
+                    ) : withdrawScore > 30 && withdrawScore < 60 ? (
                       <>
                         {[1, 2, 3].map((item) => (
                           <div
@@ -302,7 +299,7 @@ export function Withdraw() {
                         ))}
                       </>
                     ) : (
-                      withdrawalScore > 60 && (
+                      withdrawScore > 60 && (
                         <>
                           {[1, 2, 3].map((item) => (
                             <div
@@ -314,6 +311,7 @@ export function Withdraw() {
                       )
                     )}
                   </div>
+
                   <p
                     className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
                     title="Coming soon"
@@ -442,16 +440,15 @@ export function Withdraw() {
               </button>
             </div>
           )}
-          <ConfirmModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            cleanupInputsCallback={() => {
-              setTicket('');
-              setDynamicFee(null);
-              setRecipientAddress('');
-              setRecipientAddressError(false);
-            }}
-          />
+          {showModal && (
+            <ConfirmModal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              cleanupInputsCallback={() => {
+                cleanupInputs();
+              }}
+            />
+          )}
         </form>
       </div>
       {showModalPoolAnonymity && (
