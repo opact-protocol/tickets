@@ -1,4 +1,4 @@
-import { ToastCustom } from "@/components/shared/toast-custom";
+import { ToastCustom } from "@/components/toast-custom";
 import { useEnv } from "@/hooks/useEnv";
 import { TicketStored, WithdrawStore } from "@/interfaces";
 import { hycService } from "@/lib";
@@ -118,7 +118,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
         generatingProof: true,
         buttonText: "Preparing your withdraw...",
       });
-      
+
       await prepareWithdraw(
         ticket.contract,
         dynamicFee.price_token_fee,
