@@ -62,16 +62,19 @@ export const useRelayer = create<RelayerStore>((set, get) => ({
       dynamicFee: initialDynamicFee,
     });
 
-    if (!address || !ticket.contract) {
+    if (!address || !ticket!.contract) {
       return;
     }
 
-    set({ loadingDynamicFee: true });
+    set({
+      loadingDynamicFee: true,
+      recipientAddressError: '',
+    });
 
     try {
       const { data } = await getRelayerFee(
         address,
-        ticket.contract,
+        ticket!.contract,
         relayerData,
       );
 

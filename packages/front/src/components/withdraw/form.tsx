@@ -28,6 +28,7 @@ export function Withdraw() {
     errorMessage,
     withdrawScore,
     generatingProof,
+    validatingTicket,
     recipientAddress,
     handleNote,
     preWithdraw,
@@ -78,7 +79,7 @@ export function Withdraw() {
   };
 
   useEffect(() => {
-    if (!ticket.contract) {
+    if (!ticket) {
       return;
     }
 
@@ -97,7 +98,7 @@ export function Withdraw() {
         onChange={(value) => handleNote(value as string)}
       />
 
-      {ticket.contract && !errorMessage && (
+      {ticket && !errorMessage && (
         <TicketScore
           score={withdrawScore}
         />
@@ -121,7 +122,7 @@ export function Withdraw() {
       >
         <WithdrawButton
           buttonText={buttonText}
-          isLoading={loadingDynamicFee}
+          isLoading={loadingDynamicFee || validatingTicket}
           onClick={() => handleWithdraw()}
           cleanupInputs={() => cleanupInputs()}
           isDisabled={!dynamicFee.token || loadingDynamicFee}
