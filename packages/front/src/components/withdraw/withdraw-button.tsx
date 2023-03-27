@@ -10,7 +10,6 @@ export const WithdrawButton = ({
   buttonText: string,
   isDisabled: boolean,
   onClick: () => void,
-  cleanupInputs: () => void,
 }) => {
   return (
     <Button
