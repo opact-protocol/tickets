@@ -5,6 +5,7 @@ export interface InputInterface {
   error: string,
   label: string,
   placeholder: string,
+  isDisabled?: boolean,
   value: string | number,
   onChange: (value: string | number) => void,
 }
@@ -14,6 +15,7 @@ export const Input = ({
   value,
   label,
   onChange,
+  isDisabled,
   placeholder,
 }: InputInterface) => (
   <div
@@ -39,6 +41,7 @@ export const Input = ({
       )}
       autoFocus
       value={value}
+      disabled={isDisabled}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
     />
