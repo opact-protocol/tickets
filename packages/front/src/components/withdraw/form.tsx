@@ -1,6 +1,7 @@
 import { Input } from "../input";
 import { If } from "@/components/if";
 import { toast } from "react-toastify";
+import ConfirmModal from "./confirm-modal";
 import { RelayerFee } from "../relayer-fee";
 import { useEffect, useState } from "react";
 import { TicketScore } from "../ticket-score";
@@ -20,6 +21,7 @@ let totalProgress = 40;
 
 export function Withdraw() {
   const [progress, setProgress] = useState(40);
+  const [showModal, setShowModal] = useState(false);
 
   const {
     note,
@@ -60,6 +62,7 @@ export function Withdraw() {
   const handleWithdraw = async () => {
     try {
       await preWithdraw(logger);
+      setShowModal(true);
     } catch (err) {
       console.warn(err);
       toast(
@@ -128,6 +131,14 @@ export function Withdraw() {
           isDisabled={!dynamicFee.token || loadingDynamicFee}
         />
       </If>
+
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        cleanupInputsCallback={() => {
+          cleanupInputs();
+        }}
+      />
     </div>
   );
 }
