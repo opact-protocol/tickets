@@ -25,7 +25,6 @@ import {
 } from "hideyourcash-sdk";
 import { useDepositScore } from "@/hooks/useDepositScore";
 import { useEnv } from "@/hooks/useEnv";
-import axios from "axios";
 import { BlockecLocationModal } from "@/components/modals/blockedLocation";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
@@ -129,13 +128,17 @@ export function Deposit() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get("/api/geoloc");
-      if (data.result) {
+      const res = await fetch("/api/geoloc");
+      const result = await res.json();
+
+      if (result) {
         setBlockedLocationModal(true);
         return;
       }
     })();
+  }, []);
 
+  useEffect(() => {
     if (!selectedAmount.value) {
       return;
     }
@@ -463,4 +466,3 @@ export function Deposit() {
     </>
   );
 }
-
