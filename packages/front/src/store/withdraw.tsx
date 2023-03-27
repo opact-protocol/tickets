@@ -17,16 +17,22 @@ import { toast } from "react-toastify";
 import { create } from "zustand";
 import { useRelayer } from "./relayer";
 
-export const useWithdraw = create<WithdrawStore>((set, get) => ({
+const baseForm = {
+  note: "",
+  ticket: null,
   publicArgs: null,
   withdrawScore: 0,
-  ticket: { contract: "", counter: "", timestamp: "", value: "" },
-  errorMessage: "",
-  note: "",
-  recipientAddress: "",
   commitment: "",
+  errorMessage: "",
+  recipientAddress: "",
   buttonText: "Withdraw",
   generatingProof: false,
+  validatingTicket: false,
+};
+
+export const useWithdraw = create<WithdrawStore>((set, get) => ({
+  ...baseForm,
+
   prepareWithdraw: async (
     currencyContract: string,
     fee: string,
@@ -120,7 +126,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       });
 
       await prepareWithdraw(
-        ticket.contract,
+        ticket!.contract,
         dynamicFee.price_token_fee,
         {
           note,
@@ -136,8 +142,22 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
   },
 
   validateTicket: debounce(async (ticket: string) => {
+    const {
+      resetForm,
+    } = get();
+
+    set({
+      validatingTicket: true,
+    });
+
     if (ticket.split("-").length < 4) {
-      set({ errorMessage: "Ticket invalid" });
+      resetForm(['validatingTicket', 'errorMessage', 'note']);
+
+      set({
+        validatingTicket: false,
+        errorMessage: "Ticket invalid"
+      });
+
       return;
     }
 
@@ -148,7 +168,12 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     );
 
     if (!ticketStored) {
-      set({ errorMessage: "This ticket has not been deposited yet" });
+      resetForm(['validatingTicket', 'errorMessage', 'note']);
+
+      set({
+        validatingTicket: false,
+        errorMessage: "This ticket has not been deposited yet",
+      });
       return;
     }
 
@@ -158,7 +183,12 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     );
 
     if (wasNullifierSpent) {
-      set({ errorMessage: "This ticket is not valid anymore" });
+      resetForm(['validatingTicket', 'errorMessage', 'note']);
+
+      set({
+        validatingTicket: false,
+        errorMessage: "This ticket is not valid anymore",
+      });
       return;
     }
 
@@ -167,6 +197,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       note: ticket,
       commitment: commitment,
       errorMessage: "",
+      validatingTicket: false,
     });
   }, 500),
 
@@ -189,4 +220,41 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
   cleanupInputs: () => {
     set({ note: "", recipientAddress: "" });
   },
+
+  resetForm: (skip) => {
+
+    if (!skip) {
+      useRelayer.setState({
+        dynamicFee: {
+          token: "",
+          valid_fee_for_ms: 0,
+          human_network_fee: "",
+          price_token_fee: "",
+          formatted_user_will_receive: "",
+          formatted_token_fee: "",
+        }
+      });
+
+      return set(baseForm);
+    }
+
+    useRelayer.setState({
+      dynamicFee: {
+        token: "",
+        valid_fee_for_ms: 0,
+        human_network_fee: "",
+        price_token_fee: "",
+        formatted_user_will_receive: "",
+        formatted_token_fee: "",
+      }
+    });
+
+    const form = Object.keys(baseForm)
+      .filter((key) => {
+        return !skip.includes(key)
+      })
+      .reduce( (res, key) => (res[key] = baseForm[key], res), {} );
+
+    set(form);
+  }
 }));

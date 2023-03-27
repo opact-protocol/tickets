@@ -13,9 +13,10 @@ export interface WithdrawStore {
   preWithdraw: (logger: Logger) => Promise<void>;
   handleRecipientAddress: (address: string) => void;
   cleanupInputs: () => void;
+  resetForm: (skip?: string[]) => void;
   handleNote: (value: string) => void;
   errorMessage: string;
-  ticket: TicketStored;
+  ticket: TicketStored | null;
   withdrawScore: number;
   buttonText: string;
   generatingProof: boolean;
@@ -23,6 +24,7 @@ export interface WithdrawStore {
   commitment: string;
   recipientAddress: string;
   publicArgs: any;
+  validatingTicket: boolean;
 }
 
 export interface TicketStored {
