@@ -15,3 +15,5 @@ export * from './deposit';
 export * from './withdraw';
 export * from './layout';
 export * from './modals';
+export * from './input';
+export * from './ticket-score';
