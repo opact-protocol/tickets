@@ -8,7 +8,7 @@
     "add_circuit": "cp ../circuits/out/withdraw_0000.zkey ./public/circuit.zkey",
     "check_is_circuit_compiled": "test -f ../circuits/out/withdraw_js/withdraw.wasm || 'Failure: need to compile circuit first. Go to packages/circuits and run yarn circuit:setup:plonk'",
     "vercel-dev-helper": "vite --port $PORT",
-    "vdev": "cd ../.. && vercel dev --local-config ./packages/front/vercel-dev.json",
+    "vdev": "vercel dev --local-config ./vercel-dev.json",
     "dev": "(cd ../sdk && yarn build) && yarn check_is_circuit_compiled && yarn add_zk_assets && vite",
     "build": "(cd ../sdk && yarn build) && yarn add_zk_assets && tsc && vite build",
     "preview": "vite preview"

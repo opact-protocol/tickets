@@ -129,9 +129,9 @@ export function Deposit() {
   useEffect(() => {
     (async () => {
       const res = await fetch("/api/geoloc");
-      const result = await res.json();
+      const data = await res.json();
 
-      if (result) {
+      if (data.result) {
         setBlockedLocationModal(true);
         return;
       }
