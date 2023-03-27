@@ -128,7 +128,6 @@ export function Withdraw() {
           buttonText={buttonText}
           isLoading={loadingDynamicFee || validatingTicket}
           onClick={() => handleWithdraw()}
-          cleanupInputs={() => cleanupInputs()}
           isDisabled={!dynamicFee.token || loadingDynamicFee}
         />
       </If>
