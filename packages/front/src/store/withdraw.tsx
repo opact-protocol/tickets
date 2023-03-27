@@ -30,6 +30,15 @@ const baseForm = {
   validatingTicket: false,
 };
 
+const baseDynamicFee = {
+  token: "",
+  valid_fee_for_ms: 0,
+  human_network_fee: "",
+  price_token_fee: "",
+  formatted_user_will_receive: "",
+  formatted_token_fee: "",
+};
+
 export const useWithdraw = create<WithdrawStore>((set, get) => ({
   ...baseForm,
 
@@ -134,10 +143,16 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
         },
         logger
       );
-      set({ generatingProof: false });
+      set({
+        generatingProof: false,
+        buttonText: "Withdraw",
+      });
     } catch (error) {
       console.warn(error);
-      set({ generatingProof: false });
+      set({
+        generatingProof: false,
+        buttonText: "Withdraw",
+      });
     }
   },
 
@@ -225,28 +240,14 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
 
     if (!skip) {
       useRelayer.setState({
-        dynamicFee: {
-          token: "",
-          valid_fee_for_ms: 0,
-          human_network_fee: "",
-          price_token_fee: "",
-          formatted_user_will_receive: "",
-          formatted_token_fee: "",
-        }
+        dynamicFee: baseDynamicFee,
       });
 
       return set(baseForm);
     }
 
     useRelayer.setState({
-      dynamicFee: {
-        token: "",
-        valid_fee_for_ms: 0,
-        human_network_fee: "",
-        price_token_fee: "",
-        formatted_user_will_receive: "",
-        formatted_token_fee: "",
-      }
+      dynamicFee: baseDynamicFee,
     });
 
     const form = Object.keys(baseForm)
