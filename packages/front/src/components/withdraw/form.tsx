@@ -34,7 +34,7 @@ export function Withdraw() {
     recipientAddress,
     handleNote,
     preWithdraw,
-    cleanupInputs,
+    resetForm,
     poolWithdrawScore,
     handleRecipientAddress,
   } = useWithdraw();
@@ -108,6 +108,7 @@ export function Withdraw() {
       )}
 
       <Input
+        isDisabled={!ticket}
         value={recipientAddress}
         label="Recipient Address"
         placeholder="Wallet Address"
@@ -136,7 +137,7 @@ export function Withdraw() {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         cleanupInputsCallback={() => {
-          cleanupInputs();
+          resetForm();
         }}
       />
     </div>

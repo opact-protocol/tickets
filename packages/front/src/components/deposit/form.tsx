@@ -292,64 +292,6 @@ export function Deposit() {
             </div>
           ) : null}
 
-          {haveBalance && selectedAmount.value && (
-            <div className="mt-16 mb-16">
-              <div className="flex items-center justify-between">
-                <span className="text-black text-[1.1rem] font-bold ">
-                  Pool Anonymity
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                {depositScore < 500 ? (
-                  <>
-                    {[1, 2, 3].map((item) => (
-                      <div
-                        key={item}
-                        className={`w-[77px] h-[9px] ${
-                          item === 1 ? "bg-deep-blue" : "bg-gray-300"
-                        } rounded-full`}
-                      />
-                    ))}
-                  </>
-                ) : depositScore >= 500 && depositScore < 1000 ? (
-                  <>
-                    {[1, 2, 3].map((item) => (
-                      <div
-                        key={item}
-                        className={`w-[77px] h-[9px] ${
-                          item === 1 && "bg-deep-blue"
-                        } ${item === 2 && "bg-intermediate-score"} ${
-                          item === 3 && "bg-gray-300"
-                        }  rounded-full`}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  depositScore >= 1000 && (
-                    <>
-                      {[1, 2, 3].map((item) => (
-                        <div
-                          key={item}
-                          className={`w-[77px] h-[9px] ${
-                            item === 1 && "bg-deep-blue"
-                          } ${item === 2 && "bg-intermediate-score"} ${
-                            item === 3 && "bg-success"
-                          }  rounded-full`}
-                        />
-                      ))}
-                    </>
-                  )
-                )}
-              </div>
-              <p
-                className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
-                onClick={() => setShowModalPoolAnonymity(true)}
-              >
-                What is this <QuestionMarkCircleIcon className="w-4 h-4" />
-              </p>
-            </div>
-          )}
-
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button
             disabled={depositing || !haveBalance}
