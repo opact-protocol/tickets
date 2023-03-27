@@ -28,7 +28,7 @@ export interface DepositStore {
   hash: string;
   note: string;
   errorMessage: string;
-  selectedToken: ViewCurrenciesResponseInterface;
+  selectedToken: any;
   selectedAmount: AmountsProps;
   copyTicket: boolean;
   sendingDeposit: boolean;
