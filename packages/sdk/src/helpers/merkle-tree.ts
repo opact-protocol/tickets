@@ -1,5 +1,10 @@
 import type { ParseNoteInterface } from "../interfaces";
 
+/**
+ * Helpers: Parse Note
+ * @param note The note to withdraw
+ * @returns {Promise<ParseNoteInterface>}
+ */
 export const parseNote = (note: string): ParseNoteInterface => {
   const splitString = note.split("-");
 

@@ -6,6 +6,9 @@ import type {
 } from "../interfaces";
 import { mimc as mimcService } from "./mimc";
 
+/**
+ * This class provides a base Merkle Tree service, fetching all branches of an graphql url and making a merkle tree.
+ */
 export class MerkleTreeService {
   readonly name: string;
   readonly contract: string;
@@ -29,6 +32,11 @@ export class MerkleTreeService {
     this.lastBranchesQuery = lastBranchesQuery;
   }
 
+  /**
+   * Merkle Tree - Init Merkle Tree
+   * @param cache The saved array of branches
+   * @returns {Promise<any>}
+   */
   async initMerkleTree(cache?: MerkleTreeCacheInterface): Promise<MerkleTree> {
     const { hash } = await mimcService.initMimc();
 
@@ -57,6 +65,11 @@ export class MerkleTreeService {
     return tree;
   }
 
+  /**
+   * Merkle Tree - Get Branches
+   * @param cache The saved array of branches
+   * @returns {Promise<any>}
+   */
   async getBranches(cache?: MerkleTreeCacheInterface) {
     const { lastIndex = 0, branches: defaultBranches = [] } = cache || {};
 
@@ -80,6 +93,10 @@ export class MerkleTreeService {
     return [...defaultBranches];
   }
 
+  /**
+   * Merkle Tree - Get Branches
+   * @returns {Promise<number>}
+   */
   async getLastBranchIndex(): Promise<number> {
     const data = await this.getMerkleTreeBranchesWithQuery(
       this.lastBranchesQuery,
@@ -93,6 +110,10 @@ export class MerkleTreeService {
     return lastBranch?.counter || "0";
   }
 
+  /**
+   * Merkle Tree - Get Branches
+   * @returns {Promise<any>}
+   */
   async getMerkleTreeBranchesWithQuery(
     { query }: any,
     variables: any = {}
@@ -100,6 +121,10 @@ export class MerkleTreeService {
     return request(this.graphqlUrl, query, variables as any) as any;
   }
 
+  /**
+   * Merkle Tree - Get Branches
+   * @returns {Promise<any[]>}
+   */
   async getMerkleTreeBranchesWithPaginatedQuery(
     { query }: any,
     variables: any = {}
