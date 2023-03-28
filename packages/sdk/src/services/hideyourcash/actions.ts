@@ -24,6 +24,9 @@ import type {
 } from "../../interfaces";
 import { Views } from "./views";
 
+/**
+ * This class provides common contract, graphql, node url, virifier url and circuit url for all actions
+ */
 export class Actions extends Views {
   readonly nodeUrl: string;
   readonly contract: string;
@@ -47,10 +50,22 @@ export class Actions extends Views {
     this.circuitUrl = circuitUrl;
   }
 
+  /**
+   * Action Class - Send Allowlist
+   * @param accountId The accountId to be send to allowlist
+   * @param connection the near connection that will to sign the transactions (Near Account or Wallet Selector)
+   * @returns {Promise<any>}
+   */
   async sendAllowlist(accountId: string, connection: ConnectionType) {
     return sendAllowlist(this.nodeUrl, this.contract, accountId, connection);
   }
 
+  /**
+   * Action Class - Create Ticket
+   * @param accountId The user accountId
+   * @param currencyId The instance accountId to be send deposit
+   * @returns {Promise<any>}
+   */
   async createTicket(accountId: string, currencieContract: string) {
     return createTicket(
       this.nodeUrl,
@@ -60,6 +75,16 @@ export class Actions extends Views {
     );
   }
 
+  /**
+   * Action Class - Send Deposit
+   * @param hash The generated deposit hash
+   * @param amount The amount to be deposited
+   * @param contract The instance accountId to be receive deposit
+   * @param accountId The signer accountId of the transaction
+   * @param currency The data of currency with token accountId
+   * @param connection the near connection that will to sign the t
+   * @returns {Promise<any>}
+   */
   async sendDeposit(
     hash: string,
     amount: string,
@@ -79,6 +104,15 @@ export class Actions extends Views {
     );
   }
 
+  /**
+   * Action Class - Send Contract Withdraw
+   * @param contract The instance accountId to be send on transaction
+   * @param signerId The signer accountId of the transaction
+   * @param receiverId The receiver accountId of ticket amount
+   * @param publicArgs The generated withdraw payload
+   * @param connection the near connection that will to sign the transactions (Near Account or Wallet Selector)
+   * @returns {Promise<any>}
+   */
   async sendContractWithdraw(
     contract: string,
     signerId: string,
@@ -96,6 +130,13 @@ export class Actions extends Views {
     );
   }
 
+  /**
+   * Action Class - Get Relayer Fee
+   * @param relayer The data of relayer with the url to be requested fee
+   * @param accountId The near accountId to be calculate fee
+   * @param instanceId The instance accountId to be sended withdraw
+   * @returns {Promise<any>}
+   */
   async getRelayerFee(
     relayer: RelayerDataInterface,
     accountId: string,
@@ -104,6 +145,12 @@ export class Actions extends Views {
     return getRelayerFee(relayer, accountId, instanceId);
   }
 
+  /**
+   * Action Class - Send Withdraw
+   * @param relayer The data of relayer with the url to be requested fee
+   * @param payload The generated withdraw payload to be sended to withdraw
+   * @returns {Promise<AxiosResponse>}
+   */
   async sendWithdraw(
     relayer: RelayerDataInterface,
     payload: { publicArgs: PublicArgsInterface; token: string }
@@ -111,6 +158,18 @@ export class Actions extends Views {
     return sendWithdraw(relayer, payload);
   }
 
+  /**
+   * Action Class - Prepare Withdraw
+   * @param fee The relayer fee generated of relayer
+   * @param note The note to withdraw
+   * @param relayer The data of relayer to be create the proof
+   * @param recipient The receiver accountId of ticket amount
+   * @param currencyContract The instance accountId
+   * @param logger The logger instance
+   * @param allowlistTreeCache The saved array of alowlist branches
+   * @param commitmentsTreeCache The saved array of commitments branches
+   * @returns {Promise<AxiosResponse>}
+   */
   async prepareWithdraw(
     fee: string,
     note: string,

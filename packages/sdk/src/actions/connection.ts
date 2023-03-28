@@ -2,6 +2,12 @@ import { AttachedGas } from "../constants";
 import type { Transaction } from "../helpers";
 import type { ConnectionType } from "../interfaces";
 
+/**
+ * Send transactions callback
+ * @param transactions the array of transactions to be send
+ * @param connection the near connection that will to sign the transactions (Near Account or Wallet Selector)
+ * @returns {Promise<any>}
+ */
 export const sendTransactionsCallback = async (
   connection: ConnectionType,
   transactions: Transaction[]

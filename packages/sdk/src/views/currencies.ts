@@ -2,6 +2,12 @@ import { viewFunction } from "../helpers";
 import { viewFungibleTokenMetadata } from "./fungible-token";
 import type { Currency, ViewCurrenciesResponseInterface } from "../interfaces";
 
+/**
+ * View All Currencies
+ * @param rpcUrl The Current Near RPC Url
+ * @param contract The HYC registry contract accountId
+ * @returns {Promise<any>}
+ */
 export const viewAllCurrencies = async (
   rpcUrl: string,
   contract: string
@@ -31,6 +37,13 @@ export const viewAllCurrencies = async (
   );
 };
 
+/**
+ * View Currency Contracts
+ * @param rpcUrl The Current Near RPC Url
+ * @param contract The contract accountId to be sent on view function
+ * @param currency The currency accountId to get instances
+ * @returns {Promise<any>}
+ */
 export const viewCurrencyContracts = async (
   rpcUrl: string,
   contract: string,
@@ -42,6 +55,13 @@ export const viewCurrencyContracts = async (
   });
 };
 
+/**
+ * View Is Contract Allowed
+ * @param rpcUrl The Current Near RPC Url
+ * @param contract The contract accountId to be sent on view function
+ * @param accountId The instance accountId to check if is allowed
+ * @returns {Promise<any>}
+ */
 export const viewIsContractAllowed = async (
   rpcUrl: string,
   contract: string,
@@ -52,6 +72,13 @@ export const viewIsContractAllowed = async (
   });
 };
 
+/**
+ * View is Allowlist Root Valid
+ * @param rpcUrl The Current Near RPC Url
+ * @param contract The contract accountId to be sent on view function
+ * @param root The allowlist root
+ * @returns {Promise<any>}
+ */
 export const viewIsAllowlistRootValid = async (
   rpcUrl: string,
   contract: string,

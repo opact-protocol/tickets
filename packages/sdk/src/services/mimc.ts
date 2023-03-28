@@ -4,6 +4,9 @@ import { buildMimcSponge } from "circomlibjs";
 
 type IntoBigInt = string | number | bigint | boolean | BN;
 
+/**
+ * This class provides a Circom Mimc Sponge services.
+ */
 export class MimcSponge {
   sponge: any;
   initialized = false;

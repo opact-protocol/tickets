@@ -21,6 +21,16 @@ export interface Params {
   deposit: string;
 }
 
+/**
+ * Send transactions callback
+ * @param signerId The user accountId to sign the transaction
+ * @param receiverId The contract accountId to receive the transaction
+ * @param method The method to be called on contract
+ * @param args The args to be sent to contract method
+ * @param amount The human amount to be attached on transaction
+ * @param skipParser The boolean to skip amount parser
+ * @returns {Promise<Transaction>}
+ */
 export const getTransaction = (
   signerId: string,
   receiverId: string,
@@ -48,6 +58,14 @@ export const getTransaction = (
   };
 };
 
+/**
+ * View function
+ * @param nodeUrl The Current Near RPC Url
+ * @param contractId The contract accountId to call view function
+ * @param methodName The view method to be called on contract
+ * @param args The args to be sent to contract view function
+ * @returns {Promise<any>}
+ */
 export const viewFunction = async (
   nodeUrl: string,
   contractId: string,
@@ -73,6 +91,13 @@ export const viewFunction = async (
   return JSON.parse(Buffer.from(result.result).toString());
 };
 
+/**
+ * Get Transaction State
+ * @param nodeUrl The Current Near RPC Url
+ * @param txHash The transaction hash
+ * @param accountId The accountId of signer of transaction
+ * @returns {Promise<any>}
+ */
 export const getTransactionState = async ({
   nodeUrl,
   txHash,
@@ -90,6 +115,12 @@ export const getTransactionState = async ({
   return result;
 }
 
+/**
+ * Get Account Balance
+ * @param nodeUrl The Current Near RPC Url
+ * @param accountId The Near accountId to get balance
+ * @returns {Promise<any>}
+ */
 export const getAccountBalance = async ({
   nodeUrl,
   accountId,
@@ -110,6 +141,13 @@ export const getAccountBalance = async ({
   return result;
 }
 
+/**
+ * Send JSON RPC
+ * @param nodeUrl The Current Near RPC Url
+ * @param params The RPC request params
+ * @param method The RPC request method
+ * @returns {Promise<any>}
+ */
 export const sendJsonRpc = async (
   nodeUrl: string,
   method: string,
@@ -132,6 +170,12 @@ export const sendJsonRpc = async (
   return await rpcService.post("/", body);
 };
 
+/**
+ * Get Amount
+ * @param amount The Near amount in Human Format
+ * @param skip The flag to skip the amount parser
+ * @returns {Promise<string>}
+ */
 export const getAmount = (amount: string | undefined, skip = false) => {
   if (!amount) {
     return "1";
@@ -145,11 +189,9 @@ export const getAmount = (amount: string | undefined, skip = false) => {
 };
 
 /**
- * Convert human readable NEAR amount to internal indivisible units.
- * Effectively this multiplies given amount.
- *
- * @param rawAmount decimal string (potentially fractional) denominated in NEAR.
- * @returns The parsed yoctoⓃ amount or null if no amount was passed in
+ * Parse Near Amount
+ * @param rawAmount The Near amount in Human Format
+ * @returns {Promise<string>}
  */
 export const parseNearAmount = (rawAmount?: string) => {
   if (!rawAmount) {
@@ -174,10 +216,20 @@ export const parseNearAmount = (rawAmount?: string) => {
   return trimLeadingZeroes(wholePart + fracPart.padEnd(nearNominationExp, "0"));
 };
 
+/**
+ * Cleanup raw amount
+ * @param amount The Near amount in Human Format
+ * @returns {string}
+ */
 export const cleanupRawAmount = (amount: string) => {
   return amount.replace(/,/g, "").trim();
 };
 
+/**
+ * Trim leading Zeroes
+ * @param value The amount to trim leading zeroes
+ * @returns {Promise<string>}
+ */
 export const trimLeadingZeroes = (value: string) => {
   const replacedValue = value.replace(/^0+/, "");
 

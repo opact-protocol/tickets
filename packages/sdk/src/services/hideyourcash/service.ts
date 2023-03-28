@@ -1,5 +1,8 @@
 import { Actions } from "./actions";
 
+/**
+ * This class provides a common service with all actions and views methods
+ */
 export class HideyourCash extends Actions {
   readonly network: string;
   readonly nodeUrl: string;
