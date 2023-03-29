@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DownloadLink from "react-download-link";
 import FileSaver from "file-saver";
-import { formatBigNumberWithDecimals, getDecimals } from "hideyourcash-sdk";
+import { Button } from "../button";
 
 export default function Modal({
   isOpen,
@@ -15,16 +15,18 @@ export default function Modal({
 }) {
   const [buttonText, setButtonText] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const selectedToken = useDeposit((state) => state.selectedToken);
-  const selectedAmount = useDeposit((state) => state.selectedAmount);
-  const note = useDeposit((state) => state.note);
-  const copyTicket = useDeposit((state) => state.copyTicket);
-  const sending = useDeposit((state) => state.sendingDeposit);
-  const setCopyTicket = useDeposit((state) => state.setCopyTicket);
-  const deposit = useDeposit((state) => state.deposit);
+  const {
+    note,
+    sendingDeposit,
+    selectedAmount,
+    copyTicket,
+    deposit,
+    setCopyTicket,
+    handleButtonText,
+  } = useDeposit();
 
   const closeModal = () => {
-    if (sending) {
+    if (sendingDeposit) {
       return;
     }
 
@@ -39,7 +41,7 @@ export default function Modal({
     setButtonText("Sending your Deposit...");
     await deposit();
     closeModal();
-    setButtonText(`Deposit ${selectedAmount.value} Near`);
+    setButtonText(`Deposit ${selectedAmount!.value} Near`);
   };
 
   useEffect(() => {
@@ -166,28 +168,12 @@ export default function Modal({
                   wait <strong>at least 30 minutes</strong> to withdraw the
                   funds deposited.{" "}
                 </p>
-                <button
-                  disabled={sending}
+                <Button
+                  disabled={false}
+                  isLoading={true}
                   onClick={() => handleDeposit()}
-                  className="block bg-soft-blue-from-deep-blue mt-[53px] p-[12px] mx-auto mb-[90px] rounded-full w-full max-w-[367px] font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                >
-                  {buttonText
-                    ? buttonText
-                    : `Deposit ${Number(
-                        formatBigNumberWithDecimals(
-                          selectedAmount.value,
-                          getDecimals(
-                            selectedToken.type === "Near"
-                              ? 24
-                              : selectedToken.metadata.decimals
-                          )
-                        )
-                      ).toFixed(0)} ${
-                        selectedToken.type === "Near"
-                          ? "Near"
-                          : selectedToken.metadata.name
-                      }`}
-                </button>
+                  text={handleButtonText(buttonText)}
+                />
               </Dialog.Panel>
             </Transition.Child>
           </div>

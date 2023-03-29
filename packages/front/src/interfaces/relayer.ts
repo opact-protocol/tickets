@@ -12,7 +12,7 @@ export interface RelayerStore {
   checkRelayerFee: (address: string) => void;
   loadingDynamicFee: boolean;
   dynamicFee: DynamicFee;
-  relayerData: RelayerDataInterface;
+  relayerData: RelayerDataInterface | null;
   relayerJWT: string;
   recipientAddressError: string;
   toRef: any;

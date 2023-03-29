@@ -14,6 +14,7 @@ import { returnMessages } from "@/utils/returnMessages";
 import { useWallet } from "@/store/wallet";
 import { WhatIsThisModal } from "@/components/modals/poolAnonymity";
 import { useDeposit, useModal, useApp } from "@/store";
+import { TicketScore } from "../ticket-score";
 import { getDecimals, formatBigNumberWithDecimals } from "hideyourcash-sdk";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
@@ -39,15 +40,15 @@ export function Deposit() {
     preDeposit,
     selectedToken,
     selectedAmount,
-    depositScore,
     errorMessage,
     showAllowlistModal,
     buttonText,
+    depositScore,
     depositing,
   } = useDeposit();
   const hashModal = useModal((state) => state.hashModal);
   const toggleHashModal = useModal((state) => state.toggleHashModal);
-  const amounts = formatAmounts(selectedToken.contracts);
+  const amounts = formatAmounts(selectedToken ? selectedToken.contracts : "");
   const approved = localStorage.getItem(hycTransaction);
   const { action } = useAction(transactionHashes!, accountId!);
 
@@ -88,7 +89,7 @@ export function Deposit() {
   };
 
   useEffect(() => {
-    if (!selectedAmount.value) {
+    if (!selectedAmount) {
       return;
     }
     poolDepositScore();
@@ -111,7 +112,7 @@ export function Deposit() {
               value={selectedToken}
               onChange={(payload) => {
                 setSelectedToken(payload);
-                setSelectedAmount({} as any);
+                setSelectedAmount(null);
                 setHaveBalance(true);
               }}
             >
@@ -219,7 +220,7 @@ export function Deposit() {
             </Listbox>
           </div>
 
-          {selectedToken.type ? (
+          {selectedToken ? (
             <div className="mt-8">
               <div className="flex flex-col items-start justify-center w-full">
                 <span className="text-black text-[1.1rem] font-bold ">
@@ -253,7 +254,7 @@ export function Deposit() {
                     as="li"
                     className={() => `
                       bg-transparent rounded-full p-1 w-min mb-2 grow ${
-                        selectedAmount.accountId === token.accountId
+                        selectedAmount?.accountId === token.accountId
                           ? "bg-soft-blue-from-deep-blue"
                           : ""
                       }
@@ -291,6 +292,10 @@ export function Deposit() {
               </p>
             </div>
           ) : null}
+
+          {haveBalance && selectedAmount && (
+            <TicketScore score={depositScore} />
+          )}
 
           <p className="text-error ml-2 text-sm font-normal">{errorMessage}</p>
           <button

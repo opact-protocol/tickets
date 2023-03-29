@@ -6,7 +6,7 @@ import { RelayerFee } from "../relayer-fee";
 import { useEffect, useState } from "react";
 import { TicketScore } from "../ticket-score";
 import type { Logger } from "hideyourcash-sdk";
-import { useRelayer, useWithdraw } from "@/store";
+import { useModal, useRelayer, useWithdraw } from "@/store";
 import { WithdrawButton } from "./withdraw-button";
 import { ToastCustom } from "@/components/toast-custom";
 import { LoadingModal } from "@/components/modals/loading";
@@ -21,7 +21,7 @@ let totalProgress = 40;
 
 export function Withdraw() {
   const [progress, setProgress] = useState(40);
-  const [showModal, setShowModal] = useState(false);
+  const { toggleConfirmWithdrawModal, confirmWithdrawModal } = useModal();
 
   const {
     note,
@@ -39,11 +39,7 @@ export function Withdraw() {
     handleRecipientAddress,
   } = useWithdraw();
 
-  const {
-    dynamicFee,
-    loadingDynamicFee,
-    recipientAddressError,
-  } = useRelayer();
+  const { dynamicFee, loadingDynamicFee, recipientAddressError } = useRelayer();
 
   const logger: Logger = {
     debug: (message: string) => {
@@ -62,7 +58,7 @@ export function Withdraw() {
   const handleWithdraw = async () => {
     try {
       await preWithdraw(logger);
-      setShowModal(true);
+      toggleConfirmWithdrawModal();
     } catch (err) {
       console.warn(err);
       toast(
@@ -90,9 +86,7 @@ export function Withdraw() {
   }, [ticket]);
 
   return (
-    <div
-      className="space-y-4"
-    >
+    <div className="space-y-4">
       <Input
         value={note}
         error={errorMessage}
@@ -101,11 +95,7 @@ export function Withdraw() {
         onChange={(value) => handleNote(value as string)}
       />
 
-      {ticket && !errorMessage && (
-        <TicketScore
-          score={withdrawScore}
-        />
-      )}
+      {ticket && !errorMessage && <TicketScore score={withdrawScore} />}
 
       <Input
         isDisabled={!ticket}
@@ -116,13 +106,15 @@ export function Withdraw() {
         onChange={(value) => handleRecipientAddress(value as string)}
       />
 
-      {dynamicFee.token && !loadingDynamicFee && (
-        <RelayerFee/>
-      )}
+      {dynamicFee.token && !loadingDynamicFee && <RelayerFee />}
 
       <If
         condition={!generatingProof}
-        fallback={<LoadingModal loading={generatingProof} progress={progress} /> as any}
+        fallback={
+          (
+            <LoadingModal loading={generatingProof} progress={progress} />
+          ) as any
+        }
       >
         <WithdrawButton
           buttonText={buttonText}
@@ -133,8 +125,8 @@ export function Withdraw() {
       </If>
 
       <ConfirmModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        isOpen={confirmWithdrawModal}
+        onClose={() => toggleConfirmWithdrawModal()}
         cleanupInputsCallback={() => {
           resetForm();
         }}

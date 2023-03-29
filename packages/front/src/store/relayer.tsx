@@ -18,7 +18,7 @@ const initialDynamicFee = {
 };
 
 export const useRelayer = create<RelayerStore>((set, get) => ({
-  relayerData: { account: "", feePercent: "", url: "" },
+  relayerData: null,
   relayerJWT: "",
   loadingDynamicFee: false,
   dynamicFee: initialDynamicFee,
@@ -75,7 +75,7 @@ export const useRelayer = create<RelayerStore>((set, get) => ({
       const { data } = await getRelayerFee(
         address,
         ticket!.contract,
-        relayerData,
+        relayerData!,
       );
 
       set({ dynamicFee: data, relayerJWT: data.token });
