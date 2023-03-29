@@ -1,6 +1,7 @@
 import { useApp, useWallet } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Button } from "@/components/button";
 
 export function WhitelistModal({
   isOpen,
@@ -89,23 +90,23 @@ export function WhitelistModal({
 
                 {!accountId && (
                   <div>
-                    <button
+                    <Button
+                      disabled={false}
+                      isLoading={true}
                       onClick={() => toggleModal()}
-                      className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                    >
-                      Connect wallet
-                    </button>
+                      text="Connect wallet"
+                    />
                   </div>
                 )}
 
                 {!allowlist && accountId && (
                   <div>
-                    <button
+                    <Button
+                      disabled={false}
+                      isLoading={true}
                       onClick={() => sendWhitelist()}
-                      className="bg-soft-blue-from-deep-blue mt-[24px] p-[12px] rounded-full w-full font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                    >
-                      Apply now
-                    </button>
+                      text="Apply now"
+                    />
                   </div>
                 )}
               </Dialog.Panel>

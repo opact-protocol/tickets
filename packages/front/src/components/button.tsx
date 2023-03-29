@@ -1,11 +1,11 @@
-import { If } from './if';
-import { Spinner } from './spinner';
+import { If } from "./if";
+import { Spinner } from "./spinner";
 
 export interface ButtonInterface {
-  text: string,
-  disabled: boolean,
-  isLoading: boolean,
-  onClick: () => void,
+  text: string;
+  disabled: boolean;
+  isLoading: boolean;
+  onClick: () => void;
 }
 
 export const Button = ({
@@ -19,8 +19,11 @@ export const Button = ({
       disabled={disabled}
       onClick={() => onClick()}
       className="
+        block
         rounded-full
         w-full
+        max-w-[367px]
+        mx-auto
         p-3 mt-3
         font-[400]
         hover:opacity-[.9]
@@ -28,13 +31,8 @@ export const Button = ({
         disabled:opacity-[.6] disabled:cursor-not-allowed
       "
     >
-      <If
-        condition={isLoading}
-        fallback={<Spinner/> as any}
-      >
-        <span>
-          {text}
-        </span>
+      <If condition={isLoading} fallback={(<Spinner />) as any}>
+        <span>{text}</span>
       </If>
     </button>
   );

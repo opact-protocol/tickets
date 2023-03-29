@@ -20,7 +20,7 @@ export const useApp = create<AppStore>((set, get) => ({
       useEnv("VITE_NEAR_NODE_URL"),
       useEnv("VITE_CONTRACT")
     );
-
+    
     set({
       allCurrencies: currencies.map((token) => ({
         ...token,

@@ -54,7 +54,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
       const publicArgs = await hycService.prepareWithdraw(
         fee,
         note,
-        relayerData,
+        relayerData!,
         recipient,
         currencyContract,
         logger
@@ -76,7 +76,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     const { relayerJWT, relayerData } = useRelayer.getState();
 
     try {
-      await hycService.sendWithdraw(relayerData, {
+      await hycService.sendWithdraw(relayerData!, {
         publicArgs,
         token: relayerJWT,
       });

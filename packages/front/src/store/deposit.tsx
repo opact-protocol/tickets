@@ -7,6 +7,8 @@ import {
 import {
   Currency,
   CurrencyContract,
+  formatBigNumberWithDecimals,
+  getDecimals,
   ViewCurrenciesResponseInterface,
 } from "hideyourcash-sdk";
 import { create } from "zustand";
@@ -15,32 +17,14 @@ import { useModal } from "./modal";
 import { useWallet } from "./wallet";
 
 const hycTransaction = "hyc-transaction";
-const initialMetadata = {
-  spec: "",
-  name: "",
-  symbol: "",
-  icon: "",
-  reference: "",
-  reference_hash: "",
-  decimals: 0,
-};
 
 export const useDeposit = create<DepositStore>((set, get) => ({
   hash: "",
   note: "",
   errorMessage: "",
   buttonText: "Deposit",
-  selectedToken: {
-    type: "",
-    contract: "",
-    contracts: {},
-    account_id: "",
-    metadata: initialMetadata,
-  },
-  selectedAmount: {
-    accountId: "",
-    value: "",
-  },
+  selectedToken: null,
+  selectedAmount: null,
   depositScore: 0,
   sendingDeposit: false,
   copyTicket: false,
@@ -84,12 +68,12 @@ export const useDeposit = create<DepositStore>((set, get) => ({
     const { allowlist } = useApp.getState();
     const { selectedToken, selectedAmount, prepareDeposit } = get();
 
-    if (!selectedToken.type) {
+    if (!selectedToken) {
       set({ errorMessage: "Select token to deposit" });
       return;
     }
 
-    if (!selectedAmount.value) {
+    if (!selectedAmount) {
       set({ errorMessage: "Select amount to deposit" });
       return;
     }
@@ -103,7 +87,7 @@ export const useDeposit = create<DepositStore>((set, get) => ({
       return;
     }
     set({ buttonText: "Preparing your deposit...", depositing: true });
-    await prepareDeposit(accountId!, selectedAmount.accountId);
+    await prepareDeposit(accountId!, selectedAmount!.accountId);
     toggleHashModal();
     set({
       showAllowlistModal: false,
@@ -123,8 +107,8 @@ export const useDeposit = create<DepositStore>((set, get) => ({
 
     try {
       await sendDeposit(
-        selectedAmount.value,
-        selectedAmount.accountId,
+        selectedAmount!.value,
+        selectedAmount!.accountId,
         accountId!,
         selectedToken,
         selector!
@@ -140,10 +124,10 @@ export const useDeposit = create<DepositStore>((set, get) => ({
     const { selectedAmount } = get();
 
     const lastDeposit = await getLastDepositOfContract(
-      selectedAmount.accountId
+      selectedAmount!.accountId
     );
     const lastWithdrawal = await getLastWithdrawalOfContract(
-      selectedAmount.accountId
+      selectedAmount!.accountId
     );
     const depositCounter = lastDeposit.length > 0 ? +lastDeposit[0].counter : 0;
     const withdrawalCounter =
@@ -168,7 +152,7 @@ export const useDeposit = create<DepositStore>((set, get) => ({
     set({ selectedToken: payload, errorMessage: "" });
   },
 
-  setSelectedAmount: (payload: AmountsProps) => {
+  setSelectedAmount: (payload: AmountsProps | null) => {
     set({ selectedAmount: payload, errorMessage: "" });
   },
   setAllowlistModal: (state: boolean) => {
@@ -176,5 +160,24 @@ export const useDeposit = create<DepositStore>((set, get) => ({
   },
   setCopyTicket: (state: boolean) => {
     set({ copyTicket: state });
+  },
+  handleButtonText: (buttonText: string) => {
+    if (buttonText) {
+      return buttonText;
+    }
+    const { selectedAmount, selectedToken } = get();
+    const formatedNumber = Number(
+      formatBigNumberWithDecimals(
+        selectedAmount!.value,
+        getDecimals(
+          selectedToken.type === "Near" ? 24 : selectedToken.metadata.decimals
+        )
+      )
+    ).toFixed(0);
+
+    const tokenName =
+      selectedToken.type === "Near" ? "Near" : selectedToken.metadata.name;
+
+    return `Deposit ${formatedNumber} ${tokenName}`;
   },
 }));
