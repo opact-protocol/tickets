@@ -2,6 +2,7 @@ import { connect, keyStores, KeyPair, providers } from "near-api-js";
 import { Buffer } from "buffer";
 import Process from "process";
 import { Env } from "@/interfaces/env";
+import { TokenMetadata } from "@/interfaces";
 
 /* tslint:disable */
 globalThis.Buffer = Buffer;
@@ -64,6 +65,31 @@ export const viewFungibleTokenMetadata = async (
   contract: string
 ): Promise<any> => {
   return await viewFunction(rpcUrl, contract, "ft_metadata");
+};
+
+export const ftGetTokenMetadata = async (
+  env: Env,
+  id: string
+): Promise<TokenMetadata> => {
+  const metadata = await viewFunction(
+    env.RPC_URL,
+    id,
+    'ft_metadata'
+  ).catch(() => {
+    //
+  });
+
+  if (
+    !metadata.icon
+  ) {
+    return {
+      ...metadata,
+      icon: '',
+      id,
+    };
+  }
+
+  return { ...metadata, id };
 };
 
 export const getTokenStorage = async (

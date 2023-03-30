@@ -1,14 +1,16 @@
-import Big from "big.js";
-import { Env } from "../interfaces";
-import { utils } from "near-api-js";
-import jwt from "@tsndr/cloudflare-worker-jwt";
 import {
-  getTokenStorage,
-  viewFunction,
   viewState,
+  viewFunction,
+  getTokenStorage,
+  ftGetTokenMetadata,
 } from "./near";
+import Big from "big.js";
+import { utils } from "near-api-js";
+import { getConfig } from '@/constants';
+import jwt from "@tsndr/cloudflare-worker-jwt";
+import { Env, EstimateSwapView } from "@/interfaces";
+import { fetchAllPools, estimateSwap } from '@/helpers';
 import { RouterRequest } from "@tsndr/cloudflare-worker-router";
-import { estimateSwap, EstimateSwapView, fetchAllPools, ftGetTokenMetadata, getConfig } from "./ref-finance";
 
 const errorStatus = 500;
 const successStatus = 200;
@@ -79,11 +81,7 @@ export const calculateFee = async (
 
   const refConfig = getConfig(env.NEAR_NETWORK);
 
-  console.log('refConfig', refConfig);
-
   const { simplePools } = await fetchAllPools(env, refConfig.REF_FI_CONTRACT_ID);
-
-  console.log('refConfig', simplePools);
 
   const tokenIn = await ftGetTokenMetadata(
     env,
