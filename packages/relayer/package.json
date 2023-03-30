@@ -19,6 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^3.11.0",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@jest/globals": "^29.5.0",
     "@types/big.js": "^6.1.6",
     "@types/jest": "^27.5.1",
@@ -32,14 +33,10 @@
     "wrangler": "^2.0.7"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
     "@tsndr/cloudflare-worker-jwt": "^2.2.1",
     "@tsndr/cloudflare-worker-router": "^2.3.2",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
-    "dotenv": "^16.0.3",
-    "fs": "^0.0.1-security",
-    "mathjs": "^11.7.0",
     "near-api-js": "^1.1.0"
   }
 }
