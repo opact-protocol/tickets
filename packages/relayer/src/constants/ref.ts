@@ -2,8 +2,6 @@ export const FEE_DIVISOR = 10000;
 export const STABLE_LP_TOKEN_DECIMALS = 18;
 export const RATED_POOL_LP_TOKEN_DECIMALS = 24;
 
-let ENV: string | undefined = '';
-
 export function getConfig(
   env: string
 ) {
