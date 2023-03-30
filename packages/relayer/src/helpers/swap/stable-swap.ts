@@ -108,11 +108,11 @@ export const getSwappedAmount = (
   );
 
   const rates = stablePool.rates.map(r =>
-    toReadableNumber(STABLE_LP_TOKEN_DECIMALS, r)
+    toReadableNumber(STABLE_LP_TOKEN_DECIMALS, r as any)
   );
 
   const base_old_c_amounts = stablePool.c_amounts.map(amount =>
-    toReadableNumber(STABLE_LP_TOKEN_DECIMALS, amount)
+    toReadableNumber(STABLE_LP_TOKEN_DECIMALS, amount as any)
   );
 
   const old_c_amounts = base_old_c_amounts
