@@ -1,17 +1,3 @@
-/**
- *
- *
- *
- *
- *
- * This file was copied from the ref-finance source code
- *
- *
- *
- *
- *
- */
-
 // @ts-nocheck
 /* eslint-disable */
 
@@ -125,34 +111,6 @@ export function calculate_dx_float(
     .times(radical.sqrt())
     .minus(new Big(p.x).times(10000).div(p.gamma_bps));
   return dxFloat;
-}
-
-/** calculate_dy_float
- * Once you have an allocation amount for a given pool, you can use the AMM constant-product formula to determine
- * the expected output amount of output Token.
- * Note, here, as earlier, our algorithmic convention uses "y" as the output token, and so "dy" is the fraction of
- * the total output of output Token, assuming there could be dy contributions from other parallel pools as well.
- * @param dx_float  input allocation amount of inputToken for the given pool
- * @param pool   a structure representing the reserves and fees for a given pool.
- * @param inputToken  the name of the inputToken being traded in.
- * @param outputToken  the name of the outputToken being traded out.
- * @returns dyFloat  the expected trade out amount out of outputToken
- */
-export function calculate_dy_float(
-  dx_float: number,
-  pool: FormatedPool,
-  inputToken: string,
-  outputToken: string
-) {
-  if (dx_float <= 0) {
-    return new Big(0);
-  }
-  let p = formatPoolNew(pool, inputToken, outputToken);
-  let dx = new Big(dx_float);
-  let denom = new Big(10000).times(p.x).plus(new Big(p.gamma_bps).times(dx));
-  let numerator = new Big(p.y).times(dx).times(p.gamma_bps);
-  let dyFloat = numerator.div(denom).round();
-  return dyFloat;
 }
 
 /** calculateOptimalOutput

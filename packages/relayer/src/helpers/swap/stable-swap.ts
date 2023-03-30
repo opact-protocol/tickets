@@ -1,32 +1,15 @@
-/**
- *
- *
- *
- *
- *
- * This file was copied from the ref-finance source code
- *
- *
- *
- *
- *
- */
-
-// @ts-nocheck
-/* eslint-disable */
-
-import { StablePool } from './types';
-import { FEE_DIVISOR } from './constant';
+import { StablePool } from '@/interfaces';
+import { FEE_DIVISOR } from '@/constants';
 
 import {
   toReadableNumber,
   toNonDivisibleNumber,
   scientificNotationToString,
-} from './utils';
+} from '@/helpers';
 
 import Big from 'big.js';
 
-import _ from 'lodash';
+import sum from 'lodash/sum';
 
 const tradeFee = (amount: number, trade_fee: number) => {
   return (amount * trade_fee) / FEE_DIVISOR;
@@ -34,12 +17,12 @@ const tradeFee = (amount: number, trade_fee: number) => {
 
 export const calc_d = (amp: number, c_amounts: number[]) => {
   const token_num = c_amounts.length;
-  const sum_amounts = _.sum(c_amounts);
+  const sum_amounts = sum(c_amounts);
   let d_prev = 0;
   let d = sum_amounts;
   for (let i = 0; i < 256; i++) {
     let d_prod = d;
-    for (let c_amount of c_amounts) {
+    for (const c_amount of c_amounts) {
       d_prod = (d_prod * d) / (c_amount * token_num);
     }
     d_prev = d;

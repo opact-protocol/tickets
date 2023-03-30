@@ -1,19 +1,5 @@
-/**
- *
- *
- *
- *
- *
- * This file was copied from the ref-finance source code
- *
- *
- *
- *
- *
- */
-
 import Big from 'big.js';
-import { PoolMode } from './swap/swap';
+import { PoolMode } from '../helpers/pools';
 
 export interface TokenMetadata {
   id: string;
