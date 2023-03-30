@@ -1,8 +1,8 @@
-import type BN from "bn.js";
+// import type BN from "bn.js";
 // @ts-ignore
 import { buildMimcSponge } from "circomlibjs";
 
-type IntoBigInt = string | number | bigint | boolean | BN;
+// type IntoBigInt = string | number | bigint | boolean | BN;
 
 /**
  * This class provides a Circom Mimc Sponge services.
@@ -15,12 +15,12 @@ export class MimcSponge {
     const sponge = await buildMimcSponge();
 
     return {
-      hash: (left: IntoBigInt, right: IntoBigInt): string => {
+      hash: (left: any, right: any): string => {
         return sponge.F.toString(
           sponge.multiHash([BigInt(left as any), BigInt(right as any)])
         );
       },
-      singleHash: (single: IntoBigInt): string => {
+      singleHash: (single: any): string => {
         return sponge.F.toString(sponge.multiHash([BigInt(single as any)]));
       },
     };

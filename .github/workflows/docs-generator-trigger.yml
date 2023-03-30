@@ -1,12 +1,12 @@
 name: Docs Generator trigger
 env:
-   # vercel envs
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_DOCS_PROJECT_ID }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_DOCS_PROJECT_ID }}
 # on:
 #   push:
 #     branches:
 #       - main
+  on: pull_request
 
 concurrency:
   group: "docs"

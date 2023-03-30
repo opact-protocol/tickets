@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "docs": "npx typedoc",
     "add_zk_assets": "yarn add_verifier_wasm && yarn add_circuit",
     "add_verifier_wasm": "cp ../circuits/out/withdraw_js/withdraw.wasm ./test/verifier.wasm",
     "add_circuit": "cp ../circuits/out/withdraw_0000.zkey ./test/circuit.zkey",

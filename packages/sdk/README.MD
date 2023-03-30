@@ -23,7 +23,7 @@ And install all the dependencies
 
 ### Build
 
-To be able to reproduce tests, deployment and frontend, it is necessary to first compile all zero-knowledge circuits using:
+To compile SDK run the command:
 ```sh
 yarn build
 ```
