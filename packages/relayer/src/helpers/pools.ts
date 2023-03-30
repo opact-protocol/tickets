@@ -119,8 +119,8 @@ export const getStablePoolEstimate = ({
   }, {});
 
   return {
-    estimate: toReadableNumber(STABLE_LP_TOKEN_DECIMALS, amountOut),
-    noFeeAmountOut: toReadableNumber(STABLE_LP_TOKEN_DECIMALS, dyOut),
+    estimate: toReadableNumber(STABLE_LP_TOKEN_DECIMALS, amountOut as any),
+    noFeeAmountOut: toReadableNumber(STABLE_LP_TOKEN_DECIMALS, dyOut as any),
     pool: {
       ...stablePool,
       rates,
