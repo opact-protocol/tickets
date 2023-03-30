@@ -5,7 +5,6 @@ export const RATED_POOL_LP_TOKEN_DECIMALS = 24;
 export function getConfig(
   env: string
 ) {
-  ENV = env;
   switch (env) {
     case 'mainnet':
       return {
