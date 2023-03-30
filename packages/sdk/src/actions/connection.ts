@@ -4,6 +4,9 @@ import type { ConnectionType } from "../interfaces";
 
 /**
  * Send transactions callback
+ *
+ * This method is an abstraction that makes it possible to send transactions to Near Blockchain using a WalletSelector object or a Near Account.
+ *
  * @param transactions the array of transactions to be send
  * @param connection the near connection that will to sign the transactions (Near Account or Wallet Selector)
  * @returns {Promise<any>}

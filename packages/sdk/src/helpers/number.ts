@@ -1,7 +1,10 @@
 import Big from "big.js";
 
 /**
- * Get Decimals
+ * Helpers: Get Decimals
+ *
+ * This method is responsible for returning the decimals of a fungible token in BN.
+ *
  * @param decimals The number of decimals
  * @returns {Promise<string>}
  */
@@ -10,7 +13,10 @@ export function getDecimals(decimals: number | undefined) {
 }
 
 /**
- * Format Big Number with Decimals
+ * Helpers: Format Big Number with Decimals
+ *
+ * This method is responsible for formatting the amount with your decimals and return a human readable amount.
+ *
  * @param value The raw value with decimals
  * @param decimals The number of decimals
  * @returns {Promise<string>}

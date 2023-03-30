@@ -51,17 +51,23 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Send Allowlist
+   * Send Allowlist
+   *
+   * This method sends a new accountId to be added to the Allowlist of the HYC Registry contract.
+   *
    * @param accountId The accountId to be send to allowlist
    * @param connection the near connection that will to sign the transactions (Near Account or Wallet Selector)
    * @returns {Promise<any>}
    */
   async sendAllowlist(accountId: string, connection: ConnectionType) {
-    return sendAllowlist(this.nodeUrl, this.contract, accountId, connection);
+    return sendAllowlist(this.contract, accountId, connection);
   }
 
   /**
-   * Action Class - Create Ticket
+   * Create Ticket
+   *
+   * This method is responsible for generating a new ticket for deposit.
+   *
    * @param accountId The user accountId
    * @param currencyId The instance accountId to be send deposit
    * @returns {Promise<any>}
@@ -77,7 +83,10 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Send Deposit
+   * Send Deposit
+   *
+   * This method is responsible for sending a new deposit with a unique commitment hash to the instance.
+   *
    * @param hash The generated deposit hash
    * @param amount The amount to be deposited
    * @param contract The instance accountId to be receive deposit
@@ -95,7 +104,6 @@ export class Actions extends Views {
     connection: ConnectionType
   ) {
     return sendDeposit(
-      this.nodeUrl,
       hash,
       amount,
       contract,
@@ -106,7 +114,10 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Send Contract Withdraw
+   * Send Contract Withdraw
+   *
+   * This method is responsible for sending a withdraw transaction to the blockchain. Without using a relayer.
+   *
    * @param contract The instance accountId to be send on transaction
    * @param signerId The signer accountId of the transaction
    * @param receiverId The receiver accountId of ticket amount
@@ -132,7 +143,10 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Get Relayer Fee
+   * Get Relayer Fee
+   *
+   * This method is responsible for sending a fee request to the relayer.
+   *
    * @param relayer The data of relayer with the url to be requested fee
    * @param accountId The near accountId to be calculate fee
    * @param instanceId The instance accountId to be sended withdraw
@@ -147,7 +161,10 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Send Withdraw
+   * Send Withdraw
+   *
+   * This method is responsible for sending a withdraw request to the relayer.
+   *
    * @param relayer The data of relayer with the url to be requested fee
    * @param payload The generated withdraw payload to be sended to withdraw
    * @returns {Promise<AxiosResponse>}
@@ -160,7 +177,10 @@ export class Actions extends Views {
   }
 
   /**
-   * Action Class - Prepare Withdraw
+   * Prepare Withdraw
+   *
+   * This method is responsible for preparing a withdraw action, generating all account hashes, creating a withdraw input and generating a new proof.
+   *
    * @param fee The relayer fee generated of relayer
    * @param note The note to withdraw
    * @param relayer The data of relayer to be create the proof

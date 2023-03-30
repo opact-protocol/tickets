@@ -3,6 +3,9 @@ import type { PublicArgsInterface } from "../interfaces";
 
 /**
  * View Is Withdraw Valid
+ *
+ * This View Function return if withdraw payload is valid.
+ *
  * @param rpcUrl The Current Near RPC Url
  * @param contract The HYC registry accountId
  * @param currencyContract The instance accountId to check if withdraw is valid

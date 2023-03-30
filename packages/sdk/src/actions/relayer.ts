@@ -11,6 +11,9 @@ import { OneNear } from "../constants";
 
 /**
  * Relayer Get Relayer Fee
+ *
+ * This method is responsible for sending a fee request to the relayer.
+ *
  * @param relayer The data of relayer with the url to be requested fee
  * @param accountId The near accountId to be calculate fee
  * @param instanceId The instance accountId to be sended withdraw
@@ -37,6 +40,9 @@ export const getRelayerFee = async (
 
 /**
  * Relayer Send Withdraw
+ *
+ * This method is responsible for sending a withdraw request to the relayer.
+ *
  * @param relayer The data of relayer with the url to be requested fee
  * @param payload The generated withdraw payload to be sended to withdraw
  * @returns {Promise<AxiosResponse>}
@@ -58,6 +64,9 @@ export const sendWithdraw = async (
 
 /**
  * Relayer Send Contract Withdraw
+ *
+ * This method is responsible for sending a withdraw transaction to the blockchain. Without using a relayer.
+ *
  * @param nodeUrl The Near RPC to send the transaction
  * @param contract The instance accountId to be send on transaction
  * @param signerId The signer accountId of the transaction
@@ -92,6 +101,9 @@ export const sendContractWithdraw = async (
 
 /**
  * Relayer check withdraw storages
+ *
+ * This method is responsible for verifying and calculating the storage of Relayer, Sender and Receiver on contract.
+ *
  * @param nodeUrl The Near RPC to send the transaction
  * @param contract The contract accountId to be send on transaction
  * @param signerId The signer accountId of the transaction

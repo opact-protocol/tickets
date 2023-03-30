@@ -4,6 +4,9 @@ import type MerkleTree from "fixed-merkle-tree";
 
 /**
  * Prepare Merkle Tree
+ *
+ * This method is responsible for creating and starting a new merkle tree using the Merkle Tree service.
+ *
  * @param contract The accountId of registry contract
  * @param name The name of to be created merkle tree
  * @param branchesQuery The graphql query to get all branches

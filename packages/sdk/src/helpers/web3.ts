@@ -3,7 +3,10 @@ import { toBN } from "web3-utils";
 import randomBytes from "randombytes";
 
 /**
- * Left Int to Buff
+ * Helpers: Left Int to Buff
+ *
+ * This method is responsible for formatting a BN number.
+ *
  * @param value the base value to create new BN
  * @returns {Promise<BN>}
  */
@@ -12,7 +15,10 @@ export function leInt2Buff(value: any) {
 }
 
 /**
- * Random BN
+ * Helpers: Random BN
+ *
+ * This method is responsible for creating and return a random BN.
+ *
  * @param nbytes the number of bytes to radom BN
  * @returns {Promise<BN>}
  */

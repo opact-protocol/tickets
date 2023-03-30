@@ -4,6 +4,9 @@ import type { Currency, ViewCurrenciesResponseInterface } from "../interfaces";
 
 /**
  * View All Currencies
+ *
+ * This View Function returns all currencies included on registry contract
+ *
  * @param rpcUrl The Current Near RPC Url
  * @param contract The HYC registry contract accountId
  * @returns {Promise<any>}
@@ -39,6 +42,9 @@ export const viewAllCurrencies = async (
 
 /**
  * View Currency Contracts
+ *
+ * This View Function returns all instances of an currency
+ *
  * @param rpcUrl The Current Near RPC Url
  * @param contract The contract accountId to be sent on view function
  * @param currency The currency accountId to get instances
@@ -57,6 +63,9 @@ export const viewCurrencyContracts = async (
 
 /**
  * View Is Contract Allowed
+ *
+ * This View Function returns if instanceId is allowed on HYC registry.
+ *
  * @param rpcUrl The Current Near RPC Url
  * @param contract The contract accountId to be sent on view function
  * @param accountId The instance accountId to check if is allowed
@@ -74,6 +83,9 @@ export const viewIsContractAllowed = async (
 
 /**
  * View is Allowlist Root Valid
+ *
+ * This View Function returns if allowlist root is valid.
+ *
  * @param rpcUrl The Current Near RPC Url
  * @param contract The contract accountId to be sent on view function
  * @param root The allowlist root

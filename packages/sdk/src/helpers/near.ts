@@ -22,7 +22,10 @@ export interface Params {
 }
 
 /**
- * Send transactions callback
+ * Helpers: Get Transaction
+ *
+ * This method is responsible for returning a valid Transaction object.
+ *
  * @param signerId The user accountId to sign the transaction
  * @param receiverId The contract accountId to receive the transaction
  * @param method The method to be called on contract
@@ -59,7 +62,10 @@ export const getTransaction = (
 };
 
 /**
- * View function
+ * Helpers: View function
+ *
+ * This method is responsible for making a View Function on the Near Blockchain.
+ *
  * @param nodeUrl The Current Near RPC Url
  * @param contractId The contract accountId to call view function
  * @param methodName The view method to be called on contract
@@ -92,7 +98,10 @@ export const viewFunction = async (
 };
 
 /**
- * Get Transaction State
+ * Helpers: Get Transaction State
+ *
+ * This method is responsible for returning the current state of a Near Blockchain transaction.
+ *
  * @param nodeUrl The Current Near RPC Url
  * @param txHash The transaction hash
  * @param accountId The accountId of signer of transaction
@@ -116,7 +125,10 @@ export const getTransactionState = async ({
 }
 
 /**
- * Get Account Balance
+ * Helpers: Get Account Balance
+ *
+ * This method is responsible for obtaining the balance of a Near accountId.
+ *
  * @param nodeUrl The Current Near RPC Url
  * @param accountId The Near accountId to get balance
  * @returns {Promise<any>}
@@ -142,7 +154,10 @@ export const getAccountBalance = async ({
 }
 
 /**
- * Send JSON RPC
+ * Helpers: Send JSON RPC
+ *
+ * This method is responsible for sending all view functions to the Near JSON RPC.
+ *
  * @param nodeUrl The Current Near RPC Url
  * @param params The RPC request params
  * @param method The RPC request method
@@ -171,7 +186,10 @@ export const sendJsonRpc = async (
 };
 
 /**
- * Get Amount
+ * Helpers: Get Amount
+ *
+ * This method is responsible for transforming human readable amount to raw amount.
+ *
  * @param amount The Near amount in Human Format
  * @param skip The flag to skip the amount parser
  * @returns {Promise<string>}
@@ -189,7 +207,10 @@ export const getAmount = (amount: string | undefined, skip = false) => {
 };
 
 /**
- * Parse Near Amount
+ * Helpers: Parse Near Amount
+ *
+ * This method is responsible for transforming human readable amount to raw amount.
+ *
  * @param rawAmount The Near amount in Human Format
  * @returns {Promise<string>}
  */
@@ -217,7 +238,10 @@ export const parseNearAmount = (rawAmount?: string) => {
 };
 
 /**
- * Cleanup raw amount
+ * Helpers: Cleanup raw amount
+ *
+ * This method is responsible for removing all invalid characters from a Amount.
+ *
  * @param amount The Near amount in Human Format
  * @returns {string}
  */
@@ -226,7 +250,10 @@ export const cleanupRawAmount = (amount: string) => {
 };
 
 /**
- * Trim leading Zeroes
+ * Helpers: Trim leading Zeroes
+ *
+ * This method is responsible for trim leading zeroes of an amount.
+ *
  * @param value The amount to trim leading zeroes
  * @returns {Promise<string>}
  */
