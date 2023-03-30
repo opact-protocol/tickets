@@ -120,8 +120,5 @@ export const useWallet = create<WalletStore>((set, get) => ({
     return {
       available: amount,
     } as Balance;
-
-    set({ haveBalance: +balance.available < tokenValue ? false : true });
-    return;
   },
 }));
