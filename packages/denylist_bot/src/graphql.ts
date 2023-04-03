@@ -1,9 +1,14 @@
 import Big from "big.js";
 import { Env } from "./env";
+import type { QueuedData } from "./utils";
 
 const paginationSize = 100;
 
 type FeederState = string | null;
+
+type GraphqlResponse = {
+    hapioneEntries: QueuedData[]
+}
 
 export class Pagination {
     state: FeederState;
@@ -20,7 +25,6 @@ export class Pagination {
         const query = `
             query GetHapioneEntries($lastViewed: BigInt!) {
                 hapioneEntries(where: {counter_gte: $lastViewed}, first: ${paginationSize}, orderBy: counter) {
-                    id
                     counter
                     account
                     category
@@ -41,16 +45,19 @@ export class Pagination {
             body: JSON.stringify({ query, variables }),
         });
 
-        const { data, errors } = (await response.json()) as { data: any[], errors: any };
+        const { data, errors } = (await response.json()) as { data: GraphqlResponse, errors: any };
         
         // if error is thrown, exit execution
         if (errors) throw new Error(JSON.stringify(errors));
 
+        // fetches items from response object
+        const parsedData = data.hapioneEntries;
+        
         // sends all items collected in batch to queue
-        await env.QUEUE.sendBatch(data);
+        await env.QUEUE.sendBatch(parsedData as any[]);
 
         // updates state to new last read item
-        this.state = (new Big(state).plus(data.length)).toFixed(0);
+        this.state = (new Big(state).plus(parsedData.length)).toFixed(0);
 
         // returns success response
         return new Response("Success!");

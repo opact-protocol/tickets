@@ -7,8 +7,13 @@ node_compat = true
 queue = "my-queue"
 binding = "QUEUE"
 
+[[queues.consumers]]
+queue = "my-queue"
+max_batch_size = 3
+max_batch_timeout = 60
+
 [durable_objects]
-bindings = [{ name = "pagination", class_name = "Pagination" }]
+bindings = [{ name = "DURABLE", class_name = "Pagination" }]
 
 [build]
 command = "node build.js"

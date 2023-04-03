@@ -1,4 +1,8 @@
 import { Env } from "./env";
+import { consumer } from "./consumer";
+import { QueuedData } from "./utils";
+
+export { Pagination } from "./graphql";
 
 const durableObjecId = "HYC";
 
@@ -16,4 +20,9 @@ export default {
       )
     }
   },
+  queue: async (batch: MessageBatch<QueuedData>, env: Env): Promise<void> => {
+    for (const message of batch.messages) {
+      consumer(message.body, env);
+    }
+  }
 };

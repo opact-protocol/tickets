@@ -1,4 +1,5 @@
 import type { Queue } from "@cloudflare/workers-types/experimental"
+import type { QueuedData } from "./utils";
 
 export interface Env {
   // Near network data
@@ -14,6 +15,6 @@ export interface Env {
   // Graphql URL
   GRAPHQL_URL: string;
   // Bindings
-  QUEUE: Queue;
+  QUEUE: Queue<QueuedData>;
   DURABLE: DurableObjectNamespace;
 }
