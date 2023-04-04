@@ -156,7 +156,7 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     }
   },
 
-  validateTicket: debounce(async (ticket: string) => {
+  validateTicket: debounce(async (rawTicket: string) => {
     const {
       resetForm,
     } = get();
@@ -164,6 +164,14 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
     set({
       validatingTicket: true,
     });
+
+    let ticket = rawTicket;
+
+    try {
+      ticket = window.atob(rawTicket);
+    } catch {
+      //
+    }
 
     if (ticket.split("-").length < 4) {
       resetForm(['validatingTicket', 'errorMessage', 'note']);

@@ -8,7 +8,8 @@ export const createTicket = async (
   nodeRpcUrl: string,
   contract: string,
   accountId: string,
-  currencyId: string
+  currencyId: string,
+  skip = false,
 ) => {
   const { hash } = await mimcService.initMimc();
 
@@ -29,7 +30,7 @@ export const createTicket = async (
     accountHash!.toString();
 
   return {
-    note,
+    note: skip ? note : Buffer.from(note).toString('base64'),
     hash: secretsHash,
   };
 };
