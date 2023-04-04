@@ -167,10 +167,8 @@ export const useWithdraw = create<WithdrawStore>((set, get) => ({
 
     let ticket = rawTicket;
 
-    try {
-      ticket = window.atob(rawTicket);
-    } catch {
-      //
+    if (!rawTicket.includes('.testnet') && !rawTicket.includes('.near')) {
+      ticket = Buffer.from(rawTicket, 'hex').toString();
     }
 
     if (ticket.split("-").length < 4) {
