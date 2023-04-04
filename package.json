@@ -18,7 +18,7 @@
     "node": ">=17.5.0"
   },
   "lint-staged": {
-    "!(packages/subgraph/generated/*)*.{ts,tsx}": [
+    "{ts,tsx}": [
       "eslint --fix"
     ],
     "*.{js,jsx}": [

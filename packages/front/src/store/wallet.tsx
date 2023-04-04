@@ -112,13 +112,13 @@ export const useWallet = create<WalletStore>((set, get) => ({
       };
     }
 
-    const { amount } = (await getAccountBalance({
+    const res = (await getAccountBalance({
       nodeUrl,
       accountId,
     })) as any;
 
     return {
-      available: amount,
+      available: res?.amount || '0',
     } as Balance;
   },
 }));
