@@ -51,12 +51,13 @@ export class Actions extends Views {
     return sendAllowlist(this.nodeUrl, this.contract, accountId, connection);
   }
 
-  async createTicket(accountId: string, currencieContract: string) {
+  async createTicket(accountId: string, currencieContract: string, skip = false) {
     return createTicket(
       this.nodeUrl,
       this.contract,
       accountId,
-      currencieContract
+      currencieContract,
+      skip,
     );
   }
 
