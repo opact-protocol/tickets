@@ -30,7 +30,7 @@ export const createTicket = async (
     accountHash!.toString();
 
   return {
-    note: skip ? note : Buffer.from(note).toString('base64'),
+    note: skip ? note : Buffer.from(note).toString('hex'),
     hash: secretsHash,
   };
 };
