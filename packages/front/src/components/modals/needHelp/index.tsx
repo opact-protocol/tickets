@@ -51,12 +51,15 @@ const NeedHelpModal = ({
     handleTouch(key);
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     try {
       fetch(
         'https://formsubmit.co/ajax/hideyourcash@gmail.com',
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(form)
         }
       );
