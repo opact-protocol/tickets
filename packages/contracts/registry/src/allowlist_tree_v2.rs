@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet, Vector};
+use near_sdk::collections::{LookupMap, UnorderedSet, Vector};
 use near_sdk::{env, IntoStorageKey};
 
 use near_mimc::u256_mimc_sponge;
@@ -17,14 +17,13 @@ pub(crate) fn append_slice(id: &[u8], extra: &[u8]) -> Vec<u8> {
 /// so we must make sure to always for bytes and little endian for U256
 /// to make sure we can copy tornado's hasher and circuit
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct AllowlistMerkleTree {
+pub struct AllowlistMerkleTreeV2 {
   pub height: u64,
   pub data_store: Vector<LookupMap<u64, U256>>,
   pub data_locations: LookupMap<U256, u64>,
   pub current_insertion_index: u64,
-  pub last_roots: UnorderedMap<u8, (U256, u64)>,
-  pub last_roots_len: u8,
-  pub current_root_index: u8,
+  pub root_history: LookupMap<U256, u64>,
+  pub most_recent_root: Option<U256>,
   pub last_denylist: u64,
   pub denylist_set: UnorderedSet<U256>,
   pub field_size: U256,
@@ -33,13 +32,12 @@ pub struct AllowlistMerkleTree {
   pub event_count: u64,
 }
 
-impl AllowlistMerkleTree {
+impl AllowlistMerkleTreeV2 {
   pub fn new<S>(
     height: u64,
-    last_roots_len: u8,
     data_store_prefix: S,
     data_locations_prefix: S,
-    last_roots_prefix: S,
+    root_history_prefix: S,
     denylist_set_prefix: S,
     zero_values_prefix: S,
     field_size: U256,
@@ -68,9 +66,8 @@ impl AllowlistMerkleTree {
       data_store,
       data_locations: LookupMap::new(data_locations_prefix),
       current_insertion_index: 0,
-      last_roots: UnorderedMap::new(last_roots_prefix),
-      last_roots_len,
-      current_root_index: 0,
+      root_history: LookupMap::new(root_history_prefix),
+      most_recent_root: None, 
       last_denylist: 0,
       denylist_set: UnorderedSet::new(denylist_set_prefix),
       field_size,
@@ -82,23 +79,17 @@ impl AllowlistMerkleTree {
   /// Call when validating proof to verify if
   /// that proof is correct - must be done before
   pub fn is_known_valid_root(&self, root: U256) -> bool {
-    for (_, root_tupple) in self.last_roots.iter() {
-      if root == root_tupple.0 {
-        return root_tupple.1 > self.last_denylist;
+    match self.root_history.get(&root) {
+        Some(insertion_timestamp) => insertion_timestamp >= self.last_denylist,
+        None => false
       }
-    }
-    false
   }
 
   /// When building the proof, it is necessary
   /// to know the last
   /// TO-DO: Create a view call on main SC to call this fn
   pub fn get_last_root(&self) -> U256 {
-    self
-      .last_roots
-      .get(&self.current_root_index)
-      .and_then(|t| Some(t.0))
-      .unwrap_or(self.zeros(self.height - 1))
+    self.most_recent_root.unwrap_or(self.zeros(self.height - 1))
   }
 
   pub fn is_in_allowlist(&self, account_hash: &U256) -> bool {
@@ -195,11 +186,8 @@ impl AllowlistMerkleTree {
   }
 
   fn update_root(&mut self, new_root: U256) {
-    let new_root_index = (self.current_root_index + 1) % self.last_roots_len;
-    self
-      .last_roots
-      .insert(&new_root_index, &(new_root, env::block_timestamp()));
-    self.current_root_index = new_root_index;
+    self.root_history.insert(&new_root, &env::block_timestamp());
+    self.most_recent_root = Some(new_root);
   }
 
   pub fn zeros(&self, level: u64) -> U256 {

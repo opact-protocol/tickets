@@ -5,10 +5,11 @@ pub const AML_CHECK_GAS: Gas = Gas(10_000_000_000_000);
 /// yoctoNEAT price to store a new account in allowlist. is composed of:
 /// (1) U256 hash of account in tree -> 32 bytes
 /// (2) u64 location of item in tree -> 8 bytes
-/// Total cost = 40 bytes
+/// (3) u64 insertion of timestamp into allowlist's root_history -> 8 bytes
+/// Total cost = 48 bytes
 /// Cost per byte = 10_000_000_000_000_000_000
-/// Total cost = 400_000_000_000_000_000_000
-pub const ALLOWLIST_STORAGE_COST: u128 = 400_000_000_000_000_000_000;
+/// Total cost = 480_000_000_000_000_000_000
+pub const ALLOWLIST_STORAGE_COST: u128 = 480_000_000_000_000_000_000;
 /// yoctoNEAT price to store a new account in denylist. is composed of:
 /// (1) U256 hash of account in denylist_set -> 32 bytes
 /// Total cost = 32 bytes
