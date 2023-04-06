@@ -7,7 +7,7 @@ use near_sdk::{env, near_bindgen, ext_contract, Gas, Promise, PromiseOrValue, Pa
 use near_sdk::collections::{UnorderedMap, UnorderedSet};
 use near_sdk::serde_json::json;
 
-use allowlist_tree::AllowlistMerkleTree;
+use allowlist_tree_v2::AllowlistMerkleTreeV2;
 use near_mimc::{account_hash, u256_mimc_sponge_single};
 
 use hapi_connector::*;
@@ -15,7 +15,8 @@ use hyc_events::*;
 use ext_interface::*;
 
 mod actions;
-mod allowlist_tree;
+mod migrations;
+mod allowlist_tree_v2;
 mod ext_interface;
 mod hapi_connector;
 
@@ -39,7 +40,7 @@ pub struct Contract {
   // hapi.one contract connector
   pub authorizer: AML,
   // merkle tree containing all authorized accounts after AML
-  pub allowlist: AllowlistMerkleTree,
+  pub allowlist: AllowlistMerkleTreeV2,
 }
 
 #[derive(Copy, Clone, BorshDeserialize, BorshSerialize, BorshStorageKey)]
@@ -49,7 +50,8 @@ pub enum StorageKey {
   AllowlistSet,
   DataStorePrefix,
   DataLocationsPrefix,
-  LastRootsPrefix,
+  LastRootsPrefix, // this variant was used in V1, not in use anymore
+  RootHistoryPrefix,
   DenylistSetPrefix,
   ZeroValuesPrefix,
 }
@@ -65,7 +67,6 @@ impl Contract {
     risk_params: Vec<CategoryRisk>,
     // merkle tree params
     height: u64,
-    last_roots_len: u8,
     q: U256,
     zero_value: U256,
   ) -> Self {
@@ -83,12 +84,11 @@ impl Contract {
       currencies_map: UnorderedMap::new(StorageKey::CurrenciesMap),
       contracts_allowlist: UnorderedSet::new(StorageKey::AllowlistSet),
       authorizer,
-      allowlist: AllowlistMerkleTree::new(
+      allowlist: AllowlistMerkleTreeV2::new(
         height,
-        last_roots_len,
         StorageKey::DataStorePrefix,
         StorageKey::DataLocationsPrefix,
-        StorageKey::LastRootsPrefix,
+        StorageKey::RootHistoryPrefix,
         StorageKey::DenylistSetPrefix,
         StorageKey::ZeroValuesPrefix,
         q,

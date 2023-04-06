@@ -63,4 +63,8 @@ impl Contract {
   pub fn view_nullifier_hash(&self, nullifier: U256) -> U256 {
     u256_mimc_sponge_single(U256::zero(), [nullifier])[0]
   }
+
+  pub fn view_risk_params(&self) -> Vec<(Category, u8)> {
+    self.authorizer.aml_conditions.to_vec()
+  }
 }

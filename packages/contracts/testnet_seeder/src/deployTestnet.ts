@@ -196,7 +196,7 @@ export async function testnetSetup(): Promise<void> {
       account_id: tokenInstanceAccount10.accountId,
     },
     gas: new BN("300000000000000"),
-    attachedDeposit: new BN("400000000000000000000"),
+    attachedDeposit: new BN("480000000000000000000"),
   });
 
   console.log("block of creation:", last_block_height);

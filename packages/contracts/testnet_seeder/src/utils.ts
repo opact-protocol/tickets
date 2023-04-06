@@ -106,7 +106,6 @@ export async function deployRegistry(
       risk_params: RISK_PARAMS,
       // merkle tree params
       height: TREE_HEIGHT,
-      last_roots_len: 50,
       q: Q,
       zero_value: ZERO_VALUE,
     },
