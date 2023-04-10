@@ -212,6 +212,7 @@ export async function setup(): Promise<void> {
 
   fs.writeFileSync("../../sdk/test/test_setup.json", testSetup);
   fs.writeFileSync("../../relayer/test/test_setup.json", testSetup);
+  fs.writeFileSync("../../denylist-bot/test/test_setup.json", testSetup);
 
   if (isCI) {
     console.log("The code is running on a CI server");
