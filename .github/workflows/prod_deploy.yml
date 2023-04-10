@@ -70,11 +70,8 @@ jobs:
       - name: Installing Dependencies
         run: yarn
 
-      - name: Installing TheGraph
-        run: yarn global add @graphprotocol/graph-cli
-
       - name: Signin on TheGraph
-        run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
+        run: yarn subgraph auth
 
       - name: Deploy The graph
         run: yarn subgraph deploy:production
