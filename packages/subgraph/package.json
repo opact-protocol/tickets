@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "scripts": {
-    "auth": " graph auth --product=hosted-service \"$THE_GRAPH_TOKEN\"",
+    "auth": "graph auth --product=hosted-service \"$THE_GRAPH_TOKEN\"",
     "codegen": "graph codegen",
     "build": "graph build",
     "make:yaml": "node make-yaml.js",
