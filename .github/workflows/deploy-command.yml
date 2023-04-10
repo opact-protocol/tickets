@@ -72,8 +72,8 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@canary
 
-      - name: Installing TheGraph
-        run: npm install --global @graphprotocol/graph-cli
+      # - name: Installing TheGraph
+      #   run: npm install --global @graphprotocol/graph-cli
 
       - name: Install Yarn Globally
         run: npm install -g yarn
@@ -83,6 +83,7 @@ jobs:
 
       - name: Signin on TheGraph
         run: graph auth --product=hosted-service "$THE_GRAPH_TOKEN"
+        working-directory: 'packages/subgraph'
 
       - name: Deploy The graph
         run: yarn subgraph deploy:staging
