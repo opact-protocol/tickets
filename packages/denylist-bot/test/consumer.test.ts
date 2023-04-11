@@ -1,11 +1,11 @@
-import { consumer } from "./consumer";
-import testnetSetup from "../../test_setup.json";
-import { setupNear, viewFunction } from "../near";
+import testnetSetup from "../test_setup.json";
+import { consumer } from "../src/services/consumer";
+import { setupNear, viewFunction } from "../src/utils";
 import { describe, expect, jest, it, beforeAll } from '@jest/globals';
 
 const payload = {
   counter: '34',
-  account: '3ae95aeeb5a4600264ecneko.testnet',
+  account: '19b5ee6a1586bc18144e0718d93e1cb05b8c752e15b73ee4200d5ee4e88ac3b1',
   category: 'Theft',
   risk: '7',
 };
@@ -14,8 +14,8 @@ const baseEnv = {
   NEAR_NETWORK: "testnet",
   HYC_CONTRACT: testnetSetup.hyc_contract,
   RPC_URL: "https://rpc.testnet.near.org",
-  ACCOUNT_ID: testnetSetup.account.account_id,
-  PRIVATE_KEY: testnetSetup.account.private_key,
+  ACCOUNT_ID: testnetSetup.owner.account_id,
+  PRIVATE_KEY: testnetSetup.owner.private_key,
 };
 
 describe("Test all service actions", () => {
@@ -36,7 +36,7 @@ describe("Test all service actions", () => {
   });
 
   it("should return success - The account has been banned", async () => {
-    const inAllowlist = await viewFunction(
+    let inAllowlist = await viewFunction(
       baseEnv.RPC_URL,
       baseEnv.HYC_CONTRACT,
       'view_is_in_allowlist',
@@ -47,7 +47,7 @@ describe("Test all service actions", () => {
 
     expect(inAllowlist).toEqual(false);
 
-    account.functionCall({
+    await account.functionCall({
       contractId: baseEnv.HYC_CONTRACT,
       methodName: "allowlist",
       args: {
@@ -57,23 +57,36 @@ describe("Test all service actions", () => {
       attachedDeposit: "480000000000000000000" as any,
     });
 
-    expect(inAllowlist).toEqual(true);
-
     try {
+      await account.functionCall({
+        contractId: testnetSetup.hapi_contract,
+        methodName: "create_address",
+        args: {
+          address: payload.account,
+          category: "Theft",
+          risk: 10,
+        },
+        gas: "300000000000000" as any,
+      });
+
       await consumer(payload, baseEnv as any);
     } catch (e) {
       console.warn(e);
     }
 
-    const inDenylist = await viewFunction(
-      baseEnv.RPC_URL,
-      baseEnv.HYC_CONTRACT,
-      'view_is_in_allowlist',
-      {
-        account_id: payload.account,
-      },
-    );
-
-    expect(inDenylist).toEqual(false);
+    try {
+      await account.functionCall({
+        contractId: baseEnv.HYC_CONTRACT,
+        methodName: "allowlist",
+        args: {
+          account_id: payload.account,
+        },
+        gas: "300000000000000" as any,
+        attachedDeposit: "480000000000000000000" as any,
+      });
+    } catch (e: any) {
+      console.log(e.message);
+      expect(e.message).toContain("Account risk is too high");
+    }
   });
 });

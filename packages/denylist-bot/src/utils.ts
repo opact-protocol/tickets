@@ -8,6 +8,8 @@ globalThis.Buffer = Buffer;
 globalThis.process = Process;
 /* tslint:enable */
 
+export const AttachedGas = "300000000000000";
+
 export const setupNear = async ({
   RPC_URL,
   ACCOUNT_ID,
@@ -48,3 +50,16 @@ export const viewFunction = async (
 
   return JSON.parse(Buffer.from(res.result).toString());
 };
+
+export const paginationSize = 100;
+
+export const getHapioneEntriesQuery = `
+  query GetHapioneEntries($lastViewed: BigInt!) {
+    hapioneEntries(where: {counter_gt: $lastViewed}, first: ${paginationSize}, orderBy: counter) {
+      counter
+      account
+      category
+      risk
+    }
+  }
+`;

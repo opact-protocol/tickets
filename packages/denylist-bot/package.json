@@ -1,7 +1,7 @@
 {
   "name": "denylist-bot",
   "version": "1.0.0",
-  "description": "Production level relayer with cloudflare workers",
+  "description": "Production level CF Worker Bot",
   "type": "module",
   "module": "./dist/index.mjs",
   "scripts": {
@@ -37,7 +37,6 @@
     "@tsndr/cloudflare-worker-router": "^2.3.2",
     "big.js": "^6.2.1",
     "buffer": "^6.0.3",
-    "graphql-request": "^5.2.0",
     "near-api-js": "^1.1.0"
   }
 }

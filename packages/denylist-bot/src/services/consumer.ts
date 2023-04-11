@@ -1,7 +1,6 @@
 import type { Env } from "../types/env";
-import { AttachedGas } from "../constants";
-import { setupNear, viewFunction } from "../near";
 import type { QueuedData } from "../types/pagination";
+import { setupNear, viewFunction, AttachedGas } from "../utils";
 
 const riskMap: any = {
   "Scam": 5,
@@ -86,7 +85,7 @@ export const consumer = async (payload: QueuedData, env: Env) => {
 
     console.info(`The ${payload.account} account has been banned`);
   } catch (e) {
-    console.error(`Error to send the account: ${payload.account} to denylist`);
-    console.error(e);
+    console.warn(`Error to send the account: ${payload.account} to denylist`);
+    console.warn(e);
   }
 }

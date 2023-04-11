@@ -1,6 +1,6 @@
 import { Env } from "../types/env";
 import { FeederState } from "../types/pagination";
-import { sendRequest } from "..//services/request";
+import { sendRequest } from "../services/request";
 
 /**
  * The Durable Object
