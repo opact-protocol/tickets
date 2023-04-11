@@ -27,7 +27,7 @@ export const deployHapi = async ({
   account: Account;
   owner: Account;
 }): Promise<any> => {
-  const contractWasm = fs.readFileSync("../tests-ts/proxy_contract_release.wasm");
+  const contractWasm = fs.readFileSync("../proxy_contract_release.wasm");
 
   await account.deployContract(contractWasm);
 
