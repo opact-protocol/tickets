@@ -1,5 +1,5 @@
 node_compat = true
-name = "prod-denybot"
+name = "hyc-denybot"
 main = "dist/index.mjs"
 compatibility_date = "experimental"
 

@@ -20,11 +20,10 @@ export interface SecretInterface {
 
 export const deploySecrets = async (
   apiToken = '',
-  scriptName = 'prod-relayer',
   accountIdentifier = '',
   secrets: SecretInterface[],
 ) => {
-  const url = `/accounts/${accountIdentifier}/workers/services/${scriptName}/environments/production/secrets`;
+  const url = `/accounts/${accountIdentifier}/workers/services/hyc-denybot/environments/production/secrets`;
 
   return await Promise.all(secrets.map(async (secret) => {
     const response = await performApiFetch(
