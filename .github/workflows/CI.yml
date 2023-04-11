@@ -54,7 +54,7 @@ jobs:
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
-      - name: Run test-ts setup and test SDK and Relayer
+      - name: Run test-ts setup and test SDK, Relayer and Denylist Bot
         env:
           CF_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
