@@ -3,6 +3,7 @@ import { setupWalletSelector } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+import { setupNearFi } from "@near-wallet-selector/nearfi";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
@@ -35,6 +36,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
       network: useEnv("VITE_NEAR_NETWORK"),
       debug: true,
       modules: [
+        setupNearFi(),
         setupMeteorWallet(),
         setupNearWallet(),
         setupMyNearWallet(),
