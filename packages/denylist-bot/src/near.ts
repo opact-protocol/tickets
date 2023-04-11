@@ -1,6 +1,6 @@
 import Process from "process";
 import { Buffer } from "buffer";
-import type { Env } from "../types/env";
+import type { Env } from "./types/env";
 import { connect, keyStores, KeyPair, providers } from "near-api-js";
 
 /* tslint:disable */

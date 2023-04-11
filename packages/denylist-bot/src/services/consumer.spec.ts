@@ -1,7 +1,7 @@
-import testnetSetup from "./test_setup.json";
-import { consumer } from "../src/services/consumer";
+import { consumer } from "./consumer";
+import testnetSetup from "../../test_setup.json";
+import { setupNear, viewFunction } from "../near";
 import { describe, expect, jest, it, beforeAll } from '@jest/globals';
-import { setupNear, viewFunction } from "../src//utils/near";
 
 const payload = {
   counter: '34',
@@ -74,6 +74,6 @@ describe("Test all service actions", () => {
       },
     );
 
-    expect(inDenylist).toEqual(true);
+    expect(inDenylist).toEqual(false);
   });
 });

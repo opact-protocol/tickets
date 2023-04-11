@@ -1,7 +1,7 @@
 
-import { Env } from "@/types/env";
-import { getHapioneEntriesQuery } from "@/query";
-import { FeederState, FetchResponseInterface } from "@/types/pagination";
+import type { Env } from "../types/env";
+import { getHapioneEntriesQuery } from "../query";
+import type { FeederState, FetchResponseInterface } from "../types/pagination";
 
 export const sendRequest = async (counter: FeederState, env: Env): Promise<FetchResponseInterface> => {
   const response = await fetch(env.GRAPHQL_URL, {

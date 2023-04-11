@@ -1,6 +1,6 @@
 import type { Env } from "../types/env";
 import { AttachedGas } from "../constants";
-import { setupNear, viewFunction } from "../utils/near";
+import { setupNear, viewFunction } from "../near";
 import type { QueuedData } from "../types/pagination";
 
 const riskMap: any = {

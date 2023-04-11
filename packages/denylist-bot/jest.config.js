@@ -6,12 +6,9 @@ export default {
       useESM: true,
     },
   },
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^(\\.{1,2}/.*)\\.js$": "$1",
-  },
   testEnvironment: "miniflare",
   forceExit: true,
+  transform: {},
   verbose: true,
   detectOpenHandles: true,
   clearMocks: true,
