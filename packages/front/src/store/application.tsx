@@ -20,7 +20,7 @@ export const useApp = create<AppStore>((set, get) => ({
       useEnv("VITE_NEAR_NODE_URL"),
       useEnv("VITE_CONTRACT")
     );
-    
+
     set({
       allCurrencies: currencies.map((token) => ({
         ...token,
@@ -61,7 +61,9 @@ export const useApp = create<AppStore>((set, get) => ({
   initApp: async () => {
     const { getAllCurrencies, viewIsInAllowlist, viewAccountBalance } = get();
     const { fetchRelayerData } = useRelayer.getState();
+    const { initWallet } = useWallet.getState();
 
+    await initWallet();
     await getAllCurrencies();
     await viewIsInAllowlist();
     await fetchRelayerData();

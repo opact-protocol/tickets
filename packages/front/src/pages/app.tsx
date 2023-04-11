@@ -1,13 +1,13 @@
-import { Container, Actions, Spinner } from "@/components";
-import { Header } from "@/components/layout/header";
-import { NeedHelp } from "@/components/layout/needHelp";
-import { AboutUsModal } from "@/components/modals";
-import { verifyStorage } from "@/utils/verify-storage";
+import { useApp } from "@/store";
 import { useEffect, useState } from "react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { useApp, useWallet } from "@/store";
-import { Transition } from "@headlessui/react";
 import { Loader } from "@/components/loader";
+import { Transition } from "@headlessui/react";
+import { Container, Actions } from "@/components";
+import { AboutUsModal } from "@/components/modals";
+import { Header } from "@/components/layout/header";
+import { verifyStorage } from "@/utils/verify-storage";
+import { NeedHelp } from "@/components/layout/needHelp";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 const methods = {
   deposit: "hyc-deposits",
@@ -54,15 +54,8 @@ function BackgroundIllustration() {
 }
 
 export function Index() {
+  const {initApp, appStarted} = useApp();
   const [showModal, setShowModal] = useState(false);
-  const { initApp, appStarted } = useApp();
-  const { initWallet } = useWallet();
-
-  useEffect(() => {
-    void (async () => {
-      await initWallet();
-    })();
-  }, [initWallet]);
 
   useEffect(() => {
     void (async () => {
