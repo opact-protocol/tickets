@@ -8,7 +8,9 @@ globalThis.Buffer = Buffer;
 globalThis.process = Process;
 /* tslint:enable */
 
-export const AttachedGas = "300000000000000";
+export const attachedGas = "300000000000000" as any;
+export const denylistDeposit = "320000000000000000000" as any;
+export const allowlistDeposit = "480000000000000000000" as any;
 
 export const setupNear = async ({
   RPC_URL,
@@ -55,7 +57,7 @@ export const paginationSize = 100;
 
 export const getHapioneEntriesQuery = `
   query GetHapioneEntries($lastViewed: BigInt!) {
-    hapioneEntries(where: {counter_gt: $lastViewed}, first: ${paginationSize}, orderBy: counter) {
+    hapioneEntries(where: {counter_gte: $lastViewed}, first: ${paginationSize}, orderBy: counter) {
       counter
       account
       category

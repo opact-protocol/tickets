@@ -1,6 +1,6 @@
 import testnetSetup from "../test_setup.json";
 import { consumer } from "../src/services/consumer";
-import { setupNear, viewFunction } from "../src/utils";
+import { allowlistDeposit, attachedGas, setupNear, viewFunction } from "../src/utils";
 import { describe, expect, jest, it, beforeAll } from '@jest/globals';
 
 const payload = {
@@ -53,8 +53,8 @@ describe("Test all service actions", () => {
       args: {
         account_id: payload.account,
       },
-      gas: "300000000000000" as any,
-      attachedDeposit: "480000000000000000000" as any,
+      gas: attachedGas,
+      attachedDeposit: allowlistDeposit,
     });
 
     try {
@@ -66,7 +66,7 @@ describe("Test all service actions", () => {
           category: "Theft",
           risk: 10,
         },
-        gas: "300000000000000" as any,
+        gas: attachedGas,
       });
 
       await consumer(payload, baseEnv as any);
@@ -81,8 +81,8 @@ describe("Test all service actions", () => {
         args: {
           account_id: payload.account,
         },
-        gas: "300000000000000" as any,
-        attachedDeposit: "480000000000000000000" as any,
+        gas: attachedGas,
+        attachedDeposit: allowlistDeposit,
       });
     } catch (e: any) {
       console.log(e.message);

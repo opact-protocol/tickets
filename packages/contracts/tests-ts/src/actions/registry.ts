@@ -5,7 +5,6 @@ import {
   TREE_HEIGHT,
   ZERO_VALUE,
   PROTOCOL_FEE,
-  HAPI_ONE_TESTNET,
   RISK_PARAMS,
   Q,
   QF,

@@ -1,6 +1,6 @@
 import type { Env } from "../types/env";
 import type { QueuedData } from "../types/pagination";
-import { setupNear, viewFunction, AttachedGas } from "../utils";
+import { setupNear, viewFunction, attachedGas, denylistDeposit } from "../utils";
 
 const riskMap: any = {
   "Scam": 5,
@@ -41,8 +41,8 @@ const sendBanTransaction = async (payload: QueuedData, env: Env): Promise<void> 
     args: {
       account_id: payload.account,
     },
-    gas: AttachedGas as any,
-    attachedDeposit: "320000000000000000000" as any,
+    gas: attachedGas,
+    attachedDeposit: denylistDeposit,
   });
 }
 
@@ -72,8 +72,8 @@ export const consumer = async (payload: QueuedData, env: Env) => {
 
   const maxRiskScore = await fetchRiskParams(payload.category);
 
-  if (Number(payload.risk) < maxRiskScore) {
-    console.info(`The ${payload.account} account not is over the max risk`);
+  if (Number(payload.risk) <= maxRiskScore) {
+    console.info(`The ${payload.account} account is not over the max risk`);
 
     return
   }

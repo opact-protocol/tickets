@@ -66,7 +66,13 @@ export class Pagination {
 
     await this.env.QUEUE.sendBatch(hapioneEntries.map(value => ({ body: value})) as any);
 
-    await this.updateCurrentCounter(hapioneEntries.at(-1)?.counter);
+    const lastEntry = hapioneEntries.at(-1);
+
+    const nextIndexOf = lastEntry
+      ? +lastEntry.counter + 1 + ''
+      : '0';
+
+    await this.updateCurrentCounter(nextIndexOf);
 
     return new Response("Success!");
   }
