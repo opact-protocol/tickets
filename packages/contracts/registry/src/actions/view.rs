@@ -64,6 +64,9 @@ impl Contract {
     u256_mimc_sponge_single(U256::zero(), [nullifier])[0]
   }
 
+
+  /// Returns a Vec of tupples containing accepted risk
+  /// parameters for contract users
   pub fn view_risk_params(&self) -> Vec<(Category, u8)> {
     self.authorizer.aml_conditions.to_vec()
   }
