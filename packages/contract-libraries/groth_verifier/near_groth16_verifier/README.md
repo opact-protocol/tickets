@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1><code>near-groth16-verifier</code></h1>
+  <h1><code>near_groth16_verifier</code></h1>
 
   <p>
     <strong>Rust library to use verify groth16 zero knowledge proofs inside a NEAR Protocol smart contract.</strong>
