@@ -20,7 +20,13 @@ const riskMap: any = {
  * @param category The risk category
  * @returns Returns the max risk accepted by the contract
  */
-const fetchRiskParams = async (category: string): Promise<number> => {
+const fetchRiskParams = async (category: string, env: Env): Promise<number> => {
+  const riskMap = await viewFunction(
+    env.RPC_URL,
+    env.HYC_CONTRACT,
+    'view_risk_params',
+  );
+
   return riskMap[category];
 }
 
@@ -70,7 +76,7 @@ export const consumer = async (payload: QueuedData, env: Env) => {
     return
   }
 
-  const maxRiskScore = await fetchRiskParams(payload.category);
+  const maxRiskScore = await fetchRiskParams(payload.category, env);
 
   if (Number(payload.risk) <= maxRiskScore) {
     console.info(`The ${payload.account} account is not over the max risk`);
