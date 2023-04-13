@@ -2,18 +2,6 @@ import type { Env } from "../types/env";
 import type { QueuedData } from "../types/pagination";
 import { setupNear, viewFunction, attachedGas, denylistDeposit } from "../utils";
 
-const riskMap: any = {
-  "Scam": 5,
-  "Theft": 5,
-  "Sanctions": 5,
-  "ChildAbuse": 5,
-  "Ransomware": 5,
-  "Counterfeit": 5,
-  "DarknetService": 5,
-  "TerroristFinancing": 5,
-  "IllicitOrganization": 5,
-};
-
 /** fetchRiskParams
  * This function must perform a view call to contract to fetch
  * there is currently no such view call in the contract. Mock
