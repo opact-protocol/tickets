@@ -1,4 +1,4 @@
-use near_plonk_verifier::{Proof, Verifier, G1Point, G2Point, U256};
+use near_plonk_verifier::{Proof, Verifier, TempValues, G1Point, G2Point, U256};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{near_bindgen, PanicOnDefault};
 
@@ -53,4 +53,36 @@ impl Contract {
     pub fn verify(&self, proof: Proof) -> bool {
         self.verifier.verify(proof)
     }
+
+    pub fn calculate_challanges(&self, proof: Proof) -> TempValues {
+        let mut temp = TempValues::new();
+        self.verifier.calculate_challanges(proof, &mut temp);
+        temp.clone()
+    }
+
+    pub fn calculate_lagrange(&self, temp: &mut TempValues) -> TempValues {
+        self.verifier.calculate_lagrange(temp);
+        temp.clone()
+    }
+
+    pub fn calculate_pl(&self, proof: Proof, temp: &mut TempValues) -> TempValues {
+        self.verifier.calculate_pl(proof, temp);
+        temp.clone()
+    }
+
+    pub fn calculate_t(&self, proof: Proof, temp: &mut TempValues) -> TempValues {
+        self.verifier.calculate_pl(proof, temp);
+        temp.clone()
+    }
+
+    pub fn calculate_a1(&self, proof: Proof, temp: &mut TempValues) -> TempValues {
+        self.verifier.calculate_pl(proof, temp);
+        temp.clone()
+    }
+
+    pub fn calculate_b1(&self, proof: Proof, temp: &mut TempValues) -> TempValues {
+        self.verifier.calculate_pl(proof, temp);
+        temp.clone()
+    }
+    
 }

@@ -9,6 +9,7 @@ use futures::future::{try_join_all};
 
 mod methods;
 mod tests_verifier;
+mod tests_partials;
 
 pub use methods::*;
 
