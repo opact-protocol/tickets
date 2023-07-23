@@ -7,40 +7,39 @@ export const TicketScore = ({ score }: { score: number }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="my-5">
-      <div className="flex items-center justify-between">
-        <span className="text-black text-[1.1rem] font-bold ">
+    <div className="mt-[24px] mb-[8px]">
+      <div className="flex items-center space-x-[10px]">
+        <span className="text-white font-title text-[18px] font-[500]">
           Transaction Anonymity
         </span>
+
+        <p
+          className="flex items-center cursor-pointer"
+          onClick={() => setShowModal(true)}
+        >
+          <QuestionMarkCircleIcon className="w-4 h-4 text-[#606466]" />
+        </p>
       </div>
 
-      <div className="flex items-center gap-2 mt-2">
+      <div className="flex items-center gap-2 mt-[16px]">
         <div
-          className="w-[77px] h-[9px] bg-deep-blue rounded-full"
+          className="w-[80px] h-[12px] bg-[#1A92FF] rounded-full"
         />
 
         <div
           className={twMerge(
-            'w-[77px] h-[9px] bg-gray-300 rounded-full',
-            score >= 30 && 'bg-intermediate-score',
+            'w-[80px] h-[12px] bg-form-gradient rounded-full',
+            score >= 30 && 'bg-[linear-gradient(225deg,_#AD51FF_12.18%,_#1A92FF_91.42%)]',
           )}
         />
 
         <div
           className={twMerge(
-            'w-[77px] h-[9px] bg-gray-300 rounded-full',
-            score >= 60 && 'bg-success',
+            'w-[80px] h-[12px] bg-form-gradient rounded-full',
+            score >= 60 && 'bg-[#AD51FF]',
           )}
         />
       </div>
-
-      <p
-        className="text-info font-normal text-sm underline flex items-center gap-2 mt-2 cursor-pointer"
-        title="Coming soon"
-        onClick={() => setShowModal(true)}
-      >
-        What is this <QuestionMarkCircleIcon className="w-4 h-4" />
-      </p>
 
       <WhatIsThisModal
         isOpen={showModal}

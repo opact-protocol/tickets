@@ -71,7 +71,7 @@ const NeedHelpModal = ({
 
       toast(
         <ToastCustom
-          icon="check-circle-icon.svg"
+          variant="success"
           title="Message sent"
           message="Thank you for contacting us, your message will be answered shortly."
         />
@@ -80,7 +80,7 @@ const NeedHelpModal = ({
 
       toast(
         <ToastCustom
-          icon="error-circle-icon.svg"
+          variant="error"
           title="Error sending message"
           message="Something went wrong sending your message, wait a few minutes and try again."
         />

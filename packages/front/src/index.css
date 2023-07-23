@@ -3,13 +3,14 @@
 @tailwind utilities;
 
 html {
+  overflow: hidden;
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #757575 #07cf9f;
+  scrollbar-color: #060A0F #060A0F;
 }
 
 /* Chrome, Edge and Safari */
@@ -19,36 +20,37 @@ html::-webkit-scrollbar {
 }
 html::-webkit-scrollbar-track {
   border-radius: 5px;
-  background-color: #98e2d0;
+  background-color: #060A0F;
 }
 
 html::-webkit-scrollbar-track:hover {
-  background-color: #bdfbec;
+  background-color: #060A0F;
 }
 
 html::-webkit-scrollbar-track:active {
-  background-color: #bdfbec;
+  background-color: #060A0F;
 }
 
 html::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background-color: #07cf9f;
+  background-color: #060A0F;
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background-color: #07cf9f;
+  background-color: #060A0F;
 }
 
 html::-webkit-scrollbar-thumb:active {
-  background-color: #07cf9f;
+  background-color: #060A0F;
 }
 
 body {
   font-family: "Sora", sans-serif;
   color: white;
   width: 100vw;
+  overflow: hidden;
   height: 100vh;
-  background: #e8eaff;
+  background: #060A0F;
 }
 
 .toast-position {
@@ -58,7 +60,42 @@ body {
 
 .progress {
   display:block;
-  transition: width 10s ease-out;
-  -webkit-transition: width 10s ease-out;
-  -moz-transition: width 10s ease-out;
+  transition: width 1s ease-out;
+  -webkit-transition: width 1s ease-out;
+  -moz-transition: width 1s ease-out;
+}
+
+.opact-button:hover::after {
+  right: 0%;
+  transition: right 0.3s ease-out;
+}
+.opact-button::after {
+  pointer-events: none;
+  left: -40px;
+  z-index: 0;
+  content: '';
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  min-width: 40px;
+  right: 100%;
+  overflow: hidden;
+  border-radius: 100px;
+  background: linear-gradient(
+    264.6deg,
+    #ad51ff 12.18%,
+    #1a92ff 91.42%
+  );
+}
+
+.modal-bg {
+  background: rgba(13, 17, 22, 0.48);
+  backdrop-filter: blur(4px);
+}
+
+.dropdown-bg {
+  border-radius: 8px;
+  background: rgba(6, 10, 15, 0.42);
+  backdrop-filter: blur(6px);
 }

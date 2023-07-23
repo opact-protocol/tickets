@@ -9,6 +9,13 @@ import type {
 } from "../interfaces";
 import { OneNear } from "../constants";
 
+const baseRelayers = {
+  test: "https://dev-relayer.hideyourcash.workers.dev",
+  prod: "https://prod-relayer.hideyourcash.workers.dev",
+  staging: 'https://staging-relayer.hideyourcash.workers.dev',
+  local: "http://localhost:8787",
+};
+
 export const getRelayerFee = async (
   relayer: RelayerDataInterface,
   accountId: string,
@@ -116,3 +123,25 @@ export const checkWithdrawStorages = async (
 
   return transactions;
 };
+
+export const getRandomRelayer = async ({
+  network = "test"
+}: { network: "test" | "prod" | "local" }): Promise<RelayerDataInterface[]> => {
+  const relayerService = axios.create({
+    baseURL: baseRelayers[network],
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+
+  const { data } = await relayerService.get("/data");
+
+  return [
+    {
+      url: baseRelayers[network],
+      account: data.data.account_id,
+      feePercent: data.data.feePercent,
+    },
+  ];
+}

@@ -1,32 +1,53 @@
+const icons = {
+  info: 'info.svg',
+  error: 'error.svg',
+  warning: 'warning.svg',
+  success: 'success.svg',
+}
+
+const bgs = {
+  info: 'info.png',
+  error: 'error.png',
+  warning: 'warning.png',
+  success: 'success.png',
+}
+
 export const ToastCustom = ({
-  icon,
   title,
-  message
+  message,
+  variant = 'info'
 }: {
-  icon: string;
   title: string;
   message?: string;
+  variant?: 'info' | 'error' | 'warning' | 'success';
 }) => {
   return (
-    <>
-      <div className="flex gap-2 pl-4 items-cente justify-between">
-        <div className="flex gap-2 items-center">
-          {icon === "processing" ? (
-            <div className="relative w-5 h-5 animate-spin rounded-full bg-info">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full"></div>
-            </div>
-          ) : (
-            <img src={icon} alt="" className="w-5" />
-          )}
-
-          <h1 className="text-dark-grafiti-medium font-bold font-[Sora] text-md">
-            {title}
-          </h1>
+    <div className="flex w-full  rounded-[8px] overflow-hidden">
+      <img
+        src={bgs[variant]}
+        className="absolute left-0 h-full top-0 rounded-[8px]"
+      />
+      {variant !== 'info' && (
+        <div
+          className="bg-[#303746] rounded-full p-[4px] h-[32px] w-[32px] flex justify-center items-center"
+        >
+          <img
+            src={icons[variant]}
+          />
         </div>
+      )}
+
+      <div
+        className="space-y-[8px] pl-[16px]"
+      >
+        <h1 className="text-[#FFF] font-title text-[16px] font-[600] leading-[22px]">
+          {title}
+        </h1>
+
+        <p className="text-[#E0E0E0] text-[14px] font-[700] leading-[18px]">
+          {message}
+        </p>
       </div>
-      <p className="text-dark-grafiti-medium text-md font-normal mt-2 pl-4">
-        {message}
-      </p>
-    </>
+    </div>
   );
 };

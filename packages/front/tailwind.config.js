@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
@@ -44,23 +46,15 @@ module.exports = {
         info: "#2C8DFF",
         "info-2": "#D8EAFF",
         "info-3": "#0059C2",
+        dark: {
+          blue: '#060A0F'
+        }
       },
       backgroundImage: {
-        "soft-blue-from-deep-blue":
-          "linear-gradient(90deg, #606CD2 0%, #8DC1FF 100%)",
-        "hover-button":
-          "linear-gradient(90deg, #E8EAFF 2.74%, #8DC1FF 173.63%);",
-        "aqua-gradient":
-          "linear-gradient(90deg, #FFFFFF -1.75%, #D5EEF4 105.87%)",
-        "aqua-gradient-medium":
-          "linear-gradient(90deg, #47C6E2 29.37%, #63DC94 127.97%)",
-        "intermediate-score":
-          "linear-gradient(90deg, #2489FF 19.37%, #25AE75 127.97%)",
-        "green-gradient":
-          "linear-gradient(90deg, #000000 26.73%, #63DC94 96.17%)",
-        "warning-gradient": " linear-gradient(0deg, #fff 17%, #F0E7D1 35%)",
-        "intermediate-score":
-          "linear-gradient(90deg, #2489FF 19.37%, #25AE75 127.97%)",
+        'card-gradient': 'linear-gradient(181.92deg, #0D1116 5.93%, #202428 98.38%)',
+        'inverted-card-gradient': 'linear-gradient(181.92deg, #202428 5.93%, #0D1116 98.38%)',
+        'opact-gradient': 'linear-gradient(264.6deg, #AD51FF 12.18%, #1A92FF 91.42%)',
+        'form-gradient': 'linear-gradient(180deg, #202428 0%, #1F2327 0.01%, #0D1116 100%)'
       },
       animation: {
         "fade-in": "fade-in 0.5s linear forwards",
@@ -77,6 +71,25 @@ module.exports = {
         loading: "loading 1s alternate infinite",
         loader: "sliding 0.8s alternate infinite",
       },
+
+      fontFamily: {
+        sans: [
+          'Lato', ...defaultTheme.fontFamily.sans
+        ],
+        title: [
+          'Poppins', ...defaultTheme.fontFamily.sans
+        ]
+      },
+
+      screens: {
+        xs: '520px',
+        '2xl': '1440px'
+      },
+
+      minHeight: {
+        screen: '100vh'
+      },
+
       keyframes: {
         "slide-left": {
           "0%": {

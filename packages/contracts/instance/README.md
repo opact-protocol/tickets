@@ -1,4 +1,4 @@
-# Hideyour.cash Instance Smart Contract
+# Opact Tickets Instance Smart Contract
 
 Instance Smart contract is responsible for receiving deposits and issuing withdrawals. Each instance can only receive deposits of a single token type at a fixed amount.
 

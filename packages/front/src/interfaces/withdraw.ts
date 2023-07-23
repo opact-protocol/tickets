@@ -5,12 +5,13 @@ export interface WithdrawStore {
     currencyContract: string,
     fee: string,
     payload: { note: string; recipient: string },
-    logger: Logger
+    logger: Logger,
+    builder: any
   ) => Promise<void>;
   sendWithdraw: () => Promise<void>;
   poolWithdrawScore: () => Promise<void>;
   validateTicket: (ticket: string) => void;
-  preWithdraw: (logger: Logger) => Promise<void>;
+  preWithdraw: (logger: () => {}, builder: any) => Promise<void>;
   handleRecipientAddress: (address: string) => void;
   cleanupInputs: () => void;
   resetForm: (skip?: string[]) => void;

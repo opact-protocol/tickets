@@ -1,6 +1,6 @@
-# Hideyour.cash
+# Opact Tickets
 
-Hideyour.cash is a compliant anonymous transactions tool, that utilizes ZK (Zero-knowledge proof) technology.
+Opact Tickets is a compliant anonymous transactions tool, that utilizes ZK (Zero-knowledge proof) technology.
 
 The main feature is allowing the mixing of transactions using NEAR or any NEP-141 token only for well inteded users. The system integrates with data providors to block wallets suspicious of money laundering and smart contract hacking.
 
@@ -8,7 +8,7 @@ This works by leveaging [hapi.one protocol] as a data partner which is responsib
 
 ## How mixing works
 
-TBD 
+TBD
 
 ## Compliance scheme
 
@@ -31,12 +31,12 @@ This means that, even if a malicious user is fast enough to deposit the tokens t
 
 ### Installation
 
-Hideyour.cash requires [Node.js], [yarn], [rust], [circom] and the rust wasm toolchain. It is recommended that you follow [near sdk tutorial] to install rust and wasm.
+Opact Tickets requires [Node.js], [yarn], [rust], [circom] and the rust wasm toolchain. It is recommended that you follow [near sdk tutorial] to install rust and wasm.
 
 After installing all the tools, you can run the command:
 
 ```sh
-yarn 
+yarn
 ```
 And install all the dependencies
 
@@ -103,6 +103,6 @@ production: `.github/workflows/vercel_deploy.yml`
    [yarn]: <https://yarnpkg.com/>
    [circom]: <https://docs.circom.io/getting-started/installation/>
    [hapi.one protocol]: <https://hapi.one/>
-   
-   
-   
+
+
+

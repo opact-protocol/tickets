@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export const WhatIsThisModal = ({
   isOpen,
@@ -35,37 +34,26 @@ export const WhatIsThisModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-[650px] transform overflow-hidden rounded-[35px] bg-white p-6 text-left align-middle shadow-xl transition-all relative">
-                <button
-                  onClick={() => onClose()}
-                  className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
-                >
-                  <XMarkIcon className="text-black w-[24px]" />
-                </button>
-
+              <Dialog.Panel className="w-full max-w-[362px] transform overflow-hidden rounded-[8px] bg-form-gradient border-[1px] border-[#606466] p-[12px] text-left transition-all relative">
                 <Dialog.Title
                   as="h1"
-                  className="text-dark-grafiti-medium text-xl font-bold text-center mb-10"
+                  className="text-white text-[16px] font-[700] text-leading-[22px]"
                 >
                   What is anonymity score ?
                 </Dialog.Title>
-                <p className="text-dark-grafiti-medium text-lg max-w-[450px] text-center mx-auto mb-10">
-                  The anonymity score shows how hard it would be to track a
-                  transaction on hideyour.cash. {"\n"}
 
-                  To learn more about anonymity best practices <a className="text-soft-blue" href="https://docs.hideyour.cash/how-to-use-hyc/enhanced-anonymity" target="_blank" rel="noopener noreferrer">check out the docs</a>.
+                <p className="text-white text-[14px] leading-[18px] pt-[8px]">
+                  The anonymity score shows how hard it would be to track a
+                  transaction on Opact Tickets. {"\n"}
+
+                  To learn more about anonymity best practices <a className="underline" href="https://docs.hideyour.cash/how-to-use-hyc/enhanced-anonymity" target="_blank" rel="noopener noreferrer">check out the docs</a>.
                 </p>
-                <ul className="list-disc list-inside justify-center text-dark-grafiti-medium text-lg max-w-[450px] mx-auto mb-10">
+
+                <ul className="list-disc list-inside justify-center text-[14px] leading-[18px] pt-[8px] pt-[8px]">
                   <li className="text-left">Level one protects against regular users</li>
                   <li className="text-left">Level two protects against advanced robots</li>
                   <li className="text-left">Level three protects against spy-grade analytics</li>
                 </ul>
-                <button
-                  className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
-                  onClick={() => onClose()}
-                >
-                  Close
-                </button>
               </Dialog.Panel>
             </Transition.Child>
           </div>

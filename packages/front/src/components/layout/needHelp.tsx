@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import NeedHelpModal from "../modals/needHelp";
+import { Help } from "../assets/help";
 
 export const NeedHelp = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -9,57 +9,56 @@ export const NeedHelp = () => {
   return (
     <>
       <Listbox>
-        <div className="absolute top-[9.5rem] right-7 xl:right-16 md:top-36 mt-1 z-50">
-          <Listbox.Button className="flex items-center justify-center gap-2 px-2 rounded-[20px] text-soft-blue text-sm font-normal bg-white border-[2px] border-soft-blue p-1">
-            Need help <QuestionMarkCircleIcon className="w-4 h-4" />
+        <div className="relative">
+          <Listbox.Button
+            className="hover:opacity-[0.8]"
+          >
+            <Help/>
           </Listbox.Button>
+
           <Transition
             as={Fragment}
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="mt-1 flex flex-col w-full max-w-[110px] gap-2 max-h-60 overflow-auto rounded-[15px] bg-white py-2 px-2 text-base shadow-[0_4px_15px_rgba(0,0,0,0.2)] ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[10]">
+            <Listbox.Options
+              className="
+                absolute w-[299px] h-[56px] right-0 top-[70px] dropdown-bg flex py-[15px] px-[30px]
+                font-title text-[16px] leading-[24px]
+                text-white justify-between
+              "
+            >
               <Listbox.Option
                 value="FAQ"
-                className={({ active }) =>
-                  `text-sm text-dark-grafiti cursor-pointer px-2 ${
-                    active ? "hover:bg-soft-blue-normal rounded-[5px]" : ""
-                  }`
-                }
                 as="a"
                 target="_blank"
                 rel="noreferrer"
                 href="https://docs.hideyour.cash/general-information/faq"
+                className="opacity-[0.89] hover:opacity-[0.8]"
               >
                 FAQ
               </Listbox.Option>
+
               <Listbox.Option
                 value="Tutorials"
-                className={({ active }) =>
-                  `text-sm text-dark-grafiti cursor-pointer px-2 ${
-                    active ? "hover:bg-soft-blue-normal rounded-[5px]" : ""
-                  }`
-                }
                 as="a"
                 target="_blank"
                 rel="noreferrer"
+                className="opacity-[0.89] hover:opacity-[0.8]"
                 href="https://docs.hideyour.cash/how-to-use-hyc/tutorial"
               >
                 Tutorials
               </Listbox.Option>
+
               <Listbox.Option
+                as="a"
                 value="Contact us"
-                className={({ active }) =>
-                  `${active ? "hover:bg-soft-blue-normal rounded-[5px]" : ""}`
-                }
+                target="_blank"
+                href="https://www.opact.io/#contact"
+                className="opacity-[0.89] hover:opacity-[0.8]"
               >
-                <button
-                  className="text-sm text-dark-grafiti px-2"
-                  onClick={() => setShowModal(true)}
-                >
-                  Contact us
-                </button>
+                Contact us
               </Listbox.Option>
             </Listbox.Options>
           </Transition>

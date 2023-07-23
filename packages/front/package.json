@@ -20,6 +20,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.4",
+    "@koale/useworker": "^4.0.2",
     "@near-wallet-selector/core": "^7.0.3",
     "@near-wallet-selector/here-wallet": "^7.8.2",
     "@near-wallet-selector/meteor-wallet": "^7.0.3",
