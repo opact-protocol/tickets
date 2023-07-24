@@ -38,6 +38,9 @@ export type FileWorkerMessage =
 
 self.addEventListener("message", async (event: any) => {
   try {
+    // @ts-ignore
+    self.process = { browser: true };
+
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 
     self.postMessage({
