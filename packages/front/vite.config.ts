@@ -4,7 +4,7 @@ import Pages from "vite-plugin-pages";
 import react from "@vitejs/plugin-react";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const inject = require("@rollup/plugin-inject");
-import worker from 'vite-plugin-worker'
+import worker, { pluginHelper } from 'vite-plugin-worker'
 
 export default defineConfig(async () => {
   const { default: stdLibBrowser } = await import("node-stdlib-browser");
@@ -12,7 +12,7 @@ export default defineConfig(async () => {
   return {
     plugins: [
       react(),
-      // bundleHelper(),
+      pluginHelper(),
       worker({}),
       Pages({
         pagesDir: "src/pages"
@@ -40,8 +40,15 @@ export default defineConfig(async () => {
       target: ["esNext"],
       rollupOptions: {
         output: {
-          format: "es"
-        }
+          format: "es",
+          // dir: 'dist', // Diretório de saída
+          // entryFileNames: '[name].js', // Nome do arquivo de saída
+          // chunkFileNames: '[name].js', // Nome do arquivo de chunk
+        },
+        // input: {
+        //   main: './src/main.tsx', // Caminho para o arquivo principal do seu aplicativo
+        //   worker: './src/sw/worker.ts' // Caminho para o arquivo do worker
+        // },
       }
     },
     optimizeDeps: {
