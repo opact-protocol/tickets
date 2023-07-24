@@ -1,8 +1,12 @@
 import { debounce } from "../utils/debounce";
 import { plonk } from "snarkjs";
 
-// @ts-ignore
-var process = process || {}
+if (typeof process === 'undefined') {
+  global.process = {
+    // @ts-ignore
+    browser: true
+  };
+}
 
 export type FileWorkerInput = {
   type: "single_file";
