@@ -60,7 +60,7 @@ export function Index() {
 
   return (
     <div
-      class="relative"
+      className="relative"
     >
       <BackgroundIllustration />
 
