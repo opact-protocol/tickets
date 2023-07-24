@@ -1,3 +1,5 @@
+import createWorker from 'worker-iife:../workers/worker';
+
 export type FileWorkerInput = {
   type: "single_file";
   input: {
@@ -24,7 +26,8 @@ export type FileWorkerMessage =
     };
 
 export function createProofWorker() {
-  const worker = new Worker(new URL('../workers/proof.ts', import.meta.url), { type: 'module' })
+  // const worker = new Worker(new URL('../workers/worker.ts', import.meta.url), { type: 'module' })
+  const worker = new createWorker()
 
   const buildProof = ({
     payload,

@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import Pages from "vite-plugin-pages";
+import worker from "vite-plugin-worker";
 import react from "@vitejs/plugin-react";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const inject = require("@rollup/plugin-inject");
@@ -11,6 +12,13 @@ export default defineConfig(async () => {
   return {
     plugins: [
       react(),
+      worker({
+        inline_worklet_paint: false,
+        inline_worklet_audio: false,
+        inline_worklet_layout: false,
+        inline_worklet_animation: false,
+        service_worker_file: 'sw.js'
+      }),
       Pages({
         pagesDir: "src/pages"
       }),

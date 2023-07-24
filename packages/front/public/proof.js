@@ -1,36 +1,11 @@
-import { debounce } from "../utils/debounce";
+import { debounce } from "../src/utils/debounce";
 import { plonk } from "snarkjs";
 
-export type FileWorkerInput = {
-  type: "single_file";
-  input: {
-    file: File;
-    chunkSize: number;
-  };
-};
-
-export type FileWorkerEventType = MessageEvent<FileWorkerInput>;
-
-export type FileWorkerMessage =
-  | {
-      type: "done";
-      payload: {
-        progress: number;
-        chunks: Blob[];
-      };
-    }
-  | {
-      type: "error";
-      payload: {
-        error: string;
-      };
-    };
-
-self.addEventListener("message", async (event: any) => {
-  var process = {}
+self.addEventListener("message", async (event) => {
+  console.log('BUILDING NOW')
 
   try {
-    const { payload, verifierUrl, circuitUrl } = event.data.input as any;
+    const { payload, verifierUrl, circuitUrl } = event.data.input;
 
     self.postMessage({
       type: "progress",
@@ -46,7 +21,7 @@ self.addEventListener("message", async (event: any) => {
         verifierUrl,
         circuitUrl,
         {
-          debug: debounce((message: string) => {
+          debug: debounce((message) => {
             self.postMessage({
               type: "progress",
               payload: message
@@ -61,7 +36,7 @@ self.addEventListener("message", async (event: any) => {
         {
           type: "done",
           payload: res
-        } as any
+        }
       );
     } catch (e) {
       console.warn(e);
@@ -71,7 +46,7 @@ self.addEventListener("message", async (event: any) => {
         verifierUrl,
         circuitUrl,
         {
-          debug: debounce((message: string) => {
+          debug: debounce((message) => {
             self.postMessage({
               type: "progress",
               payload: message
@@ -86,7 +61,7 @@ self.addEventListener("message", async (event: any) => {
         {
           type: "done",
           payload: res
-        } as any
+        }
       );
     }
   } catch (error) {
@@ -96,7 +71,7 @@ self.addEventListener("message", async (event: any) => {
         payload: {
           error
         }
-      } as any
+      }
     );
   }
 });

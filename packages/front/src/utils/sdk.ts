@@ -195,7 +195,7 @@ export const calculateRelayerFee = async ({
 }
 
 export const randomRelayer = async () => {
-  const [ relayer ] = await getRandomRelayer({ network: relayerNetwork})
+  const [ relayer ] = await getRandomRelayer({ network: relayerNetwork })
 
   return relayer
 }
