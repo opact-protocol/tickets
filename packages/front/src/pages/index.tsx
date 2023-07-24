@@ -35,10 +35,11 @@ export const handleOpenModal = (callback: (value: boolean) => void) => {
 function BackgroundIllustration() {
   return (
     <div
-      className="absolute inset-[-80px]"
+      className="absolute inset-0 max-w-full max-h-full overflow-hidden"
     >
       <img
         src="/hero.png"
+        className="w-full"
       />
     </div>
   );
@@ -58,7 +59,9 @@ export function Index() {
   }, [isStarted]);
 
   return (
-    <>
+    <div
+      class="relative"
+    >
       <BackgroundIllustration />
 
       <Transition
@@ -72,11 +75,11 @@ export function Index() {
       >
         <Header />
 
-        <div className="overflow-hidden relative max-h-[100vh] h-[100vh] pt-[240px]">
+        <div className="overflow-hidden relative min-h-[100vh]">
           <Actions />
         </div>
       </Transition>
-    </>
+    </div>
   );
 }
 

@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 html {
-  overflow: hidden;
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
@@ -48,7 +47,6 @@ body {
   font-family: "Sora", sans-serif;
   color: white;
   width: 100vw;
-  overflow: hidden;
   height: 100vh;
   background: #060A0F;
 }
