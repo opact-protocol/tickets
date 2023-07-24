@@ -9,8 +9,6 @@ import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
-import { WalletStore } from "@/interfaces";
-// import { hycService } from "@/lib";
 import { viewAccountBalance, getAccountBalance } from "hideyourcash-sdk";
 import { getAllCurrencies, viewIsInAllowlist } from "@/utils/sdk";
 
@@ -19,6 +17,46 @@ interface Balance {
 }
 
 const nodeUrl = useEnv("VITE_NEAR_NODE_URL");
+
+export interface WithdrawStore {
+  prepareWithdraw: (
+    currencyContract: string,
+    fee: string,
+    payload: { note: string; recipient: string },
+    logger: Logger,
+    builder: any
+  ) => Promise<void>;
+  sendWithdraw: () => Promise<void>;
+  poolWithdrawScore: () => Promise<void>;
+  validateTicket: (ticket: string) => void;
+  preWithdraw: (logger: () => {}, builder: any) => Promise<void>;
+  handleRecipientAddress: (address: string) => void;
+  cleanupInputs: () => void;
+  resetForm: (skip?: string[]) => void;
+  handleNote: (value: string) => void;
+  errorMessage: string;
+  ticket: TicketStored | null;
+  withdrawScore: number;
+  buttonText: string;
+  generatingProof: boolean;
+  note: string;
+  commitment: string;
+  recipientAddress: string;
+  publicArgs: any;
+  validatingTicket: boolean;
+}
+
+export interface TicketStored {
+  contract: string;
+  counter: string;
+  timestamp: string;
+  value: string;
+}
+
+export interface WithdrawProps {
+  ticket: string;
+  address: string;
+}
 
 export const useWallet = create<WalletStore>((set, get) => ({
   accountId: "",

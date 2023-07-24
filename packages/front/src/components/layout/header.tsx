@@ -75,7 +75,7 @@ export function Header() {
             <a href="/" aria-label="Home">
               <img
                 className="h-[32px] w-auto"
-                src="./assets/logo.svg"
+                src="./logo.svg"
               />
             </a>
           </div>

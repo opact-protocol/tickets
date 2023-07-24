@@ -1,5 +1,4 @@
 import { useToast } from "./useToast";
-import { TicketStored } from "@/interfaces";
 import { debounce } from "@/utils/debounce";
 import { useCallback, useState } from "react";
 import {
@@ -13,6 +12,13 @@ import {
 import {
   RelayerDataInterface,
 } from "hideyourcash-sdk";
+
+export interface TicketStored {
+  contract: string;
+  counter: string;
+  timestamp: string;
+  value: string;
+}
 
 const baseFee = {
   token: "",
