@@ -1,4 +1,5 @@
-import createWorker from 'worker-iife:../workers/worker';
+// @ts-ignore
+import createWorker from 'worker-module:../sw/worker';
 
 export type FileWorkerInput = {
   type: "single_file";
