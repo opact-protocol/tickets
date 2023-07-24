@@ -138,8 +138,8 @@ export const useWithdraw = () => {
     }
   }
 
-  const validateTicket = useCallback(debounce(async (note: string) => {
-    if (!note) {
+  const validateTicket = useCallback(debounce(async (rawNote: string) => {
+    if (!rawNote) {
       setNoteError('')
       setIsValidTicket(false)
 
@@ -147,6 +147,12 @@ export const useWithdraw = () => {
     }
 
     setLoading(true)
+
+    let note = rawNote;
+
+    if (!rawNote.includes('.testnet') && !rawNote.includes('.near')) {
+      note = Buffer.from(rawNote, 'hex').toString();
+    }
 
     const {
       isValid,
