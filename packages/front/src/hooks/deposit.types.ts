@@ -31,7 +31,6 @@ export interface MakeHashInterface {
   haveBalance: boolean,
 }
 
-
 export interface DepositStore {
   preDeposit: (haveBalance: boolean) => Promise<void>;
   deposit: () => Promise<void>;

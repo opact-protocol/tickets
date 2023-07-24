@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
-import { MakeHashInterface } from './deposit.types';
-import { deposit, getTicket } from '@/utils/sdk';
+import { deposit, getTicket } from '@/utils/sdk'
+import type { MakeHashInterface } from './deposit.types';
 
 const hycTransaction = "hyc-transaction";
 
@@ -70,7 +70,7 @@ export const useDeposit = () => {
     try {
       await deposit({
         hash: state.hash,
-        amount: state.selectedAmount,
+        amount: state.selectedAmount.value,
         depositContract: state.selectedAmount!.accountId,
         accountId,
         currency: state.selectedToken,
