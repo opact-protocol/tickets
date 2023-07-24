@@ -78,32 +78,32 @@ jobs:
       - name: Installing Dependencies
         run: yarn
 
-      - name: Signin on TheGraph
-        run: yarn subgraph auth
+      # - name: Signin on TheGraph
+      #   run: yarn subgraph auth
 
-      - name: Deploy The graph
-        run: yarn subgraph deploy:staging
+      # - name: Deploy The graph
+      #   run: yarn subgraph deploy:staging
 
-      - name: Building Relayer
-        run: yarn relayer build
+      # - name: Building Relayer
+      #   run: yarn relayer build
 
-      - name: Set Relayer Variables
-        env:
-          NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
-          RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
-          RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
-          HYC_CONTRACT: ${{ env.VITE_CONTRACT }}
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
-        run: yarn relayer populate:envs
+      # - name: Set Relayer Variables
+      #   env:
+      #     NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
+      #     RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
+      #     RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
+      #     HYC_CONTRACT: ${{ env.VITE_CONTRACT }}
+      #     CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      #     CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
+      #   run: yarn relayer populate:envs
 
 
-      - name: Publish Relayer
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: publish --name staging-relayer --keep-vars
-          workingDirectory: 'packages/relayer'
+      # - name: Publish Relayer
+      #   uses: cloudflare/wrangler-action@2.0.0
+      #   with:
+      #     apiToken: ${{ secrets.CF_API_TOKEN }}
+      #     command: publish --name staging-relayer --keep-vars
+      #     workingDirectory: 'packages/relayer'
 
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
