@@ -71,7 +71,8 @@ describe("Test all service actions", () => {
     const { hash = "", note = "" } =
       (await service?.createTicket(
         env.account.account_id,
-        currency.account_id || "near"
+        currency.account_id || "near",
+        true,
       )) || {};
 
     const amount = "10000000";
