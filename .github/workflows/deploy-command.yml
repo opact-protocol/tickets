@@ -19,16 +19,16 @@ jobs:
       THE_GRAPH_TOKEN: ${{ secrets.THE_GRAPH_TOKEN }}
 
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
-      VITE_NEAR_NODE_URL: https://rpc.testnet.near.org/
-      VITE_CONTRACT: 2635d665d4dd894555f2registryhyctest.testnet
+      VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
+      VITE_CONTRACT: registry.hideyourcash.near
       VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_staging
-      VITE_NEAR_NETWORK: testnet
+      VITE_NEAR_NETWORK: mainnet
       VITE_RELAYER_NETWORK: staging
       VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
 
-      HYC_CONTRACT_PREFIX: 2635d665d4dd894555f2
-      HAPI_CONTRACT_PREFIX: hapione.testnet
-      HYC_START_BLOCK: 132064231
+      HYC_CONTRACT_PREFIX: hideyourcash.near
+      HAPI_CONTRACT_PREFIX: proxy.hapiprotocol.near
+      HYC_START_BLOCK: 59503757
 
       VITE_TRACES_SAMPLE_RATE: 0
       VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
