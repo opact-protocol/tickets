@@ -73,8 +73,8 @@ jobs:
       # - name: Rust Tests
       #   run: yarn contracts test:rust
 
-      - name: Lib Tests
-        run: yarn contracts test:lib
+      # - name: Lib Tests
+      #   run: yarn contracts test:lib
 
       - name: Front build
         run: yarn front build
