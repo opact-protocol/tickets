@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       className="toast-position"
       position="bottom-right"
       toastClassName={() =>
-        "relative flex  bg-[#1C2023] w-[420px] rounded-[8px]  px-[16px] relative h-[72px]"
+        "relative flex  bg-[#1C2023] w-[420px] rounded-[8px]  px-[16px] relative"
       }
       limit={1}
       pauseOnHover={false}
