@@ -128,7 +128,7 @@ export const ticketIsValid = async ({
 
 export const buildProof = async ({
   fee,
-  note,
+  note: rawNote,
   ticket,
   relayer,
   receiver,
@@ -137,6 +137,12 @@ export const buildProof = async ({
   const { worker, handlers } = createProofWorker()
 
   try {
+    let note = rawNote;
+
+    if (!rawNote.includes('.testnet') && !rawNote.includes('.near')) {
+      note = Buffer.from(rawNote, 'hex').toString();
+    }
+
     const input = await generateProofInput({
       note,
       relayer,
