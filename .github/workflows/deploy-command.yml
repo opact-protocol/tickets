@@ -21,11 +21,11 @@ jobs:
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
       VITE_CONTRACT: registry.hideyourcash.near
-      VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_staging
+      VITE_API_GRAPHQL_URL: https://thegraph.com/hosted-service/subgraph/hack-a-chain/hyc_mainnet
       VITE_NEAR_NETWORK: mainnet
       VITE_RELAYER_NETWORK: staging
       VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
-                        
+
       HYC_CONTRACT_PREFIX: hideyourcash.near
       HAPI_CONTRACT_PREFIX: proxy.hapiprotocol.near
       HYC_START_BLOCK: 59503757
@@ -88,11 +88,11 @@ jobs:
         run: yarn relayer build
 
       - name: Set Relayer Variables
-        env: 
+        env:
           NEAR_NETWORK: ${{ env.VITE_NEAR_NETWORK }}
           RPC_URL: ${{ env.VITE_NEAR_NODE_URL }}
           RELAYER_URL: ${{ env.VITE_RELAYER_URL }}
-          HYC_CONTRACT: ${{ env.VITE_CONTRACT }} 
+          HYC_CONTRACT: ${{ env.VITE_CONTRACT }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
         run: yarn relayer populate:envs
