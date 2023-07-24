@@ -1,8 +1,5 @@
 import { debounce } from "../utils/debounce";
-import { plonk } from "snarkjs";
-
-// @ts-ignore
-window = globalThis
+import { getProof } from "../utils/sdk";
 
 export type FileWorkerInput = {
   type: "single_file";
@@ -38,58 +35,28 @@ self.addEventListener("message", async (event: any) => {
       payload: 'start'
     })
 
-    /**
-     * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
-     */
-    try {
-      const res = await plonk.fullProve(
-        payload,
-        verifierUrl,
-        circuitUrl,
-        {
-          debug: debounce((message: string) => {
-            self.postMessage({
-              type: "progress",
-              payload: message
-            })
+    const res = await getProof({
+      payload,
+      circuitUrl,
+      verifierUrl,
+      logger: {
+        debug: debounce((message: string) => {
+          self.postMessage({
+            type: "progress",
+            payload: message
+          })
 
-            return message
-          }, 100)
-        }
-      );
+          return message
+        }, 100)
+      }
+    });
 
-      self.postMessage(
-        {
-          type: "done",
-          payload: res
-        } as any
-      );
-    } catch (e) {
-      console.warn(e);
-
-      const res = await plonk.fullProve(
-        payload,
-        verifierUrl,
-        circuitUrl,
-        {
-          debug: debounce((message: string) => {
-            self.postMessage({
-              type: "progress",
-              payload: message
-            })
-
-            return message
-          }, 100)
-        }
-      );
-
-      self.postMessage(
-        {
-          type: "done",
-          payload: res
-        } as any
-      );
-    }
+    self.postMessage(
+      {
+        type: "done",
+        payload: res
+      } as any
+    );
   } catch (error) {
     self.postMessage(
       {

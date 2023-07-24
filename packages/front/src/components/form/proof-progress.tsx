@@ -28,6 +28,10 @@ export const ProofProgress = ({ progress, generatingProof }: { progress: string,
   const updateProgress = useCallback((events: string[]) => {
     const current = events.length - 1;
 
+    if (!bar.current) {
+      return
+    }
+
     if (current === 0) {
       bar.current.style.maxWidth = (init) + '%'
       bar.current.style.transitionTimingFunction = 'cubic-bezier(0, 0, 0.2, 1)'

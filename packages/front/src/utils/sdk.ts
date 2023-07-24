@@ -15,7 +15,8 @@ import {
   createTicket,
   viewIsInAllowlist as isInAllowlist,
   viewAllCurrencies,
-  sendAllowlist as allowlist
+  sendAllowlist as allowlist,
+  createSnarkProof,
 } from 'hideyourcash-sdk';
 
 // import {
@@ -224,4 +225,18 @@ export const getAllCurrencies = async () => {
     ...token,
     ...(token.type === "Near" && { icon: "/near-icon.svg" }),
   }))
+}
+
+export const getProof = ({
+  payload,
+  logger,
+  verifierUrl,
+  circuitUrl,
+}: any) => {
+  return createSnarkProof(
+    payload,
+    verifierUrl,
+    circuitUrl,
+    logger
+  )
 }
