@@ -28,6 +28,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
   allowlist: false,
   nearBalance: 0,
   tokenBalance: 0,
+  isStarted: false,
 
   toggleModal: () => {
     const { showWalletModal } = get();
@@ -35,10 +36,10 @@ export const useWallet = create<WalletStore>((set, get) => ({
     set(() => ({ showWalletModal: !showWalletModal }));
   },
 
-  viewAccountBalance: async () => {
-    const { allCurrencies, viewBalance, viewNearBalance } = get();
+  viewAccountBalance: async ({ accountId }, currencies) => {
+    const { viewBalance, viewNearBalance } = get();
 
-    const token = allCurrencies.find((token) => {
+    const token = currencies.find((token) => {
       if ("account_id" in token) return token;
     });
 
@@ -46,7 +47,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     const balance = await viewBalance(token.account_id!);
 
-    const { available } = await viewNearBalance();
+    const { available } = await viewNearBalance({ accountId });
 
     set({ nearBalance: +available, tokenBalance: +balance });
   },
@@ -74,10 +75,9 @@ export const useWallet = create<WalletStore>((set, get) => ({
     const newAccount =
       state?.accounts.find((account) => account.active)?.accountId || "";
 
-    await viewAccountBalance()
-
     const allCurrencies = await getAllCurrencies();
     const allowlist = await viewIsInAllowlist({ accountId: newAccount });
+    await viewAccountBalance({ accountId: newAccount }, allCurrencies)
 
     try {
       set(() => ({
@@ -85,6 +85,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
         selector: newSelector,
         allowlist,
         allCurrencies,
+        isStarted: true
       }));
     } catch (e) {
       console.warn(e);
@@ -133,9 +134,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
   //   await hycService.sendAllowlist(accountId!, selector);
   // },
 
-  viewNearBalance: async (): Promise<any> => {
-    const { accountId } = get();
-
+  viewNearBalance: async ({ accountId }): Promise<any> => {
     if (!accountId) {
       return {
         available: "0",

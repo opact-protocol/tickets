@@ -45,20 +45,24 @@ function BackgroundIllustration() {
 }
 
 export function Index() {
-  const { initWallet } = useWallet();
+  const { initWallet, isStarted } = useWallet();
 
   useEffect(() => {
+    if (isStarted) {
+      return
+    }
+
     void (async () => {
       await initWallet();
     })();
-  }, [initWallet]);
+  }, [isStarted]);
 
   return (
     <>
       <BackgroundIllustration />
 
       <Transition
-        show={true}
+        show={isStarted}
         enter="transition-opacity duration-1000"
         enterFrom="opacity-0"
         enterTo="opacity-100"

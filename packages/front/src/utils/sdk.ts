@@ -43,6 +43,7 @@ export const deposit = async ({
   currency,
   connection,
 }: SendDepositInterface) => {
+  console.log(nodeUrl, hash, amount, depositContract, accountId, currency, connection)
   return await sendDeposit(
     nodeUrl,
     hash,

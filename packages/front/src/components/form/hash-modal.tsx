@@ -10,27 +10,35 @@ import {
   formatBigNumberWithDecimals,
   getDecimals,
 } from "hideyourcash-sdk";
-import useDeposit from "@/hooks/deposit";
+import { useWallet } from "@/store";
 
 export default function Modal({
+  hash,
+  token,
+  amount,
   isOpen,
   onClose,
+  onClick,
 }: {
+  token: any;
+  amount: any;
+  hash: string;
   isOpen: boolean;
   onClose: () => void;
+  onClick: () => void;
 }) {
-  const [buttonText, setButtonText] = useState<string>("");
+  const [sending, setSending] = useState(false)
+  const [buttonText, setButtonText] = useState<string>("Deposit");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [copyTicket, setCopyTicket] = useState<boolean>(false);
+
   const {
-    state,
-
-    dispatch,
-    sendDeposit,
-
-  } = useDeposit();
+    accountId,
+    selector
+  } = useWallet()
 
   const closeModal = () => {
-    if (state.sendingDeposit) {
+    if (sending) {
       return;
     }
 
@@ -38,31 +46,41 @@ export default function Modal({
   };
 
   const handleDeposit = async () => {
-    if (!state.copyTicket) {
+    if (!selector || !accountId) {
+      return
+    }
+
+    if (!copyTicket) {
       setErrorMessage("Copy or download your withdraw ticket to continue");
+
       return;
     }
+
     setButtonText("Sending your Deposit...");
-    await sendDeposit();
+
+    await onClick()
+
     closeModal();
-    setButtonText(`Deposit ${state.selectedAmount!.value} Near`);
+
+    setButtonText(`Deposit ${amount.value} Near`);
   };
 
   useEffect(() => {
-    if (!isOpen) return;
-    const blob = new Blob([state.note], { type: "text/plain;charset=utf-8" });
+    if (!isOpen || !amount) return;
+
+    const blob = new Blob([hash], { type: "text/plain;charset=utf-8" });
 
     const formatedNumber = Number(
       formatBigNumberWithDecimals(
-        state.selectedAmount!.value,
+        amount.value,
         getDecimals(
-          state.selectedToken.type === "Near" ? 24 : state.selectedToken.metadata.decimals
+          token.type === "Near" ? 24 : token.metadata.decimals
         )
       )
     ).toFixed(0);
 
-    FileSaver.saveAs(blob, `opact-${formatedNumber}-${state.selectedToken.type}.txt`);
-  }, [isOpen, state.selectedAmount]);
+    FileSaver.saveAs(blob, `opact-${formatedNumber}-${token.type.toLowerCase()}.txt`);
+  }, [isOpen, amount]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -71,7 +89,8 @@ export default function Modal({
         className="relative z-[999]"
         onClose={() => {
           closeModal();
-          dispatch({ copyTicket: false });
+          setSending(false);
+          setCopyTicket(false);
         }}
       >
         <div className="fixed inset-0 overflow-y-auto modal-bg">
@@ -128,34 +147,34 @@ export default function Modal({
                   className={`flex items-center bg-transparent border-[1px] border-[#606466] rounded-[8px] w-full ${
                     errorMessage
                       ? "border-error mt-0"
-                      : state.copyTicket
+                      : copyTicket
                       ? "border-success"
                       : ""
                   }`}
                 >
                   <p
                     className={`${
-                      state.copyTicket ? "text-success" : "text-white"
+                      copyTicket ? "text-success" : "text-white"
                     } truncate text-[16px] font-[500] leading-[24px] opacity-[0.89] p-[16px]`}
                   >
-                    {state.note}
+                    {hash}
                   </p>
 
                   <CopyToClipboard
-                    text={state.note}
+                    text={hash}
                     onCopy={() => {
-                      dispatch({ copyTicket: true })
+                      setCopyTicket(true)
                       setErrorMessage("");
                     }}
                   >
                     <button
                       className={`min-w-[20px] min-h-[20px] flex items-center gap-3 pr-10 ${
-                        state.copyTicket ? "text-success" : "text-dark-grafiti-medium"
+                        copyTicket ? "text-success" : "text-dark-grafiti-medium"
                       } text-sm font-normal`}
                     >
                       <img
-                        src={state.copyTicket ? "/copied-icon.svg" : "/copy-icon.svg"}
-                        alt={state.copyTicket ? "Copied Icon" : "Copy Icon"}
+                        src={copyTicket ? "/copied-icon.svg" : "/copy-icon.svg"}
+                        alt={copyTicket ? "Copied Icon" : "Copy Icon"}
                         className="min-w-[20px] min-h-[20px]"
                       />
                     </button>
@@ -184,7 +203,7 @@ export default function Modal({
                   disabled={false}
                   isLoading={false}
                   onClick={() => handleDeposit()}
-                  text={handleButtonText(buttonText)}
+                  text={buttonText}
                 />
               </Dialog.Panel>
             </Transition.Child>

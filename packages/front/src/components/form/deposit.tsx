@@ -1,5 +1,5 @@
 import HashModal from "./hash-modal";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { RadioGroup, Listbox, Transition } from "@headlessui/react";
 import {
   QuestionMarkCircleIcon,
@@ -32,13 +32,14 @@ export function Deposit() {
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [haveBalance, setHaveBalance] = useState(true);
-  const { accountId, toggleModal, allCurrencies, nearBalance, tokenBalance } = useWallet();
+  const { accountId, selector, toggleModal, allCurrencies, nearBalance, tokenBalance } = useWallet();
 
   const {
     state,
 
     makeHash,
     dispatch,
+    sendDeposit,
   } = useDeposit();
 
   const amounts = formatAmounts(state.selectedToken ? state.selectedToken.contracts : "");
@@ -70,16 +71,28 @@ export function Deposit() {
   }
 
   const handleDeposit = async () => {
-    console.log(accountId)
-
     if (!accountId) {
       toggleModal();
 
       return;
     }
 
-    await makeHash({ accountId, haveBalance});
+    await makeHash({ accountId, haveBalance });
   };
+
+  const send = useCallback(async () => {
+    if (!selector) {
+      return
+    }
+
+    console.log(accountId, selector, state)
+
+    return sendDeposit({
+      accountId,
+      // @ts-ignore
+      connection: selector,
+    })
+  }, [selector, accountId, state])
 
   return (
     <>
@@ -97,7 +110,7 @@ export function Deposit() {
 
             <Listbox
               disabled={!accountId}
-              key={state}
+              key={state.selectedToken}
               value={state.selectedToken}
               onChange={(payload) => dispatch({ selectedToken: payload, selectedAmount: null, haveBalance: true })}
             >
@@ -252,7 +265,7 @@ export function Deposit() {
                     setHaveBalance(() => tokenBalance > +payload.value);
                   }
 
-                  dispatch({ setSelectedAmount: payload })
+                  dispatch({ selectedAmount: payload })
                 }}
                 className="mt-[16px] max-w-full flex gap-[16px]"
                 as="ul"
@@ -312,14 +325,17 @@ export function Deposit() {
             />
           </div>
 
-          {state.hashModal && (
-            <HashModal
-              isOpen={state.hashModal}
-              onClose={() => {
-                dispatch({ showHashModal: true })
-              }}
-            />
-          )}
+          <HashModal
+            hash={state.note}
+            token={state.selectedToken}
+            amount={state.selectedAmount}
+            isOpen={state.showHashModal}
+            onClose={() => {
+              dispatch({ showHashModal: false })
+            }}
+            onClick={async () => send()}
+          />
+
           {isOpen && (
             <FixedValuesModal
               isOpen={isOpen}

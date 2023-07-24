@@ -37,8 +37,6 @@ const NeedHelpModal = ({
   };
 
   const handleForm = (key: string, value: string) => {
-    console.log('formkeytrigger', key);
-
     if (form[key] === value) {
       return;
     }

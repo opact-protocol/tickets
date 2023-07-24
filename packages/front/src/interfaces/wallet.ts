@@ -6,15 +6,16 @@ export interface WalletStore {
   initWallet: () => Promise<string>;
   viewBalance: (contract: string) => Promise<void>;
   // sendWhitelist: () => Promise<void>;
-  viewNearBalance: () => Promise<any>;
+  viewNearBalance: (foo: any) => Promise<any>;
   accountId: string | null;
   showWalletModal: boolean;
   selector: WalletSelector | null;
-  viewAccountBalance: () => void;
+  viewAccountBalance: (foo: any, baa: any) => void;
   allCurrencies: any;
   allowlist: boolean;
   nearBalance: number,
   tokenBalance: number,
+  isStarted: boolean
 }
 export interface Balance {
   total: string;

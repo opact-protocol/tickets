@@ -62,22 +62,27 @@ export const useDeposit = () => {
   }
 
   const sendDeposit = async ({
-    amount,
-    currency,
     accountId,
     connection,
-    depositContract,
-  }) => {
-    await deposit({
-      amount,
-      currency,
-      accountId,
-      connection,
-      depositContract,
-      hash: state.hash,
-    });
+  }: any) => {
+    dispatch({ sendingDeposit: true })
 
-    localStorage.removeItem(hycTransaction);
+    try {
+      await deposit({
+        hash: state.note,
+        amount: state.selectedAmount,
+        depositContract: state.selectedAmount!.accountId,
+        accountId,
+        currency: state.selectedToken,
+        connection,
+      });
+
+      localStorage.removeItem(hycTransaction);
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      dispatch({ sendingDeposit: false, copyTicket: false });
+    }
   }
 
   return {
