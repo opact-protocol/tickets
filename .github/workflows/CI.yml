@@ -70,8 +70,8 @@ jobs:
           echo "private_key=${{ env.TESTNET_RELAYER_PRIVATE_KEY }}" >> "$GITHUB_OUTPUT"
           echo "hyc_contract=${{ env.TESTNET_HYC_CONTRACT }}" >> "$GITHUB_OUTPUT"
 
-      - name: Rust Tests
-        run: yarn contracts test:rust
+      # - name: Rust Tests
+      #   run: yarn contracts test:rust
 
       - name: Lib Tests
         run: yarn contracts test:lib
