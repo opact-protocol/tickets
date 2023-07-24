@@ -69,7 +69,7 @@ export const useDeposit = () => {
 
     try {
       await deposit({
-        hash: state.note,
+        hash: state.hash,
         amount: state.selectedAmount,
         depositContract: state.selectedAmount!.accountId,
         accountId,

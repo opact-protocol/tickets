@@ -66,7 +66,7 @@ export const send = async ({
   token,
   relayer,
   publicArgs,
-}): Promise<any> => {
+}: any): Promise<any> => {
   return await sendWithdraw(relayer, {
     token,
     publicArgs,
