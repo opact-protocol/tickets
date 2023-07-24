@@ -28,10 +28,13 @@ env:
       BASE_STORAGE_FEE: "0.1"
       RELAYER_NAME: "prod-relayer"
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+
+on: pull_request
+
 
 jobs:
   production_deploy:
