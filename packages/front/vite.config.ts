@@ -44,7 +44,6 @@ export default defineConfig(async () => {
     optimizeDeps: {
       include: ["buffer", "process"]
     },
-    'process.env': {},
     server: {
       port: 3000,
       proxy: {

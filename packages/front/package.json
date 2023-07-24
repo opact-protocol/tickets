@@ -2,12 +2,6 @@
   "name": "@near/front",
   "private": true,
   "version": "0.0.0",
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true
-    }
-  },
   "scripts": {
     "add_zk_assets": "yarn add_verifier_wasm && yarn add_circuit",
     "add_verifier_wasm": "cp ../circuits/out/withdraw_js/withdraw.wasm ./public/verifier.wasm",
