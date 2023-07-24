@@ -1,4 +1,4 @@
-import { ConnectionType, Currency } from "hideyourcash-sdk";
+import type { ConnectionType, Currency } from "hideyourcash-sdk";
 
 export interface BuildProof {
   fee: any;
@@ -43,5 +43,10 @@ export interface SendDepositInterface {
   depositContract: string,
 
   currency: Currency;
+  connection: ConnectionType;
+}
+
+export interface SendAllowlistInterface {
+  accountId: string;
   connection: ConnectionType;
 }

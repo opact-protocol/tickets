@@ -1,7 +1,7 @@
 import { useEnv } from '@/hooks/useEnv';
 import { TicketStored } from '../hooks/useWithdraw';
 import { createProofWorker } from './proof-worker';
-import { BuildProof, CalculateRelayerFee, GetTicketInterface, SendDepositInterface, TicketIsValid, ValidatedTicket } from './sdk.types';
+import { BuildProof, CalculateRelayerFee, GetTicketInterface, SendAllowlistInterface, SendDepositInterface, TicketIsValid, ValidatedTicket } from './sdk.types';
 import { getTicketInTheMerkleTree } from '@/utils/graphql-queries';
 import {
   sendWithdraw,
@@ -15,6 +15,7 @@ import {
   createTicket,
   viewIsInAllowlist as isInAllowlist,
   viewAllCurrencies,
+  sendAllowlist as allowlist
 } from 'hideyourcash-sdk';
 
 // import {
@@ -34,6 +35,16 @@ export const graphqlUrl = useEnv('VITE_API_GRAPHQL_URL')
 // NETWORKS
 export const nearNetwork = useEnv('VITE_NEAR_NETWORK')
 export const relayerNetwork = useEnv('VITE_RELAYER_NETWORK')
+
+export const sendAllowlist = ({
+  accountId,
+  connection,
+}: SendAllowlistInterface) => allowlist(
+  nodeUrl,
+  registry,
+  accountId,
+  connection
+)
 
 export const deposit = async ({
   hash,

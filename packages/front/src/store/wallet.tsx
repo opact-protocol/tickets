@@ -11,6 +11,7 @@ import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
 import { viewAccountBalance, getAccountBalance } from "hideyourcash-sdk";
 import { getAllCurrencies, viewIsInAllowlist } from "@/utils/sdk";
+import { sendAllowlist } from "../utils/sdk";
 
 interface Balance {
   available: string;
@@ -23,7 +24,7 @@ export interface WalletStore {
   signOut: () => Promise<void>;
   initWallet: () => Promise<string>;
   viewBalance: (contract: string) => Promise<void>;
-  // sendWhitelist: () => Promise<void>;
+  sendWhitelist: () => Promise<void>;
   viewNearBalance: (foo: any) => Promise<any>;
   accountId: string | null;
   showWalletModal: boolean;
@@ -144,11 +145,15 @@ export const useWallet = create<WalletStore>((set, get) => ({
     );
   },
 
-  // sendWhitelist: async () => {
-  //   const { selector, accountId } = get();
-  //   if (!accountId) return;
-  //   await hycService.sendAllowlist(accountId!, selector);
-  // },
+  sendWhitelist: async () => {
+    const { selector, accountId } = get();
+    if (!accountId) return;
+
+    await sendAllowlist({
+      accountId,
+      connection: selector
+    });
+  },
 
   viewNearBalance: async ({ accountId }): Promise<any> => {
     if (!accountId) {
