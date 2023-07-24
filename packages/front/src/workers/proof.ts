@@ -1,5 +1,5 @@
 import { debounce } from "../utils/debounce";
-import { getProof } from "../utils/sdk";
+import { plonk } from "snarkjs";
 
 export type FileWorkerInput = {
   type: "single_file";
@@ -27,6 +27,8 @@ export type FileWorkerMessage =
     };
 
 self.addEventListener("message", async (event: any) => {
+  var process = {}
+
   try {
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 
@@ -35,28 +37,58 @@ self.addEventListener("message", async (event: any) => {
       payload: 'start'
     })
 
-    const res = await getProof({
-      payload,
-      circuitUrl,
-      verifierUrl,
-      logger: {
-        debug: debounce((message: string) => {
-          self.postMessage({
-            type: "progress",
-            payload: message
-          })
+    /**
+     * When is the first hit of IP on circuit.zkey, vercel returns 502. We retry to continue withdraw
+     */
+    try {
+      const res = await plonk.fullProve(
+        payload,
+        verifierUrl,
+        circuitUrl,
+        {
+          debug: debounce((message: string) => {
+            self.postMessage({
+              type: "progress",
+              payload: message
+            })
 
-          return message
-        }, 100)
-      }
-    });
+            return message
+          }, 100)
+        }
+      );
 
-    self.postMessage(
-      {
-        type: "done",
-        payload: res
-      } as any
-    );
+      self.postMessage(
+        {
+          type: "done",
+          payload: res
+        } as any
+      );
+    } catch (e) {
+      console.warn(e);
+
+      const res = await plonk.fullProve(
+        payload,
+        verifierUrl,
+        circuitUrl,
+        {
+          debug: debounce((message: string) => {
+            self.postMessage({
+              type: "progress",
+              payload: message
+            })
+
+            return message
+          }, 100)
+        }
+      );
+
+      self.postMessage(
+        {
+          type: "done",
+          payload: res
+        } as any
+      );
+    }
   } catch (error) {
     self.postMessage(
       {
