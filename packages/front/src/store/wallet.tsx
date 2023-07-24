@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { setupWalletSelector } from "@near-wallet-selector/core";
+import { WalletSelector, setupWalletSelector } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
@@ -18,44 +18,22 @@ interface Balance {
 
 const nodeUrl = useEnv("VITE_NEAR_NODE_URL");
 
-export interface WithdrawStore {
-  prepareWithdraw: (
-    currencyContract: string,
-    fee: string,
-    payload: { note: string; recipient: string },
-    logger: Logger,
-    builder: any
-  ) => Promise<void>;
-  sendWithdraw: () => Promise<void>;
-  poolWithdrawScore: () => Promise<void>;
-  validateTicket: (ticket: string) => void;
-  preWithdraw: (logger: () => {}, builder: any) => Promise<void>;
-  handleRecipientAddress: (address: string) => void;
-  cleanupInputs: () => void;
-  resetForm: (skip?: string[]) => void;
-  handleNote: (value: string) => void;
-  errorMessage: string;
-  ticket: TicketStored | null;
-  withdrawScore: number;
-  buttonText: string;
-  generatingProof: boolean;
-  note: string;
-  commitment: string;
-  recipientAddress: string;
-  publicArgs: any;
-  validatingTicket: boolean;
-}
-
-export interface TicketStored {
-  contract: string;
-  counter: string;
-  timestamp: string;
-  value: string;
-}
-
-export interface WithdrawProps {
-  ticket: string;
-  address: string;
+export interface WalletStore {
+  toggleModal: () => void;
+  signOut: () => Promise<void>;
+  initWallet: () => Promise<string>;
+  viewBalance: (contract: string) => Promise<void>;
+  // sendWhitelist: () => Promise<void>;
+  viewNearBalance: (foo: any) => Promise<any>;
+  accountId: string | null;
+  showWalletModal: boolean;
+  selector: WalletSelector | null;
+  viewAccountBalance: (foo: any, baa: any) => void;
+  allCurrencies: any;
+  allowlist: boolean;
+  nearBalance: number,
+  tokenBalance: number,
+  isStarted: boolean
 }
 
 export const useWallet = create<WalletStore>((set, get) => ({
