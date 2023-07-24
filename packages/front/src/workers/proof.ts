@@ -1,15 +1,8 @@
 import { debounce } from "../utils/debounce";
 import { plonk } from "snarkjs";
 
-if (typeof process === 'undefined') {
-  global.process = {
-    // @ts-ignore
-    browser: true
-  };
-}
-
 // @ts-ignore
-self.process = { browser: true };
+window = globalThis
 
 export type FileWorkerInput = {
   type: "single_file";
@@ -38,9 +31,6 @@ export type FileWorkerMessage =
 
 self.addEventListener("message", async (event: any) => {
   try {
-    // @ts-ignore
-    self.process = { browser: true };
-
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 
     self.postMessage({
