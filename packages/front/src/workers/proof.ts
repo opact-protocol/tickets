@@ -8,6 +8,9 @@ if (typeof process === 'undefined') {
   };
 }
 
+// @ts-ignore
+self.process = { browser: true };
+
 export type FileWorkerInput = {
   type: "single_file";
   input: {
