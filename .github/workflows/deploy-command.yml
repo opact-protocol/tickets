@@ -21,7 +21,7 @@ jobs:
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_NEAR_NODE_URL: https://rpc.mainnet.near.org/
       VITE_CONTRACT: registry.hideyourcash.near
-      VITE_API_GRAPHQL_URL: https://thegraph.com/hosted-service/subgraph/hack-a-chain/hyc_mainnet
+      VITE_API_GRAPHQL_URL: https://api.thegraph.com/subgraphs/name/hack-a-chain/hyc_staging
       VITE_NEAR_NETWORK: mainnet
       VITE_RELAYER_NETWORK: staging
       VITE_RELAYER_URL: https://staging-relayer.hideyourcash.workers.dev
@@ -77,12 +77,6 @@ jobs:
 
       - name: Installing Dependencies
         run: yarn
-
-      # - name: Signin on TheGraph
-      #   run: yarn subgraph auth
-
-      # - name: Deploy The graph
-      #   run: yarn subgraph deploy:staging
 
       - name: Building Relayer
         run: yarn relayer build
