@@ -11,7 +11,7 @@ function BackgroundIllustration() {
     >
       <img
         src="/rebrand.png"
-        className="w-full"
+        className="w-full h-full"
       />
     </div>
   );
@@ -20,7 +20,7 @@ function BackgroundIllustration() {
 export function Rebrand() {
   return (
     <div
-      className="relative bg-white"
+      className="relative bg-dark-blue"
     >
       <BackgroundIllustration />
 
