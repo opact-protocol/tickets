@@ -38,7 +38,7 @@ function BackgroundIllustration() {
       className="absolute inset-0 max-w-full max-h-full overflow-hidden"
     >
       <img
-        src="/hero.png"
+        src="/hero.webp"
         className="w-full"
       />
     </div>
@@ -63,6 +63,15 @@ export function Index() {
       className="relative"
     >
       <BackgroundIllustration />
+
+      {!isStarted && <div
+        className="fixed inset-0 flex items-center justify-center"
+      >
+        <img
+          src="/logo-opact.svg"
+          className="mb-[90px]"
+        />
+      </div>}
 
       <Transition
         show={isStarted}
