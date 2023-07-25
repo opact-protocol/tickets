@@ -3,6 +3,12 @@ import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import TagManager from "react-gtm-module";
 
 const Pages = () => {
+  if (!window.location.hostname.includes('app')) {
+    const rebrandRoute = routes.find(({ path }: any) => path === 'rebrand')
+
+    return useRoutes([{ ...rebrandRoute, path: '/' }])
+
+  }
   return useRoutes(routes);
 };
 

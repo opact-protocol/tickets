@@ -1,11 +1,13 @@
 // import { If } from "./if";
 // import { Spinner } from "./spinner";
+import { twMerge } from "tailwind-merge";
 import { Arrow } from "./assets/arrow";
 
 export interface ButtonInterface {
   text: string;
   disabled: boolean;
   isLoading: boolean;
+  className?: string;
   onClick: () => void;
 }
 
@@ -13,18 +15,19 @@ export const ButtonPrimary = ({
   text,
   disabled,
   isLoading,
+  className= '',
   onClick,
 }: ButtonInterface) => {
   return (
     <button
       disabled={disabled}
       onClick={() => onClick()}
-      className="
+      className={twMerge(`
         shrink-0
         text-white rounded-[100px] xl:w-max relative md:max-w-max overflow-hidden cursor-pointer
         opact-button group/button
         bg-opact-gradient p-[2px] inline-flex items-center justify-center lg:h-[28px] xl:h-[36px]
-      "
+      `, className)}
     >
       <div
         className="
