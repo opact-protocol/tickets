@@ -125,7 +125,6 @@ export function Rebrand() {
                     disabled={false}
                     isLoading={false}
                     text="Opact Tickets App"
-                    className="!h-[40px]"
                     onClick={() => {}}
                   />
 
@@ -134,7 +133,6 @@ export function Rebrand() {
                     disabled={false}
                     isLoading={false}
                     text="Opact Tickets Site"
-                    className="!h-[40px]"
                     onClick={() => {}}
                   />
                 </div>
