@@ -125,7 +125,7 @@ export function Rebrand() {
                     disabled={false}
                     isLoading={false}
                     text="Opact Tickets App"
-                    onClick={() => {}}
+                    onClick={() => window.open('https://www.opact.io/tickets', '_blank')}
                   />
 
                   <ButtonSecondary
@@ -133,7 +133,7 @@ export function Rebrand() {
                     disabled={false}
                     isLoading={false}
                     text="Opact Tickets Site"
-                    onClick={() => {}}
+                    onClick={() => window.open('https://tickets.opact.io/', '_self')}
                   />
                 </div>
               </div>
