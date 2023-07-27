@@ -7,17 +7,20 @@ export interface ButtonInterface {
   text: string;
   disabled?: boolean;
   isLoading?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
+  type?: any;
 }
 
 export const Button = ({
   text,
   disabled = false,
   isLoading = false,
-  onClick,
+  type = 'button',
+  onClick = () => {},
 }: ButtonInterface) => {
   return (
     <button
+      type={type}
       disabled={!!disabled}
       onClick={() => onClick()}
       className={twMerge(`

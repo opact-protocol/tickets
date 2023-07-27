@@ -42,7 +42,7 @@ export const WithdrawWarn = () => {
                   text-[#BDBDBD]
                 "
               >
-                Try clearing your browser cache from the last 7 days and attempt again. If the problem persists, feel free to <span className="underline text-white">contact us</span> for assistance.
+                Try clearing your browser cache from the last 7 days and attempt again. If the problem persists, feel free to <span className="underline text-white cursor-pointer hover:opacity-90">contact us</span> for assistance.
               </Disclosure.Panel>
             </>
           )}

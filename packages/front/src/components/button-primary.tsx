@@ -4,22 +4,25 @@ import { twMerge } from "tailwind-merge";
 import { Arrow } from "./assets/arrow";
 
 export interface ButtonInterface {
+  type: string;
   text: string;
   disabled: boolean;
   isLoading: boolean;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const ButtonPrimary = ({
   text,
   disabled,
   isLoading,
+  type = 'button',
   className= '',
-  onClick,
+  onClick = () => {},
 }: ButtonInterface) => {
   return (
     <button
+      type={type}
       disabled={disabled}
       onClick={() => onClick()}
       className={twMerge(`
@@ -37,8 +40,8 @@ export const ButtonPrimary = ({
           sm:text-lg
           sm:font-medium
           sm:leading-[27px]
-          xl:w-max
           lg:px-[18px]
+          !w-full
           xl:px-[24px]
           group-hover/button:text-white
           bg-dark-blue w-full h-full flex items-center justify-center

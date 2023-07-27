@@ -52,11 +52,9 @@ export const NeedHelp = () => {
               </Listbox.Option>
 
               <Listbox.Option
-                as="a"
                 value="Contact us"
-                target="_blank"
-                href="https://www.opact.io/#contact"
-                className="opacity-[0.89] hover:opacity-[0.8]"
+                className="opacity-[0.89] hover:opacity-[0.8] cursor-pointer"
+                onClick={() => setShowModal(true)}
               >
                 Contact us
               </Listbox.Option>
