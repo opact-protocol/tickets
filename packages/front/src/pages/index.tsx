@@ -1,4 +1,4 @@
-import { Actions } from "@/components";
+import { Actions, WithdrawWarn } from "@/components";
 import { Header } from "@/components/layout/header";
 import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect } from "react";
@@ -86,6 +86,8 @@ export function Index() {
 
         <div className="overflow-hidden relative min-h-[100vh]">
           <Actions />
+
+          <WithdrawWarn/>
         </div>
       </Transition>
     </div>

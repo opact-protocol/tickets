@@ -62,7 +62,7 @@ export function Withdraw() {
         isValid={isValidTicket}
         isDisabled={generatingProof}
         label="Withdrawal ticket"
-        placeholder="Paste your withdraw ticked"
+        placeholder="Paste your withdraw ticket"
         onChange={(value) => handleNote(value as string)}
       />
 

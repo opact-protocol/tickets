@@ -12,7 +12,7 @@ export function Actions() {
         w-[480px]
         bg-form-gradient
         py-[24px] space-y-[24px]
-        my-[240px]
+        mt-[240px]
         rounded-[12px] border-[2px] border-solid border-[#606466] mx-auto z-[3] relative
       "
     >
