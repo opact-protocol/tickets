@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { Arrow } from "./assets/arrow";
 
 export interface ButtonInterface {
-  type: string;
+  type?: any;
   text: string;
   disabled: boolean;
   isLoading: boolean;
