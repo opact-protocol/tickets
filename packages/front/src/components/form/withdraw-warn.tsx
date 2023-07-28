@@ -25,7 +25,7 @@ export const WithdrawWarn = () => {
                   flex justify-between space-x-[8px]
                 "
               >
-                <span>Facing issues when withdrawing</span>
+                <span>Facing issues when withdrawing?</span>
 
                 <ChevronDownIcon
                   aria-hidden="true"

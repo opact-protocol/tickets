@@ -34,7 +34,7 @@ export const NeedHelp = () => {
                 as="a"
                 target="_blank"
                 rel="noreferrer"
-                href="https://docs.hideyour.cash/general-information/faq"
+                href="https://docs.tickets.opact.io/faq"
                 className="opacity-[0.89] hover:opacity-[0.8]"
               >
                 FAQ
@@ -46,7 +46,7 @@ export const NeedHelp = () => {
                 target="_blank"
                 rel="noreferrer"
                 className="opacity-[0.89] hover:opacity-[0.8]"
-                href="https://docs.hideyour.cash/how-to-use-hyc/tutorial"
+                href="https://docs.tickets.opact.io/tutorial"
               >
                 Tutorials
               </Listbox.Option>
