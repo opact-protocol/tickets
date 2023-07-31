@@ -46,7 +46,7 @@ export const useWithdraw = () => {
   const [generatingProof, setGeneratingProof] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false)
 
-  const [toRef, setToref] = useState<any>()
+  // const [toRef, setToref] = useState<any>()
   const [fee, setFee] = useState<any>({ ...baseFee })
   const [publicArgs, setPublicArgs] = useState<any | null>(null)
   const [ticket, setTicket] = useState<TicketStored | null>(null)
@@ -73,7 +73,7 @@ export const useWithdraw = () => {
     }
 
     try {
-      clearTimeout(toRef);
+      // clearTimeout(toRef);
 
       setLoading(true)
 
@@ -101,8 +101,18 @@ export const useWithdraw = () => {
       console.error("prepareWithdraw", e);
 
       if (e instanceof Error) {
+        useToast({
+          variant: 'error',
+          id: 'withdraw-toast',
+          title: 'Proof Error',
+          message: e.message,
+        })
+
         throw new Error(e.message);
       }
+    } finally {
+      setLoading(false)
+      setGeneratingProof(false)
     }
   }, [fee, note, relayer, receiver, ticket, progress])
 
