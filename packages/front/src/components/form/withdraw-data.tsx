@@ -28,24 +28,8 @@ export const WithdrawData = ({
               text-white
             "
           >
-              Total
-            </span>
-
-            <div className="text-black text-sm">
-              {!generatingProof &&
-                <Countdown
-                  date={Date.now() + 300000}
-                  renderer={({ hours, minutes, seconds }) => (
-                    <span
-                      className="w-[65px] text-white flex items-center font-title text-[16px] font-[500] opacity-[0.89]"
-                    >
-                      {getHumanFormat(hours)}:{getHumanFormat(minutes)}:
-                      {getHumanFormat(seconds)}
-                    </span>
-                  )}
-                />
-              }
-            </div>
+            Total
+          </span>
         </div>
 
         <div className="flex flex-col w-full">
