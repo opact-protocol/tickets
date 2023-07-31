@@ -64,28 +64,39 @@ self.addEventListener("message", async (event: any) => {
     } catch (e) {
       console.warn(e);
 
-      const res = await plonk.fullProve(
-        payload,
-        verifierUrl,
-        circuitUrl,
-        {
-          debug: debounce((message: string) => {
-            self.postMessage({
-              type: "progress",
-              payload: message
-            })
+      try {
+        const res = await plonk.fullProve(
+          payload,
+          verifierUrl,
+          circuitUrl,
+          {
+            debug: debounce((message: string) => {
+              self.postMessage({
+                type: "progress",
+                payload: message
+              })
 
-            return message
-          }, 100)
-        }
-      );
+              return message
+            }, 100)
+          }
+        );
 
-      self.postMessage(
-        {
-          type: "done",
-          payload: res
-        } as any
-      );
+        self.postMessage(
+          {
+            type: "done",
+            payload: res
+          } as any
+        );
+      } catch (error) {
+        self.postMessage(
+          {
+            type: "error",
+            payload: {
+              error
+            }
+          } as any
+        );
+      }
     }
   } catch (error) {
     self.postMessage(
