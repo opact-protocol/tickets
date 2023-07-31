@@ -35,10 +35,6 @@ env:
 
 on: pull_request
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   production_deploy:
     runs-on: ubuntu-latest
