@@ -30,7 +30,7 @@ self.addEventListener("message", async (event: any) => {
   try {
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 
-    console.log('Starting proof with: ', payload)
+    console.log('Starting proof with')
 
     self.postMessage({
       type: "progress",
@@ -64,7 +64,7 @@ self.addEventListener("message", async (event: any) => {
         } as any
       );
     } catch (e) {
-      console.warn(e);
+      console.warn('[Retry] First full prove error:', e);
 
       try {
         const res = await plonk.fullProve(
@@ -90,6 +90,8 @@ self.addEventListener("message", async (event: any) => {
           } as any
         );
       } catch (error) {
+        console.warn('[Retry] Building proof error: ', error)
+
         self.postMessage(
           {
             type: "error",
@@ -101,6 +103,8 @@ self.addEventListener("message", async (event: any) => {
       }
     }
   } catch (error) {
+    console.warn('Building proof error: ', error)
+
     self.postMessage(
       {
         type: "error",
