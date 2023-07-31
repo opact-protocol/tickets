@@ -27,8 +27,6 @@ export type FileWorkerMessage =
     };
 
 self.addEventListener("message", async (event: any) => {
-  console.log('BUILDING NOW')
-
   try {
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 

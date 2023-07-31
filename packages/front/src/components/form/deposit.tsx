@@ -85,8 +85,6 @@ export function Deposit() {
       return
     }
 
-    console.log(accountId, selector, state)
-
     return sendDeposit({
       accountId,
       // @ts-ignore

@@ -18,7 +18,7 @@ export const sendAllowlist = async (
       {
         account_id: accountId,
       },
-      "0.00048"
+      "0.00040"
     )
   );
 

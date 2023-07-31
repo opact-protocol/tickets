@@ -27,10 +27,7 @@ export type FileWorkerMessage =
     };
 
 export function createProofWorker() {
-  // const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
   const worker = new createWorker()
-
-  console.log(worker, 'worker')
 
   const buildProof = ({
     payload,

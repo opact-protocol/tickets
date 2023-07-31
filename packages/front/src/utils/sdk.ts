@@ -55,7 +55,6 @@ export const deposit = async ({
   currency,
   connection,
 }: SendDepositInterface) => {
-  console.log(nodeUrl, hash, amount, depositContract, accountId, currency, connection)
   return await sendDeposit(
     nodeUrl,
     hash,
@@ -177,8 +176,6 @@ export const buildProof = async ({
     }
   } finally {
     worker.terminate()
-
-    console.log('terminate worker');
   }
 }
 
