@@ -238,7 +238,7 @@ export const useWithdraw = () => {
 
     const ref = setInterval(() => {
       checkRelayerFee(address);
-    }, 3000);
+    }, ms);
 
     setToref(ref)
   }, [toRef])
