@@ -1,6 +1,5 @@
 // @ts-ignore
 import createWorker from 'worker-module:../sw/worker';
-import { artifactStore } from "@/utils/artifact-store";
 
 export type FileWorkerInput = {
   type: "single_file";
