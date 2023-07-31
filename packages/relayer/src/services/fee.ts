@@ -218,17 +218,18 @@ export const checkIsValidAccountId = async (
   accountId: string,
   RPC_URL: string
 ) => {
-  const regExpCheck =
-    /^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/.test(accountId);
+  const regExpCheck = /^[A-Za-z0-9]*$/.test(accountId);
 
-  const checkLength = accountId.length > 2 && accountId.length <= 64;
+  if (regExpCheck && accountId.length === 64) {
+    return true
+  }
 
   const isRegisteredAccount = await checkIsRegisteredAccountId(
     accountId,
     RPC_URL
   );
 
-  return regExpCheck && checkLength && isRegisteredAccount;
+  return !regExpCheck && isRegisteredAccount;
 };
 
 export const checkIsRegisteredAccountId = async (
