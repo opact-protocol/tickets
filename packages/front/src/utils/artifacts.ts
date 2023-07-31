@@ -1,19 +1,10 @@
-import {
-  promiseTimeout,
-} from '@railgun-community/shared-models';
 import axios from 'axios';
 import { artifactStore } from './artifact-store';
 
 export const loadArtifacts = async (): Promise<void> => {
-  await promiseTimeout(
-    Promise.all([
-      loadArtifact(),
-    ]),
-    45000,
-    new Error(
-      `Timed out downloading artifact files for ZKEY circuit. Please try again.`,
-    ),
-  );
+  await Promise.all([
+    loadArtifact(),
+  ])
 }
 
 export const loadArtifact = async() => {
