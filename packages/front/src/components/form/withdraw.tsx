@@ -80,7 +80,6 @@ export function Withdraw() {
         fee={fee}
         loading={loading}
         publicArgs={!!publicArgs}
-        generatingProof={generatingProof}
         isOpen={isValidTicket && isValidReceiver}
       />
 

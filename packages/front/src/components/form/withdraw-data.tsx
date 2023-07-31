@@ -1,5 +1,5 @@
 import { If } from "../if";
-import Countdown from "react-countdown";
+// import Countdown from "react-countdown";
 import { TicketScore } from "../ticket-score";
 
 export const getHumanFormat = (value: number | string): string => Number(value) < 10 ? `0${value}` : String(value);
@@ -8,7 +8,7 @@ export const WithdrawData = ({
   fee,
   score,
   isOpen,
-  generatingProof,
+  // generatingProof,
 }: any) => {
   return (
     <If
