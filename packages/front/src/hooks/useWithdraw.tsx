@@ -95,6 +95,10 @@ export const useWithdraw = () => {
         }
       })
 
+      if (!publicArgs) {
+        throw new Error('We had a problem building your proof.');
+      }
+
       setPublicArgs({ ...publicArgs })
       setShowConfirmModal(true)
     } catch (e) {
