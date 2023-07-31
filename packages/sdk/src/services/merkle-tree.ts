@@ -97,7 +97,12 @@ export class MerkleTreeService {
     { query }: any,
     variables: any = {}
   ): Promise<any> {
-    return request(this.graphqlUrl, query, variables as any) as any;
+    return request(this.graphqlUrl, query, {
+      ...variables,
+      headers: {
+        'Cache-Control': 'no-cache',
+      }
+    } as any) as any;
   }
 
   async getMerkleTreeBranchesWithPaginatedQuery(
@@ -119,6 +124,9 @@ export class MerkleTreeService {
         {
           ...variables,
           startId: String(Number(variables.startId) + 100 * i),
+          headers: {
+            'Cache-Control': 'no-cache',
+          }
         } as any
       )) as any;
 
