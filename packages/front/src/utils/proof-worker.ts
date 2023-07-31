@@ -51,6 +51,8 @@ export function createProofWorker() {
           return
         }
 
+        console.log('event', event)
+
         switch (event.data.type) {
           case "done":
             resolve(event.data)

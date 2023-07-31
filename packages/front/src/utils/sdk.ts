@@ -161,8 +161,6 @@ export const buildProof = async ({
       callbackProgress,
     }) as any
 
-    console.log('publicargs', payload)
-
     if (!payload) {
       throw new Error('We had a problem building your proof.');
     }
