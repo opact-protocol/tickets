@@ -30,6 +30,7 @@
     "@near-wallet-selector/sender": "^7.8.2",
     "@near-wallet-selector/welldone-wallet": "^7.8.2",
     "@near-wallet-selector/xdefi": "^7.8.2",
+    "@railgun-community/shared-models": "^5.2.8",
     "@rollup/plugin-inject": "^4.0.4",
     "@sentry/react": "^7.38.0",
     "@sentry/tracing": "^7.38.0",

@@ -3077,6 +3077,11 @@
   dependencies:
     json-parse-even-better-errors "^2.3.1"
 
+"@railgun-community/shared-models@^5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@railgun-community/shared-models/-/shared-models-5.2.8.tgz#4562f43ad0add80a4b9802a40d7769e522f731d2"
+  integrity sha512-HV/Tfzy8CT2LnX+9UicTr85Phc+5MOu23jJopnlxp/qT/Fkdh0qNIYcZufK/PxPdfLvqYGBiTxMSa2ixs6jOaQ==
+
 "@remix-run/dev@npm:@vercel/remix-run-dev@1.14.2":
   version "1.14.2"
   resolved "https://registry.yarnpkg.com/@vercel/remix-run-dev/-/remix-run-dev-1.14.2.tgz#3899c9b40aea2d4deb3c0e9febcc5398a9c5e162"

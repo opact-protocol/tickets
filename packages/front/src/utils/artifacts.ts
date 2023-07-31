@@ -1,20 +1,8 @@
 import {
-  isDefined,
   promiseTimeout,
 } from '@railgun-community/shared-models';
-import axios, { ResponseType } from 'axios';
+import axios from 'axios';
 import { artifactStore } from './artifact-store';
-// import brotliDecompress from 'brotli/decompress';
-
-export const getArtifactData = (
-  data: string | ArrayBuffer,
-): string | Uint8Array => decompressArtifact(data as ArrayBuffer)
-
-export const decompressArtifact = (arrayBuffer: ArrayBuffer): Uint8Array => {
-  const decompress = brotliDecompress as (input: Uint8Array) => Uint8Array;
-
-  return decompress(Buffer.from(arrayBuffer));
-};
 
 export const loadArtifacts = async (): Promise<void> => {
   await promiseTimeout(
@@ -55,10 +43,8 @@ export const loadArtifact = async() => {
     //   dataFormatted,
     // );
 
-    console.log('fooo')
-
     await artifactStore.store(
-      'zkey:',
+      'zkey',
       path,
       new Uint8Array(data),
     );
