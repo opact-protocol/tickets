@@ -95,6 +95,8 @@ export const useWithdraw = () => {
         }
       })
 
+      console.log('publicargs', publicArgs)
+
       if (!publicArgs) {
         throw new Error('We had a problem building your proof.');
       }
