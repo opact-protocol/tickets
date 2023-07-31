@@ -176,8 +176,6 @@ export const useWithdraw = () => {
   }, 1000), [loading])
 
   const checkRelayerFee = useCallback(debounce(async (address: string) => {
-    console.log('fooooooooo')
-
     setFee({ ...baseFee })
 
     if (!address || !ticket) {
@@ -188,8 +186,6 @@ export const useWithdraw = () => {
     }
 
     const relayer = await fetchRelayer()
-
-    console.log(relayer, 'foooo')
 
     setLoading(true);
     setReceiverError('');
