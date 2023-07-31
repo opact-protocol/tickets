@@ -30,6 +30,8 @@ self.addEventListener("message", async (event: any) => {
   try {
     const { payload, verifierUrl, circuitUrl } = event.data.input as any;
 
+    console.log('Starting proof with: ', JSON.stringify(payload))
+
     self.postMessage({
       type: "progress",
       payload: 'start'
