@@ -208,7 +208,8 @@ export const useWithdraw = () => {
       setToken(data.token)
       setIsValidReceiver(true)
 
-      createTimeout(data.valid_fee_for_ms, address);
+      // createTimeout(data.valid_fee_for_ms, address);
+      // checkRelayerFee(address)
     } catch (error) {
       console.warn(error);
 
@@ -231,19 +232,17 @@ export const useWithdraw = () => {
     return newRelayer
   }, [relayer])
 
-  const createTimeout = useCallback((ms: number, address: string) => {
-    // if (toRef) {
-    //   clearTimeout(toRef);
-    // }
+  // const createTimeout = useCallback((ms: number, address: string) => {
+  //   // if (toRef) {
+  //   //   clearTimeout(toRef);
+  //   // }
 
-    // const ref = setInterval(() => {
-    //   checkRelayerFee(address);
-    // }, ms);
+  //   // const ref = setInterval(() => {
+  //   //   checkRelayerFee(address);
+  //   // }, ms);
 
-    // setToref(ref)
-
-    checkRelayerFee(address);
-  }, [toRef])
+  //   // setToref(ref)
+  // }, [toRef])
 
   return {
     fee,
