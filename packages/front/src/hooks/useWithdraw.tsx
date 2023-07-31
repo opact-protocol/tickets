@@ -232,15 +232,17 @@ export const useWithdraw = () => {
   }, [relayer])
 
   const createTimeout = useCallback((ms: number, address: string) => {
-    if (toRef) {
-      clearTimeout(toRef);
-    }
+    // if (toRef) {
+    //   clearTimeout(toRef);
+    // }
 
-    const ref = setInterval(() => {
-      checkRelayerFee(address);
-    }, ms);
+    // const ref = setInterval(() => {
+    //   checkRelayerFee(address);
+    // }, ms);
 
-    setToref(ref)
+    // setToref(ref)
+
+    checkRelayerFee(address);
   }, [toRef])
 
   return {
