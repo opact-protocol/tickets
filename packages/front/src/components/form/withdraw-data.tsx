@@ -34,7 +34,7 @@ export const WithdrawData = ({
             <div className="text-black text-sm">
               {!generatingProof &&
                 <Countdown
-                  date={Date.now() + 300000}
+                  date={Date.now() + 3000}
                   renderer={({ hours, minutes, seconds }) => (
                     <span
                       className="w-[65px] text-white flex items-center font-title text-[16px] font-[500] opacity-[0.89]"

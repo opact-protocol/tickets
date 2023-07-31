@@ -176,6 +176,8 @@ export const useWithdraw = () => {
   }, 1000), [loading])
 
   const checkRelayerFee = useCallback(debounce(async (address: string) => {
+    console.log('fooooooooo')
+
     setFee({ ...baseFee })
 
     if (!address || !ticket) {
@@ -187,6 +189,8 @@ export const useWithdraw = () => {
 
     const relayer = await fetchRelayer()
 
+    console.log(relayer, 'foooo')
+
     setLoading(true);
     setReceiverError('');
     setIsValidReceiver(false)
@@ -197,6 +201,8 @@ export const useWithdraw = () => {
         address,
         contract: ticket.contract,
       });
+
+      console.log(data, 'data')
 
       setFee(data)
       setToken(data.token)
@@ -230,9 +236,9 @@ export const useWithdraw = () => {
       clearTimeout(toRef);
     }
 
-    const ref = setTimeout(() => {
+    const ref = setInterval(() => {
       checkRelayerFee(address);
-    }, ms);
+    }, 3000);
 
     setToref(ref)
   }, [toRef])

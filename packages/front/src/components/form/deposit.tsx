@@ -32,7 +32,7 @@ export function Deposit() {
   const [showModalPoolAnonymity, setShowModalPoolAnonymity] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [haveBalance, setHaveBalance] = useState(true);
-  const { accountId, selector, toggleModal, allCurrencies, nearBalance, tokenBalance } = useWallet();
+  const { allowlist, accountId, selector, toggleModal, allCurrencies, nearBalance, tokenBalance } = useWallet();
 
   const {
     state,
@@ -317,9 +317,9 @@ export function Deposit() {
           >
             <Button
               isLoading={false}
-              disabled={state.depositing || !haveBalance}
+              disabled={state.depositing || !haveBalance || !allowlist}
               onClick={() => handleDeposit()}
-              text={!accountId ? "Connect Wallet" : state.buttonText}
+              text={!accountId ? "Connect Wallet" : !allowlist ? 'Apply to Allowlist' : state.buttonText}
             />
           </div>
 
