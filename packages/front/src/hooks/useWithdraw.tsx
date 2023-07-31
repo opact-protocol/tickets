@@ -208,14 +208,9 @@ export const useWithdraw = () => {
         contract: ticket.contract,
       });
 
-      console.log(data, 'data')
-
       setFee(data)
       setToken(data.token)
       setIsValidReceiver(true)
-
-      // createTimeout(data.valid_fee_for_ms, address);
-      // checkRelayerFee(address)
     } catch (error) {
       console.warn(error);
 
@@ -237,18 +232,6 @@ export const useWithdraw = () => {
 
     return newRelayer
   }, [relayer])
-
-  // const createTimeout = useCallback((ms: number, address: string) => {
-  //   // if (toRef) {
-  //   //   clearTimeout(toRef);
-  //   // }
-
-  //   // const ref = setInterval(() => {
-  //   //   checkRelayerFee(address);
-  //   // }, ms);
-
-  //   // setToref(ref)
-  // }, [toRef])
 
   return {
     fee,

@@ -51,7 +51,7 @@ export function createProofWorker() {
           return
         }
 
-        console.log('event', event)
+        console.log('Worker PostMessage Event', event)
 
         switch (event.data.type) {
           case "done":
