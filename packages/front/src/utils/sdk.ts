@@ -18,6 +18,7 @@ import {
   sendAllowlist as allowlist,
   createSnarkProof,
 } from 'hideyourcash-sdk';
+import { artifactStore } from './artifact-store';
 
 // import {
 //   getLastDepositsBeforeTheTicketWasCreated,
@@ -154,8 +155,10 @@ export const buildProof = async ({
       contract: ticket?.contract,
     });
 
+    const zkey = await artifactStore.get('/circuit.zkey')
+
     const { payload } = await handlers.buildProof({
-      circuitUrl,
+      zkey,
       verifierUrl,
       payload: input,
       callbackProgress,

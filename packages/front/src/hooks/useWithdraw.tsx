@@ -46,7 +46,6 @@ export const useWithdraw = () => {
   const [generatingProof, setGeneratingProof] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false)
 
-  // const [toRef, setToref] = useState<any>()
   const [fee, setFee] = useState<any>({ ...baseFee })
   const [publicArgs, setPublicArgs] = useState<any | null>(null)
   const [ticket, setTicket] = useState<TicketStored | null>(null)
@@ -73,8 +72,6 @@ export const useWithdraw = () => {
     }
 
     try {
-      // clearTimeout(toRef);
-
       setLoading(true)
 
       const publicArgs = await buildProof({

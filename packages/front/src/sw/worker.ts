@@ -28,9 +28,9 @@ export type FileWorkerMessage =
 
 self.addEventListener("message", async (event: any) => {
   try {
-    const { payload, verifierUrl, circuitUrl } = event.data.input as any;
+    const { input, wasm, zkey } = event.data.input as any;
 
-    console.log('Starting proof with', payload)
+    console.log('Starting proof with', input)
 
     self.postMessage({
       type: "progress",
@@ -42,9 +42,9 @@ self.addEventListener("message", async (event: any) => {
      */
     try {
       const res = await plonk.fullProve(
-        payload,
-        verifierUrl,
-        circuitUrl,
+        input,
+        wasm,
+        zkey,
         {
           debug: debounce((message: string) => {
             self.postMessage({
@@ -68,9 +68,9 @@ self.addEventListener("message", async (event: any) => {
 
       try {
         const res = await plonk.fullProve(
-          payload,
-          verifierUrl,
-          circuitUrl,
+          input,
+          wasm,
+          zkey,
           {
             debug: debounce((message: string) => {
               self.postMessage({

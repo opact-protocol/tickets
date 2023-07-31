@@ -40,6 +40,7 @@
     "clsx": "^1.2.1",
     "file-saver": "^2.0.5",
     "hideyourcash-sdk": "*",
+    "localforage": "^1.10.0",
     "node-stdlib-browser": "^1.2.0",
     "postcss": "^8.4.13",
     "react": "^18.0.0",

@@ -1,5 +1,6 @@
 // @ts-ignore
 import createWorker from 'worker-module:../sw/worker';
+import { artifactStore } from "@/utils/artifact-store";
 
 export type FileWorkerInput = {
   type: "single_file";
@@ -30,17 +31,17 @@ export function createProofWorker() {
   const worker = new createWorker()
 
   const buildProof = ({
+    zkey,
     payload,
     verifierUrl,
-    circuitUrl,
     callbackProgress
   }: any) => {
     return new Promise<Blob[]>((resolve, reject) => {
       worker.postMessage({
         input: {
-          payload: payload,
-          verifierUrl: new URL(verifierUrl, window.location.origin).toString(),
-          circuitUrl: new URL(circuitUrl, window.location.origin).toString(),
+          zkey,
+          input: payload,
+          wasm: new URL(verifierUrl, window.location.origin).toString(),
         }
       })
 
