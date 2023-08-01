@@ -1,12 +1,11 @@
 import { Input } from "../input";
+import { useCallback } from "react";
 import { If } from "@/components/if";
 import ConfirmModal from "./confirm-modal";
-import { useCallback, useEffect } from "react";
 import { useWithdraw } from '@/hooks/useWithdraw'
 import { WithdrawButton } from "./withdraw-button";
 import { ProofProgress } from "./proof-progress";
 import { WithdrawData } from "./withdraw-data";
-import { loadArtifact } from "@/utils/artifacts";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -52,15 +51,8 @@ export function Withdraw() {
   const handleReceiver = useCallback(async (receiver: string) => {
     setReceiver(receiver)
 
-    checkRelayerFee(receiver);
+    checkRelayerFee(receiver)
   }, [receiver])
-
-  useEffect(() => {
-    // artifactStore.store
-    (async () => {
-      await loadArtifact()
-    })()
-  }, [])
 
   return (
     <div className="space-y-[24px]">

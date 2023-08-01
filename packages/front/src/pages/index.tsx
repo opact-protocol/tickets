@@ -4,6 +4,7 @@ import { verifyStorage } from "@/utils/verify-storage";
 import { useEffect } from "react";
 import { useWallet } from "@/store";
 import { Transition } from "@headlessui/react";
+import { loadArtifact } from "@/utils/artifacts";
 
 const methods = {
   deposit: "hyc-deposits",
@@ -57,6 +58,13 @@ export function Index() {
       await initWallet();
     })();
   }, [isStarted]);
+
+
+  useEffect(() => {
+    (async () => {
+      await loadArtifact()
+    })()
+  }, [])
 
   return (
     <div
