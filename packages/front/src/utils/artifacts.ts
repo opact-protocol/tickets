@@ -29,7 +29,8 @@ export const loadArtifact = async() => {
           responseType: 'arraybuffer',
         });
       } catch(e) {
-        throw new Error(e.message)
+        // throw new Error(e.message)
+        console.warn(e)
       }
     }
 
