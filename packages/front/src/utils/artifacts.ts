@@ -10,6 +10,8 @@ export const loadArtifacts = async (): Promise<void> => {
 export const loadArtifact = async() => {
   const path = '/circuit.zkey';
 
+  const url = new URL(path, window.location.origin).toString()
+
   if (await artifactStore.exists(path)) {
     return path;
   }
@@ -18,7 +20,7 @@ export const loadArtifact = async() => {
     let result
 
     try {
-      result = await axios.get(path, {
+      result = await axios.get(url, {
         method: 'GET',
         headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '0' },
         responseType: 'arraybuffer',
@@ -34,6 +36,8 @@ export const loadArtifact = async() => {
         console.warn(e)
       }
     }
+
+    console.log('New Data: ', result.data)
 
     const data: ArrayBuffer = result.data;
 
