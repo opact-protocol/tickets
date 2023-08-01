@@ -47,7 +47,7 @@ function BackgroundIllustration() {
 }
 
 export function Index() {
-  const { initWallet, isStarted } = useWallet();
+  const { initWallet, isStarted, loadingData, toggleLoadingData } = useWallet();
 
   useEffect(() => {
     if (isStarted) {
@@ -62,7 +62,11 @@ export function Index() {
 
   useEffect(() => {
     (async () => {
+      toggleLoadingData(true)
+
       await loadArtifact()
+
+      toggleLoadingData(false)
     })()
   }, [])
 

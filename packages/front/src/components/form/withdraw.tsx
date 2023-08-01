@@ -6,6 +6,7 @@ import { useWithdraw } from '@/hooks/useWithdraw'
 import { WithdrawButton } from "./withdraw-button";
 import { ProofProgress } from "./proof-progress";
 import { WithdrawData } from "./withdraw-data";
+import { useWallet } from "@/store";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
   "transactionHashes"
@@ -54,6 +55,8 @@ export function Withdraw() {
     checkRelayerFee(receiver)
   }, [receiver])
 
+  const { loadingData } = useWallet()
+
   return (
     <div className="space-y-[24px]">
       <Input
@@ -96,7 +99,7 @@ export function Withdraw() {
           className="pt-[16px]"
         >
           <WithdrawButton
-            isLoading={loading}
+            isLoading={loading || loadingData}
             buttonText={buttonText}
             onClick={() => preWithdraw()}
             isDisabled={!fee.token || loading}

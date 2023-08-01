@@ -29,17 +29,20 @@ export interface WalletStore {
   viewNearBalance: (foo: any) => Promise<any>;
   accountId: string | null;
   showWalletModal: boolean;
+  loadingData: boolean;
   selector: WalletSelector | null;
   viewAccountBalance: (foo: any, baa: any) => void;
   allCurrencies: any;
   allowlist: boolean;
   nearBalance: number,
+  toggleLoadingData: (flag: boolean) => void;
   tokenBalance: number,
   isStarted: boolean
 }
 
 export const useWallet = create<WalletStore>((set, get) => ({
   accountId: "",
+  loadingData: false,
   selector: null,
   showWalletModal: false,
   allCurrencies: [],
@@ -47,6 +50,12 @@ export const useWallet = create<WalletStore>((set, get) => ({
   nearBalance: 0,
   tokenBalance: 0,
   isStarted: false,
+
+  toggleLoadingData: (flag = false) => {
+    set(() => ({
+      loadingData: flag
+    }))
+  },
 
   toggleModal: () => {
     const { showWalletModal } = get();
