@@ -32,6 +32,7 @@ export const loadArtifact = async() => {
           responseType: 'arraybuffer',
         });
       } catch(e) {
+        window.location.reload()
         // throw new Error(e.message)
         console.warn(e)
       }
