@@ -15,10 +15,23 @@ export const loadArtifact = async() => {
   }
 
   try {
-    const result = await axios.get(path, {
-      method: 'GET',
-      responseType: 'arraybuffer',
-    });
+    let result
+
+    try {
+      result = await axios.get(path, {
+        method: 'GET',
+        responseType: 'arraybuffer',
+      });
+    } catch (e) {
+      try {
+        result = await axios.get(path, {
+          method: 'GET',
+          responseType: 'arraybuffer',
+        });
+      } catch(e) {
+        throw new Error(e.message)
+      }
+    }
 
     const data: ArrayBuffer = result.data;
 
