@@ -20,6 +20,7 @@ export const loadArtifact = async() => {
     try {
       result = await axios.get(path, {
         method: 'GET',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '0' },
         responseType: 'arraybuffer',
       });
     } catch (e) {
