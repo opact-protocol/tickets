@@ -99,10 +99,10 @@ export function Withdraw() {
           className="pt-[16px]"
         >
           <WithdrawButton
-            isLoading={loading || loadingData}
-            buttonText={buttonText}
+            isLoading={loading}
+            buttonText={loadingData ? 'Downloading security files...' : buttonText}
             onClick={() => preWithdraw()}
-            isDisabled={!fee.token || loading}
+            isDisabled={!fee.token || loading || loadingData}
           />
         </div>
       </If>

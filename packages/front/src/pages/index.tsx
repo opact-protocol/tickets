@@ -47,7 +47,7 @@ function BackgroundIllustration() {
 }
 
 export function Index() {
-  const { initWallet, isStarted, toggleLoadingData } = useWallet();
+  const { initWallet, isStarted, loadingData, toggleLoadingData } = useWallet();
 
   useEffect(() => {
     if (isStarted) {
@@ -99,7 +99,7 @@ export function Index() {
         <div className="overflow-hidden relative min-h-[100vh]">
           <Actions />
 
-          <WithdrawWarn/>
+          {loadingData && <WithdrawWarn/>}
         </div>
       </Transition>
     </div>
