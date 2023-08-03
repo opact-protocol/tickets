@@ -30,7 +30,7 @@ export const WithdrawWarn = () => {
             text-[#BDBDBD]
           "
         >
-          For enhanced privacy and security, Opact Tickets requires downloading secure files to your browser. Don't worry, this process is performed <span className="underline text-white cursor-pointer hover:opacity-90">only once.</span> Your privacy is our priority.
+          For enhanced privacy and security, Opact Tickets requires downloading secure files to your browser. Don't worry, this process is performed <span className="underline text-white cursor-pointer">only once.</span> Your privacy is our priority.
         </div>
       </div>
     </div>

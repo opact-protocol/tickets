@@ -98,8 +98,6 @@ export function Index() {
 
         <div className="overflow-hidden relative min-h-[100vh]">
           <Actions />
-
-          {loadingData && <WithdrawWarn/>}
         </div>
       </Transition>
     </div>
