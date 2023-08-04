@@ -49,7 +49,9 @@ export const useWithdraw = () => {
   const [fee, setFee] = useState<any>({ ...baseFee })
   const [publicArgs, setPublicArgs] = useState<any | null>(null)
   const [ticket, setTicket] = useState<TicketStored | null>(null)
+  const [showWithdrawWarn, setShowWithdrawWarn] = useState(false)
   const [relayer, setRelayer] = useState<RelayerDataInterface | null>(null)
+  const [isDisabled, setIsDisabled] = useState(false)
 
   const reset = () => {
     setNote('')
@@ -59,6 +61,7 @@ export const useWithdraw = () => {
     setLoading(false)
     setRelayer(null)
     setPublicArgs(null)
+    setIsDisabled(false)
     setIsValidTicket(false)
     setGeneratingProof(false)
     setIsValidReceiver(false)
@@ -66,7 +69,15 @@ export const useWithdraw = () => {
     setButtonText('Withdraw')
   }
 
-  const preWithdraw = useCallback(async () => {
+  const preWithdraw = useCallback(async (loadingData) => {
+    if (loadingData) {
+      setIsDisabled(true)
+      setShowWithdrawWarn(true)
+      setButtonText('Downloading security files...')
+
+      return
+    }
+
     if (!relayer || !receiver || !ticket) {
       return
     }
@@ -244,19 +255,24 @@ export const useWithdraw = () => {
     publicArgs,
     receiverError,
     isValidTicket,
+    isDisabled,
     generatingProof,
     isValidReceiver,
+    showWithdrawWarn,
     showConfirmModal,
 
     send,
     reset,
     setNote,
+    setIsDisabled,
     setLoading,
     preWithdraw,
     setReceiver,
+    setButtonText,
     validateTicket,
     checkRelayerFee,
     setShowConfirmModal,
+    setShowWithdrawWarn,
   }
 }
 

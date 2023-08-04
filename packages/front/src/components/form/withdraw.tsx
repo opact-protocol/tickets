@@ -1,11 +1,12 @@
 import { Input } from "../input";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { If } from "@/components/if";
 import ConfirmModal from "./confirm-modal";
 import { useWithdraw } from '@/hooks/useWithdraw'
 import { WithdrawButton } from "./withdraw-button";
 import { ProofProgress } from "./proof-progress";
 import { WithdrawData } from "./withdraw-data";
+import { WithdrawWarn } from './withdraw-warn'
 import { useWallet } from "@/store";
 
 const transactionHashes = new URLSearchParams(window.location.search).get(
@@ -26,7 +27,9 @@ export function Withdraw() {
     noteError,
     buttonText,
     isValidTicket,
+    isDisabled,
     receiverError,
+    showWithdrawWarn,
     generatingProof,
     isValidReceiver,
     showConfirmModal,
@@ -35,8 +38,11 @@ export function Withdraw() {
     setNote,
     preWithdraw,
     setReceiver,
+    setButtonText,
+    setIsDisabled,
     validateTicket,
     checkRelayerFee,
+    setShowWithdrawWarn,
   } = useWithdraw()
 
   if (transactionHashes) {
@@ -56,6 +62,17 @@ export function Withdraw() {
   }, [receiver])
 
   const { loadingData } = useWallet()
+
+  useEffect(() => {
+    if (loadingData) {
+      return
+    }
+
+    setIsDisabled(false)
+    setButtonText('Withdraw')
+    setShowWithdrawWarn(false)
+
+  }, [loadingData])
 
   return (
     <div className="space-y-[24px]">
@@ -100,9 +117,9 @@ export function Withdraw() {
         >
           <WithdrawButton
             isLoading={loading}
-            buttonText={loadingData ? 'Downloading security files...' : buttonText}
-            onClick={() => preWithdraw()}
-            isDisabled={!fee.token || loading || loadingData}
+            buttonText={buttonText}
+            isDisabled={!fee.token || loading || isDisabled}
+            onClick={() => preWithdraw(loadingData)}
           />
         </div>
       </If>
@@ -114,6 +131,11 @@ export function Withdraw() {
           reset()
         }}
         cleanupInputsCallback={() => reset()}
+      />
+
+      <WithdrawWarn
+        isOpen={showWithdrawWarn}
+        closeModal={() => { setShowWithdrawWarn(false) }}
       />
     </div>
   );
