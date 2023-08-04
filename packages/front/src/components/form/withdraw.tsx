@@ -71,7 +71,6 @@ export function Withdraw() {
     setIsDisabled(false)
     setButtonText('Withdraw')
     setShowWithdrawWarn(false)
-
   }, [loadingData])
 
   return (

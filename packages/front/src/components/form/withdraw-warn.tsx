@@ -56,7 +56,7 @@ export const WithdrawWarn = ({
                     text-[#BDBDBD] w-full
                   "
                 >
-                  We need to download the system checker, it ensures secure verification of transactions while protecting your private data.
+                  We need to download the system circuit, it ensures secure verification of transactions while protecting your private data.
                 </p>
 
                 <p
