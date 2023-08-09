@@ -2,6 +2,7 @@ import { useWallet } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "@/components/button";
+import { shortenAddress } from "hideyourcash-sdk";
 
 export function WhitelistModal({
   isOpen,
@@ -77,7 +78,7 @@ export function WhitelistModal({
                       disabled={!!allowlist && !!accountId}
                       isLoading={false}
                       onClick={() => sendWhitelist()}
-                      text={allowlist && accountId ? "You are already on the allowlist" : "Apply now"}
+                      text={allowlist && shortenAddress(accountId) ? "You are already on the allowlist" : "Apply now"}
                     />
                   </div>
                 }
