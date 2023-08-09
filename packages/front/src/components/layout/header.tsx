@@ -6,6 +6,7 @@ import { ButtonPrimary } from "../button-primary";
 import { ButtonSecondary } from "../button-secondary";
 import { NeedHelp } from "./needHelp";
 import { Arrow } from "@/components/assets/arrow";
+import { shortenAddress } from "hideyourcash-sdk";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
@@ -102,7 +103,7 @@ export function Header() {
                 disabled={false}
                 isLoading={false}
                 onClick={() => signOut()}
-                text={accountId}
+                text={shortenAddress(accountId)}
               />
             )}
 
