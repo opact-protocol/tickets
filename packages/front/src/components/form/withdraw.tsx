@@ -59,7 +59,7 @@ export function Withdraw() {
     setReceiver(receiver)
 
     checkRelayerFee(receiver)
-  }, [receiver])
+  }, [receiver, ticket])
 
   const { loadingData } = useWallet()
 
