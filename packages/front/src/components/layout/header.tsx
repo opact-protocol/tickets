@@ -33,7 +33,7 @@ export function Header() {
               This app is in beta. It has not been audited.
             </p>
 
-            <p className="lg:hidden text-bold text-black text-center">
+            <p className="lg:hidden text-bold text-[#919699] text-center ml-[8px]">
               App in beta version. Audit in progress.
             </p>
 
@@ -70,6 +70,9 @@ export function Header() {
             lg:bg-[#060A0F]/[0.42]
             lg:backdrop-blur-[6px]
             lg:mb-[8px]
+
+            flex-col space-y-[12px]
+            md:flex-row md:space-y-0
           "
         >
           <div className="relative z-10 flex items-center gap-16">

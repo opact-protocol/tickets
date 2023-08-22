@@ -9,7 +9,9 @@ export function Actions() {
   return (
     <div
       className="
-        w-[480px]
+        w-[90%]
+        min-w-[370px]
+        sm:w-[480px]
         bg-form-gradient
         py-[24px] space-y-[24px]
         my-[240px]

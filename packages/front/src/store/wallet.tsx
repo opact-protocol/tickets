@@ -105,7 +105,6 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     const allCurrencies = await getAllCurrencies();
     const allowlist = await viewIsInAllowlist({ accountId: newAccount });
-    console.log(allCurrencies, 'foooooooooooooo')
     await viewAccountBalance({ accountId: newAccount }, allCurrencies)
 
     try {
