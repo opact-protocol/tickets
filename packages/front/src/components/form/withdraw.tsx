@@ -2,7 +2,7 @@ import { Input } from "../input";
 import { useCallback, useEffect } from "react";
 import { If } from "@/components/if";
 import ConfirmModal from "./confirm-modal";
-import { useWithdraw } from '@/hooks/useWithdraw'
+import { useWithdraw } from '@/hooks/withdraw'
 import { WithdrawButton } from "./withdraw-button";
 import { ProofProgress } from "./proof-progress";
 import { WithdrawData } from "./withdraw-data";
@@ -17,32 +17,14 @@ const HYC_TRANSACTION = "hyc-transaction";
 
 export function Withdraw() {
   const {
-    fee,
-    note,
-    ticket,
-    loading,
-    progress,
-    publicArgs,
-    receiver,
-    noteError,
-    buttonText,
-    isValidTicket,
-    isDisabled,
-    receiverError,
-    showWithdrawWarn,
-    generatingProof,
-    isValidReceiver,
-    showConfirmModal,
+    state,
+
     send,
     reset,
-    setNote,
+    dispatch,
     preWithdraw,
-    setReceiver,
-    setButtonText,
-    setIsDisabled,
     validateTicket,
     checkRelayerFee,
-    setShowWithdrawWarn,
   } = useWithdraw()
 
   if (transactionHashes) {
@@ -50,16 +32,18 @@ export function Withdraw() {
   }
 
   const handleNote = useCallback(async (note: string) => {
-    setNote(note)
+    dispatch({ note })
 
     validateTicket(note)
-  }, [note])
+  }, [state.note])
 
   const handleReceiver = useCallback(async (receiver: string) => {
-    setReceiver(receiver)
+    dispatch({
+      receiver
+    })
 
     checkRelayerFee(receiver)
-  }, [receiver, ticket])
+  }, [state.receiver, state.ticket])
 
   const { loadingData } = useWallet()
 
@@ -68,56 +52,58 @@ export function Withdraw() {
       return
     }
 
-    setIsDisabled(false)
-    setButtonText('Withdraw')
-    setShowWithdrawWarn(false)
+    dispatch({
+      isDisabled: false,
+      buttonText: 'Withdraw',
+      showWithdrawWarn: false,
+    })
   }, [loadingData])
 
   return (
     <div className="space-y-[24px]">
       <Input
-        value={note}
-        error={noteError}
-        isValid={isValidTicket}
-        isDisabled={generatingProof}
+        value={state.note}
+        error={state.noteError}
+        isValid={state.isValidTicket}
+        isDisabled={state.generatingProof}
         label="Withdrawal ticket"
         placeholder="Paste your withdraw ticket"
         onChange={(value) => handleNote(value as string)}
       />
 
       <Input
-        value={receiver}
-        isDisabled={!ticket || generatingProof}
-        error={receiverError}
-        isValid={isValidReceiver}
+        value={state.receiver}
+        isDisabled={!state.ticket || state.generatingProof}
+        error={state.receiverError}
+        isValid={state.isValidReceiver}
         label="Recipient Address"
         placeholder="Wallet Address"
         onChange={(value) => handleReceiver(value as string)}
       />
 
       <WithdrawData
-        fee={fee}
-        loading={loading}
-        publicArgs={!!publicArgs}
-        isOpen={isValidTicket && isValidReceiver}
+        fee={state.fee}
+        loading={state.loading}
+        publicArgs={!!state.publicArgs}
+        isOpen={state.isValidTicket && state.isValidReceiver}
       />
 
 
-      <If condition={generatingProof && !publicArgs && !loading}>
+      <If condition={state.generatingProof && !state.publicArgs && !state.loading}>
         <ProofProgress
-          progress={progress}
-          generatingProof={generatingProof}
+          progress={state.progress}
+          generatingProof={state.generatingProof}
         />
       </If>
 
-      <If condition={!generatingProof || !!publicArgs}>
+      <If condition={!state.generatingProof || !!state.publicArgs}>
         <div
           className="pt-[16px]"
         >
           <WithdrawButton
-            isLoading={loading}
-            buttonText={buttonText}
-            isDisabled={!fee.token || loading || isDisabled}
+            isLoading={state.loading}
+            buttonText={state.buttonText}
+            isDisabled={!state.fee.token || state.loading || state.isDisabled}
             onClick={() => preWithdraw(loadingData)}
           />
         </div>
@@ -125,7 +111,7 @@ export function Withdraw() {
 
       <ConfirmModal
         send={send}
-        isOpen={showConfirmModal}
+        isOpen={state.showConfirmModal}
         onClose={() => {
           reset()
         }}
@@ -133,8 +119,8 @@ export function Withdraw() {
       />
 
       <WithdrawWarn
-        isOpen={showWithdrawWarn}
-        closeModal={() => { setShowWithdrawWarn(false) }}
+        isOpen={state.showWithdrawWarn}
+        closeModal={() => { dispatch({ showWithdrawWarn: false }) }}
       />
     </div>
   );

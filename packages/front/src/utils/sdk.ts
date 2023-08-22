@@ -1,5 +1,5 @@
 import { useEnv } from '@/hooks/useEnv';
-import { TicketStored } from '../hooks/useWithdraw';
+import { TicketStored } from '../hooks/withdraw';
 import { createProofWorker } from './proof-worker';
 import { BuildProof, CalculateRelayerFee, GetTicketInterface, SendAllowlistInterface, SendDepositInterface, TicketIsValid, ValidatedTicket } from './sdk.types';
 import { getTicketInTheMerkleTree } from '@/utils/graphql-queries';
