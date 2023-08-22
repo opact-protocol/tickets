@@ -72,7 +72,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     if (!token) return;
 
-    const balance = await viewBalance(token.accountId, accountId);
+    const balance = await viewBalance(token.account_id, accountId);
 
     const { available } = await viewNearBalance({ accountId });
 
