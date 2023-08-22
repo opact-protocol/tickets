@@ -10,7 +10,7 @@ export function Actions() {
     <div
       className="
         w-[90%]
-        min-w-[370px]
+        min-w-[350px]
         sm:w-[480px]
         bg-form-gradient
         py-[24px] space-y-[24px]
