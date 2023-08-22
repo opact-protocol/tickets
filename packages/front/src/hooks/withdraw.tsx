@@ -209,7 +209,6 @@ export const useWithdraw = () => {
       noteError: '',
       loading: false,
       isValidTicket: isValid,
-      // showConfirmModal: true
     })
   }, 1000)
 

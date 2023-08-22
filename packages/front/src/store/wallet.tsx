@@ -24,7 +24,7 @@ export interface WalletStore {
   toggleModal: () => void;
   signOut: () => Promise<void>;
   initWallet: () => Promise<string>;
-  viewBalance: (contract: string) => Promise<void>;
+  viewBalance: (contract: string, accountId: string) => Promise<void>;
   sendWhitelist: () => Promise<void>;
   viewNearBalance: (foo: any) => Promise<any>;
   accountId: string | null;
@@ -72,7 +72,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     if (!token) return;
 
-    const balance = await viewBalance(token.account_id!);
+    const balance = await viewBalance(token.accountId, accountId);
 
     const { available } = await viewNearBalance({ accountId });
 
@@ -105,6 +105,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
 
     const allCurrencies = await getAllCurrencies();
     const allowlist = await viewIsInAllowlist({ accountId: newAccount });
+    console.log(allCurrencies, 'foooooooooooooo')
     await viewAccountBalance({ accountId: newAccount }, allCurrencies)
 
     try {
@@ -144,11 +145,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
     set(() => ({ accountId: "" }));
   },
 
-  viewBalance: async (contract: string) => {
-    const { accountId } = get();
-
-    if (!accountId) return;
-
+  viewBalance: async (contract: string, accountId: string) => {
     return await viewAccountBalance(
       useEnv("VITE_NEAR_NODE_URL"),
       contract,
