@@ -54,7 +54,7 @@ export const NeedHelp = () => {
               <Listbox.Option
                 value="Contact us"
                 className="opacity-[0.89] hover:opacity-[0.8] cursor-pointer"
-                onClick={() => setShowModal(true)}
+                onClick={() => window.open('https://app.pipefy.com/public/form/iaRIm6N_', '__blank')}
               >
                 Contact us
               </Listbox.Option>
