@@ -72,11 +72,11 @@ jobs:
       - name: Installing Dependencies
         run: yarn
 
-      - name: Signin on TheGraph
-        run: yarn subgraph auth
+      # - name: Signin on TheGraph
+      #   run: yarn subgraph auth
 
-      - name: Deploy The graph
-        run: yarn subgraph deploy:production
+      # - name: Deploy The graph
+      #   run: yarn subgraph deploy:production
 
       - name: Building Relayer
         run: yarn relayer build
