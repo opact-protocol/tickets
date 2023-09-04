@@ -30,8 +30,6 @@ self.addEventListener("message", async (event: any) => {
   try {
     const { input, wasm, zkey } = event.data.input as any;
 
-    console.log('Starting proof with', input)
-
     self.postMessage({
       type: "progress",
       payload: 'start'
