@@ -52,7 +52,7 @@
     "browserify-fs": "^1.0.0",
     "circomlibjs": "^0.1.7",
     "fixed-merkle-tree": "^0.7.3",
-    "graphql-request": "^5.2.0",
+    "graphql-request": "5.2.0",
     "jest-puppeteer": "^8.0.2",
     "node-stdlib-browser": "^1.2.0",
     "randombytes": "^2.1.0",
