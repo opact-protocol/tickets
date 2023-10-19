@@ -26,3 +26,5 @@ temp
 verifier.wasm
 circuit.zkey
 env.json
+docs
+.vercel

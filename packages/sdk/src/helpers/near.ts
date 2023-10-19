@@ -21,6 +21,19 @@ export interface Params {
   deposit: string;
 }
 
+/**
+ * Helpers: Get Transaction
+ *
+ * This method is responsible for returning a valid Transaction object.
+ *
+ * @param signerId The user accountId to sign the transaction
+ * @param receiverId The contract accountId to receive the transaction
+ * @param method The method to be called on contract
+ * @param args The args to be sent to contract method
+ * @param amount The human amount to be attached on transaction
+ * @param skipParser The boolean to skip amount parser
+ * @returns {Promise<Transaction>}
+ */
 export const getTransaction = (
   signerId: string,
   receiverId: string,
@@ -48,6 +61,17 @@ export const getTransaction = (
   };
 };
 
+/**
+ * Helpers: View function
+ *
+ * This method is responsible for making a View Function on the Near Blockchain.
+ *
+ * @param nodeUrl The Current Near RPC Url
+ * @param contractId The contract accountId to call view function
+ * @param methodName The view method to be called on contract
+ * @param args The args to be sent to contract view function
+ * @returns {Promise<any>}
+ */
 export const viewFunction = async (
   nodeUrl: string,
   contractId: string,
@@ -73,6 +97,16 @@ export const viewFunction = async (
   return JSON.parse(Buffer.from(result.result).toString());
 };
 
+/**
+ * Helpers: Get Transaction State
+ *
+ * This method is responsible for returning the current state of a Near Blockchain transaction.
+ *
+ * @param nodeUrl The Current Near RPC Url
+ * @param txHash The transaction hash
+ * @param accountId The accountId of signer of transaction
+ * @returns {Promise<any>}
+ */
 export const getTransactionState = async ({
   nodeUrl,
   txHash,
@@ -90,6 +124,15 @@ export const getTransactionState = async ({
   return result;
 }
 
+/**
+ * Helpers: Get Account Balance
+ *
+ * This method is responsible for obtaining the balance of a Near accountId.
+ *
+ * @param nodeUrl The Current Near RPC Url
+ * @param accountId The Near accountId to get balance
+ * @returns {Promise<any>}
+ */
 export const getAccountBalance = async ({
   nodeUrl,
   accountId,
@@ -110,6 +153,16 @@ export const getAccountBalance = async ({
   return result;
 }
 
+/**
+ * Helpers: Send JSON RPC
+ *
+ * This method is responsible for sending all view functions to the Near JSON RPC.
+ *
+ * @param nodeUrl The Current Near RPC Url
+ * @param params The RPC request params
+ * @param method The RPC request method
+ * @returns {Promise<any>}
+ */
 export const sendJsonRpc = async (
   nodeUrl: string,
   method: string,
@@ -132,6 +185,15 @@ export const sendJsonRpc = async (
   return await rpcService.post("/", body);
 };
 
+/**
+ * Helpers: Get Amount
+ *
+ * This method is responsible for transforming human readable amount to raw amount.
+ *
+ * @param amount The Near amount in Human Format
+ * @param skip The flag to skip the amount parser
+ * @returns {Promise<string>}
+ */
 export const getAmount = (amount: string | undefined, skip = false) => {
   if (!amount) {
     return "1";
@@ -145,11 +207,12 @@ export const getAmount = (amount: string | undefined, skip = false) => {
 };
 
 /**
- * Convert human readable NEAR amount to internal indivisible units.
- * Effectively this multiplies given amount.
+ * Helpers: Parse Near Amount
  *
- * @param rawAmount decimal string (potentially fractional) denominated in NEAR.
- * @returns The parsed yoctoⓃ amount or null if no amount was passed in
+ * This method is responsible for transforming human readable amount to raw amount.
+ *
+ * @param rawAmount The Near amount in Human Format
+ * @returns {Promise<string>}
  */
 export const parseNearAmount = (rawAmount?: string) => {
   if (!rawAmount) {
@@ -174,10 +237,26 @@ export const parseNearAmount = (rawAmount?: string) => {
   return trimLeadingZeroes(wholePart + fracPart.padEnd(nearNominationExp, "0"));
 };
 
+/**
+ * Helpers: Cleanup raw amount
+ *
+ * This method is responsible for removing all invalid characters from a Amount.
+ *
+ * @param amount The Near amount in Human Format
+ * @returns {string}
+ */
 export const cleanupRawAmount = (amount: string) => {
   return amount.replace(/,/g, "").trim();
 };
 
+/**
+ * Helpers: Trim leading Zeroes
+ *
+ * This method is responsible for trim leading zeroes of an amount.
+ *
+ * @param value The amount to trim leading zeroes
+ * @returns {Promise<string>}
+ */
 export const trimLeadingZeroes = (value: string) => {
   const replacedValue = value.replace(/^0+/, "");
 

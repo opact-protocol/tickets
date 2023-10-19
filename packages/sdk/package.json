@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "docs": "npx typedoc",
     "add_zk_assets": "yarn add_verifier_wasm && yarn add_circuit",
     "add_verifier_wasm": "cp ../circuits/out/withdraw_js/withdraw.wasm ./test/verifier.wasm",
     "add_circuit": "cp ../circuits/out/withdraw_0000.zkey ./test/circuit.zkey",
@@ -43,6 +44,7 @@
     "rollup-plugin-esbuild": "^5.0.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.23.28",
     "typescript": "^4.9.4",
     "yarn": "^1.22.19"
   },

@@ -1,6 +1,8 @@
 import { gql } from "graphql-request";
 
-// hyc registry
+/**
+ * @constant allowListUpdatesQuery The query to get all allowlist branches to make the merkle tree
+ */
 export const allowListUpdatesQuery = {
   name: "allowlistMerkleTreeUpdates",
   query: gql`
@@ -22,6 +24,9 @@ export const allowListUpdatesQuery = {
   `,
 };
 
+/**
+ * @constant depositUpdatesQuery The query to get all deposit branches to make the merkle tree
+ */
 export const depositUpdatesQuery = {
   name: "depositMerkleTreeUpdates",
   query: gql`
@@ -43,7 +48,9 @@ export const depositUpdatesQuery = {
   `,
 };
 
-// hyc registry
+/**
+ * @constant allowListUpdatesQuery The query to get the last allowlist branch to make the merkle tree
+ */
 export const lastAllowListQuery = {
   name: "allowlistMerkleTreeUpdates",
   query: gql`
@@ -60,6 +67,9 @@ export const lastAllowListQuery = {
   `,
 };
 
+/**
+ * @constant allowListUpdatesQuery The query to get the last deposit branch to make the merkle tree
+ */
 export const lastDepositQuery = {
   name: "depositMerkleTreeUpdates",
   query: gql`
