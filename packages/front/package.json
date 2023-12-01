@@ -10,7 +10,7 @@
     "vercel-dev-helper": "vite --port $PORT",
     "vdev": "vercel dev --local-config ./vercel-dev.json",
     "dev": "(cd ../sdk && yarn build) && yarn check_is_circuit_compiled && yarn add_zk_assets && vite",
-    "build": "(cd ../sdk && yarn build) && yarn add_zk_assets && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "engines": {
@@ -43,6 +43,7 @@
     "hideyourcash-sdk": "*",
     "localforage": "^1.10.0",
     "node-stdlib-browser": "^1.2.0",
+    "opact-sdk": "^1.0.96",
     "postcss": "^8.4.13",
     "react": "^18.0.0",
     "react-copy-to-clipboard": "^5.1.0",
