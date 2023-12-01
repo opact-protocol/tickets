@@ -5,9 +5,8 @@ self.addEventListener("message", async (event: any) => {
     const {
       secret,
       currentId,
-      nullifiers,
       storedUtxos,
-      encryptedCommitments,
+      storedReceipts,
     } = event.data.input as any;
 
     const {
@@ -17,8 +16,6 @@ self.addEventListener("message", async (event: any) => {
       secret,
       currentId,
       storedUtxos,
-      nullifiers,
-      encryptedCommitments,
     )
 
     self.postMessage(
