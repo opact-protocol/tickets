@@ -1,4 +1,4 @@
-import { getUserBalanceBySecret } from 'opact-sdk'
+import { getUserBalanceBySecret } from '../opact'
 
 self.addEventListener("message", async (event: any) => {
   try {
