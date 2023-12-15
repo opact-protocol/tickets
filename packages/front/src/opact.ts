@@ -1,5 +1,3 @@
-const RPC = 'https://bpsd19dro1.execute-api.us-east-2.amazonaws.com'
-
 import { decode } from 'js-base64';
 import { babyjub, poseidon } from 'circomlibjs';
 import { decrypt as _decrypt } from '@metamask/eth-sig-util';
@@ -32,12 +30,14 @@ export const parseUtxoString = (utxo: string) => {
     token,
     amount,
     pubkey,
+    receipt,
     address,
     blinding,
   } = JSON.parse(utxo)
 
   return {
     id,
+    receipt,
     address,
     hash: BigInt(hash),
     token: BigInt(token),
@@ -67,6 +67,7 @@ export const decrypt = ({ encrypted, privateKey, isUtxo = true }: any) => {
 export const getNullifier = ({ utxo, secret }: any) => poseidon([secret, utxoHash(utxo)])
 
 export const getUserBalanceBySecret = async (
+  config: any,
   secret: any,
   currentId: any,
   storedUtxos: any,
@@ -78,7 +79,7 @@ export const getUserBalanceBySecret = async (
   let encrypted: any[] = []
 
   while (!isLastPage) {
-    const response = await fetch(`${RPC}/encrypted?salt=${currentId as string}`)
+    const response = await fetch(`${config.indexerUrl}/encrypted?salt=${currentId as string}`)
 
     const {
       data,
@@ -100,7 +101,7 @@ export const getUserBalanceBySecret = async (
   let nullifiers: any[] = []
 
   while (!nullifierIsLastPage) {
-    const response = await fetch(`${RPC}/nullifiers`)
+    const response = await fetch(`${config.indexerUrl}/nullifiers`)
 
     const {
       data,
@@ -112,73 +113,46 @@ export const getUserBalanceBySecret = async (
     nullifierIsLastPage = is_last_page
   }
 
-  encrypted = encrypted.map((item: any) => {
+  const decrypted: any[] = []
+  const encryptedUtxos: any[] = []
+
+  encrypted.forEach((item: any) => {
+    if (storedUtxos.includes(item)) {
+      return
+    }
+
     try {
       const value = decrypt({
         encrypted: item,
         privateKey: secret,
       })
 
-      return value
+      decrypted.push(value)
+      encryptedUtxos.push(item)
     } catch (e) {
       return null
     }
-  }).filter(item => !!item)
+  })
 
-  return {
-    lastId,
-    ...groupUtxoByToken([...storedUtxos, ...encrypted], nullifiers, secret)
-  }
-}
-
-export const getUserReceiptsBySecret = async (
-  secret: any,
-  currentId: any,
-  storedReceipts: any,
-) => {
-  let isLastPage = false
-
-  let receipts: any[] = []
-
-  while (!isLastPage) {
-    const response = await fetch(`${RPC}/receipts?salt=${currentId as string}`)
-
-    const {
-      data,
-      is_last_page
-    } = await response.json()
-
-    receipts = [...receipts, ...data]
-
-    isLastPage = is_last_page
-  }
-
-  receipts = receipts.map((receipt: any) => {
+  storedUtxos.forEach((item: any) => {
     try {
-      const value =  decrypt({
-        isUtxo: false,
-        encrypted: receipt,
+      const value = decrypt({
+        encrypted: item,
         privateKey: secret,
       })
 
-      return value
+      decrypted.push(value)
+      encryptedUtxos.push(item)
     } catch (e) {
       return null
     }
-  }).filter(item => {
-    if (!item) {
-      return false
-    }
-
-    return !storedReceipts.find((value: any) => {
-      return value?.date === item?.date
-    })
   })
 
-  return [
-    ...receipts,
-    ...storedReceipts
-  ]
+  return {
+    lastId,
+    encryptedUtxos,
+    ...groupUtxoByToken([...decrypted], nullifiers, secret)
+  }
 }
 
 export const groupUtxoByToken = (encrypted: any, nullifiers: any, secret: any) => {
@@ -193,6 +167,10 @@ export const groupUtxoByToken = (encrypted: any, nullifiers: any, secret: any) =
     const isOnUtxos = acc.utxos.find((value: any) => {
       return value.blinding === curr.blinding
     })
+
+    if (curr.receipt) {
+      acc.receipts.push(curr.receipt)
+    }
 
     if (nullifiers.includes(nullifier.toString()) || curr.amount === 0n || !!isOnUtxos) {
       return acc
@@ -220,6 +198,7 @@ export const groupUtxoByToken = (encrypted: any, nullifiers: any, secret: any) =
     return acc
   }, {
     utxos: [],
+    receipts: [],
     treeBalances: {},
   })
 }

@@ -1,27 +1,24 @@
-import { getUserBalanceBySecret, getUserReceiptsBySecret } from '../opact'
+import { getUserBalanceBySecret } from '../opact'
 
 self.addEventListener("message", async (event: any) => {
   try {
     const {
+      config,
       secret,
       currentId,
       storedUtxos,
-      storedReceipts,
     } = event.data.input as any;
 
     const {
       lastId,
+      receipts,
       treeBalances,
+      encryptedUtxos,
     } = await getUserBalanceBySecret(
+      config,
       secret,
       currentId,
       storedUtxos,
-    )
-
-    const receipts = await getUserReceiptsBySecret(
-      secret,
-      currentId,
-      storedReceipts
     )
 
     self.postMessage(
@@ -30,7 +27,8 @@ self.addEventListener("message", async (event: any) => {
         payload: {
           lastId,
           receipts,
-          treeBalances
+          treeBalances,
+          encryptedUtxos,
         }
       } as any
     );
