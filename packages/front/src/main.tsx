@@ -25,7 +25,7 @@ import { Loader } from "@/components/loader";
 
 // TODO: Find a better way to handle this buffer error
 /* eslint-disable */
-window.Buffer = window.Buffer || Buffer;
+(window as any).Buffer = (window as any).Buffer || Buffer;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
