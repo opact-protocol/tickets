@@ -1,4 +1,4 @@
-import { useApp, useWallet } from "@/store";
+import { useWallet } from "@/store";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "@/components/button";
@@ -10,8 +10,7 @@ export function WhitelistModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { accountId, toggleModal, sendWhitelist } = useWallet();
-  const allowlist = useApp((state) => state.allowlist);
+  const { allowlist, accountId, toggleModal, sendWhitelist } = useWallet();
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -39,76 +38,49 @@ export function WhitelistModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all space-y-4">
+              <Dialog.Panel className="w-full max-w-[423px] transform overflow-hidden rounded-[8px] bg-form-gradient p-[24px] text-left border-[1px] border-[#606466] align-middle transition-all">
                 <Dialog.Title
                   as="h1"
-                  className="text-black text-[18px] font-medium text-center font-[Sora]"
+                  className="text-[18px] font-title font-[500] mb-[16px]"
                 >
-                  {allowlist && accountId
-                    ? "You are already on the allowlist"
-                    : "Apply for Allowlist"}
+                  Apply for Allowlist
                 </Dialog.Title>
 
-                {!allowlist && (
-                  <div className="mt-2 text-[16px] text-black space-y-[12px]">
-                    <p className="text-center">
-                      Apply to our allowlist to receive permission to make
-                      anonymous transfers at Hideyour.cash.
-                    </p>
-                  </div>
-                )}
-
-                {accountId && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-black text-[1.1rem] font-medium">
-                      Your Address
-                    </span>
-                  </div>
-                )}
-
-                <div>
-                  {accountId && allowlist ? (
-                    <div>
-                      <h2
-                        className="text-dark-grafiti font-bold font-[Sora] mt-4 mx-28 text-center truncate"
-                        title={accountId}
-                      >
-                        {accountId}
-                      </h2>
-                    </div>
-                  ) : (
-                    <div>
-                      <h2
-                        className="text-dark-grafiti font-bold font-[Sora] mt-4 mx-28 text-center truncate"
-                        title={accountId!}
-                      >
-                        {accountId}
-                      </h2>
-                    </div>
-                  )}
+                <div className="mb-[32px] ">
+                  <p
+                    className="
+                      text-[15px]
+                      font-[500]
+                      text-[#BDBDBD]
+                    "
+                  >
+                    Apply to our allowlist to receive permission to make
+                    anonymous transfers at Opact Tickets.
+                  </p>
                 </div>
 
                 {!accountId && (
                   <div>
                     <Button
                       disabled={false}
-                      isLoading={true}
+                      isLoading={false}
                       onClick={() => toggleModal()}
                       text="Connect wallet"
                     />
                   </div>
                 )}
 
-                {!allowlist && accountId && (
+                {
+                  accountId &&
                   <div>
                     <Button
-                      disabled={false}
-                      isLoading={true}
+                      disabled={!!allowlist && !!accountId}
+                      isLoading={false}
                       onClick={() => sendWhitelist()}
-                      text="Apply now"
+                      text={allowlist && accountId ? "You are already on the allowlist" : "Apply now"}
                     />
                   </div>
-                )}
+                }
               </Dialog.Panel>
             </Transition.Child>
           </div>

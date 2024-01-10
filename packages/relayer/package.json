@@ -9,7 +9,7 @@
     "dev": "miniflare --live-reload --debug --modules dist/index.mjs --env .env",
     "dev:remote": "wrangler dev",
     "test:only": "yarn build && node --experimental-vm-modules --no-warnings node_modules/.bin/jest --forceExit --detectOpenHandles",
-    "test": "(cd ../contracts && yarn tests:ts) && (cd ../sdk && yarn test:only) && yarn test:only --forceExit --detectOpenHandles",
+    "test": "(cd ../contracts && yarn tests:ts) && (cd ../sdk && yarn test:only) && (cd ../denylist-bot && yarn test:only) && yarn test:only --forceExit --detectOpenHandles",
     "types:check": "tsc && tsc -p test/tsconfig.json",
     "deploy": "yarn build && wrangler publish --keep-vars",
     "populate:envs": "cd scripts && tsc && node build/populateEnvs.js"

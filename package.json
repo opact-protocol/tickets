@@ -11,6 +11,7 @@
     "contract_libraries": "yarn workspace @near/contract_libraries",
     "subgraph": "yarn workspace @near/subgraph",
     "sdk": "yarn workspace hideyourcash-sdk",
+    "denylist": "yarn workspace denylist-bot",
     "relayer": "yarn workspace relayer"
   },
   "engines": {

@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
 import { toast } from "react-toastify";
 import { ToastCustom } from "@/components/toast-custom";
 import { twMerge } from 'tailwind-merge';
+import { Button } from "@/components/button";
 
 const baseForm = {
   name: '',
@@ -37,8 +37,6 @@ const NeedHelpModal = ({
   };
 
   const handleForm = (key: string, value: string) => {
-    console.log('formkeytrigger', key);
-
     if (form[key] === value) {
       return;
     }
@@ -71,7 +69,7 @@ const NeedHelpModal = ({
 
       toast(
         <ToastCustom
-          icon="check-circle-icon.svg"
+          variant="success"
           title="Message sent"
           message="Thank you for contacting us, your message will be answered shortly."
         />
@@ -80,7 +78,7 @@ const NeedHelpModal = ({
 
       toast(
         <ToastCustom
-          icon="error-circle-icon.svg"
+          variant="error"
           title="Error sending message"
           message="Something went wrong sending your message, wait a few minutes and try again."
         />
@@ -118,39 +116,39 @@ const NeedHelpModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-[620px] transform overflow-hidden rounded-[35px] bg-white p-6 text-left align-middle shadow-xl transition-all relative">
-                <button
-                  onClick={() => {
-                    onClose();
-                    setForm({ ...baseForm });
-                    setTouched({ ...baseTouched });
-                  }}
-                  className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
+              <Dialog.Panel className="w-full max-w-[598px] transform overflow-hidden rounded-[8px] bg-form-gradient border-[1px] border-[#606466] px-[24px] py-[32px] text-center transition-all relative">
+                <div
+                  className="space-y-[16px] pb-[24px]"
                 >
-                  <XMarkIcon className="text-black w-[24px]" />
-                </button>
+                  <Dialog.Title
+                    as="h1"
+                    className="
+                      text-[#FAFAFA]
+                      font-tile
+                      text-[18px]
+                      font-[500]
+                      leading-[18px]
+                    "
+                  >
+                    Contact us
+                  </Dialog.Title>
 
-                <Dialog.Title
-                  as="h1"
-                  className="text-dark-grafiti-medium text-xl font-bold text-center mb-5"
-                >
-                  Contact us
-                </Dialog.Title>
+                  <span
+                    className="block text-[#BDBDBD] text-[15px] leading-[22.5px] font-[500]"
+                  >
+                    Having issues or questions about Opact Tickets? Send us a message
+                  </span>
+                </div>
 
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     onSubmit();
                   }}
+                  className="w-full "
                 >
-                  <div className="flex flex-col gap-2 mb-2 sm:flex-row">
-                    <div className="w-full">
-                      <label
-                        className="text-dark-grafiti"
-                      >
-                        Your name
-                      </label>
-
+                  <div className="flex flex-col gap-4 sm:flex-row ">
+                    <div className="w-full pb-4">
                       <input
                         value={form.name}
                         onChange={(e) => {
@@ -161,18 +159,22 @@ const NeedHelpModal = ({
                         pattern=".{3,}"
                         title="2 characters minimum"
                         required
-                        placeholder="Write your name here"
-                        className={twMerge("p-[8px] h-[43px] bg-soft-blue-normal rounded-[15px] text-dark-grafiti-light w-full flex items-center justify-between border-[2px] border-transparent focus:outline-none", touched.name && 'invalid:border-error' )}
+                        placeholder="Name"
+                        className={twMerge(`
+                        w-full
+                        px-[20px]
+                        py-[18px]
+                        rounded-[8px]
+                        text-base
+                        font-title
+                        leading-[20px]
+                        disabled:cursor-not-allowed
+                        text-dark-blue
+                        placeholder:text-dark-blue`, touched.name && 'invalid:border-error' )}
                       />
                     </div>
 
                     <div className="w-full">
-                      <label
-                        className="text-dark-grafiti"
-                      >
-                        Your email
-                      </label>
-
                       <input
                         id="contact-us-email"
                         value={form.email}
@@ -180,35 +182,51 @@ const NeedHelpModal = ({
                         name="email"
                         type="email"
                         required
-                        placeholder="example@email.com"
-                        className={twMerge("p-[8px] h-[43px] bg-soft-blue-normal rounded-[15px] text-dark-grafiti-light w-full flex items-center justify-between border-[2px] border-transparent focus:outline-none", touched.email && 'invalid:border-error')}
+                        placeholder="E-mail"
+                        className={twMerge(`
+                        w-full
+                        px-[20px]
+                        py-[18px]
+                        rounded-[8px]
+                        text-base
+                        font-title
+                        leading-[20px]
+                        disabled:cursor-not-allowed
+                        text-dark-blue
+                        placeholder:text-dark-blue`, touched.email && 'invalid:border-error')}
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      className="text-dark-grafiti"
-                    >
-                      Your message
-                    </label>
-
+                  <div
+                    className="pb-[40px]"
+                  >
                     <textarea
                       value={form.message}
                       onChange={(e) => handleForm('message', e.target.value)}
                       name="message"
                       required
-                      placeholder="Write your message here"
-                      className={twMerge("w-full h-[160px] border-[2px] rounded-[15px] resize-none p-[8px] border-transparent focus:outline-none bg-soft-blue-normal text-dark-grafiti-light flex items-center justify-between", touched.message && 'invalid:border-error')}
+                      placeholder="Message"
+                      className={twMerge(`
+                      w-full
+                      px-[20px]
+                      py-[18px]
+                      rounded-[8px]
+                      text-base
+                      font-title
+                      leading-[20px]
+                      disabled:cursor-not-allowed
+                      text-dark-blue
+                      placeholder:text-dark-blue`, touched.message && 'invalid:border-error')}
                     />
                   </div>
 
-                  <button
+                  <Button
                     type="submit"
-                    className="bg-soft-blue-from-deep-blue p-[12px] rounded-full block w-full mt-6 mx-auto font-[400] hover:opacity-[.9] disabled:opacity-[.6] disabled:cursor-not-allowed"
-                  >
-                    Send
-                  </button>
+                    disabled={false}
+                    isLoading={false}
+                    text="Send"
+                />
                 </form>
               </Dialog.Panel>
             </Transition.Child>

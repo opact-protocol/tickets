@@ -15,7 +15,7 @@ export const registerUser = async ({
       account_id: account.accountId,
     },
     gas: new BN("300000000000000"),
-    attachedDeposit: new BN("480000000000000000000"),
+    attachedDeposit: new BN("400000000000000000000"),
   });
 };
 

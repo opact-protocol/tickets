@@ -1,18 +1,18 @@
 import { create } from "zustand";
-import { setupWalletSelector } from "@near-wallet-selector/core";
+import { WalletSelector, setupWalletSelector } from "@near-wallet-selector/core";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
-import { setupNearFi } from "@near-wallet-selector/nearfi";
+// import { setupNearFi } from "@near-wallet-selector/nearfi";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { setupXDEFI } from "@near-wallet-selector/xdefi";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { useEnv } from "@/hooks/useEnv";
-import { WalletStore } from "@/interfaces";
-import { hycService } from "@/lib";
 import { viewAccountBalance, getAccountBalance } from "hideyourcash-sdk";
+import { getAllCurrencies, viewIsInAllowlist } from "@/utils/sdk";
+import { sendAllowlist } from "../utils/sdk";
 
 interface Balance {
   available: string;
@@ -20,10 +20,42 @@ interface Balance {
 
 const nodeUrl = useEnv("VITE_NEAR_NODE_URL");
 
+export interface WalletStore {
+  toggleModal: () => void;
+  signOut: () => Promise<void>;
+  initWallet: () => Promise<string>;
+  viewBalance: (contract: string, accountId: string) => Promise<void>;
+  sendWhitelist: () => Promise<void>;
+  viewNearBalance: (foo: any) => Promise<any>;
+  accountId: string | null;
+  showWalletModal: boolean;
+  loadingData: boolean;
+  selector: WalletSelector | null;
+  viewAccountBalance: (foo: any, baa: any) => void;
+  allCurrencies: any;
+  allowlist: boolean;
+  nearBalance: number,
+  toggleLoadingData: (flag: boolean) => void;
+  tokenBalance: number,
+  isStarted: boolean
+}
+
 export const useWallet = create<WalletStore>((set, get) => ({
   accountId: "",
+  loadingData: false,
   selector: null,
   showWalletModal: false,
+  allCurrencies: [],
+  allowlist: false,
+  nearBalance: 0,
+  tokenBalance: 0,
+  isStarted: false,
+
+  toggleLoadingData: (flag = false) => {
+    set(() => ({
+      loadingData: flag
+    }))
+  },
 
   toggleModal: () => {
     const { showWalletModal } = get();
@@ -31,12 +63,30 @@ export const useWallet = create<WalletStore>((set, get) => ({
     set(() => ({ showWalletModal: !showWalletModal }));
   },
 
+  viewAccountBalance: async ({ accountId }, currencies) => {
+    const { viewBalance, viewNearBalance } = get();
+
+    const token = currencies.find((token) => {
+      if ("account_id" in token) return token;
+    });
+
+    if (!token || !accountId) return;
+
+    const balance = await viewBalance(token.account_id, accountId);
+
+    const { available } = await viewNearBalance({ accountId });
+
+    set({ nearBalance: +available, tokenBalance: +balance });
+  },
+
   initWallet: async () => {
+    const { viewAccountBalance } = get()
+
     const newSelector = await setupWalletSelector({
       network: useEnv("VITE_NEAR_NETWORK"),
       debug: true,
       modules: [
-        setupNearFi(),
+        // setupNearFi(),
         setupMeteorWallet(),
         setupNearWallet(),
         setupMyNearWallet(),
@@ -53,10 +103,17 @@ export const useWallet = create<WalletStore>((set, get) => ({
     const newAccount =
       state?.accounts.find((account) => account.active)?.accountId || "";
 
+    const allCurrencies = await getAllCurrencies();
+    const allowlist = await viewIsInAllowlist({ accountId: newAccount });
+    await viewAccountBalance({ accountId: newAccount }, allCurrencies)
+
     try {
       set(() => ({
         accountId: newAccount,
         selector: newSelector,
+        allowlist,
+        allCurrencies,
+        isStarted: true
       }));
     } catch (e) {
       console.warn(e);
@@ -87,11 +144,7 @@ export const useWallet = create<WalletStore>((set, get) => ({
     set(() => ({ accountId: "" }));
   },
 
-  viewBalance: async (contract: string) => {
-    const { accountId } = get();
-
-    if (!accountId) return;
-
+  viewBalance: async (contract: string, accountId: string) => {
     return await viewAccountBalance(
       useEnv("VITE_NEAR_NODE_URL"),
       contract,
@@ -102,12 +155,14 @@ export const useWallet = create<WalletStore>((set, get) => ({
   sendWhitelist: async () => {
     const { selector, accountId } = get();
     if (!accountId) return;
-    await hycService.sendAllowlist(accountId!, selector);
+
+    await sendAllowlist({
+      accountId,
+      connection: selector
+    });
   },
 
-  viewNearBalance: async (): Promise<any> => {
-    const { accountId } = get();
-
+  viewNearBalance: async ({ accountId }): Promise<any> => {
     if (!accountId) {
       return {
         available: "0",

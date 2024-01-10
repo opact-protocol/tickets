@@ -1,10 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { ModuleState } from "@near-wallet-selector/core";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useEnv } from "@/hooks/useEnv";
 import { useWallet } from "@/store/wallet";
 import { reloadPage } from "@/utils/reloadPage";
+import { Arrow } from "@/components/assets/arrow";
 
 export function WalletSelectorModal() {
   const { selector, showWalletModal, toggleModal } = useWallet();
@@ -53,20 +53,8 @@ export function WalletSelectorModal() {
   return (
     <Transition appear show={showWalletModal} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={() => toggleModal()}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+        <div className="fixed inset-0 overflow-y-auto modal-bg">
+          <div className="flex min-h-full items-center justify-center p-4 text-center border-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -76,30 +64,38 @@ export function WalletSelectorModal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <div className="flex flex-col mb-[12px]">
-                  <Dialog.Title className="text-[#121315] text-[18px] font-[500]">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-[8px] p-[24px] bg-form-gradient text-left align-middle transition-all border-[1px] border-[#606466]">
+                <div className="flex flex-col mb-[16px]">
+                  <Dialog.Title
+                    className="text-[#FAFAFA] font-title text-[18px] font-[500]"
+                  >
                     Connect Wallet
                   </Dialog.Title>
                 </div>
 
-                <div className="space-y-[12px] flex flex-col">
+                <div className="space-y-[16px] flex flex-col">
                   {modules.map((module) => (
                     <button
                       key={"wallet-selector-modal-module" + module.id}
                       onClick={() => handleWalletClick(module)}
-                      className="border border-[#e0e1e4] rounded-[13px] py-[12px] px-[24px] h-[56px] flex items-center hover:bg-gray-100 text-[16px] text-[#121315] justify-between"
+                      className="group border border-[#606466] rounded-[8px] py-[12px] p-[16px] h-[56px] flex items-center hover:bg-[#606466] text-[16px] justify-between"
                     >
                       <div className="flex">
                         <img
                           src={module.metadata.iconUrl}
-                          className="w-[20px] mr-[12px]"
+                          className="w-[24px] h-[24px] mr-[12px]"
                         />
 
-                        {module.metadata.name}
+                        <span
+                          className="block text-white/[0.9]"
+                        >
+                          {module.metadata.name}
+                        </span>
                       </div>
 
-                      <ChevronRightIcon className="w-[18px]" />
+                      <Arrow
+                        className="group-hover:rotate-[45deg] transition-all"
+                      />
                     </button>
                   ))}
                 </div>

@@ -9,5 +9,9 @@ export const shortenAddress = (address: string, chars = 8): string => {
     return "";
   }
 
+  if (address.length <= 8 || address.includes('.near')) {
+    return address
+  }
+
   return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 };

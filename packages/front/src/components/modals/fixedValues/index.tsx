@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export const FixedValuesModal = ({
   isOpen,
@@ -35,32 +34,17 @@ export const FixedValuesModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-[700px] transform overflow-hidden rounded-[35px] bg-white p-6 text-left align-middle shadow-xl transition-all relative">
-                <button
-                  onClick={() => onClose()}
-                  className="absolute right-[24px] top-[24px] hover:opacity-[0.7]"
-                >
-                  <XMarkIcon className="text-black w-[24px]" />
-                </button>
-
+              <Dialog.Panel className="max-w-[294px] border-[1px] border-[#606466] transform overflow-hidden rounded-[8px] w-screen bg-form-gradient p-[12px] text-left transition-all relative">
                 <Dialog.Title
                   as="h1"
-                  className="text-dark-grafiti-medium text-xl font-bold text-center mb-5"
+                  className="text-[16px] leading-[22px]"
                 >
                   Why use fixed values ?
                 </Dialog.Title>
-                <p className="text-dark-grafiti-medium text-lg max-w-[600px] mx-auto mb-5">
-                  Fixed values guarantee the standardization of transactions,
-                  making detection of the source wallet much more difficult. In
-                  this way, further ensuring the anonymity and security of your
-                  transaction.
+
+                <p className="text-white leading-[18px] text-[14px] pt-[8px]">
+                  Fixed values guarantee the standardization of transactions, making detection of the source wallet much more difficult. In this way, further ensuring the anonymity and security of your transaction.
                 </p>
-                <button
-                  className="max-w-[367px] block mx-auto bg-soft-blue-from-deep-blue mt-[24px] p-[12px] mb-5 rounded-full w-full font-[400] hover:opacity-[.9]"
-                  onClick={() => onClose()}
-                >
-                  Close
-                </button>
               </Dialog.Panel>
             </Transition.Child>
           </div>

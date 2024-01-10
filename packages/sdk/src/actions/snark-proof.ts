@@ -10,6 +10,14 @@ import type {
   PublicArgsInterface,
   WithdrawInputInterface,
 } from "../interfaces/snark-proof";
+import { prepareMerkleTree } from "./merkle-tree";
+
+import {
+  lastDepositQuery,
+  depositUpdatesQuery,
+  allowListUpdatesQuery,
+  lastAllowListQuery,
+} from "../graphql";
 
 export const createSnarkProof = async (
   payload: WithdrawInputInterface,
@@ -42,6 +50,69 @@ export const createSnarkProof = async (
     return { proof, publicSignals };
   }
 };
+
+export const generateProofInput = async ({
+  fee,
+  note,
+  relayer,
+  nodeUrl,
+  contract,
+  registry,
+  recipient,
+  graphqlUrl,
+}: {
+  fee: string,
+  note: string,
+  nodeUrl: string,
+  contract: string,
+  registry: string,
+  recipient: string,
+  graphqlUrl: string,
+  relayer: RelayerDataInterface,
+}): Promise<WithdrawInputInterface> => {
+  const allowlistTree = await prepareMerkleTree(
+    registry,
+    "allowlistTree",
+    allowListUpdatesQuery,
+    lastAllowListQuery,
+    graphqlUrl,
+  );
+
+  const commitmentsTree = await prepareMerkleTree(
+    contract,
+    "commitmentsTree",
+    depositUpdatesQuery,
+    lastDepositQuery,
+    graphqlUrl,
+  );
+
+  const { hash, singleHash } = await mimcService.initMimc();
+
+  const recipientHash = await viewAccountHash(nodeUrl, contract, recipient);
+  const relayerHash = await viewAccountHash(nodeUrl, contract, relayer.account);
+
+  const commitment = parseNote(note);
+
+  const secretsHash = hash(commitment.secret, commitment.nullifier);
+
+  const commitmentLeaves = hash(secretsHash, commitment.account_hash);
+
+  const path = commitmentsTree.proof(commitmentLeaves);
+  const pathWL = allowlistTree.proof(commitment.account_hash);
+
+  return await getWithdrawInput(
+    {
+      ...relayer,
+      hash: relayerHash,
+    },
+    fee,
+    recipientHash,
+    path,
+    pathWL,
+    commitment,
+    singleHash
+  );
+}
 
 export const prepareWithdraw = async (
   nodeUrl: string,

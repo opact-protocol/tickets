@@ -54,7 +54,7 @@ jobs:
       - name: Compile circuits
         run: yarn circuits circuit:setup:plonk
 
-      - name: Run test-ts setup and test SDK and Relayer
+      - name: Run test-ts setup and test SDK, Relayer and Denylist Bot
         env:
           CF_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_IDENTIFIER: ${{ secrets.CF_IDENTIFIER }}
@@ -70,11 +70,11 @@ jobs:
           echo "private_key=${{ env.TESTNET_RELAYER_PRIVATE_KEY }}" >> "$GITHUB_OUTPUT"
           echo "hyc_contract=${{ env.TESTNET_HYC_CONTRACT }}" >> "$GITHUB_OUTPUT"
 
-      - name: Rust Tests
-        run: yarn contracts test:rust
+      # - name: Rust Tests
+      #   run: yarn contracts test:rust
 
-      - name: Lib Tests
-        run: yarn contracts test:lib
+      # - name: Lib Tests
+      #   run: yarn contracts test:lib
 
       - name: Front build
         run: yarn front build

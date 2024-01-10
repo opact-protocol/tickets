@@ -1,6 +1,5 @@
 import { Tab } from "@headlessui/react";
-import { Deposit } from "./deposit";
-import { Withdraw } from "./withdraw";
+import { Deposit, Withdraw } from "./form";
 
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -8,34 +7,62 @@ export function Actions() {
   const tabs = ["Deposit", "Withdraw"];
 
   return (
-    <div className="w-[95%] max-w-[479px] bg-background-page px-4 py-6 rounded-[40px] border-[2px] border-solid border-white sm:px-0 mx-auto z-[3] relative">
+    <div
+      className="
+        w-[90%]
+        min-w-[350px]
+        sm:w-[480px]
+        bg-form-gradient
+        py-[24px] space-y-[24px]
+        my-[240px]
+        rounded-[12px] border-[2px] border-solid border-[#606466] mx-auto z-[3] relative
+      "
+    >
       <Tab.Group
         as="div"
-        className="flex flex-col items-center max-w-[431px] bg-white rounded-[30px] mx-auto p-8 shadow-sm border-[3px] border-solid border-[#616dd333]"
+        className="
+          w-full px-[12px]
+          space-y-[24px]
+          flex flex-col items-center
+        "
       >
-        <Tab.List className="flex gap-4 py-6 w-full rounded-[30px]">
-          {tabs.map(tab => (
-            <Tab
+        <Tab.List className="flex w-full">
+          {tabs.map((tab, i) => (
+            <div
               key={tab}
-              className={({ selected }) =>
-                classNames(
-                  "w-full rounded-full py-2.5 text-md font-bold leading-5",
-                  "ring-white ring-opacity-60 ring-offset-2  ring-offset-gray-100 hover:transition-colors focus:outline-none focus:ring-2",
-                  selected
-                    ? "text-white bg-soft-blue hover:bg-soft-blue-light"
-                    : "bg-soft-blue-normal hover:bg-hover-button text-soft-blue"
-                )
-              }
+              className="flex"
             >
-              {tab}
-            </Tab>
+              <Tab
+                className={({ selected }) =>
+                  classNames(
+                    'px-[12px] py-[8px] font-title text-[16px] font-[500] select-none outline-none',
+                    selected
+                      ? "text-white"
+                      : "hover:text-white text-[#5B5F61] "
+                  )
+                }
+              >
+                {tab}
+              </Tab>
+
+              { i % 2 === 0 &&
+                <div
+                  className="px-[16px] py-[5px] flex items-center justify-center"
+                >
+                  <div
+                    className="h-[22px] w-[1px] bg-[#5B5F61]"
+                  />
+                </div>
+              }
+            </div>
           ))}
         </Tab.List>
 
-        <Tab.Panels className="mt-2 w-full">
+        <Tab.Panels className="w-full px-[12px]">
           <Tab.Panel>
             <Deposit />
           </Tab.Panel>
+
           <Tab.Panel>
             <Withdraw />
           </Tab.Panel>

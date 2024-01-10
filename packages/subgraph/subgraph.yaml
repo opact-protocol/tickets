@@ -7,10 +7,9 @@ dataSources:
     network: near-testnet
     source:
       accounts:
-        suffixes:
-          - hideyourcash.near
-          - proxy.hapiprotocol.near
-      startBlock: 59503757 # 87518288
+        prefixes:
+          - 2635d665d4dd894555f2
+      startBlock: 132064200
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript

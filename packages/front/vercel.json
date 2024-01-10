@@ -5,18 +5,13 @@
       "dest": "/"
     },
     {
-      "src": "/circuit.zkey",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, must-revalidate"
-      },
-      "status": 200
+      "src": "/circuit.zkey"
     },
     {
       "src": "/verifier.wasm",
       "headers": {
-        "Cache-Control": "public, max-age=31536000, must-revalidate"
-      },
-      "status": 200
+        "Cache-Control": "public, max-age=300000, must-revalidate"
+      }
     }
   ],
   "github": {

@@ -4,6 +4,7 @@ import { If } from "./if"
 export interface InputInterface {
   error: string,
   label: string,
+  isValid: boolean,
   placeholder: string,
   isDisabled?: boolean,
   value: string | number,
@@ -14,6 +15,7 @@ export const Input = ({
   error,
   value,
   label,
+  isValid,
   onChange,
   isDisabled,
   placeholder,
@@ -21,8 +23,8 @@ export const Input = ({
   <div
     className="flex flex-col"
   >
-    <div className="flex items-center justify-between">
-      <span className="text-black text-[1.1rem] font-bold">
+    <div className="flex items-center justify-between mb-[16px]">
+      <span className="font-title text-[18px] text-white font-[500]">
         {label}
 
         <If
@@ -36,7 +38,8 @@ export const Input = ({
 
     <input
       className={twMerge(
-        'mt-2 p-2 h-[43px] bg-soft-blue-normal rounded-[15px] text-dark-grafiti-light w-full flex items-center justify-between border-[2px] focus:outline-none border-transparent',
+        'px-[16px] h-[60px] bg-transparent rounded-[8px] text-[#919699] w-full flex items-center justify-between border-[1px] outline-none border-[#606466] font-title text-[16px] font-[500] opacity-[0.89] disabled:cursor-not-allowed',
+        isValid && '!border-white',
         error && 'border-error'
       )}
       autoFocus

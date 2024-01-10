@@ -7,7 +7,7 @@ import { deployToken, sendDeposit } from "./actions/token";
 import { createAccount } from "./actions/account";
 import { getConnection } from "./actions/connection";
 import { FT_DECIMALS } from "./constants";
-import { deployInstance, deployRegistry, addEntry } from "./actions/registry";
+import { deployInstance, deployRegistry, addEntry, deployHapi } from "./actions/registry";
 import { addBalances, addStorage, registerUser } from "./actions/contracts";
 import { buildCommitments } from "./prepare_commitments";
 import { readInputs } from "./utils/file";
@@ -80,6 +80,13 @@ export async function setup(): Promise<void> {
     accountId: `${random_prefix}sdk.testnet`,
   });
 
+  const hapiOneAccount = await createAccount({
+    creator,
+    config,
+    near,
+    accountId: `${random_prefix}hapione.testnet`,
+  });
+
   console.log("Deploying tokens and instances");
 
   await deployToken({
@@ -87,9 +94,15 @@ export async function setup(): Promise<void> {
     account: tokenContractAccount,
   });
 
+  await deployHapi({
+    owner,
+    account: hapiOneAccount,
+  });
+
   await deployRegistry({
     owner,
     account: registryAccount,
+    hapi: hapiOneAccount,
   });
 
   await deployInstance({
@@ -207,11 +220,13 @@ export async function setup(): Promise<void> {
     account: proofInputs.sdk,
     tokenInstance: tokenInstanceAccount10.accountId,
     hyc_contract: registryAccount.accountId,
+    hapi_contract: hapiOneAccount.accountId,
     cache: output,
   });
 
   fs.writeFileSync("../../sdk/test/test_setup.json", testSetup);
   fs.writeFileSync("../../relayer/test/test_setup.json", testSetup);
+  fs.writeFileSync("../../denylist-bot/test_setup.json", testSetup);
 
   if (isCI) {
     console.log("The code is running on a CI server");

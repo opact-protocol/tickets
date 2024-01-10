@@ -1,92 +1,121 @@
 import { Container } from "@/components";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
-import { useAllowlist } from "@/hooks/useAllowlist";
 import { useWallet } from "@/store/wallet";
+import { ButtonPrimary } from "../button-primary";
+import { ButtonSecondary } from "../button-secondary";
+import { NeedHelp } from "./needHelp";
+import { Arrow } from "@/components/assets/arrow";
+import { shortenAddress } from "hideyourcash-sdk";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
   const { accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
 
-  const { allowList } = useAllowlist(accountId!);
-
   return (
-    <>
-      <header className="bg-white/80 relative z-50">
-        <WhitelistModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-        />
+    <header className="relative z-50">
+      <WhitelistModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
 
-        <nav>
-          <Container className="relative z-50 flex justify-between py-4">
-            <div className="relative z-10 flex items-center gap-16">
-              <a href="/" aria-label="Home">
-                <img className="sm:hidden h-6 w-auto" src="/mini-logo.svg" />
-                <img
-                  className="hidden h-6 w-auto sm:block"
-                  src="./assets/logo-horizontal.png"
-                />
-              </a>
+      <nav
+        className="w-full absolute"
+      >
+        <div
+          className="bg-[#060A0F] h-[44px] w-full flex items-center justify-center border-b-[2px] border-[#606466] py-[8px]"
+        >
+          <div className="flex">
+            <ExclamationTriangleIcon className="w-[18px] text-[#919699]" />
+
+            <p className="hidden lg:block text-[#919699] text-[16px] text-center font-[600] ml-[8px]">
+              This app is in beta. It has not been audited.
+            </p>
+
+            <p className="lg:hidden text-bold text-[#919699] text-center ml-[8px]">
+              App in beta version. Audit in progress.
+            </p>
+
+            <a
+              href="https://docs.hideyour.cash/general-information/alpha-version"
+              target={`_blank`}
+              className="flex group text-bold text-white text-center cursor-pointer text-[14px] leading-[21px] space-x-[8px] ml-[16px]"
+            >
+              <span>
+                Learn more
+              </span>
+
+
+              <Arrow
+                className="w-[18px] group-hover:rotate-[45deg] transition-all"
+              />
+            </a>
+          </div>
+
+        </div>
+        <Container
+          className="
+            px-[16px]
+            max-w-full
+            sm:px-[32px]
+            lg:px-[30px]
+            xl:px-[60px]
+            py-[12px]
+            lg:py-[18px]
+            flex
+            justify-between
+            bg-[rgba(16,_20,_24,_0.88)]
+            backdrop-blur-[4px]
+            lg:bg-[#060A0F]/[0.42]
+            lg:backdrop-blur-[6px]
+            lg:mb-[8px]
+
+            flex-col space-y-[12px]
+            md:flex-row md:space-y-0
+          "
+        >
+          <div className="relative z-10 flex items-center gap-16">
+            <a href="/" aria-label="Home">
+              <img
+                className="h-[32px] w-auto"
+                src="./logo.svg"
+              />
+            </a>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <ButtonPrimary
+              disabled={false}
+              isLoading={false}
+              onClick={() => setShowModal(true)}
+              text="Allowlist"
+            />
+
+            {!!!accountId ? (
+              <ButtonSecondary
+                withIcon={true}
+                disabled={false}
+                isLoading={false}
+                onClick={() => toggleModal()}
+                text="Connect Wallet"
+              />
+            ) : (
+              <ButtonSecondary
+                withIcon={false}
+                disabled={false}
+                isLoading={false}
+                onClick={() => signOut()}
+                text={shortenAddress(accountId)}
+              />
+            )}
+
+            <div>
+              <NeedHelp />
             </div>
-
-            <div className="flex items-center gap-6">
-              <button
-                onClick={() => setShowModal(true)}
-                className={`${
-                  allowList && accountId
-                    ? "bg-green-light"
-                    : "bg-soft-blue-normal"
-                } flex h-[3rem] sm:h-full items-center justify-center space-x-[8px] text-black px-[24px] py-[12px] sm:py-[10px] rounded-full w-full font-normal ${
-                  allowList && accountId
-                    ? "hover:bg-green-medium"
-                    : "hover:bg-hover-button"
-                } justify-bettween hover:transition-all`}
-              >
-                {allowList && accountId ? (
-                  <img src="/copied-icon.svg" alt="Check icon" />
-                ) : (
-                  <PaperAirplaneIcon className="w-[18px] text-soft-blue" />
-                )}
-                <span
-                  className={`hidden sm:block whitespace-nowrap text-soft-blue-medium font-bold text-base ${
-                    allowList && accountId && "text-success"
-                  }`}
-                >
-                  Allowlist
-                </span>
-              </button>
-
-              {!!!accountId ? (
-                <button
-                  onClick={() => toggleModal()}
-                  className="flex items-center justify-center space-x-[4px] bg-soft-blue px-[24px] py-[10px] rounded-full w-full font-[400] hover:bg-soft-blue-light justify-bettween hover:transition-all"
-                >
-                  <img src="/wallet-icon.svg" alt="Wallet icon" />
-                  <span className="text-white whitespace-nowrap">
-                    Connect Wallet
-                  </span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => signOut()}
-                  className="flex items-center space-x-[8px] bg-soft-blue px-[24px] py-[12px] rounded-full w-full max-w-[150px] sm:max-w-full font-[400] hover:opacity-[.9]"
-                >
-                  <span
-                    className="w-[150px] text-white truncate"
-                    title={accountId}
-                  >
-                    {accountId}
-                  </span>
-
-                  <img src="/power-icon.svg" alt="Power icon" />
-                </button>
-              )}
-            </div>
-          </Container>
-        </nav>
-      </header>
-    </>
+          </div>
+        </Container>
+      </nav>
+    </header>
   );
 }

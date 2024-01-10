@@ -5,7 +5,6 @@ import {
   TREE_HEIGHT,
   ZERO_VALUE,
   PROTOCOL_FEE,
-  HAPI_ONE_TESTNET,
   RISK_PARAMS,
   Q,
   QF,
@@ -20,12 +19,44 @@ type Currency =
       account_id: string;
     };
 
-export const deployRegistry = async ({
+export const deployHapi = async ({
   account,
   owner,
 }: {
   account: Account;
   owner: Account;
+}): Promise<any> => {
+  const contractWasm = fs.readFileSync("../proxy_contract_release.wasm");
+
+  await account.deployContract(contractWasm);
+
+  await account.functionCall({
+    contractId: account.accountId,
+    methodName: "new",
+    args: {
+      owner_id: owner.accountId,
+    },
+    gas: new BN("300000000000000"),
+  });
+
+  await owner.functionCall({
+    contractId: account.accountId,
+    methodName: "create_reporter",
+    args: {
+      address: owner.accountId,
+      permission_level: 1,
+    },
+  });
+};
+
+export const deployRegistry = async ({
+  account,
+  owner,
+  hapi,
+}: {
+  account: Account;
+  owner: Account;
+  hapi: Account;
 }): Promise<any> => {
   const contractWasm = fs.readFileSync("../out/registry.wasm");
 
@@ -36,7 +67,7 @@ export const deployRegistry = async ({
     methodName: "new",
     args: {
       owner: owner.accountId,
-      authorizer: HAPI_ONE_TESTNET,
+      authorizer: hapi.accountId,
       // vec of tupples (category, max_risk_threshold)
       risk_params: RISK_PARAMS,
       // merkle tree params

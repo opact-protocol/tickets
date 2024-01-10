@@ -75,7 +75,7 @@ pub async fn ft_balance_of(
 }
 
 pub async fn initialize_ft_contract(
-  worker: &Worker<impl DevNetwork>,
+  worker: &Worker<Sandbox>,
   contract: &Contract,
   owner: &Account,
 ) -> workspaces::result::CallExecutionDetails {
