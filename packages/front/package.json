@@ -39,7 +39,7 @@
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "file-saver": "^2.0.5",
-    "graphql": "^16.8.0",
+    "graphql": "16.6.0",
     "hideyourcash-sdk": "*",
     "localforage": "^1.10.0",
     "node-stdlib-browser": "^1.2.0",
