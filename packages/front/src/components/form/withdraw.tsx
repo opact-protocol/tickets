@@ -98,13 +98,37 @@ export function Withdraw() {
 
       <If condition={!state.generatingProof || !!state.publicArgs}>
         <div
-          className="pt-[16px]"
+          className={loadingData ? 'pt-[16px]' : 'pt-0'}
         >
+          <If
+            condition={loadingData}
+          >
+            <div
+              className="mb-[16px] border-[#F8D45C] bg-[#2D2A1C] px-4 py-2 border rounded-[8px] relative z-[0]"
+            >
+              <div>
+                <span
+                  className="text-font-1 text-xxs font-[600]"
+                >
+                  Download security files
+                </span>
+              </div>
+
+              <div v-if="desc">
+                <span
+                  className="text-font-1 text-xxs font-[500]"
+                >
+                  Opact Tickets needs to download the security files so that you can proceed with the withdrawal.
+                </span>
+              </div>
+            </div>
+          </If>
+
           <WithdrawButton
-            isLoading={state.loading}
             buttonText={state.buttonText}
-            isDisabled={!state.fee.token || state.loading || state.isDisabled}
             onClick={() => preWithdraw(loadingData)}
+            isLoading={state.loading || loadingData}
+            isDisabled={!state.fee.token || state.loading || state.isDisabled || loadingData}
           />
         </div>
       </If>
