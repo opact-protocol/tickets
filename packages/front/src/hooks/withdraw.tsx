@@ -9,10 +9,6 @@ import {
   calculateRelayerFee,
 } from '@/utils/sdk'
 
-import {
-  RelayerDataInterface,
-} from "hideyourcash-sdk";
-
 export interface TicketStored {
   contract: string;
   counter: string;
@@ -70,17 +66,7 @@ export const useWithdraw = () => {
   }
 
   const preWithdraw = useCallback(async (loadingData) => {
-    if (loadingData) {
-      dispatch({
-        isDisable: true,
-        setShowWithdrawWarn: true,
-        buttonText: 'Downloading security files...'
-      })
-
-      return
-    }
-
-    if (!state.relayer || !state.receiver || !state.ticket) {
+    if (!state.relayer || !state.receiver || !state.ticket || loadingData) {
       return
     }
 
@@ -259,7 +245,7 @@ export const useWithdraw = () => {
         loading: false
       })
     }
-  }, 1000), [state.ticket, state.loading])
+  }, 1500), [state.ticket, state.loading])
 
   const fetchRelayer = useCallback(async () => {
     if (state.relayer) {
