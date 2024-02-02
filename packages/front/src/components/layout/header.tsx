@@ -23,7 +23,7 @@ export function Header() {
       <nav
         className="w-full absolute"
       >
-        <div
+        {/* <div
           className="bg-[#060A0F] h-[44px] w-full flex items-center justify-center border-b-[2px] border-[#606466] py-[8px]"
         >
           <div className="flex">
@@ -53,7 +53,8 @@ export function Header() {
             </a>
           </div>
 
-        </div>
+        </div> */}
+
         <Container
           className="
             px-[16px]
