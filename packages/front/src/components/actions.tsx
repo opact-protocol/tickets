@@ -50,7 +50,7 @@ export function Actions() {
                 {tab}
               </Tab>
 
-              { i % 2 === 0 &&
+              {/* { i % 2 === 0 &&
                 <div
                   className="px-[16px] py-[5px] flex items-center justify-center"
                 >
@@ -58,7 +58,7 @@ export function Actions() {
                     className="h-[22px] w-[1px] bg-[#5B5F61]"
                   />
                 </div>
-              }
+              } */}
             </div>
           ))}
         </Tab.List>

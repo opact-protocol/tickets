@@ -4,7 +4,7 @@ import { WhitelistModal } from "@/components/modals";
 // import { useWallet } from "@/store/wallet";
 // import { ButtonPrimary } from "../button-primary";
 // import { ButtonSecondary } from "../button-secondary";
-import { NeedHelp } from "./needHelp";
+// import { NeedHelp } from "./needHelp";
 // import { Arrow } from "@/components/assets/arrow";
 // import { shortenAddress } from "hideyourcash-sdk";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
