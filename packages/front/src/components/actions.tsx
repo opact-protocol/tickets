@@ -1,10 +1,15 @@
 import { Tab } from "@headlessui/react";
-import { Deposit, Withdraw } from "./form";
+import {
+  // Deposit,
+  Withdraw } from "./form";
 
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export function Actions() {
-  const tabs = ["Deposit", "Withdraw"];
+  const tabs = [
+    // "Deposit",
+    "Withdraw"
+  ];
 
   return (
     <div
@@ -59,9 +64,9 @@ export function Actions() {
         </Tab.List>
 
         <Tab.Panels className="w-full px-[12px]">
-          <Tab.Panel>
+          {/* <Tab.Panel>
             <Deposit />
-          </Tab.Panel>
+          </Tab.Panel> */}
 
           <Tab.Panel>
             <Withdraw />

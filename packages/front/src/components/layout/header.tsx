@@ -1,16 +1,16 @@
 import { Container } from "@/components";
 import { useState } from "react";
 import { WhitelistModal } from "@/components/modals";
-import { useWallet } from "@/store/wallet";
-import { ButtonPrimary } from "../button-primary";
-import { ButtonSecondary } from "../button-secondary";
+// import { useWallet } from "@/store/wallet";
+// import { ButtonPrimary } from "../button-primary";
+// import { ButtonSecondary } from "../button-secondary";
 import { NeedHelp } from "./needHelp";
-import { Arrow } from "@/components/assets/arrow";
-import { shortenAddress } from "hideyourcash-sdk";
+// import { Arrow } from "@/components/assets/arrow";
+// import { shortenAddress } from "hideyourcash-sdk";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
-  const { accountId, toggleModal, signOut } = useWallet();
+  // const { accountId, toggleModal, signOut } = useWallet();
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -23,37 +23,22 @@ export function Header() {
       <nav
         className="w-full absolute"
       >
-        {/* <div
+        <div
           className="bg-[#060A0F] h-[44px] w-full flex items-center justify-center border-b-[2px] border-[#606466] py-[8px]"
         >
           <div className="flex">
             <ExclamationTriangleIcon className="w-[18px] text-[#919699]" />
 
             <p className="hidden lg:block text-[#919699] text-[16px] text-center font-[600] ml-[8px]">
-              This app is in beta. It has not been audited.
+              This app will be discontinued by June, 9th. Please, withdraw all your funds before that
             </p>
 
             <p className="lg:hidden text-bold text-[#919699] text-center ml-[8px]">
-              App in beta version. Audit in progress.
+            This app will be discontinued by June, 9th.
             </p>
-
-            <a
-              href="https://docs.hideyour.cash/general-information/alpha-version"
-              target={`_blank`}
-              className="flex group text-bold text-white text-center cursor-pointer text-[14px] leading-[21px] space-x-[8px] ml-[16px]"
-            >
-              <span>
-                Learn more
-              </span>
-
-
-              <Arrow
-                className="w-[18px] group-hover:rotate-[45deg] transition-all"
-              />
-            </a>
           </div>
 
-        </div> */}
+        </div>
 
         <Container
           className="
@@ -86,7 +71,7 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-6">
-            <ButtonPrimary
+            {/* <ButtonPrimary
               disabled={false}
               isLoading={false}
               onClick={() => setShowModal(true)}
@@ -109,7 +94,7 @@ export function Header() {
                 onClick={() => signOut()}
                 text={shortenAddress(accountId)}
               />
-            )}
+            )} */}
 
             <div>
               <NeedHelp />
