@@ -61,7 +61,7 @@ export function Header() {
             md:flex-row md:space-y-0
           "
         >
-          <div className="relative z-10 flex items-center gap-16">
+          <div className="relative z-10 flex items-center justify-center gap-16">
             <a href="/" aria-label="Home">
               <img
                 className="h-[32px] w-auto"
@@ -96,9 +96,9 @@ export function Header() {
               />
             )} */}
 
-            <div>
+            {/* <div>
               <NeedHelp />
-            </div>
+            </div> */}
           </div>
         </Container>
       </nav>
