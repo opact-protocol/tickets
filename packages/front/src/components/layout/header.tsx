@@ -24,13 +24,13 @@ export function Header() {
         className="w-full absolute"
       >
         <div
-          className="bg-[#060A0F] h-[44px] w-full flex items-center justify-center border-b-[2px] border-[#606466] py-[8px]"
+          className="bg-[#060A0F] h-[44px] w-full flex items-center justify-center border-b-[2px] border-[#606466] py-[8px] bg-[#FFCA41]"
         >
           <div className="flex">
             <ExclamationTriangleIcon className="w-[18px] text-[#919699]" />
 
             <p className="hidden lg:block text-[#919699] text-[16px] text-center font-[600] ml-[8px]">
-              This app will be discontinued by June, 9th. Please, withdraw all your funds before that
+              This app will be discontinued by June, 9th. Please, withdraw all your funds before that.
             </p>
 
             <p className="lg:hidden text-bold text-[#919699] text-center ml-[8px]">
