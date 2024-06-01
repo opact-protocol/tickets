@@ -176,18 +176,18 @@ export const useWithdraw = () => {
 
     const {
       isValid,
-      message,
+      // message,
       ticket
     } = await ticketIsValid({ note })
 
-    if (!isValid) {
-      dispatch({
-        loading: false,
-        noteError: message
-      })
+    // if (!isValid) {
+    //   dispatch({
+    //     loading: false,
+    //     noteError: message
+    //   })
 
-      return
-    }
+    //   return
+    // }
 
     // TODO: POOL WITHDRAW SCORE HERE
     dispatch({
